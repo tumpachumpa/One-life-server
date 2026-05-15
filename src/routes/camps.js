@@ -174,8 +174,8 @@ async function campRoutes(fastify) {
   fastify.get('/camps/my-status', { preHandler: fastify.authenticate }, async (request) => {
     const { id } = request.user;
 
-    // Auto-transition any pending challenge where the defender no longer has a valid active camp.
-    // This handles disconnects, expiries, and any path that skips DELETE /camps.
+    // Auto-transition pending challenges to prep when the defender is no longer
+    // actively inside the adventure (in_adventure=false, expired, or camp gone).
     await pool.query(`
       UPDATE pvp_challenges
       SET status = 'prep', prep_started_at = NOW(),
@@ -187,6 +187,7 @@ async function campRoutes(fastify) {
           WHERE user_id = pvp_challenges.defender_id
             AND status = 'active'
             AND expires_at > NOW()
+            AND in_adventure = true
         )
     `, [id]);
 

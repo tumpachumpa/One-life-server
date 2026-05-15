@@ -26,6 +26,7 @@
     "dotenv": "^17.4.2",
     "fastify": "^5.8.5",
     "fastify-plugin": "^5.1.0",
+    "onelife-game": "github:tumpachumpa/OneLife",
     "pg": "^8.20.0"
   },
   "devDependencies": {

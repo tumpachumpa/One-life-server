@@ -3,8 +3,9 @@
 const pool = require('../db/pool');
 
 // Start loading ESM game modules immediately (loaded once, reused)
-const adventureModP = import('../game/logic/adventure.js');
-const lootModP      = import('../game/logic/loot.js');
+const adventureModP = import('onelife-game/logic/adventure.js');
+const lootModP      = import('onelife-game/logic/loot.js');
+const heroModP      = import('onelife-game/logic/hero.js');
 
 async function getActiveSession(userId) {
   const r = await pool.query(
@@ -149,29 +150,71 @@ async function adventureRoutes(fastify) {
   // POST /adventure/complete-node — node finished (combat won or event resolved)
   fastify.post('/adventure/complete-node', { preHandler: fastify.authenticate }, async (request, reply) => {
     const { id: userId } = request.user;
-    const { nodeId, xpGained = 0, goldGained = 0, lootItems = [] } = request.body;
+    const { nodeId } = request.body;
     if (!nodeId) return reply.status(400).send({ error: 'Missing nodeId' });
 
     const session = await getActiveSession(userId);
     if (!session) return reply.status(404).send({ error: 'No active adventure' });
 
-    const {
-      getAdventure,
-      completeNode,
-      getAdventureChoiceNodes,
-      getAdventureStatus,
-    } = await adventureModP;
+    const [
+      {
+        getAdventure,
+        completeNode,
+        getAdventureChoiceNodes,
+        getAdventureStatus,
+        getNode,
+        resolveAdventureNode,
+      },
+      { rollCombatLoot },
+      { getHungerLevel, getOverlevelXpMult, xpToLevel },
+    ] = await Promise.all([adventureModP, lootModP, heroModP]);
 
     const adventure = getAdventure(session.adventure_id);
     if (!adventure) return reply.status(404).send({ error: 'Adventure not found' });
 
-    const progress    = session.progress;
+    const progress = session.progress;
+
+    // Resolve the node & encounter to determine authoritative rewards
+    const { node }   = getNode(adventure, nodeId, progress);
+    const totalCombats = (progress.completedNodes || []).length;
+    const encounter  = node
+      ? resolveAdventureNode({ ...adventure, __progress: progress }, node, totalCombats)
+      : null;
+    const enemy = encounter?.enemy || null;
+
+    // Load hero for hunger / overlevel XP multipliers
+    const heroResult = await pool.query('SELECT save_data FROM heroes WHERE user_id = $1', [userId]);
+    const hero = heroResult.rows[0]?.save_data?.hero || {};
+
+    let xpGained   = 0;
+    let goldGained = 0;
+    let lootItems  = [];
+
+    if (enemy?.rewards) {
+      const suppressRewards = !!(node?.noRewards || adventure?.noRewards);
+      const suppressLoot    = suppressRewards || !!(node?.noLoot || adventure?.noLoot);
+
+      if (!suppressRewards) {
+        const heroLevel    = xpToLevel(hero.xp || 0).lvl;
+        const hungerLevel  = getHungerLevel(hero.hunger ?? 100);
+        const diffStars    = progress.activeDifficultyStars ?? 0;
+        const enemyTier    = (enemy.tier || 1) + diffStars / 5;
+        const overlevelMult = getOverlevelXpMult(heroLevel, enemyTier, enemy.rarity?.id, hero.energy);
+
+        xpGained   = Math.floor((enemy.rewards.xp   || 0) * (hungerLevel.xpMult ?? 1) * overlevelMult);
+        goldGained = enemy.rewards.gold || 0;
+      }
+      if (!suppressLoot) {
+        lootItems = rollCombatLoot(enemy, Math.random, { adventure, node }).filter(Boolean);
+      }
+    }
+
     const newProgress = completeNode(adventure, progress, nodeId);
 
     const runLoot  = [...(session.run_loot || []), ...lootItems];
     const runXp    = (session.run_xp  || 0) + xpGained;
     const runGold  = (session.run_gold || 0) + goldGained;
-    const complete = !!newProgress.bossCompleted;
+    const complete  = !!newProgress.bossCompleted;
     const newStatus = complete ? 'completed' : 'active';
 
     await pool.query(
@@ -189,6 +232,9 @@ async function adventureRoutes(fastify) {
       runXp,
       runGold,
       complete,
+      xpGained,
+      goldGained,
+      lootItems,
     };
   });
 

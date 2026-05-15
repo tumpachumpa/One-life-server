@@ -1,5 +1,7 @@
 const pool = require('../db/pool');
 
+const snapModP = import('../game/snap.js');
+
 const DUNGEON_DURATION_MINUTES = 30;
 const PREP_DURATION_SECONDS    = 60;
 const CANCEL_COOLDOWN_MINUTES  = 10;
@@ -296,7 +298,7 @@ async function campRoutes(fastify) {
   // Queue a challenge against a player who is currently in a dungeon.
   fastify.post('/camps/challenge', { preHandler: fastify.authenticate }, async (request, reply) => {
     const { id: challengerId } = request.user;
-    const { defenderUserId, challengerSnap } = request.body;
+    const { defenderUserId } = request.body;
     if (!defenderUserId)               return reply.status(400).send({ error: 'Missing defenderUserId' });
     if (defenderUserId === challengerId) return reply.status(400).send({ error: 'Cannot challenge yourself' });
 
@@ -335,7 +337,9 @@ async function campRoutes(fastify) {
 
     // Overwrite check — if B already has a pending challenge from player A, C intercepts it.
     // A vs C fight starts immediately (prep); B is freed; C vs B challenge is not created.
-    const snapJson = challengerSnap ? JSON.stringify(challengerSnap) : null;
+    const { buildCombatSnapFromHero } = await snapModP;
+    const challengerHero = atkResult.rows[0].save_data?.hero || {};
+    const snapJson = JSON.stringify(buildCombatSnapFromHero(challengerHero));
     const overwroteResult = await pool.query(
       `SELECT ch.id, ch.challenger_id,
               COALESCE(h.save_data->'hero'->>'name', u.username) AS challenger_name

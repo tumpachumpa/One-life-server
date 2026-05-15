@@ -59,18 +59,38 @@ function collectAllItems(saveData) {
   return items;
 }
 
+// Matches client's equipmentGenerator.js exactly
+function getDiceAverage(dice) {
+  if (!dice) return 0;
+  const count = Math.max(1, Math.floor(Number(dice.count) || 1));
+  const sides = Math.max(1, Math.floor(Number(dice.sides) || 1));
+  return count * ((sides + 1) / 2) + (Number(dice.bonus) || 0);
+}
+
+function rollDice(dice, rng) {
+  if (!dice) return 0;
+  const count = Math.max(1, Math.floor(Number(dice.count) || 1));
+  const sides = Math.max(1, Math.floor(Number(dice.sides) || 1));
+  const bonus = Math.floor(Number(dice.bonus) || 0);
+  let total = bonus;
+  for (let i = 0; i < count; i++) total += 1 + Math.floor(rng() * sides);
+  return Math.max(1, total);
+}
+
 function makeCombatant(snap, side) {
   const s = snap || {};
   return {
     side,
-    hp:                s.maxHp       || 100,
-    maxHp:             s.maxHp       || 100,
-    damage:            s.damage      || 10,
-    armor:             s.armor       || 0,
-    attackSpeed:       s.attackSpeed || 1,
-    critChance:        s.critChance  || 5,
-    critMult:          s.critMult    || 1.5,
-    critResist:        s.critResist  || 0,
+    hp:                s.maxHp         ?? 100,
+    maxHp:             s.maxHp         ?? 100,
+    damage:            s.damage        ?? 10,
+    armor:             s.armor         ?? 0,
+    attackSpeed:       s.attackSpeed   ?? 1,
+    critChance:        s.critChance    ?? 0,   // 0 is valid — don't treat as falsy
+    critMult:          s.critMult      ?? 1.5,
+    critResist:        s.critResist    ?? 0,
+    weaponDamageDice:  s.weaponDamageDice  || null,
+    weaponDamageMult:  s.weaponDamageMult  ?? 1,
     autoProgress:      0,
     abilities:         (s.equippedSkillIds || s.availableSkillIds || []).filter(Boolean),
     lastAbilityTick:   -(ABILITY_AUTO_TICKS + 1),
@@ -78,21 +98,30 @@ function makeCombatant(snap, side) {
   };
 }
 
+// Matches client's combatManager damage formula
+function baseAttackDamage(attacker, rng) {
+  const diceRoll    = attacker.weaponDamageDice ? rollDice(attacker.weaponDamageDice, rng) : null;
+  const diceAverage = attacker.weaponDamageDice ? getDiceAverage(attacker.weaponDamageDice) : 0;
+  const diceDelta   = diceRoll == null ? 0 : Math.round((diceRoll - diceAverage) * (attacker.weaponDamageMult ?? 1));
+  return Math.max(0, (attacker.damage ?? 0) + diceDelta);
+}
+
 function calcHit(attacker, defender, rng) {
-  const effectiveCrit = Math.max(0, attacker.critChance - defender.critResist);
-  const isCrit = rng() * 100 < effectiveCrit;
-  const rawDmg = attacker.damage * (isCrit ? attacker.critMult : 1);
-  const dmg    = Math.max(1, Math.floor(rawDmg * (100 / (100 + defender.armor))));
+  const base          = baseAttackDamage(attacker, rng);
+  const effectiveCrit = Math.max(0, (attacker.critChance ?? 0) - (defender.critResist ?? 0));
+  const isCrit        = rng() * 100 < effectiveCrit;
+  const rawDmg        = base * (isCrit ? (attacker.critMult ?? 1.5) : 1);
+  const dmg           = Math.max(1, Math.floor(rawDmg * (100 / (100 + (defender.armor ?? 0)))));
   return { dmg, isCrit };
 }
 
 function calcAbilityHit(attacker, defender, rng, abilityIdx) {
-  // Abilities deal 1.5× + 0.3× per index on top of normal crit/armor
-  const mult = 1.5 + (abilityIdx || 0) * 0.3;
-  const effectiveCrit = Math.max(0, attacker.critChance - defender.critResist);
-  const isCrit = rng() * 100 < effectiveCrit;
-  const rawDmg = attacker.damage * mult * (isCrit ? attacker.critMult : 1);
-  const dmg    = Math.max(1, Math.floor(rawDmg * (100 / (100 + defender.armor))));
+  const base          = baseAttackDamage(attacker, rng);
+  const mult          = 1.5 + (abilityIdx || 0) * 0.3;
+  const effectiveCrit = Math.max(0, (attacker.critChance ?? 0) - (defender.critResist ?? 0));
+  const isCrit        = rng() * 100 < effectiveCrit;
+  const rawDmg        = base * mult * (isCrit ? (attacker.critMult ?? 1.5) : 1);
+  const dmg           = Math.max(1, Math.floor(rawDmg * (100 / (100 + (defender.armor ?? 0)))));
   return { dmg, isCrit };
 }
 

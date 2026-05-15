@@ -200,6 +200,9 @@ function createEnemyCombatant(enemyObj, id = 'enemy') {
       weaponFamily: enemyObj.weaponFamily || enemyObj.stats.weaponFamily || null,
       attackType: enemyObj.attackType || enemyObj.stats.attackType || null,
       weaponTags: enemyObj.weaponTags || enemyObj.stats.weaponTags || [],
+      weaponDamageDice: enemyObj.stats?.weaponDamageDice || null,
+      weaponDamageMult: enemyObj.stats?.weaponDamageMult || 1,
+      hitChanceBonus: enemyObj.stats?.hitChanceBonus || 0,
     },
   );
   return {

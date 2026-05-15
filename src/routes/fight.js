@@ -295,10 +295,14 @@ async function fightRoutes(fastify) {
     if (!chRes.rows[0]) return reply.status(404).send({ error: 'Challenge not found or not in prep' });
     const ch = chRes.rows[0];
 
-    // SSE setup
-    reply.raw.setHeader('Content-Type',  'text/event-stream');
-    reply.raw.setHeader('Cache-Control', 'no-cache');
-    reply.raw.setHeader('Connection',    'keep-alive');
+    // SSE setup — CORS headers must be set manually here because we bypass
+    // Fastify's normal response pipeline by writing directly to reply.raw.
+    const origin = request.headers.origin || '*';
+    reply.raw.setHeader('Access-Control-Allow-Origin',      origin);
+    reply.raw.setHeader('Access-Control-Allow-Credentials', 'true');
+    reply.raw.setHeader('Content-Type',      'text/event-stream');
+    reply.raw.setHeader('Cache-Control',     'no-cache');
+    reply.raw.setHeader('Connection',        'keep-alive');
     reply.raw.setHeader('X-Accel-Buffering', 'no');
     reply.raw.flushHeaders();
 

@@ -551,6 +551,8 @@ async function campRoutes(fastify) {
       [challengeId, challengerId, defenderId, winnerId, JSON.stringify(lootPool), atkLevel, defLevel]
     );
     if (!record.rows[0]) {
+      // Lost the concurrent-insert race: wait for the winner to commit then read its result.
+      await new Promise(r => setTimeout(r, 250));
       const existing = await pool.query(`
         SELECT c.challenger_id, c.defender_id, pr.id AS record_id, pr.winner_id, pr.loot_pool
         FROM pvp_records pr

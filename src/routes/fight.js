@@ -296,6 +296,41 @@ function startFight(game) {
 async function fightRoutes(fastify) {
   const verifyToken = createVerifier({ key: async () => process.env.JWT_SECRET });
 
+  // GET /fight/:id/prep — returns snaps + seed so the client can run the fight locally
+  fastify.get('/fight/:id/prep', { preHandler: fastify.authenticate }, async (request, reply) => {
+    const { id: challengeId } = request.params;
+    const { id: userId }      = request.user;
+
+    const chRes = await pool.query(`
+      SELECT ch.*,
+        COALESCE(ch.defender_snap, dc.combat_snap) AS resolved_defender_snap,
+        COALESCE(ch_hero.save_data->'hero'->>'name', cu.username) AS challenger_name,
+        COALESCE(dh_hero.save_data->'hero'->>'name', du.username) AS defender_name
+      FROM pvp_challenges ch
+      LEFT JOIN camps dc ON dc.user_id = ch.defender_id
+      JOIN users cu ON cu.id = ch.challenger_id
+      LEFT JOIN heroes ch_hero ON ch_hero.user_id = ch.challenger_id
+      JOIN users du ON du.id = ch.defender_id
+      LEFT JOIN heroes dh_hero ON dh_hero.user_id = ch.defender_id
+      WHERE ch.id = $1
+        AND (ch.challenger_id = $2 OR ch.defender_id = $2)
+        AND ch.status IN ('prep', 'done')
+    `, [challengeId, userId]);
+
+    if (!chRes.rows[0]) return reply.status(404).send({ error: 'Challenge not found' });
+    const ch = chRes.rows[0];
+
+    return {
+      challengerId:   String(ch.challenger_id),
+      defenderId:     String(ch.defender_id),
+      challengerSnap: ch.challenger_snap      || null,
+      defenderSnap:   ch.resolved_defender_snap || null,
+      fightSeed:      ch.fight_seed != null ? Number(ch.fight_seed) : null,
+      challengerName: ch.challenger_name || 'Challenger',
+      defenderName:   ch.defender_name   || 'Defender',
+    };
+  });
+
   // GET /fight/:id/stream?token=JWT
   // SSE — both challenger and defender connect here to watch the live fight.
   fastify.get('/fight/:id/stream', async (request, reply) => {

@@ -170,7 +170,7 @@ async function campRoutes(fastify) {
   // Called when the player enters an adventure. Creates/replaces the camp.
   fastify.post('/camps', { preHandler: fastify.authenticate }, async (request, reply) => {
     const { id } = request.user;
-    const { adventureId, col, row, combatSnap } = request.body;
+    const { adventureId, col, row } = request.body;
     if (!adventureId || col == null || row == null)
       return reply.status(400).send({ error: 'Missing adventureId, col or row' });
 
@@ -181,7 +181,9 @@ async function campRoutes(fastify) {
     const heroName  = save?.hero?.name || 'Adventurer';
     const heroLevel = xpToLevel(save?.hero?.xp);
     const expiresAt = new Date(Date.now() + DUNGEON_DURATION_MINUTES * 60 * 1000);
-    const snapJson  = combatSnap ? JSON.stringify(combatSnap) : null;
+
+    const { buildCombatSnapFromHero } = await snapModP;
+    const snapJson = JSON.stringify(buildCombatSnapFromHero(save?.hero || {}));
 
     await pool.query(`
       INSERT INTO camps (user_id, hero_name, hero_level, adventure_id, col, row, expires_at, status, combat_snap, in_adventure)

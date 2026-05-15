@@ -265,9 +265,9 @@ async function campRoutes(fastify) {
 
     const camp = campResult.rows[0];
 
-    // Check protection
-    if (camp.protected_until && new Date(camp.protected_until) > new Date())
-      return reply.status(403).send({ error: 'PROTECTED', message: 'That player is protected', protectedUntil: camp.protected_until });
+    // Check protection (disabled for testing)
+    // if (camp.protected_until && new Date(camp.protected_until) > new Date())
+    //   return reply.status(403).send({ error: 'PROTECTED', message: 'That player is protected', protectedUntil: camp.protected_until });
 
     // Overwrite check — if B already has a pending challenge from player A, C intercepts it.
     // A vs C fight starts immediately (prep); B is freed; C vs B challenge is not created.

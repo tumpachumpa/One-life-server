@@ -1,0 +1,1 @@
+ALTER TABLE pvp_challenges ADD COLUMN IF NOT EXISTS fight_seed BIGINT;

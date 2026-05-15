@@ -161,7 +161,8 @@ async function campRoutes(fastify) {
     const { id } = request.user;
     await pool.query(`UPDATE camps SET status = 'done' WHERE user_id = $1`, [id]);
     await pool.query(`
-      UPDATE pvp_challenges SET status = 'prep', prep_started_at = NOW()
+      UPDATE pvp_challenges SET status = 'prep', prep_started_at = NOW(),
+        fight_seed = FLOOR(RANDOM() * 4294967296)::BIGINT
       WHERE defender_id = $1 AND status = 'pending'
     `, [id]);
     return { ok: true };
@@ -173,11 +174,27 @@ async function campRoutes(fastify) {
   fastify.get('/camps/my-status', { preHandler: fastify.authenticate }, async (request) => {
     const { id } = request.user;
 
+    // Auto-transition any pending challenge where the defender no longer has a valid active camp.
+    // This handles disconnects, expiries, and any path that skips DELETE /camps.
+    await pool.query(`
+      UPDATE pvp_challenges
+      SET status = 'prep', prep_started_at = NOW(),
+          fight_seed = FLOOR(RANDOM() * 4294967296)::BIGINT
+      WHERE status = 'pending'
+        AND (defender_id = $1 OR challenger_id = $1)
+        AND NOT EXISTS (
+          SELECT 1 FROM camps
+          WHERE user_id = pvp_challenges.defender_id
+            AND status = 'active'
+            AND expires_at > NOW()
+        )
+    `, [id]);
+
     const [campResult, challengeResult] = await Promise.all([
       pool.query(`SELECT * FROM camps WHERE user_id = $1`, [id]),
       pool.query(`
         SELECT ch.id, ch.challenger_id, ch.defender_id, ch.adventure_id, ch.status,
-               ch.queued_at, ch.prep_started_at, ch.winner_id, ch.challenger_snap,
+               ch.queued_at, ch.prep_started_at, ch.winner_id, ch.challenger_snap, ch.fight_seed,
                cu.username AS challenger_username,
                COALESCE(chero.save_data->'hero'->>'name', cu.username) AS challenger_name,
                du.username AS defender_username,
@@ -192,7 +209,7 @@ async function campRoutes(fastify) {
         LEFT JOIN camps dc ON dc.user_id = ch.defender_id
         WHERE (ch.defender_id = $1 OR ch.challenger_id = $1)
           AND (
-            (ch.status = 'prep' AND ch.queued_at > NOW() - INTERVAL '5 minutes')
+            (ch.status = 'prep' AND ch.prep_started_at > NOW() - INTERVAL '5 minutes')
             OR (ch.status = 'pending' AND ch.queued_at > NOW() - INTERVAL '35 minutes')
             OR (ch.status = 'done' AND ch.queued_at > NOW() - INTERVAL '60 seconds')
             OR (ch.status = 'cancelled' AND ch.queued_at > NOW() - INTERVAL '35 minutes')
@@ -276,15 +293,16 @@ async function campRoutes(fastify) {
         );
         // Create A vs C fight in prep state (C challenges A)
         const fightInsert = await pool.query(`
-          INSERT INTO pvp_challenges (challenger_id, defender_id, adventure_id, status, prep_started_at, challenger_snap)
-          VALUES ($1, $2, $3, 'prep', NOW(), $4)
-          RETURNING id, prep_started_at
+          INSERT INTO pvp_challenges (challenger_id, defender_id, adventure_id, status, prep_started_at, challenger_snap, fight_seed)
+          VALUES ($1, $2, $3, 'prep', NOW(), $4, FLOOR(RANDOM() * 4294967296)::BIGINT)
+          RETURNING id, prep_started_at, fight_seed
         `, [challengerId, prior.challenger_id, camp.adventure_id, snapJson]);
         return {
           ok: true,
           overwrite: true,
           fightChallengeId: fightInsert.rows[0].id,
           prepStartedAt: fightInsert.rows[0].prep_started_at,
+          fightSeed: fightInsert.rows[0].fight_seed != null ? Number(fightInsert.rows[0].fight_seed) : null,
           cancelledChallengerId: String(prior.challenger_id),
           cancelledChallengerName: prior.challenger_name,
         };
@@ -309,15 +327,16 @@ async function campRoutes(fastify) {
       );
       // Create C vs A fight in prep state
       const fightInsert = await pool.query(`
-        INSERT INTO pvp_challenges (challenger_id, defender_id, adventure_id, status, prep_started_at, challenger_snap)
-        VALUES ($1, $2, $3, 'prep', NOW(), $4)
-        RETURNING id, prep_started_at
+        INSERT INTO pvp_challenges (challenger_id, defender_id, adventure_id, status, prep_started_at, challenger_snap, fight_seed)
+        VALUES ($1, $2, $3, 'prep', NOW(), $4, FLOOR(RANDOM() * 4294967296)::BIGINT)
+        RETURNING id, prep_started_at, fight_seed
       `, [challengerId, defenderUserId, camp.adventure_id, snapJson]);
       return {
         ok: true,
         overwrite: true,
         fightChallengeId: fightInsert.rows[0].id,
         prepStartedAt: fightInsert.rows[0].prep_started_at,
+        fightSeed: fightInsert.rows[0].fight_seed != null ? Number(fightInsert.rows[0].fight_seed) : null,
         cancelledChallengerId: String(defenderUserId),
         cancelledChallengerName: camp.hero_name || null,
       };
@@ -339,7 +358,7 @@ async function campRoutes(fastify) {
     }
 
     const existingResult = await pool.query(
-      `SELECT id, status, prep_started_at FROM pvp_challenges
+      `SELECT id, status, prep_started_at, fight_seed FROM pvp_challenges
        WHERE challenger_id = $1 AND defender_id = $2
          AND status IN ('pending','prep')
          AND queued_at > NOW() - INTERVAL '35 minutes'`,
@@ -347,7 +366,13 @@ async function campRoutes(fastify) {
     );
     if (existingResult.rows[0]) {
       const ch = existingResult.rows[0];
-      return { ok: true, challengeId: ch.id, status: ch.status, ...(ch.prep_started_at ? { prepStartedAt: ch.prep_started_at } : {}) };
+      return {
+        ok: true,
+        challengeId: ch.id,
+        status: ch.status,
+        ...(ch.prep_started_at ? { prepStartedAt: ch.prep_started_at } : {}),
+        ...(ch.fight_seed != null ? { fight_seed: Number(ch.fight_seed) } : {}),
+      };
     }
 
     // Cancel any other stale active challenges this challenger has open

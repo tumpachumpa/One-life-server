@@ -461,7 +461,7 @@
         "prepared_food",
         "consumable_ration"
       ],
-      "price": 20,
+      "price": 15,
       "dropWeight": 8,
       "stackable": true,
       "icon": "/assets/items/generated/ration.png"
@@ -1038,19 +1038,122 @@
       "effects": [
         {
           "type": "restore_hp_pct",
-          "value": 40
-        },
-        {
-          "type": "restore_energy",
-          "value": 25
+          "value": 20
         }
       ],
       "tags": [
         "camp",
         "campfire"
       ],
-      "price": 60,
+      "price": 100,
       "dropWeight": 3,
+      "stackable": true,
+      "icon": "/assets/items/generated/campfire.png"
+    },
+    {
+      "id": "pine_campfire",
+      "name": "Pine Campfire",
+      "size": [
+        2,
+        2
+      ],
+      "type": "consumable",
+      "family": "camp_supply",
+      "effects": [
+        {
+          "type": "restore_hp_pct",
+          "value": 40
+        }
+      ],
+      "tags": [
+        "camp",
+        "campfire"
+      ],
+      "price": 150,
+      "stackable": true,
+      "icon": "/assets/items/generated/campfire.png"
+    },
+    {
+      "id": "oak_campfire",
+      "name": "Oak Campfire",
+      "size": [
+        2,
+        2
+      ],
+      "type": "consumable",
+      "family": "camp_supply",
+      "effects": [
+        {
+          "type": "restore_hp_pct",
+          "value": 60
+        },
+        {
+          "type": "active_buff",
+          "stats": { "maxHpPct": 5 },
+          "combats": 1
+        }
+      ],
+      "tags": [
+        "camp",
+        "campfire"
+      ],
+      "price": 250,
+      "stackable": true,
+      "icon": "/assets/items/generated/campfire.png"
+    },
+    {
+      "id": "ironwood_campfire",
+      "name": "Ironwood Campfire",
+      "size": [
+        2,
+        2
+      ],
+      "type": "consumable",
+      "family": "camp_supply",
+      "effects": [
+        {
+          "type": "restore_hp_pct",
+          "value": 80
+        },
+        {
+          "type": "active_buff",
+          "stats": { "maxHpPct": 7 },
+          "combats": 1
+        }
+      ],
+      "tags": [
+        "camp",
+        "campfire"
+      ],
+      "price": 400,
+      "stackable": true,
+      "icon": "/assets/items/generated/campfire.png"
+    },
+    {
+      "id": "ancient_campfire",
+      "name": "Ancient Campfire",
+      "size": [
+        2,
+        2
+      ],
+      "type": "consumable",
+      "family": "camp_supply",
+      "effects": [
+        {
+          "type": "restore_hp_pct",
+          "value": 100
+        },
+        {
+          "type": "active_buff",
+          "stats": { "maxHpPct": 10 },
+          "combats": 1
+        }
+      ],
+      "tags": [
+        "camp",
+        "campfire"
+      ],
+      "price": 600,
       "stackable": true,
       "icon": "/assets/items/generated/campfire.png"
     },
@@ -1070,6 +1173,50 @@
         "crafting_material"
       ],
       "price": 1,
+      "stackable": true,
+      "icon": "/assets/items/generated/wood.png"
+    },
+    {
+      "id": "pine_wood",
+      "name": "Pine Wood",
+      "size": [1, 1],
+      "type": "resource",
+      "family": "raw_material",
+      "tags": ["resource", "wood", "fuel", "crafting_material"],
+      "price": 3,
+      "stackable": true,
+      "icon": "/assets/items/generated/wood.png"
+    },
+    {
+      "id": "oak_wood",
+      "name": "Oak Wood",
+      "size": [1, 1],
+      "type": "resource",
+      "family": "raw_material",
+      "tags": ["resource", "wood", "fuel", "crafting_material"],
+      "price": 8,
+      "stackable": true,
+      "icon": "/assets/items/generated/wood.png"
+    },
+    {
+      "id": "ironwood",
+      "name": "Ironwood",
+      "size": [1, 1],
+      "type": "resource",
+      "family": "raw_material",
+      "tags": ["resource", "wood", "fuel", "crafting_material"],
+      "price": 18,
+      "stackable": true,
+      "icon": "/assets/items/generated/wood.png"
+    },
+    {
+      "id": "ancient_heartwood",
+      "name": "Ancient Heartwood",
+      "size": [1, 1],
+      "type": "resource",
+      "family": "raw_material",
+      "tags": ["resource", "wood", "fuel", "crafting_material"],
+      "price": 45,
       "stackable": true,
       "icon": "/assets/items/generated/wood.png"
     },
@@ -1242,6 +1389,17 @@
         "crafting_material"
       ],
       "price": 5,
+      "stackable": true,
+      "icon": "/assets/items/generated/yarrow.png"
+    },
+    {
+      "id": "silverleaf",
+      "name": "Silverleaf",
+      "size": [1, 1],
+      "type": "resource",
+      "family": "herb",
+      "tags": ["resource", "herb", "rare_herb", "crafting_material"],
+      "price": 25,
       "stackable": true,
       "icon": "/assets/items/generated/yarrow.png"
     },

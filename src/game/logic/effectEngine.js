@@ -107,6 +107,8 @@ export function collectActiveFoodBuffEffects(hero) {
     for (const [stat, value] of Object.entries(buff.stats || {})) {
       if (stat === "attackSpeedPct") {
         effects.push({ type: "attack_speed_pct", value, source: `food_${buff.itemId}` });
+      } else if (stat === "maxHpPct") {
+        effects.push({ type: "max_hp_pct", value, source: `food_${buff.itemId}` });
       } else {
         effects.push({ type: "stat_bonus", stat, value, source: `food_${buff.itemId}` });
       }

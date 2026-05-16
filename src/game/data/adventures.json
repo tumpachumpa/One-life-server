@@ -164,12 +164,52 @@
     {
       "id": "dodge_test_region",
       "name": "Dodge Test Range",
-      "x": 20,
-      "y": 45,
+      "x": 84,
+      "y": 16,
       "devOnly": true,
       "adventures": [
         "dodge_test"
       ]
+    },
+    {
+      "id": "thornhaven",
+      "name": "Thornhaven",
+      "x": 35,
+      "y": 78,
+      "cityNode": true,
+      "footprint": [
+        {"dc":1,"dr":0},{"dc":2,"dr":0},{"dc":3,"dr":0},
+        {"dc":0,"dr":1},{"dc":1,"dr":1},{"dc":2,"dr":1},{"dc":3,"dr":1},
+        {"dc":0,"dr":2},{"dc":1,"dr":2},{"dc":2,"dr":2},{"dc":3,"dr":2},
+        {"dc":0,"dr":3},{"dc":1,"dr":3},{"dc":2,"dr":3},{"dc":3,"dr":3}
+      ]
+    },
+    {
+      "id": "pine_forest",
+      "name": "Pine Forest",
+      "x": 22,
+      "y": 47,
+      "gatheringNode": true,
+      "availableJobs": ["gather_wood"],
+      "footprint": [{"dc":1,"dr":0},{"dc":0,"dr":1},{"dc":1,"dr":1}]
+    },
+    {
+      "id": "berry_meadow",
+      "name": "Berry Meadow",
+      "x": 60,
+      "y": 80,
+      "gatheringNode": true,
+      "availableJobs": ["gather_food"],
+      "footprint": [{"dc":1,"dr":0},{"dc":0,"dr":1},{"dc":1,"dr":1}]
+    },
+    {
+      "id": "herb_hollow",
+      "name": "Herb Hollow",
+      "x": 46,
+      "y": 62,
+      "gatheringNode": true,
+      "availableJobs": ["gather_herbs"],
+      "footprint": [{"dc":1,"dr":0},{"dc":0,"dr":1},{"dc":1,"dr":1}]
     }
   ],
   "adventures": [

@@ -578,6 +578,8 @@ export function calcStats(hero) {
     }
   }
   stats.maxHp = (stats.maxHp || 0) + sumEffect(effects, "max_hp");
+  const maxHpPctBonus = sumEffect(effects, "max_hp_pct");
+  if (maxHpPctBonus) stats.maxHp = Math.max(1, Math.round(stats.maxHp * (1 + maxHpPctBonus / 100)));
   stats.armor = Math.max(0, Math.floor(((stats.armor || 0) + sumEffect(effects, "armor")) * (1 + sumEffect(effects, "armor_pct") / 100)));
 
   stats.fistDamage = Math.max(0, sumEffect(effects, "fist_damage"));

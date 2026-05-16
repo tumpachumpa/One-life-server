@@ -81,7 +81,10 @@
       "name": "Wolf Glade",
       "x": 61.3,
       "y": 72,
-      "staminaCost": 5,
+      "singleEncounter": true,
+      "enemyId": "wolf",
+      "lootPoolId": "ancient_forest",
+      "charges": { "max": 5, "rechargeSeconds": 120, "campRequired": false },
       "adventures": [
         "wolf_glade_encounter"
       ]
@@ -91,7 +94,10 @@
       "name": "Blood Rat Den",
       "x": 35.5,
       "y": 72,
-      "staminaCost": 5,
+      "singleEncounter": true,
+      "enemyId": "blood_rat",
+      "lootPoolId": "ancient_forest",
+      "charges": { "max": 5, "rechargeSeconds": 120, "campRequired": false },
       "adventures": [
         "blood_rat_encounter"
       ]
@@ -101,7 +107,10 @@
       "name": "Boar Hollow",
       "x": 51.6,
       "y": 88,
-      "staminaCost": 5,
+      "singleEncounter": true,
+      "enemyId": "boar",
+      "lootPoolId": "ancient_forest",
+      "charges": { "max": 5, "rechargeSeconds": 120, "campRequired": false },
       "adventures": [
         "boar_encounter"
       ]
@@ -111,7 +120,10 @@
       "name": "Crow Thicket",
       "x": 67.7,
       "y": 56,
-      "staminaCost": 5,
+      "singleEncounter": true,
+      "enemyId": "crow_swarm",
+      "lootPoolId": "ancient_forest",
+      "charges": { "max": 5, "rechargeSeconds": 120, "campRequired": false },
       "adventures": [
         "crow_encounter"
       ]
@@ -121,7 +133,10 @@
       "name": "Bandit Trail",
       "x": 71,
       "y": 80,
-      "staminaCost": 5,
+      "singleEncounter": true,
+      "enemyId": "forest_bandit",
+      "lootPoolId": "ancient_forest",
+      "charges": { "max": 5, "rechargeSeconds": 120, "campRequired": false },
       "adventures": [
         "bandit_encounter"
       ]

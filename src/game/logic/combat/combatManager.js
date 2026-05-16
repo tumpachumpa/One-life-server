@@ -3633,6 +3633,9 @@ function applyEnemyBleed(enemy, tick, log, attacker = null, procState = null) {
 }
 
 function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, hero, enemy, heroResources, heroConditions, heroWounds, procState = null, heroProcNodes = [], opts = {}) {
+  // Secondary chance rolls (relics, enchantments, double-hit, bleed) use the
+  // isolated proc RNG so they don't shift the shared combat RNG sequence.
+  const procRng = procState?.procRng || rng;
   const defenderStunBefore = defender?.stunUntilTick ?? -1;
   const attackerIsHero = attacker?.id === 'hero' && attacker?.isPlayer;
   const attackerIsAlly = !!attacker?.isAlly;
@@ -3830,7 +3833,7 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
       tryAddRapidFireCritCharge(hero, action);
       if (action.isCrit) grantCombatTrigger(hero, 'after_crit');
       grantCombatTrigger(defender, 'after_block');
-      tryApplyOnHitEffects(hero, enemy, tick, log, rng, null, { ...action, serratedEffect: null }, { allowBleed: applied.damage > 0, allowPoison: applied.damage > 0, procState });
+      tryApplyOnHitEffects(hero, enemy, tick, log, rng, null, { ...action, serratedEffect: null }, { allowBleed: applied.damage > 0, allowPoison: applied.damage > 0, procState, procRng });
       tryCounter(enemy, hero, tick, log, rng, hero, enemy);
       consumeNextHitEffects(hero);
       if (applied.damage > 0) trackPetFlankingHit(hero, hero, procState, tick, log, defender);
@@ -3853,7 +3856,7 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
       tryAddRapidFireCritCharge(attacker, action);
       if (action.isCrit) grantCombatTrigger(attacker, 'after_crit');
       grantCombatTrigger(defender, 'after_block');
-      tryApplyOnHitEffects(attacker, defender, tick, log, rng, null, { ...action, serratedEffect: null }, { allowBleed: applied.damage > 0, allowPoison: applied.damage > 0, procState });
+      tryApplyOnHitEffects(attacker, defender, tick, log, rng, null, { ...action, serratedEffect: null }, { allowBleed: applied.damage > 0, allowPoison: applied.damage > 0, procState, procRng });
       tryCounter(defender, attacker, tick, log, rng, hero, defender);
       consumeNextHitEffects(attacker);
       if (applied.damage > 0) {
@@ -3875,7 +3878,7 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
       tryAddRapidFireCritCharge(attacker, action);
       grantCombatTrigger(defender, 'after_block');
       applyLifeDrain(attacker, applied.damage, tick, log, hero, attacker);
-      tryApplyOnHitEffects(attacker, defender, tick, log, rng, null, action, { allowBleed: applied.damage > 0, allowPoison: applied.damage > 0 });
+      tryApplyOnHitEffects(attacker, defender, tick, log, rng, null, action, { allowBleed: applied.damage > 0, allowPoison: applied.damage > 0, procRng });
       tryCounter(defender, attacker, tick, log, rng, hero, attacker);
     } else {
       hero.hp = Math.max(0, hero.hp - result.damage);
@@ -3896,7 +3899,7 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
       }
       tryShieldUpCounter(hero, enemy, result, tick, log, hero, enemy);
       applyLifeDrain(attacker, result.damage, tick, log, hero, enemy);
-      tryApplyOnHitEffects(enemy, hero, tick, log, rng, heroConditions, action, { allowBleed: result.damage > 0, allowPoison: result.damage > 0 });
+      tryApplyOnHitEffects(enemy, hero, tick, log, rng, heroConditions, action, { allowBleed: result.damage > 0, allowPoison: result.damage > 0, procRng });
       tryCounter(hero, enemy, tick, log, rng, hero, enemy);
       maybeInflictDeepCut(enemy, hero, result.damage, false, tick, log, heroWounds, rng);
     }
@@ -3928,8 +3931,8 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
       tryAddBerserkerCritCharge(hero, action);
       tryAddRapidFireCritCharge(hero, action);
       if (action.isCrit) grantCombatTrigger(hero, 'after_crit');
-      tryApplyOnHitEffects(hero, enemy, tick, log, rng, null, { ...action, serratedEffect: null }, { allowBleed: applied.damage > 0, allowPoison: applied.damage > 0, procState });
-      if (applied.damage > 0 && (action.serratedBleedChancePct || 0) > 0 && enemy.hp > 0 && rng() * 100 < action.serratedBleedChancePct) {
+      tryApplyOnHitEffects(hero, enemy, tick, log, rng, null, { ...action, serratedEffect: null }, { allowBleed: applied.damage > 0, allowPoison: applied.damage > 0, procState, procRng });
+      if (applied.damage > 0 && (action.serratedBleedChancePct || 0) > 0 && enemy.hp > 0 && procRng() * 100 < action.serratedBleedChancePct) {
         applyEnemyBleed(enemy, tick, log, hero, procState);
       }
       tryCounter(enemy, hero, tick, log, rng, hero, enemy);
@@ -3958,7 +3961,7 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
       if (applied.damage > 0) trackPetFlankingHit(hero, hero, procState, tick, log, defender);
       if (!action.skipDoubleHit && enemy.hp > 0) {
         const doubleHitChance = getDoubleHitChancePct(hero);
-        if (doubleHitChance > 0 && rng() * 100 < doubleHitChance) {
+        if (doubleHitChance > 0 && procRng() * 100 < doubleHitChance) {
           const bonusAttack = {
             ...createBasicAttackImpact(hero, enemy, tick, rng, ACTION.BASIC_ATTACK, opts),
             skipDoubleHit: true,
@@ -3974,7 +3977,7 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
         for (const relic of procState.activeRelics || []) {
           const p = relic?.relicPassive;
           if (!p) continue;
-          if (p.type === 'armor_reduce_on_hit' && rng() * 100 < (p.chance || 0)) {
+          if (p.type === 'armor_reduce_on_hit' && procRng() * 100 < (p.chance || 0)) {
             const dur = Math.round((p.durationSecs || 4) * 1000 / TICK_MS);
             enemy.activeEffects = (enemy.activeEffects || []).filter(e => e.type !== 'armor_debuff_relic');
             enemy.activeEffects.push({ type: 'armor_debuff_relic', value: p.reduction || 3, remainingTicks: dur, label: 'Infernal Fang' });
@@ -3990,12 +3993,12 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
         // Enchantment procs (fired once per auto-attack hit)
         for (const e of procState.enchantmentEffects || []) {
           if (!e?.type || !e?.chance) continue;
-          if (rng() * 100 >= e.chance) continue;
+          if (procRng() * 100 >= e.chance) continue;
           if (e.type === 'fire_proc_on_hit') {
             const dmg = Math.max(1, e.damage || Math.floor(((e.minDamage || 0) + (e.maxDamage || 0)) / 2));
             enemy.hp = Math.max(0, enemy.hp - dmg);
             log.push(makeEntry(tick, 'hero', 'hit', `Ember: ${dmg} fire damage!`, dmg, hero.hp, enemy.hp, { element: 'fire' }));
-            if (e.burnGuaranteed || (e.burnChanceBonus && rng() * 100 < e.burnChanceBonus)) {
+            if (e.burnGuaranteed || (e.burnChanceBonus && procRng() * 100 < e.burnChanceBonus)) {
               const burnTicks = Math.round(((e.burnDurationSecs || 2) * 1000) / TICK_MS);
               enemy.activeEffects = (enemy.activeEffects || []).filter(eff => !(eff.type === 'burning' && eff.source === 'enchant_ember'));
               enemy.activeEffects.push({ type: 'burning', damagePctPerTick: e.burnDamagePct || 3, remainingTicks: burnTicks, source: 'enchant_ember', element: 'fire' });
@@ -4025,7 +4028,7 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
       tryAddBerserkerCritCharge(attacker, action);
       tryAddRapidFireCritCharge(attacker, action);
       if (action.isCrit) grantCombatTrigger(attacker, 'after_crit');
-      tryApplyOnHitEffects(attacker, defender, tick, log, rng, null, { ...action, serratedEffect: null }, { allowBleed: applied.damage > 0, allowPoison: applied.damage > 0, procState });
+      tryApplyOnHitEffects(attacker, defender, tick, log, rng, null, { ...action, serratedEffect: null }, { allowBleed: applied.damage > 0, allowPoison: applied.damage > 0, procState, procRng });
       tryCounter(defender, attacker, tick, log, rng, hero, defender);
       consumeNextHitEffects(attacker);
       if (applied.damage > 0) {
@@ -4054,7 +4057,7 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
       applyLifeDrain(attacker, applied.damage, tick, log, hero, attacker);
       tryAddBerserkerCritCharge(attacker, action);
       tryAddRapidFireCritCharge(attacker, action);
-      tryApplyOnHitEffects(attacker, defender, tick, log, rng, null, action, { allowBleed: applied.damage > 0, allowPoison: applied.damage > 0 });
+      tryApplyOnHitEffects(attacker, defender, tick, log, rng, null, action, { allowBleed: applied.damage > 0, allowPoison: applied.damage > 0, procRng });
       tryCounter(defender, attacker, tick, log, rng, hero, attacker);
     } else {
       let incomingDamage = result.damage;
@@ -4089,7 +4092,7 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
       applyLifeDrain(attacker, incomingDamage, tick, log, hero, enemy);
       tryAddBerserkerCritCharge(enemy, action);
       tryAddRapidFireCritCharge(enemy, action);
-      tryApplyOnHitEffects(enemy, hero, tick, log, rng, heroConditions, action);
+      tryApplyOnHitEffects(enemy, hero, tick, log, rng, heroConditions, action, { procRng });
       tryCounter(hero, enemy, tick, log, rng, hero, enemy);
       maybeInflictDeepCut(enemy, hero, incomingDamage, !!action.isCrit, tick, log, heroWounds, rng);
       if (procState) {
@@ -4337,10 +4340,13 @@ function getOnHitEffects(attacker, action = null) {
 function tryApplyOnHitEffects(attacker, defender, tick, log, rng, heroConditions, action = null, options = {}) {
   const targetMeta = { targetId: defender?.id || null };
   const attackerIsPlayerSide = isPlayerSideCombatant(attacker);
+  // Use isolated proc RNG when provided so on-hit effect chance-rolls don't
+  // shift the shared combat RNG (important for duel-mode determinism).
+  const procRng = options.procRng || rng;
   for (const effect of getOnHitEffects(attacker, action)) {
     if (effect.type === 'bleed_on_hit' && options.allowBleed === false) continue;
     if (effect.type === 'poison_on_hit' && options.allowPoison === false) continue;
-    if (rng() * 100 >= (effect.chance || 0)) continue;
+    if (procRng() * 100 >= (effect.chance || 0)) continue;
     if (effect.type === 'daze_on_hit') {
       defender.activeEffects = (defender.activeEffects || []).filter(active => active.type !== 'daze');
       defender.activeEffects.push({

@@ -1492,6 +1492,12 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
   );
   const heroProcNodes = state.heroProcNodes || [];
   const procState = state.procState ? { ...state.procState, onceFiredIds: [...(state.procState.onceFiredIds || [])] } : createInitialProcState(hero.hp);
+  // In duel mode a separate proc RNG is provided so proc chance-rolls don't
+  // consume from the shared combat RNG (which must stay in sync on both screens).
+  const procRngBySide = options.procRngBySide || {};
+  if (typeof procRngBySide.player === 'function' && !procState.procRng) {
+    procState.procRng = procRngBySide.player;
+  }
   syncHeroCombatResources(heroResources, procState);
   procState.parryCountThisTick = 0;
   procState.heroAttackedThisTick = false;
@@ -5115,6 +5121,10 @@ function applyProcEffect(effect, ctx, procState, heroProcNodes, hero, enemy, tic
 
 function fireProcTrigger(trigger, ctx, procState, heroProcNodes, hero, enemy, tick, log, rng) {
   if (!heroProcNodes || !heroProcNodes.length || !procState) return;
+  // Use the isolated proc RNG when available so proc chance-rolls don't consume
+  // from the shared combat RNG.  This keeps hit/miss/damage sequences identical
+  // on both screens in duel mode even when proc triggers fire asymmetrically.
+  const procRng = procState.procRng || rng;
   for (const node of heroProcNodes) {
     if (!node.proc || node.proc.trigger !== trigger) continue;
     if (node.proc.held_ticks != null && (ctx.heldTicks || 0) < node.proc.held_ticks) continue;
@@ -5129,11 +5139,11 @@ function fireProcTrigger(trigger, ctx, procState, heroProcNodes, hero, enemy, ti
     }
     if (!checkProcCondition(node.proc.condition, nodeCtx, procState, hero, enemy)) continue;
     const chance = node.proc.chance ?? 100;
-    if (chance < 100 && rng() * 100 >= chance) continue;
+    if (chance < 100 && procRng() * 100 >= chance) continue;
     if (node.proc.condition?.once_per_combat) {
       procState.onceFiredIds = [...procState.onceFiredIds, node.id];
     }
-    applyProcEffect(node.proc.effect, nodeCtx, procState, heroProcNodes, hero, enemy, tick, log, rng);
+    applyProcEffect(node.proc.effect, nodeCtx, procState, heroProcNodes, hero, enemy, tick, log, procRng);
   }
 }
 

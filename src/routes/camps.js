@@ -174,7 +174,7 @@ async function campRoutes(fastify) {
     if (!adventureId || col == null || row == null)
       return reply.status(400).send({ error: 'Missing adventureId, col or row' });
 
-    const heroResult = await pool.query('SELECT save_data FROM heroes WHERE user_id = $1', [id]);
+    const heroResult = await pool.query('SELECT save_data FROM heroes WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 1', [id]);
     const save = heroResult.rows[0]?.save_data;
     if (!save) return reply.status(400).send({ error: 'No hero found' });
 
@@ -321,8 +321,8 @@ async function campRoutes(fastify) {
 
     // Load both saves for level check
     const [atkResult, defResult] = await Promise.all([
-      pool.query('SELECT save_data FROM heroes WHERE user_id = $1', [challengerId]),
-      pool.query('SELECT save_data FROM heroes WHERE user_id = $1', [defenderUserId]),
+      pool.query('SELECT save_data FROM heroes WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 1', [challengerId]),
+      pool.query('SELECT save_data FROM heroes WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 1', [defenderUserId]),
     ]);
     if (!atkResult.rows[0]) return reply.status(400).send({ error: 'No hero found' });
     if (!defResult.rows[0]) return reply.status(400).send({ error: 'Defender has no hero' });
@@ -634,8 +634,8 @@ async function campRoutes(fastify) {
     const loserId   = attackerWon ? defenderId   : challengerId;
 
     const [atkSaveResult, defSaveResult] = await Promise.all([
-      pool.query('SELECT save_data FROM heroes WHERE user_id = $1', [challengerId]),
-      pool.query('SELECT save_data FROM heroes WHERE user_id = $1', [defenderId]),
+      pool.query('SELECT save_data FROM heroes WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 1', [challengerId]),
+      pool.query('SELECT save_data FROM heroes WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 1', [defenderId]),
     ]);
     const atkSave = atkSaveResult.rows[0]?.save_data;
     const defSave = defSaveResult.rows[0]?.save_data;
@@ -712,7 +712,7 @@ async function campRoutes(fastify) {
     const loserId     = String(rec.winner_id) === String(rec.attacker_id) ? rec.defender_id : rec.attacker_id;
     const lootPool    = rec.loot_pool || [];
 
-    const loserResult = await pool.query('SELECT save_data FROM heroes WHERE user_id = $1', [loserId]);
+    const loserResult = await pool.query('SELECT save_data FROM heroes WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 1', [loserId]);
     const loserSave   = loserResult.rows[0]?.save_data;
     const loserName   = loserSave?.hero?.name || 'Adventurer';
 

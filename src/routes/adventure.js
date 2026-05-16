@@ -45,7 +45,7 @@ async function adventureRoutes(fastify) {
     );
 
     // Load the hero's saved adventure progress
-    const heroResult = await pool.query('SELECT save_data FROM heroes WHERE user_id = $1', [userId]);
+    const heroResult = await pool.query('SELECT save_data FROM heroes WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 1', [userId]);
     const saveData = heroResult.rows[0]?.save_data || {};
     const adventureProgress = saveData.adventureProgress || {};
     const existing = adventureProgress[adventureId] || null;
@@ -183,7 +183,7 @@ async function adventureRoutes(fastify) {
     const enemy = encounter?.enemy || null;
 
     // Load hero for hunger / overlevel XP multipliers
-    const heroResult = await pool.query('SELECT save_data FROM heroes WHERE user_id = $1', [userId]);
+    const heroResult = await pool.query('SELECT save_data FROM heroes WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 1', [userId]);
     const hero = heroResult.rows[0]?.save_data?.hero || {};
 
     let xpGained   = 0;
@@ -281,7 +281,7 @@ async function adventureRoutes(fastify) {
 
     // Client applies XP/gold/loot locally and saves via POST /hero.
     // Server only updates adventureProgress (difficulty unlocks, boss completion).
-    const heroResult = await pool.query('SELECT save_data FROM heroes WHERE user_id = $1', [userId]);
+    const heroResult = await pool.query('SELECT save_data FROM heroes WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 1', [userId]);
     const saveData   = heroResult.rows[0]?.save_data || {};
 
     const advProgress    = saveData.adventureProgress || {};

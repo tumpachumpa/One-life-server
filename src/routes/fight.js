@@ -236,8 +236,8 @@ async function finishGame(game) {
 
   try {
     const [atkSaveRes, defSaveRes] = await Promise.all([
-      pool.query('SELECT save_data FROM heroes WHERE user_id = $1', [challengerId]),
-      pool.query('SELECT save_data FROM heroes WHERE user_id = $1', [defenderId]),
+      pool.query('SELECT save_data FROM heroes WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 1', [challengerId]),
+      pool.query('SELECT save_data FROM heroes WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 1', [defenderId]),
     ]);
     const atkSave    = atkSaveRes.rows[0]?.save_data;
     const defSave    = defSaveRes.rows[0]?.save_data;

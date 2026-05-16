@@ -4361,7 +4361,11 @@ function tryApplyOnHitEffects(attacker, defender, tick, log, rng, heroConditions
     if (effect.type === 'bleed_on_hit' && options.allowBleed === false) continue;
     if (effect.type === 'poison_on_hit' && options.allowPoison === false) continue;
     if (!(effect.chance > 0)) continue;
-    if (rng() * 100 >= effect.chance) continue;
+    // Threshold-granted effects (_threshold: true) come from hero.passiveEffects rebuilt
+    // each tick by applyThresholdEffects — they don't exist in the enemy object on the
+    // other duel screen. Route them through procRng (isolated) so they don't shift the
+    // shared combat RNG. Static effects from combatSnap use shared rng() for determinism.
+    if ((effect._threshold ? procRng : rng)() * 100 >= effect.chance) continue;
     if (effect.type === 'daze_on_hit') {
       defender.activeEffects = (defender.activeEffects || []).filter(active => active.type !== 'daze');
       defender.activeEffects.push({
@@ -5248,7 +5252,7 @@ function applyThresholdEffects(heroProcNodes, procState, hero, enemy, allies = [
     if (replacedThresholdIds.has(node.id)) continue;
     procState.activeThresholdIds.push(node.id);
     hero.passiveEffects.push({ type: 'threshold_status', statusType: node.id });
-    hero.passiveEffects.push(...effects);
+    hero.passiveEffects.push(...effects.map(e => (e.chance > 0 ? { ...e, _threshold: true } : e)));
   }
   applyRelentlessPressure(hero, enemy, allies);
   applyPetAliveDamageReduction(hero, allies);

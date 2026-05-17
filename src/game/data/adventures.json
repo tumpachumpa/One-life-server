@@ -84,7 +84,11 @@
       "singleEncounter": true,
       "enemyId": "wolf",
       "lootPoolId": "ancient_forest",
-      "charges": { "max": 5, "rechargeSeconds": 120, "campRequired": false },
+      "charges": {
+        "max": 5,
+        "rechargeSeconds": 120,
+        "campRequired": false
+      },
       "adventures": [
         "wolf_glade_encounter"
       ]
@@ -97,7 +101,11 @@
       "singleEncounter": true,
       "enemyId": "blood_rat",
       "lootPoolId": "ancient_forest",
-      "charges": { "max": 5, "rechargeSeconds": 120, "campRequired": false },
+      "charges": {
+        "max": 5,
+        "rechargeSeconds": 120,
+        "campRequired": false
+      },
       "adventures": [
         "blood_rat_encounter"
       ]
@@ -110,7 +118,11 @@
       "singleEncounter": true,
       "enemyId": "boar",
       "lootPoolId": "ancient_forest",
-      "charges": { "max": 5, "rechargeSeconds": 120, "campRequired": false },
+      "charges": {
+        "max": 5,
+        "rechargeSeconds": 120,
+        "campRequired": false
+      },
       "adventures": [
         "boar_encounter"
       ]
@@ -123,7 +135,11 @@
       "singleEncounter": true,
       "enemyId": "crow_swarm",
       "lootPoolId": "ancient_forest",
-      "charges": { "max": 5, "rechargeSeconds": 120, "campRequired": false },
+      "charges": {
+        "max": 5,
+        "rechargeSeconds": 120,
+        "campRequired": false
+      },
       "adventures": [
         "crow_encounter"
       ]
@@ -136,7 +152,11 @@
       "singleEncounter": true,
       "enemyId": "forest_bandit",
       "lootPoolId": "ancient_forest",
-      "charges": { "max": 5, "rechargeSeconds": 120, "campRequired": false },
+      "charges": {
+        "max": 5,
+        "rechargeSeconds": 120,
+        "campRequired": false
+      },
       "adventures": [
         "bandit_encounter"
       ]
@@ -178,10 +198,66 @@
       "y": 78,
       "cityNode": true,
       "footprint": [
-        {"dc":1,"dr":0},{"dc":2,"dr":0},{"dc":3,"dr":0},
-        {"dc":0,"dr":1},{"dc":1,"dr":1},{"dc":2,"dr":1},{"dc":3,"dr":1},
-        {"dc":0,"dr":2},{"dc":1,"dr":2},{"dc":2,"dr":2},{"dc":3,"dr":2},
-        {"dc":0,"dr":3},{"dc":1,"dr":3},{"dc":2,"dr":3},{"dc":3,"dr":3}
+        {
+          "dc": 1,
+          "dr": 0
+        },
+        {
+          "dc": 2,
+          "dr": 0
+        },
+        {
+          "dc": 3,
+          "dr": 0
+        },
+        {
+          "dc": 0,
+          "dr": 1
+        },
+        {
+          "dc": 1,
+          "dr": 1
+        },
+        {
+          "dc": 2,
+          "dr": 1
+        },
+        {
+          "dc": 3,
+          "dr": 1
+        },
+        {
+          "dc": 0,
+          "dr": 2
+        },
+        {
+          "dc": 1,
+          "dr": 2
+        },
+        {
+          "dc": 2,
+          "dr": 2
+        },
+        {
+          "dc": 3,
+          "dr": 2
+        },
+        {
+          "dc": 0,
+          "dr": 3
+        },
+        {
+          "dc": 1,
+          "dr": 3
+        },
+        {
+          "dc": 2,
+          "dr": 3
+        },
+        {
+          "dc": 3,
+          "dr": 3
+        }
       ]
     },
     {
@@ -190,8 +266,23 @@
       "x": 22,
       "y": 47,
       "gatheringNode": true,
-      "availableJobs": ["gather_wood"],
-      "footprint": [{"dc":1,"dr":0},{"dc":0,"dr":1},{"dc":1,"dr":1}]
+      "availableJobs": [
+        "gather_wood"
+      ],
+      "footprint": [
+        {
+          "dc": 1,
+          "dr": 0
+        },
+        {
+          "dc": 0,
+          "dr": 1
+        },
+        {
+          "dc": 1,
+          "dr": 1
+        }
+      ]
     },
     {
       "id": "berry_meadow",
@@ -199,8 +290,23 @@
       "x": 60,
       "y": 80,
       "gatheringNode": true,
-      "availableJobs": ["gather_food"],
-      "footprint": [{"dc":1,"dr":0},{"dc":0,"dr":1},{"dc":1,"dr":1}]
+      "availableJobs": [
+        "gather_food"
+      ],
+      "footprint": [
+        {
+          "dc": 1,
+          "dr": 0
+        },
+        {
+          "dc": 0,
+          "dr": 1
+        },
+        {
+          "dc": 1,
+          "dr": 1
+        }
+      ]
     },
     {
       "id": "herb_hollow",
@@ -208,8 +314,23 @@
       "x": 46,
       "y": 62,
       "gatheringNode": true,
-      "availableJobs": ["gather_herbs"],
-      "footprint": [{"dc":1,"dr":0},{"dc":0,"dr":1},{"dc":1,"dr":1}]
+      "availableJobs": [
+        "gather_herbs"
+      ],
+      "footprint": [
+        {
+          "dc": 1,
+          "dr": 0
+        },
+        {
+          "dc": 0,
+          "dr": 1
+        },
+        {
+          "dc": 1,
+          "dr": 1
+        }
+      ]
     }
   ],
   "adventures": [
@@ -234,7 +355,9 @@
               "x": 12,
               "y": 50,
               "repeatable": true,
-              "next": ["af_boar_1"],
+              "next": [
+                "af_boar_1"
+              ],
               "paths": {},
               "event": {
                 "id": "forest_entrance_event",
@@ -257,7 +380,9 @@
               "x": 30,
               "y": 30,
               "enemyId": "boar",
-              "next": ["af_wolf_1"],
+              "next": [
+                "af_wolf_1"
+              ],
               "paths": {}
             },
             {
@@ -266,7 +391,9 @@
               "x": 50,
               "y": 55,
               "enemyId": "white_wolf",
-              "next": ["af_boar_2"],
+              "next": [
+                "af_boar_2"
+              ],
               "paths": {}
             },
             {
@@ -275,7 +402,9 @@
               "x": 67,
               "y": 30,
               "enemyId": "boar",
-              "next": ["af_armored_bear"],
+              "next": [
+                "af_armored_bear"
+              ],
               "paths": {}
             },
             {
@@ -284,7 +413,9 @@
               "x": 80,
               "y": 60,
               "enemyId": "armored_bear",
-              "next": ["af_boss"],
+              "next": [
+                "af_boss"
+              ],
               "paths": {}
             },
             {
@@ -944,12 +1075,12 @@
               "id": "warg_pack_2",
               "type": "combat",
               "encounterRole": "multi",
-                "difficulty": "hard",
-                "enemyId": "warg",
-                "enemyIds": [
-                  "orc_patrol",
-                  "warg"
-                ],
+              "difficulty": "hard",
+              "enemyId": "warg",
+              "enemyIds": [
+                "orc_patrol",
+                "warg"
+              ],
               "x": 66,
               "y": 36,
               "next": [
@@ -984,7 +1115,7 @@
               "bossId": "orc_general",
               "bossIds": [
                 "orc_general",
-                "lich"
+                "orc_shaman"
               ],
               "x": 86,
               "y": 26,
@@ -2542,16 +2673,20 @@
             {
               "id": "wolf_glade_fight_1",
               "type": "combat",
-              "x": 30, "y": 50,
+              "x": 30,
+              "y": 50,
               "encounterCap": 4,
-              "next": ["wolf_glade_fight_2"],
+              "next": [
+                "wolf_glade_fight_2"
+              ],
               "enemyId": "wolf",
               "paths": {}
             },
             {
               "id": "wolf_glade_fight_2",
               "type": "combat",
-              "x": 75, "y": 50,
+              "x": 75,
+              "y": 50,
               "bossId": "encounter_complete",
               "next": [],
               "enemyId": "white_wolf",
@@ -2577,16 +2712,20 @@
             {
               "id": "blood_rat_fight_1",
               "type": "combat",
-              "x": 30, "y": 50,
+              "x": 30,
+              "y": 50,
               "encounterCap": 4,
-              "next": ["blood_rat_fight_2"],
+              "next": [
+                "blood_rat_fight_2"
+              ],
               "enemyId": "blood_rat",
               "paths": {}
             },
             {
               "id": "blood_rat_fight_2",
               "type": "combat",
-              "x": 75, "y": 50,
+              "x": 75,
+              "y": 50,
               "bossId": "encounter_complete",
               "next": [],
               "enemyId": "forest_wisp",
@@ -2612,16 +2751,20 @@
             {
               "id": "boar_fight_1",
               "type": "combat",
-              "x": 30, "y": 50,
+              "x": 30,
+              "y": 50,
               "encounterCap": 4,
-              "next": ["boar_fight_2"],
+              "next": [
+                "boar_fight_2"
+              ],
               "enemyId": "boar",
               "paths": {}
             },
             {
               "id": "boar_fight_2",
               "type": "combat",
-              "x": 75, "y": 50,
+              "x": 75,
+              "y": 50,
               "bossId": "encounter_complete",
               "next": [],
               "enemyId": "boar",
@@ -2647,16 +2790,20 @@
             {
               "id": "crow_fight_1",
               "type": "combat",
-              "x": 30, "y": 50,
+              "x": 30,
+              "y": 50,
               "encounterCap": 4,
-              "next": ["crow_fight_2"],
+              "next": [
+                "crow_fight_2"
+              ],
               "enemyId": "crow_swarm",
               "paths": {}
             },
             {
               "id": "crow_fight_2",
               "type": "combat",
-              "x": 75, "y": 50,
+              "x": 75,
+              "y": 50,
               "bossId": "encounter_complete",
               "next": [],
               "enemyId": "forest_spirit",
@@ -2682,16 +2829,20 @@
             {
               "id": "bandit_fight_1",
               "type": "combat",
-              "x": 30, "y": 50,
+              "x": 30,
+              "y": 50,
               "encounterCap": 4,
-              "next": ["bandit_fight_2"],
+              "next": [
+                "bandit_fight_2"
+              ],
               "enemyId": "forest_bandit",
               "paths": {}
             },
             {
               "id": "bandit_fight_2",
               "type": "combat",
-              "x": 75, "y": 50,
+              "x": 75,
+              "y": 50,
               "bossId": "encounter_complete",
               "next": [],
               "enemyId": "forest_bandit",
@@ -2717,10 +2868,14 @@
             {
               "id": "deep_grove_fight_1",
               "type": "combat",
-              "x": 50, "y": 50,
+              "x": 50,
+              "y": 50,
               "encounterCap": 1,
               "next": [],
-              "enemyIds": ["armored_bear", "armored_bear"],
+              "enemyIds": [
+                "armored_bear",
+                "armored_bear"
+              ],
               "paths": {}
             }
           ]

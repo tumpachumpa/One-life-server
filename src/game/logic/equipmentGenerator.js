@@ -284,6 +284,7 @@ function materializeBaseEffect(definition, rarity, rng = Math.random) {
 
 export function isGeneratedEquipmentAffixAllowedForBase(definition, base = {}, rarity = null) {
   if (!definition?.type) return false;
+  if (definition.type === "counter_chance" && base.family !== "shield") return false;
   if (definition.type === "block_chance" && !canRollBlockChanceAffix(base)) return false;
   if (definition.type !== "block_chance" && BLOCK_AFFIX_TYPES.has(definition.type) && base.family !== "shield") return false;
   if (

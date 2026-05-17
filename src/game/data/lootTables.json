@@ -92,6 +92,8 @@
           "plate_boots",
           "plate_gloves",
           "buckler",
+          "bone_shield",
+          "heater_shield",
           "tower_shield"
         ],
         "slots": [
@@ -150,6 +152,8 @@
           "plate_boots",
           "plate_gloves",
           "buckler",
+          "bone_shield",
+          "heater_shield",
           "tower_shield"
         ],
         "materials": [
@@ -208,7 +212,8 @@
           "mace_1h",
           "leather_chest",
           "leather_legs",
-          "buckler"
+          "buckler",
+          "bone_shield"
         ],
         "materials": [
           "rusty",
@@ -313,6 +318,7 @@
           "plate_chest",
           "plate_legs",
           "plate_gloves",
+          "heater_shield",
           "tower_shield"
         ],
         "materials": [
@@ -344,6 +350,7 @@
           "plate_legs",
           "plate_boots",
           "plate_gloves",
+          "heater_shield",
           "tower_shield"
         ],
         "materials": [
@@ -394,6 +401,7 @@
           "plate_legs",
           "plate_boots",
           "plate_gloves",
+          "heater_shield",
           "tower_shield"
         ],
         "materials": [
@@ -430,6 +438,7 @@
           "plate_legs",
           "plate_boots",
           "plate_gloves",
+          "heater_shield",
           "tower_shield"
         ],
         "materials": [
@@ -480,6 +489,8 @@
           "plate_boots",
           "plate_gloves",
           "buckler",
+          "bone_shield",
+          "heater_shield",
           "tower_shield"
         ],
         "slots": [
@@ -520,7 +531,8 @@
           "leather_legs",
           "leather_boots",
           "leather_gloves",
-          "buckler"
+          "buckler",
+          "bone_shield"
         ],
         "materials": [
           "bone",
@@ -569,6 +581,7 @@
           "plate_helm",
           "mail_chest",
           "plate_chest",
+          "heater_shield",
           "tower_shield"
         ],
         "materials": [
@@ -628,6 +641,8 @@
           "emberward_cape",
           "nightfall_cape",
           "buckler",
+          "bone_shield",
+          "heater_shield",
           "tower_shield"
         ],
         "materials": [
@@ -680,6 +695,7 @@
           "umbralward_amulet",
           "emberward_cape",
           "nightfall_cape",
+          "heater_shield",
           "tower_shield"
         ],
         "materials": [
@@ -743,6 +759,7 @@
           "umbralward_amulet",
           "emberward_cape",
           "nightfall_cape",
+          "heater_shield",
           "tower_shield"
         ],
         "materials": [
@@ -813,6 +830,7 @@
           "umbralward_amulet",
           "emberward_cape",
           "nightfall_cape",
+          "heater_shield",
           "tower_shield"
         ],
         "materials": [
@@ -864,7 +882,7 @@
         "enabled": true,
         "weight": 20,
         "itemLevelBonus": 3,
-        "baseIds": ["mace_1h", "greatsword_2h", "plate_chest", "plate_legs", "tower_shield"],
+        "baseIds": ["mace_1h", "greatsword_2h", "plate_chest", "plate_legs", "heater_shield", "tower_shield"],
         "materials": ["iron", "steel", "bone"]
       }
     },
@@ -878,7 +896,7 @@
         "enabled": true,
         "weight": 18,
         "itemLevelBonus": 4,
-        "baseIds": ["mace_1h", "greatsword_2h", "plate_helm", "plate_chest", "plate_legs", "tower_shield"],
+        "baseIds": ["mace_1h", "greatsword_2h", "plate_helm", "plate_chest", "plate_legs", "heater_shield", "tower_shield"],
         "materials": ["iron", "steel", "bone"]
       }
     },
@@ -892,7 +910,7 @@
         "enabled": true,
         "weight": 24,
         "itemLevelBonus": 5,
-        "baseIds": ["sword_1h", "greatsword_2h", "plate_helm", "plate_chest", "plate_legs", "plate_boots", "plate_gloves", "tower_shield"],
+        "baseIds": ["sword_1h", "greatsword_2h", "plate_helm", "plate_chest", "plate_legs", "plate_boots", "plate_gloves", "heater_shield", "tower_shield"],
         "materials": ["steel", "bone", "ancient"]
       }
     },

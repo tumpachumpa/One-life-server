@@ -78,6 +78,14 @@
       "artifact": [7, 11],
       "unique": [9, 13]
     },
+    "counter_chance": {
+      "uncommon": [2, 3],
+      "rare": [3, 4],
+      "epic": [4, 6],
+      "legendary": [5, 7],
+      "artifact": [6, 9],
+      "unique": [8, 11]
+    },
     "block_power": {
       "uncommon": [6, 12],
       "rare": [9, 18],
@@ -983,6 +991,42 @@
       "icon": "/assets/items/generated/buckler.png"
     },
     {
+      "id": "bone_shield",
+      "name": "Bone Shield",
+      "slot": "offhand",
+      "family": "shield",
+      "armorType": "shield",
+      "armorDice": { "count": 1, "sides": 8 },
+      "size": [2, 2],
+      "materialPool": ["bone"],
+      "affixPools": ["guard", "survival"],
+      "effects": [
+        { "type": "block_chance", "value": 5 },
+        { "type": "block_power", "value": 18 }
+      ],
+      "tags": ["shield", "medium", "bone"],
+      "price": 86,
+      "icon": "/assets/items/generated/buckler.png"
+    },
+    {
+      "id": "heater_shield",
+      "name": "Heater Shield",
+      "slot": "offhand",
+      "family": "shield",
+      "armorType": "shield",
+      "armorDice": { "count": 1, "sides": 8 },
+      "size": [2, 3],
+      "materialPool": ["iron", "steel", "bone", "bloodiron"],
+      "affixPools": ["guard", "survival"],
+      "effects": [
+        { "type": "block_chance", "value": 6 },
+        { "type": "block_power", "value": 20 }
+      ],
+      "tags": ["shield", "medium", "heater"],
+      "price": 98,
+      "icon": "/assets/items/generated/heater_shield.png"
+    },
+    {
       "id": "tower_shield",
       "name": "Tower Shield",
       "slot": "offhand",
@@ -1154,6 +1198,7 @@
       { "type": "armor_pct", "min": 4, "max": 10, "scalingProfile": "damage_pct_limited", "weight": 5 },
       { "type": "block_chance", "min": 3, "max": 8, "scalingProfile": "block_chance", "weight": 5 },
       { "type": "block_power", "min": 8, "max": 24, "scalingProfile": "block_power", "weight": 5 },
+      { "type": "counter_chance", "min": 2, "max": 5, "scalingProfile": "counter_chance", "weight": 3 },
       { "type": "max_hp", "min": 6, "max": 18, "scalingProfile": "max_hp_medium", "weight": 4 }
     ],
     "weapon_guard": [

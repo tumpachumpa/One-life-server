@@ -45,6 +45,8 @@
           "emberward_cape",
           "nightfall_cape",
           "buckler",
+          "bone_shield",
+          "heater_shield",
           "tower_shield"
         ],
         "materials": [
@@ -130,6 +132,8 @@
           "plate_boots",
           "plate_gloves",
           "buckler",
+          "bone_shield",
+          "heater_shield",
           "tower_shield"
         ],
         "slots": [
@@ -203,6 +207,8 @@
           "plate_boots",
           "plate_gloves",
           "buckler",
+          "bone_shield",
+          "heater_shield",
           "tower_shield"
         ],
         "materials": [
@@ -280,6 +286,7 @@
           "plate_legs",
           "plate_boots",
           "plate_gloves",
+          "heater_shield",
           "tower_shield"
         ],
         "materials": [

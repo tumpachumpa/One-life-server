@@ -156,6 +156,43 @@ describe("generated equipment", () => {
     ]));
   });
 
+  it("lets one-handed weapons roll modest block chance but not block power", () => {
+    const swordAffixes = rollEquipmentAffixes({
+      id: "test_guard_sword",
+      slot: "weapon",
+      family: "sword",
+      hands: 1,
+      affixPools: ["weapon_guard"],
+      effects: [],
+    }, "rare", () => 0);
+    const twoHandedAffixes = rollEquipmentAffixes({
+      id: "test_guard_greatsword",
+      slot: "weapon",
+      family: "sword",
+      hands: 2,
+      affixPools: ["weapon_guard"],
+      effects: [],
+    }, "rare", () => 0);
+
+    expect(swordAffixes).toEqual([{ type: "block_chance", value: 3 }]);
+    expect(swordAffixes.some(effect => effect.type === "block_power")).toBe(false);
+    expect(twoHandedAffixes).toEqual([]);
+  });
+
+  it("lets the Guard Ring roll block chance without opening block power to rings", () => {
+    const rolls = [0.6, 0, 0, 0];
+    const affixes = rollEquipmentAffixes({
+      id: "ring_of_thorns",
+      slot: "ring",
+      family: "ring",
+      affixPools: ["guard"],
+      effects: [],
+    }, "rare", () => rolls.shift() ?? 0);
+
+    expect(affixes).toContainEqual({ type: "block_chance", value: 3 });
+    expect(affixes.some(effect => effect.type === "block_power")).toBe(false);
+  });
+
   it("rolls rapier base parry from 3-5 and scales it with rarity", () => {
     const normal = rollGeneratedEquipment({
       baseId: "rapier",

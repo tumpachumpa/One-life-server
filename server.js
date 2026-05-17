@@ -2,7 +2,7 @@ require('dotenv').config();
 const fastify = require('fastify')({ logger: true });
 
 fastify.register(require('@fastify/cors'), {
-  origin: true,
+  origin: process.env.CLIENT_ORIGIN ? process.env.CLIENT_ORIGIN.split(',') : false,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,

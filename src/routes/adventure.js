@@ -279,8 +279,6 @@ async function adventureRoutes(fastify) {
     const adventure = getAdventure(session.adventure_id);
     if (!adventure) return reply.status(404).send({ error: 'Adventure not found' });
 
-    // Client applies XP/gold/loot locally and saves via POST /hero.
-    // Server only updates adventureProgress (difficulty unlocks, boss completion).
     const heroResult = await pool.query('SELECT save_data FROM heroes WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 1', [userId]);
     const saveData   = heroResult.rows[0]?.save_data || {};
 
@@ -290,6 +288,17 @@ async function adventureRoutes(fastify) {
       adventure,
       { completedDifficultyStars: session.progress?.activeDifficultyStars ?? 0 }
     );
+
+    // Apply XP and gold server-side — client cannot inflate these via POST /hero
+    if (saveData.hero) {
+      saveData.hero.xp   = (saveData.hero.xp   || 0) + (session.run_xp   || 0);
+      saveData.hero.gold = (saveData.hero.gold  || 0) + (session.run_gold || 0);
+    }
+
+    // Queue loot items for client to place on next GET /hero
+    if (session.run_loot && session.run_loot.length > 0) {
+      saveData.pendingLoot = [...(saveData.pendingLoot || []), ...session.run_loot];
+    }
 
     saveData.adventureProgress = newAdvProgress;
 

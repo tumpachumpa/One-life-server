@@ -170,6 +170,27 @@ async function heroRoutes(fastify) {
     // encounterCharges is server-managed — strip so old clients can't overwrite
     if (hero.hero) delete hero.hero.encounterCharges;
 
+    // XP and gold are server-authoritative — clamp to DB values so clients can't inflate them
+    const existingResult = await pool.query(
+      'SELECT save_data FROM heroes WHERE user_id = $1 AND slot_id = $2',
+      [id, slotId]
+    );
+    if (hero.hero) {
+      if (existingResult.rows[0]) {
+        const dbHero = existingResult.rows[0].save_data?.hero || {};
+        if (typeof dbHero.xp === 'number' && (hero.hero.xp ?? 0) > dbHero.xp) {
+          hero.hero.xp = dbHero.xp;
+        }
+        if (typeof dbHero.gold === 'number' && (hero.hero.gold ?? 0) > dbHero.gold) {
+          hero.hero.gold = dbHero.gold;
+        }
+      } else {
+        // First save — new heroes start at 0; clamp any inflated client values
+        if ((hero.hero.xp ?? 0) > 0) hero.hero.xp = 0;
+        if ((hero.hero.gold ?? 0) > 0) hero.hero.gold = 0;
+      }
+    }
+
     const removalsApplied = await applyPendingRemovals(hero, id);
     const lootApplied = await applyPendingLoot(hero, id);
 

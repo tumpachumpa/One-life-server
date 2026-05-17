@@ -158,7 +158,7 @@ async function campRoutes(fastify) {
     const result = await pool.query(`
       SELECT c.user_id, c.hero_name, c.hero_level, c.adventure_id,
              c.col, c.row, c.started_at, c.expires_at, c.protected_until, c.status,
-             c.combat_snap, c.in_adventure
+             c.in_adventure
       FROM camps c
       WHERE c.status != 'done'
         AND c.expires_at > NOW()

@@ -1,8 +1,7 @@
 const pool = require('../db/pool');
 
-// Testing values — change to hours for production
-const PROTECTION_SECONDS = 5;
-const TARGET_COOLDOWN_SECONDS = 5;
+const PROTECTION_SECONDS = 3600;       // 1 hour post-loss protection
+const TARGET_COOLDOWN_SECONDS = 3600;  // 1 hour before you can re-attack the same player
 const WEEKLY_ATTACK_LIMIT = 3;
 const MAX_LEVEL_DIFF = 2;
 const LOOT_POOL_SIZE = 5;
@@ -173,8 +172,8 @@ async function pvpRoutes(fastify) {
     if (defenderUserId === attackerId) return reply.status(400).send({ error: 'Cannot attack yourself' });
 
     const [atkResult, defResult] = await Promise.all([
-      pool.query('SELECT save_data FROM heroes WHERE user_id = $1', [attackerId]),
-      pool.query('SELECT save_data FROM heroes WHERE user_id = $1', [defenderUserId]),
+      pool.query('SELECT save_data FROM heroes WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 1', [attackerId]),
+      pool.query('SELECT save_data FROM heroes WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 1', [defenderUserId]),
     ]);
     if (!atkResult.rows[0]) return reply.status(400).send({ error: 'Attacker has no hero' });
     if (!defResult.rows[0]) return reply.status(400).send({ error: 'Defender has no hero' });
@@ -201,15 +200,25 @@ async function pvpRoutes(fastify) {
       return reply.status(403).send({ error: 'PROTECTED', message: 'This player is protected from attacks', protectedUntil: claim.protected_until });
     }
 
+    // Weekly attack cap
+    const weekStart = getWeekStartUTC();
+    const weeklyCount = await pool.query(
+      `SELECT COUNT(*) FROM pvp_records WHERE attacker_id = $1 AND created_at >= $2`,
+      [attackerId, weekStart]
+    );
+    if (parseInt(weeklyCount.rows[0].count) >= WEEKLY_ATTACK_LIMIT) {
+      return reply.status(403).send({ error: 'WEEKLY_LIMIT', message: 'Weekly attack limit reached. Resets each Monday.' });
+    }
+
     const cooldownResult = await pool.query(
-      `SELECT attacked_at FROM pvp_records
+      `SELECT created_at FROM pvp_records
        WHERE attacker_id = $1 AND defender_id = $2
-       AND attacked_at > NOW() - INTERVAL '${TARGET_COOLDOWN_SECONDS} seconds'
-       ORDER BY attacked_at DESC LIMIT 1`,
-      [attackerId, defenderUserId]
+       AND created_at > NOW() - ($3 * INTERVAL '1 second')
+       ORDER BY created_at DESC LIMIT 1`,
+      [attackerId, defenderUserId, TARGET_COOLDOWN_SECONDS]
     );
     if (cooldownResult.rows[0]) {
-      const cooldownEnds = new Date(cooldownResult.rows[0].attacked_at);
+      const cooldownEnds = new Date(cooldownResult.rows[0].created_at);
       cooldownEnds.setSeconds(cooldownEnds.getSeconds() + TARGET_COOLDOWN_SECONDS);
       return reply.status(403).send({ error: 'COOLDOWN_TARGET', message: 'You must wait before attacking this player again', cooldownEnds });
     }
@@ -272,7 +281,7 @@ async function pvpRoutes(fastify) {
     if (!recResult.rows[0]) return reply.status(404).send({ error: 'Record not found' });
     const rec = recResult.rows[0];
 
-    if (rec.winner_id !== attackerId) return reply.status(403).send({ error: 'Not the winner' });
+    if (String(rec.winner_id) !== String(attackerId)) return reply.status(403).send({ error: 'Not the winner' });
 
     // Atomically mark claimed — prevents double-claim from concurrent requests
     const claimResult = await pool.query(

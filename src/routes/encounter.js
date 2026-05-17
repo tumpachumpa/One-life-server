@@ -51,43 +51,56 @@ async function encounterRoutes(fastify) {
 
     const { max, rechargeSeconds } = region.charges;
     const rechargeMs = rechargeSeconds * 1000;
-    const nowMs = Date.now();
 
-    const existing = await pool.query(
-      'SELECT current_charges, last_recharge_at FROM encounter_charges WHERE user_id = $1 AND region_id = $2',
-      [userId, regionId]
-    );
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
 
-    let current, lastRechargeAt;
-    if (existing.rows.length === 0) {
-      current = max;
-      lastRechargeAt = nowMs;
-    } else {
-      current = existing.rows[0].current_charges;
-      lastRechargeAt = new Date(existing.rows[0].last_recharge_at).getTime();
+      // Initialize row at full charges if it doesn't exist yet, then lock it.
+      // The two-step (INSERT ON CONFLICT DO NOTHING + SELECT FOR UPDATE) prevents
+      // concurrent first-use requests from both seeing an empty row and double-consuming.
+      await client.query(
+        `INSERT INTO encounter_charges (user_id, region_id, current_charges, last_recharge_at)
+         VALUES ($1, $2, $3, NOW())
+         ON CONFLICT (user_id, region_id) DO NOTHING`,
+        [userId, regionId, max]
+      );
+
+      const existing = await client.query(
+        `SELECT current_charges, last_recharge_at
+         FROM encounter_charges
+         WHERE user_id = $1 AND region_id = $2
+         FOR UPDATE`,
+        [userId, regionId]
+      );
+
+      const current = existing.rows[0].current_charges;
+      const lastRechargeAt = new Date(existing.rows[0].last_recharge_at).getTime();
+      const nowMs = Date.now();
+
+      const available = getAvailable(max, rechargeMs, current, lastRechargeAt, nowMs);
+      if (available <= 0) {
+        await client.query('ROLLBACK');
+        return reply.status(403).send({ error: 'No charges available' });
+      }
+
+      const next = consume(max, rechargeMs, current, lastRechargeAt, nowMs);
+
+      await client.query(
+        `UPDATE encounter_charges
+         SET current_charges = $1, last_recharge_at = $2
+         WHERE user_id = $3 AND region_id = $4`,
+        [next.current, new Date(next.lastRechargeAt), userId, regionId]
+      );
+
+      await client.query('COMMIT');
+      return { regionId, current: next.current, lastRechargeAt: next.lastRechargeAt };
+    } catch (e) {
+      await client.query('ROLLBACK');
+      throw e;
+    } finally {
+      client.release();
     }
-
-    const available = getAvailable(max, rechargeMs, current, lastRechargeAt, nowMs);
-    if (available <= 0) {
-      return reply.status(403).send({ error: 'No charges available' });
-    }
-
-    const next = consume(max, rechargeMs, current, lastRechargeAt, nowMs);
-
-    await pool.query(
-      `INSERT INTO encounter_charges (user_id, region_id, current_charges, last_recharge_at)
-       VALUES ($1, $2, $3, $4)
-       ON CONFLICT (user_id, region_id) DO UPDATE
-         SET current_charges = EXCLUDED.current_charges,
-             last_recharge_at = EXCLUDED.last_recharge_at`,
-      [userId, regionId, next.current, new Date(next.lastRechargeAt)]
-    );
-
-    return {
-      regionId,
-      current: next.current,
-      lastRechargeAt: next.lastRechargeAt,
-    };
   });
 }
 

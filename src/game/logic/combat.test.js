@@ -9656,3 +9656,256 @@ describe("modular combat", () => {
     expect(afterSpell.log.some(entry => entry.text.includes("Spite Wall reflects") && entry.text.includes("to Add Dummy"))).toBe(true);
   });
 });
+
+describe("talent proc behavior", () => {
+  const dummy = (hp = 100000) => ({
+    id: "target_dummy",
+    name: "Target Dummy",
+    hp,
+    stats: { maxHp: hp, attack: 0, armor: 0, attackSpeed: 1 },
+    effects: [],
+  });
+
+  it("Bloodletter heals 2% max HP when hitting a bleeding enemy", () => {
+    const bloodletter = {
+      id: "bleeder_bloodletter_heal",
+      proc: {
+        trigger: "on_hit",
+        chance: 100,
+        condition: { target_has_bleed: true },
+        effect: { type: "heal_pct_max_hp", value: 2 },
+      },
+    };
+    let state = initCombat({
+      heroName: "Tester",
+      heroHp: 80,
+      heroMaxHp: 100,
+      heroDamage: 10,
+      heroArmor: 0,
+      enemyObj: dummy(),
+      heroAbilities: [],
+      heroEffects: [],
+      heroAttackRate: 3,
+      heroProcNodes: [bloodletter],
+    });
+    // inject bleed on enemy
+    state = {
+      ...state,
+      combatants: {
+        ...state.combatants,
+        enemy: {
+          ...state.combatants.enemy,
+          activeEffects: [{ type: "bleed", stacks: 1, remainingTicks: 4, damagePctPerTick: 2 }],
+        },
+      },
+    };
+    state = processTick(state, ACTION.BASIC_ATTACK, () => 0.01);
+    // 2% of 100 maxHp = 2 HP healed
+    expect(state.combatants.hero.hp).toBe(82);
+    expect(state.log.some(entry => entry.type === "heal" && entry.text.includes("2 HP"))).toBe(true);
+  });
+
+  it("Bloodletter does NOT heal when the enemy has no bleed", () => {
+    const bloodletter = {
+      id: "bleeder_bloodletter_heal",
+      proc: {
+        trigger: "on_hit",
+        chance: 100,
+        condition: { target_has_bleed: true },
+        effect: { type: "heal_pct_max_hp", value: 2 },
+      },
+    };
+    let state = initCombat({
+      heroName: "Tester",
+      heroHp: 80,
+      heroMaxHp: 100,
+      heroDamage: 10,
+      heroArmor: 0,
+      enemyObj: dummy(),
+      heroAbilities: [],
+      heroEffects: [],
+      heroAttackRate: 3,
+      heroProcNodes: [bloodletter],
+    });
+    state = processTick(state, ACTION.BASIC_ATTACK, () => 0.01);
+    expect(state.combatants.hero.hp).toBe(80);
+  });
+
+  it("Iron Skin multi effect applies both attack speed and heal on block", () => {
+    const ironSkin = {
+      id: "warmonger_iron_skin",
+      proc: {
+        trigger: "on_block",
+        chance: 100,
+        condition: null,
+        effect: {
+          type: "multi",
+          effects: [
+            { type: "gain_attack_speed_pct", value: 20, durationTicks: 3 },
+            { type: "heal_pct_max_hp", value: 3 },
+          ],
+        },
+      },
+    };
+    const base = initCombat({
+      heroName: "Tester",
+      heroHp: 80,
+      heroMaxHp: 100,
+      heroDamage: 1,
+      heroArmor: 0,
+      heroBlockChance: 100,
+      heroBlockPower: 50,
+      heroBlockPowerRegen: 0,
+      enemyObj: dummy(1000),
+      heroAbilities: [],
+      heroEffects: [],
+      heroProcNodes: [ironSkin],
+    });
+    const state = {
+      ...base,
+      tick: 2,
+      actionQueue: enqueueAction(createActionQueue(), "enemy", ACTION.BASIC_ATTACK, 1, 5, null, undefined, { targetId: "hero" }),
+    };
+    const after = processTick(state, ACTION.BLOCK, () => 0.01);
+    // 3% of 100 maxHp = 3 HP healed
+    expect(after.combatants.hero.hp).toBe(83);
+    // attack_speed_buff active effect added
+    expect(after.combatants.hero.activeEffects.some(e => e.type === "attack_speed_buff" && e.value === 20)).toBe(true);
+  });
+
+  it("Fortress Stance raises block chance by 15 when a shield is equipped", () => {
+    const hero = initHero("Tester");
+    const shield = rollGeneratedEquipment({ baseId: "buckler", itemLevel: 2 }, () => 0);
+    const withoutTalent = { ...hero, equip: { ...hero.equip, offhand: shield }, talents: {} };
+    const withTalent = { ...withoutTalent, talents: { warmonger_fortress_stance: 1 } };
+
+    const baseBlock = calcStats(withoutTalent).blockChance;
+    const talentBlock = calcStats(withTalent).blockChance;
+
+    expect(talentBlock).toBe(baseBlock + 15);
+  });
+
+  it("Flash fires after 1 tick at max momentum", () => {
+    const flash = {
+      id: "speed_flash",
+      proc: {
+        trigger: "on_momentum_max_held",
+        held_ticks: 1,
+        chance: 100,
+        condition: null,
+        effect: { type: "flash_burst", attacksPerTick: 3, ticks: 2 },
+      },
+    };
+    const base = initCombat({
+      heroName: "Tester",
+      heroHp: 100,
+      heroMaxHp: 100,
+      heroDamage: 10,
+      heroArmor: 0,
+      enemyObj: dummy(),
+      heroAbilities: [],
+      heroEffects: [],
+      heroProcNodes: [flash],
+    });
+    const state = {
+      ...base,
+      procState: { ...base.procState, momentumStacks: 10, momentumMaxHeldTicks: 0 },
+    };
+    const after = processTick(state, ACTION.NONE, () => 0.01);
+    expect(after.combatants.hero.activeEffects.some(e => e.type === "flash_burst" && e.attacksPerTick === 3)).toBe(true);
+    expect(after.log.some(entry => entry.text.includes("Flash:"))).toBe(true);
+  });
+
+  it("Flash does NOT fire before the held_ticks threshold is met", () => {
+    const flash = {
+      id: "speed_flash",
+      proc: {
+        trigger: "on_momentum_max_held",
+        held_ticks: 3,
+        chance: 100,
+        condition: null,
+        effect: { type: "flash_burst", attacksPerTick: 3, ticks: 2 },
+      },
+    };
+    const base = initCombat({
+      heroName: "Tester",
+      heroHp: 100,
+      heroMaxHp: 100,
+      heroDamage: 10,
+      heroArmor: 0,
+      enemyObj: dummy(),
+      heroAbilities: [],
+      heroEffects: [],
+      heroProcNodes: [flash],
+    });
+    const state = {
+      ...base,
+      procState: { ...base.procState, momentumStacks: 10, momentumMaxHeldTicks: 0 },
+    };
+    // After 1 tick: heldTicks = 1, threshold is 3 → should NOT fire
+    const after = processTick(state, ACTION.NONE, () => 0.01);
+    expect(after.combatants.hero.activeEffects.some(e => e.type === "flash_burst")).toBe(false);
+  });
+
+  it("Retribution deals 30% weapon damage back as true damage on block", () => {
+    const retribution = {
+      id: "warmonger_retribution",
+      proc: {
+        trigger: "on_block",
+        chance: 100,
+        condition: null,
+        effect: { type: "counter_hit", damageMult: 0.3 },
+      },
+    };
+    const base = initCombat({
+      heroName: "Tester",
+      heroHp: 100,
+      heroMaxHp: 100,
+      heroDamage: 40,
+      heroArmor: 0,
+      heroBlockChance: 100,
+      heroBlockPower: 50,
+      heroBlockPowerRegen: 0,
+      enemyObj: dummy(1000),
+      heroAbilities: [],
+      heroEffects: [],
+      heroProcNodes: [retribution],
+    });
+    const state = {
+      ...base,
+      tick: 2,
+      actionQueue: enqueueAction(createActionQueue(), "enemy", ACTION.BASIC_ATTACK, 1, 5, null, undefined, { targetId: "hero" }),
+    };
+    const after = processTick(state, ACTION.BLOCK, () => 0.01);
+    // 30% of 40 hero damage = 12 true damage dealt back
+    expect(after.combatants.enemy.hp).toBe(988);
+    expect(after.log.some(entry => entry.type === "hit" && entry.text.includes("counter hit for 12"))).toBe(true);
+  });
+
+  it("Retribution does NOT fire without a block", () => {
+    const retribution = {
+      id: "warmonger_retribution",
+      proc: {
+        trigger: "on_block",
+        chance: 100,
+        condition: null,
+        effect: { type: "counter_hit", damageMult: 0.3 },
+      },
+    };
+    const base = initCombat({
+      heroName: "Tester",
+      heroHp: 100,
+      heroMaxHp: 100,
+      heroDamage: 40,
+      heroArmor: 0,
+      enemyObj: dummy(1000),
+      heroAbilities: [],
+      heroEffects: [],
+      heroProcNodes: [retribution],
+    });
+    // Hero attacks enemy — no block involved
+    const after = processTick(base, ACTION.BASIC_ATTACK, () => 0.01);
+    expect(after.combatants.enemy.hp).toBe(1000 - 40);
+    expect(after.log.some(entry => entry.text?.includes("counter hit"))).toBe(false);
+  });
+});

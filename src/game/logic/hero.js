@@ -99,6 +99,12 @@ export function xpToLevel(xp) {
 // Each tier's "center level" = tier * 5 - 2 (tier 1 ≈ 3, tier 2 ≈ 8, tier 3 ≈ 13 …).
 // Rarer enemies have higher effective levels so they stay relevant longer.
 // Energy is a minor factor: being well-rested (≥75) gives 1 level of grace.
+// Extra XP for killing rare/epic/legendary enemies (stacks on top of overlevel mult).
+export function getRarityXpMult(rarityId) {
+  const RARITY_XP = { normal: 1.0, raro: 1.5, epico: 2.5, legendario: 4.0 };
+  return RARITY_XP[rarityId] ?? 1.0;
+}
+
 export function getOverlevelXpMult(heroLevel, enemyTier, rarityId, heroEnergy) {
   const RARITY_BONUS = { normal: 0, raro: 3, epico: 7, legendario: 12 };
   const rarityBonus = RARITY_BONUS[rarityId] ?? 0;

@@ -28,33 +28,50 @@
                 {
                   "id": "berserker_battle_high",
                   "name": "Battle High",
-                  "summary": ["+3 Rage on every hit you land"],
+                  "summary": [
+                    "+3 Rage on every hit you land"
+                  ],
                   "proc": {
                     "trigger": "on_hit",
                     "chance": 100,
                     "condition": null,
-                    "effect": { "type": "gain_rage", "value": 3 }
+                    "effect": {
+                      "type": "gain_rage",
+                      "value": 3
+                    }
                   }
                 },
                 {
                   "id": "berserker_blood_price",
                   "name": "Blood Price",
-                  "summary": ["Gain Rage equal to 10% of any damage you take"],
+                  "summary": [
+                    "Gain Rage equal to 10% of any damage you take"
+                  ],
                   "proc": {
                     "trigger": "on_take_damage",
                     "chance": 100,
                     "condition": null,
-                    "effect": { "type": "gain_rage_pct_damage", "value": 10 }
+                    "effect": {
+                      "type": "gain_rage_pct_damage",
+                      "value": 10
+                    }
                   }
                 },
                 {
                   "id": "berserker_glass_cannon",
                   "name": "Glass Cannon",
-                  "summary": ["+20% damage while above 85% HP"],
+                  "summary": [
+                    "+20% damage while above 85% HP"
+                  ],
                   "threshold": {
                     "stat": "hp_pct",
                     "min": 85,
-                    "effects": [{ "type": "threshold_dmg_pct", "value": 20 }]
+                    "effects": [
+                      {
+                        "type": "threshold_dmg_pct",
+                        "value": 20
+                      }
+                    ]
                   }
                 }
               ]
@@ -66,26 +83,42 @@
                 {
                   "id": "berserker_frenzy_state",
                   "name": "Frenzy State",
-                  "summary": ["While Rage ≥ 40: +12% attack speed and +8% damage. Upgrades into Berserk State at 75 Rage."],
+                  "summary": [
+                    "While Rage ≥ 40: +12% attack speed and +8% damage. Upgrades into Berserk State at 75 Rage."
+                  ],
                   "threshold": {
                     "stat": "rage",
                     "min": 40,
                     "effects": [
-                      { "type": "attack_speed_bonus_pct", "value": 12 },
-                      { "type": "threshold_dmg_pct", "value": 8 }
+                      {
+                        "type": "attack_speed_bonus_pct",
+                        "value": 12
+                      },
+                      {
+                        "type": "threshold_dmg_pct",
+                        "value": 8
+                      }
                     ]
                   }
                 },
                 {
                   "id": "berserker_spite",
                   "name": "Spite",
-                  "summary": ["While below 35% HP: +10% crit chance and 10% lifesteal"],
+                  "summary": [
+                    "While below 35% HP: +10% crit chance and 10% lifesteal"
+                  ],
                   "threshold": {
                     "stat": "hp_pct",
                     "max": 35,
                     "effects": [
-                      { "type": "crit_chance_bonus", "value": 10 },
-                      { "type": "lifesteal", "value": 10 }
+                      {
+                        "type": "crit_chance_bonus",
+                        "value": 10
+                      },
+                      {
+                        "type": "lifesteal",
+                        "value": 10
+                      }
                     ]
                   }
                 },
@@ -96,7 +129,12 @@
                     "2-second cast. Costs 50 Rage. 12-second cooldown. Deals 150% weapon damage to all enemies.",
                     "If it kills any enemy: recover 25 Rage and heal 15% max HP."
                   ],
-                  "effects": [{ "type": "unlock_skill", "skillId": "whirlwind" }]
+                  "effects": [
+                    {
+                      "type": "unlock_skill",
+                      "skillId": "whirlwind"
+                    }
+                  ]
                 }
               ]
             },
@@ -108,38 +146,63 @@
                   "id": "berserker_berserk_state",
                   "name": "Berserk State",
                   "requiresTalentId": "berserker_frenzy_state",
-                  "summary": ["While Rage ≥ 75: replaces Frenzy with +25% attack speed and +20% damage."],
+                  "summary": [
+                    "While Rage ≥ 75: replaces Frenzy with +25% attack speed and +20% damage."
+                  ],
                   "threshold": {
                     "stat": "rage",
                     "min": 75,
-                    "replacesThresholdIds": ["berserker_frenzy_state"],
+                    "replacesThresholdIds": [
+                      "berserker_frenzy_state"
+                    ],
                     "effects": [
-                      { "type": "attack_speed_bonus_pct", "value": 25 },
-                      { "type": "threshold_dmg_pct", "value": 20 }
+                      {
+                        "type": "attack_speed_bonus_pct",
+                        "value": 25
+                      },
+                      {
+                        "type": "threshold_dmg_pct",
+                        "value": 20
+                      }
                     ]
                   }
                 },
                 {
                   "id": "berserker_deaths_door",
                   "name": "Death's Door",
-                  "summary": ["Upon reaching 15% HP: +50% crit chance for 3 seconds"],
+                  "summary": [
+                    "Upon reaching 15% HP: +50% crit chance for 3 seconds"
+                  ],
                   "proc": {
                     "trigger": "on_hp_cross_below",
                     "chance": 100,
                     "threshold": 15,
-                    "condition": { "once_per_combat": true },
-                    "effect": { "type": "gain_crit_chance_pct", "value": 50, "durationTicks": 3 }
+                    "condition": {
+                      "once_per_combat": true
+                    },
+                    "effect": {
+                      "type": "gain_crit_chance_pct",
+                      "value": 50,
+                      "durationTicks": 3
+                    }
                   }
                 },
                 {
                   "id": "berserker_lingering_rage",
                   "name": "Lingering Rage",
-                  "summary": ["On combat start: if you carried Rage from last fight, restore 30% of it"],
+                  "summary": [
+                    "On combat start: if you carried Rage from last fight, restore 30% of it"
+                  ],
                   "proc": {
                     "trigger": "on_combat_start",
                     "chance": 100,
-                    "condition": { "carried_rage_gt": 0 },
-                    "effect": { "type": "gain_rage_from_carry", "pct": 30 }
+                    "condition": {
+                      "carried_rage_gt": 0
+                    },
+                    "effect": {
+                      "type": "gain_rage_from_carry",
+                      "pct": 30
+                    }
                   }
                 }
               ]
@@ -151,13 +214,20 @@
                 {
                   "id": "berserker_last_breath",
                   "name": "Last Breath",
-                  "summary": ["Once per combat, when HP drops below 10%: you cannot die for 3.5 seconds. When the effect ends, you survive at your current HP and only die if you take lethal damage later."],
+                  "summary": [
+                    "Once per combat, when HP drops below 10%: you cannot die for 3.5 seconds. When the effect ends, you survive at your current HP and only die if you take lethal damage later."
+                  ],
                   "proc": {
                     "trigger": "on_hp_cross_below",
                     "threshold_value": 10,
                     "chance": 100,
-                    "condition": { "once_per_combat": true },
-                    "effect": { "type": "death_cheat", "ticks": 3.5 }
+                    "condition": {
+                      "once_per_combat": true
+                    },
+                    "effect": {
+                      "type": "death_cheat",
+                      "ticks": 3.5
+                    }
                   }
                 }
               ]
@@ -178,23 +248,33 @@
                 {
                   "id": "speed_momentum_gen",
                   "name": "Momentum",
-                  "summary": ["+1 Momentum stack (max 10) on every hit. Each stack = +6% attack speed"],
+                  "summary": [
+                    "+1 Momentum stack (max 10) on every hit. Each stack = +6% attack speed"
+                  ],
                   "proc": {
                     "trigger": "on_hit",
                     "chance": 100,
                     "condition": null,
-                    "effect": { "type": "gain_momentum", "value": 1 }
+                    "effect": {
+                      "type": "gain_momentum",
+                      "value": 1
+                    }
                   }
                 },
                 {
                   "id": "speed_opening_blitz",
                   "name": "Opening Blitz",
-                  "summary": ["Your very first hit of combat sets Momentum to at least 3 stacks"],
+                  "summary": [
+                    "Your very first hit of combat sets Momentum to at least 3 stacks"
+                  ],
                   "proc": {
                     "trigger": "on_first_hit",
                     "chance": 100,
                     "condition": null,
-                    "effect": { "type": "set_momentum_min", "value": 3 }
+                    "effect": {
+                      "type": "set_momentum_min",
+                      "value": 3
+                    }
                   }
                 },
                 {
@@ -208,12 +288,20 @@
                     "trigger": "on_avoid",
                     "chance": 100,
                     "condition": null,
-                    "effect": { "type": "gain_momentum", "value": 2 }
+                    "effect": {
+                      "type": "gain_momentum",
+                      "value": 2
+                    }
                   },
                   "threshold": {
                     "stat": "momentum_stacks",
                     "min": 6,
-                    "effects": [{ "type": "evasion_chance", "value": 5 }]
+                    "effects": [
+                      {
+                        "type": "evasion_chance",
+                        "value": 5
+                      }
+                    ]
                   }
                 }
               ]
@@ -225,33 +313,55 @@
                 {
                   "id": "speed_blur",
                   "name": "Blur",
-                  "summary": ["At 7+ Momentum stacks: 15% chance each hit strikes twice"],
+                  "summary": [
+                    "At 7+ Momentum stacks: 15% chance each hit strikes twice"
+                  ],
                   "threshold": {
                     "stat": "momentum_stacks",
                     "min": 7,
-                    "effects": [{ "type": "double_hit", "value": 15 }]
+                    "effects": [
+                      {
+                        "type": "double_hit",
+                        "value": 15
+                      }
+                    ]
                   }
                 },
                 {
                   "id": "speed_rapid_bleeder",
                   "name": "Rapid Bleeder",
-                  "summary": ["At 5+ Momentum stacks: 12% chance to apply 1 Bleed stack on hit"],
+                  "summary": [
+                    "At 5+ Momentum stacks: 12% chance to apply 1 Bleed stack on hit"
+                  ],
                   "proc": {
                     "trigger": "on_hit",
                     "chance": 12,
-                    "condition": { "momentum_stacks_gte": 5 },
-                    "effect": { "type": "apply_bleed", "stacks": 1 }
+                    "condition": {
+                      "momentum_stacks_gte": 5
+                    },
+                    "effect": {
+                      "type": "apply_bleed",
+                      "stacks": 1
+                    }
                   }
                 },
                 {
                   "id": "speed_crash_landing",
                   "name": "Stutter Step",
-                  "summary": ["On miss at 5+ Momentum: gain +10% dodge and +10% crit until your next hit"],
+                  "summary": [
+                    "On miss at 5+ Momentum: gain +10% dodge and +10% crit until your next hit"
+                  ],
                   "proc": {
                     "trigger": "on_miss",
                     "chance": 100,
-                    "condition": { "momentum_stacks_gte": 5 },
-                    "effect": { "type": "stutter_step", "evasionChanceBonus": 10, "critChanceBonus": 10 }
+                    "condition": {
+                      "momentum_stacks_gte": 5
+                    },
+                    "effect": {
+                      "type": "stutter_step",
+                      "evasionChanceBonus": 10,
+                      "critChanceBonus": 10
+                    }
                   }
                 }
               ]
@@ -263,12 +373,19 @@
                 {
                   "id": "speed_overdrive",
                   "name": "Overdrive",
-                  "summary": ["At 4+ Momentum stacks: each hit generates +6 Rage"],
+                  "summary": [
+                    "At 4+ Momentum stacks: each hit generates +6 Rage"
+                  ],
                   "proc": {
                     "trigger": "on_hit",
                     "chance": 100,
-                    "condition": { "momentum_stacks_gte": 4 },
-                    "effect": { "type": "gain_rage", "value": 6 }
+                    "condition": {
+                      "momentum_stacks_gte": 4
+                    },
+                    "effect": {
+                      "type": "gain_rage",
+                      "value": 6
+                    }
                   }
                 },
                 {
@@ -278,17 +395,27 @@
                     "Consume all Momentum stacks. Fire one rapid hit per stack consumed at 25% weapon damage each.",
                     "Cooldown: 14 seconds. Requires at least 3 Momentum stacks."
                   ],
-                  "effects": [{ "type": "unlock_skill", "skillId": "burnout" }]
+                  "effects": [
+                    {
+                      "type": "unlock_skill",
+                      "skillId": "burnout"
+                    }
+                  ]
                 },
                 {
                   "id": "speed_killing_speed",
                   "name": "Killing Speed",
-                  "summary": ["On kill: carry 5 Momentum stacks into the start of your next fight"],
+                  "summary": [
+                    "On kill: carry 5 Momentum stacks into the start of your next fight"
+                  ],
                   "proc": {
                     "trigger": "on_kill",
                     "chance": 100,
                     "condition": null,
-                    "effect": { "type": "gain_momentum_carry", "value": 5 }
+                    "effect": {
+                      "type": "gain_momentum_carry",
+                      "value": 5
+                    }
                   }
                 }
               ]
@@ -300,13 +427,19 @@
                 {
                   "id": "speed_flash",
                   "name": "Flash",
-                  "summary": ["At max Momentum for 3 consecutive seconds: unleash Flash — attack 3 times per second for 2 seconds, then all Momentum resets."],
+                  "summary": [
+                    "Reaching max Momentum: attack 3 times per second for 2 seconds, then Momentum resets."
+                  ],
                   "proc": {
                     "trigger": "on_momentum_max_held",
-                    "held_ticks": 3,
+                    "held_ticks": 1,
                     "chance": 100,
                     "condition": null,
-                    "effect": { "type": "flash_burst", "attacksPerTick": 3, "ticks": 2 }
+                    "effect": {
+                      "type": "flash_burst",
+                      "attacksPerTick": 3,
+                      "ticks": 2
+                    }
                   }
                 }
               ]
@@ -327,34 +460,51 @@
                 {
                   "id": "duelist_blade_stack",
                   "name": "Blade Stack",
-                  "summary": ["+1 Blade Stack on each parry (max 5). Each stack = +6% crit chance"],
+                  "summary": [
+                    "+1 Blade Stack on each parry (max 5). Each stack = +6% crit chance"
+                  ],
                   "proc": {
                     "trigger": "on_parry",
                     "chance": 100,
                     "condition": null,
-                    "effect": { "type": "gain_blade_stack", "value": 1 }
+                    "effect": {
+                      "type": "gain_blade_stack",
+                      "value": 1
+                    }
                   }
                 },
                 {
                   "id": "duelist_counter_stance",
                   "name": "Counter Stance",
-                  "summary": ["On parry: your next hit deals +80% damage"],
+                  "summary": [
+                    "On parry: your next hit deals +80% damage"
+                  ],
                   "proc": {
                     "trigger": "on_parry",
                     "chance": 100,
                     "condition": null,
-                    "effect": { "type": "gain_crit_chance_pct", "value": 40, "durationTicks": 1 }
+                    "effect": {
+                      "type": "gain_crit_chance_pct",
+                      "value": 40,
+                      "durationTicks": 1
+                    }
                   }
                 },
                 {
                   "id": "duelist_patience",
                   "name": "Patience",
-                  "summary": ["On miss: +8% crit chance until next hit (stacks up to +40%)"],
+                  "summary": [
+                    "On miss: +8% crit chance until next hit (stacks up to +40%)"
+                  ],
                   "proc": {
                     "trigger": "on_miss",
                     "chance": 100,
                     "condition": null,
-                    "effect": { "type": "gain_crit_chance_pct", "value": 8, "durationTicks": 999 }
+                    "effect": {
+                      "type": "gain_crit_chance_pct",
+                      "value": 8,
+                      "durationTicks": 999
+                    }
                   }
                 }
               ]
@@ -366,34 +516,55 @@
                 {
                   "id": "duelist_steel_mirror",
                   "name": "Steel Mirror",
-                  "summary": ["On parry: 25% chance to stun the enemy for 1 second"],
+                  "summary": [
+                    "On parry: 25% chance to stun the enemy for 1 second"
+                  ],
                   "proc": {
                     "trigger": "on_parry",
                     "chance": 25,
                     "condition": null,
-                    "effect": { "type": "stun_enemy", "ticks": 1 }
+                    "effect": {
+                      "type": "stun_enemy",
+                      "ticks": 1
+                    }
                   }
                 },
                 {
                   "id": "duelist_thousand_cuts",
                   "name": "Thousand Cuts",
-                  "summary": ["On crit at 5 Blade Stacks: fire 4 rapid hits at 35% damage each, then clear all Blade Stacks"],
+                  "summary": [
+                    "On crit at 5 Blade Stacks: fire 4 rapid hits at 35% damage each, then clear all Blade Stacks"
+                  ],
                   "proc": {
                     "trigger": "on_crit",
                     "chance": 100,
-                    "condition": { "blade_stacks_eq": 5 },
-                    "effect": { "type": "thousand_cuts", "hits": 4, "damageMult": 0.35 }
+                    "condition": {
+                      "blade_stacks_eq": 5
+                    },
+                    "effect": {
+                      "type": "thousand_cuts",
+                      "hits": 4,
+                      "damageMult": 0.35
+                    }
                   }
                 },
                 {
                   "id": "duelist_flow",
                   "name": "Duelist's Flow",
-                  "summary": ["After 2 consecutive parries: +25% attack speed for 3 seconds"],
+                  "summary": [
+                    "After 2 consecutive parries: +25% attack speed for 3 seconds"
+                  ],
                   "proc": {
                     "trigger": "on_parry",
                     "chance": 100,
-                    "condition": { "consecutive_parries_gte": 2 },
-                    "effect": { "type": "gain_attack_speed_pct", "value": 25, "durationTicks": 3 }
+                    "condition": {
+                      "consecutive_parries_gte": 2
+                    },
+                    "effect": {
+                      "type": "gain_attack_speed_pct",
+                      "value": 25,
+                      "durationTicks": 3
+                    }
                   }
                 }
               ]
@@ -405,12 +576,17 @@
                 {
                   "id": "duelist_relentless",
                   "name": "Relentless",
-                  "summary": ["On crit: queue a bonus auto-attack at 50% damage"],
+                  "summary": [
+                    "On crit: queue a bonus auto-attack at 50% damage"
+                  ],
                   "proc": {
                     "trigger": "on_crit",
                     "chance": 100,
                     "condition": null,
-                    "effect": { "type": "counter_hit", "damageMult": 0.5 }
+                    "effect": {
+                      "type": "counter_hit",
+                      "damageMult": 0.5
+                    }
                   }
                 },
                 {
@@ -420,17 +596,29 @@
                     "For 3 seconds: parry chance is 100% and each parry grants 2 Blade Stacks instead of 1.",
                     "Cooldown: 16 seconds."
                   ],
-                  "effects": [{ "type": "unlock_skill", "skillId": "en_garde" }]
+                  "effects": [
+                    {
+                      "type": "unlock_skill",
+                      "skillId": "en_garde"
+                    }
+                  ]
                 },
                 {
                   "id": "duelist_perfect_rhythm",
                   "name": "Perfect Rhythm",
-                  "summary": ["On a second parry in the same second: free counter hit at 100% damage"],
+                  "summary": [
+                    "On a second parry in the same second: free counter hit at 100% damage"
+                  ],
                   "proc": {
                     "trigger": "on_parry",
                     "chance": 100,
-                    "condition": { "already_parried_this_tick": true },
-                    "effect": { "type": "counter_hit", "damageMult": 1.0 }
+                    "condition": {
+                      "already_parried_this_tick": true
+                    },
+                    "effect": {
+                      "type": "counter_hit",
+                      "damageMult": 1.0
+                    }
                   }
                 }
               ]
@@ -442,12 +630,19 @@
                 {
                   "id": "duelist_flow_state",
                   "name": "Flow State",
-                  "summary": ["After 5 consecutive crits: enter Flow State — all hits crit for 4 seconds. On expire: splash hit for 150% damage."],
+                  "summary": [
+                    "After 5 consecutive crits: enter Flow State — all hits crit for 4 seconds. On expire: splash hit for 150% damage."
+                  ],
                   "proc": {
                     "trigger": "on_crit",
                     "chance": 100,
-                    "condition": { "consecutive_crits_gte": 5 },
-                    "effect": { "type": "enter_flow_state", "ticks": 4 }
+                    "condition": {
+                      "consecutive_crits_gte": 5
+                    },
+                    "effect": {
+                      "type": "enter_flow_state",
+                      "ticks": 4
+                    }
                   }
                 }
               ]
@@ -468,34 +663,50 @@
                 {
                   "id": "warmonger_scar_tissue",
                   "name": "Scar Tissue",
-                  "summary": ["Each time you take damage: +1 Scar Stack. Each stack = +1 armor, permanent this combat (max 15)"],
+                  "summary": [
+                    "Each time you take damage: +1 Scar Stack. Each stack = +1 armor, permanent this combat (max 15)"
+                  ],
                   "proc": {
                     "trigger": "on_take_damage",
                     "chance": 100,
                     "condition": null,
-                    "effect": { "type": "gain_scar_stack" }
+                    "effect": {
+                      "type": "gain_scar_stack"
+                    }
                   }
                 },
                 {
-                  "id": "warmonger_grudge_bearer",
-                  "name": "Grudge",
-                  "summary": ["Store 35% of each hit taken as Grudge. Your next hit releases it as bonus damage"],
-                  "proc": {
-                    "trigger": "on_take_damage",
-                    "chance": 100,
-                    "condition": null,
-                    "effect": { "type": "store_grudge_pct", "value": 35 }
-                  }
+                  "id": "warmonger_fortress_stance",
+                  "name": "Fortress Stance",
+                  "summary": [
+                    "Passive: +15% block chance. Block power regenerates 2 per second faster."
+                  ],
+                  "effects": [
+                    {
+                      "type": "block_chance",
+                      "value": 15
+                    },
+                    {
+                      "type": "block_power_regen",
+                      "value": 2
+                    }
+                  ]
                 },
                 {
                   "id": "warmonger_iron_will",
                   "name": "Iron Will",
-                  "summary": ["On taking a critical hit: +20% crit chance for 3 seconds"],
+                  "summary": [
+                    "On taking a critical hit: +20% crit chance for 3 seconds"
+                  ],
                   "proc": {
                     "trigger": "on_take_crit",
                     "chance": 100,
                     "condition": null,
-                    "effect": { "type": "gain_crit_chance_pct", "value": 20, "durationTicks": 3 }
+                    "effect": {
+                      "type": "gain_crit_chance_pct",
+                      "value": 20,
+                      "durationTicks": 3
+                    }
                   }
                 }
               ]
@@ -507,32 +718,61 @@
                 {
                   "id": "warmonger_pain_is_power",
                   "name": "Pain is Power",
-                  "summary": ["While missing 30%+ HP: +10% damage (grows as you lose more HP, up to +25%)"],
+                  "summary": [
+                    "While missing 30%+ HP: +10% damage (grows as you lose more HP, up to +25%)"
+                  ],
                   "threshold": {
                     "stat": "hp_pct_missing",
                     "min": 30,
-                    "effects": [{ "type": "threshold_dmg_pct", "value": 10 }]
+                    "effects": [
+                      {
+                        "type": "threshold_dmg_pct",
+                        "value": 10
+                      }
+                    ]
                   }
                 },
                 {
                   "id": "warmonger_iron_skin",
                   "name": "Iron Skin",
-                  "summary": ["After 3 consecutive blocks: +25% attack speed for 5 seconds"],
+                  "summary": [
+                    "On block: +20% attack speed for 3 seconds and restore 3% max HP."
+                  ],
                   "proc": {
                     "trigger": "on_block",
                     "chance": 100,
-                    "condition": { "consecutive_blocks_gte": 3 },
-                    "effect": { "type": "gain_attack_speed_pct", "value": 25, "durationTicks": 5 }
+                    "condition": null,
+                    "effect": {
+                      "type": "multi",
+                      "effects": [
+                        {
+                          "type": "gain_attack_speed_pct",
+                          "value": 20,
+                          "durationTicks": 3
+                        },
+                        {
+                          "type": "heal_pct_max_hp",
+                          "value": 3
+                        }
+                      ]
+                    }
                   }
                 },
                 {
-                  "id": "warmonger_release",
-                  "name": "Release",
+                  "id": "warmonger_retribution",
+                  "name": "Retribution",
                   "summary": [
-                    "Instantly release all stored Grudge as a single strike.",
-                    "Cooldown: 10 seconds. Requires at least 1 stored Grudge."
+                    "On block: deal 30% of your weapon damage back to the attacker as true damage."
                   ],
-                  "effects": [{ "type": "unlock_skill", "skillId": "grudge_release" }]
+                  "proc": {
+                    "trigger": "on_block",
+                    "chance": 100,
+                    "condition": null,
+                    "effect": {
+                      "type": "counter_hit",
+                      "damageMult": 0.3
+                    }
+                  }
                 }
               ]
             },
@@ -543,34 +783,55 @@
                 {
                   "id": "warmonger_martyrs_rage",
                   "name": "Martyr's Rage",
-                  "summary": ["While below 30% HP: all damage you take also generates Rage equal to 10% of the hit"],
+                  "summary": [
+                    "While below 30% HP: all damage you take also generates Rage equal to 10% of the hit"
+                  ],
                   "proc": {
                     "trigger": "on_take_damage",
                     "chance": 100,
-                    "condition": { "hp_pct_below": 30 },
-                    "effect": { "type": "gain_rage_pct_damage", "value": 10 }
+                    "condition": {
+                      "hp_pct_below": 30
+                    },
+                    "effect": {
+                      "type": "gain_rage_pct_damage",
+                      "value": 10
+                    }
                   }
                 },
                 {
                   "id": "warmonger_unbreakable",
                   "name": "Unbreakable",
-                  "summary": ["At 15 Scar Stacks: no single hit can deal more than 20% of your max HP"],
+                  "summary": [
+                    "At 15 Scar Stacks: no single hit can deal more than 20% of your max HP"
+                  ],
                   "proc": {
                     "trigger": "on_take_damage",
                     "chance": 100,
-                    "condition": { "scar_stacks_gte": 15 },
-                    "effect": { "type": "cap_hit_damage", "maxPct": 20 }
+                    "condition": {
+                      "scar_stacks_gte": 15
+                    },
+                    "effect": {
+                      "type": "cap_hit_damage",
+                      "maxPct": 20
+                    }
                   }
                 },
                 {
                   "id": "warmonger_the_debt",
                   "name": "The Debt",
-                  "summary": ["If you took damage last fight: start this combat with +15% damage for its duration"],
+                  "summary": [
+                    "If you took damage last fight: start this combat with +15% damage for its duration"
+                  ],
                   "proc": {
                     "trigger": "on_combat_start",
                     "chance": 100,
-                    "condition": { "took_damage_last_fight": true },
-                    "effect": { "type": "gain_damage_this_fight", "value": 15 }
+                    "condition": {
+                      "took_damage_last_fight": true
+                    },
+                    "effect": {
+                      "type": "gain_damage_this_fight",
+                      "value": 15
+                    }
                   }
                 }
               ]
@@ -582,12 +843,18 @@
                 {
                   "id": "warmonger_juggernaut",
                   "name": "Juggernaut",
-                  "summary": ["At 15 Scar Stacks: enter Juggernaut - armor cannot be reduced, take 50% less damage, and deal 20% less damage. Lasts until combat ends."],
+                  "summary": [
+                    "At 15 Scar Stacks: enter Juggernaut - armor cannot be reduced, take 50% less damage, and deal 20% less damage. Lasts until combat ends."
+                  ],
                   "proc": {
                     "trigger": "on_scar_stacks_max",
                     "chance": 100,
-                    "condition": { "once_per_combat": true },
-                    "effect": { "type": "enter_juggernaut" }
+                    "condition": {
+                      "once_per_combat": true
+                    },
+                    "effect": {
+                      "type": "enter_juggernaut"
+                    }
                   }
                 }
               ]
@@ -608,34 +875,52 @@
                 {
                   "id": "bleeder_serrated_edge",
                   "name": "Serrated Edge",
-                  "summary": ["20% chance to apply 1 Bleed stack on every hit"],
+                  "summary": [
+                    "20% chance to apply 1 Bleed stack on every hit"
+                  ],
                   "proc": {
                     "trigger": "on_hit",
                     "chance": 20,
                     "condition": null,
-                    "effect": { "type": "apply_bleed", "stacks": 1 }
+                    "effect": {
+                      "type": "apply_bleed",
+                      "stacks": 1
+                    }
                   }
                 },
                 {
                   "id": "bleeder_deep_cuts",
                   "name": "Deep Cuts",
-                  "summary": ["On crit: guaranteed 2 Bleed stacks applied"],
+                  "summary": [
+                    "On crit: guaranteed 2 Bleed stacks applied"
+                  ],
                   "proc": {
                     "trigger": "on_crit",
                     "chance": 100,
                     "condition": null,
-                    "effect": { "type": "apply_bleed", "stacks": 2 }
+                    "effect": {
+                      "type": "apply_bleed",
+                      "stacks": 2
+                    }
                   }
                 },
                 {
                   "id": "bleeder_bloodletter_heal",
                   "name": "Bloodletter",
-                  "summary": ["Each Bleed damage pulse: heal HP equal to 5% of the Bleed damage dealt"],
+                  "summary": [
+                    "Hitting a Bleeding enemy: restore 2% max HP"
+                  ],
                   "proc": {
-                    "trigger": "on_bleed_tick",
+                    "trigger": "on_hit",
                     "chance": 100,
-                    "condition": null,
-                    "effect": { "type": "heal_pct_bleed_dmg", "value": 5 }
+                    "condition": {
+                      "target_has_bleed": true
+                    },
+                    "effect": {
+                      "type": "heal_pct_max_hp",
+                      "value": 2,
+                      "label": "Bloodletter"
+                    }
                   }
                 }
               ]
@@ -647,23 +932,35 @@
                 {
                   "id": "bleeder_bloodrush",
                   "name": "Bloodrush",
-                  "summary": ["Each Bleed damage pulse: gain +4% attack speed per active Bleed stack during that second"],
+                  "summary": [
+                    "Each Bleed damage pulse: gain +4% attack speed per active Bleed stack during that second"
+                  ],
                   "proc": {
                     "trigger": "on_bleed_tick",
                     "chance": 100,
                     "condition": null,
-                    "effect": { "type": "gain_attack_speed_pct_per_bleed_stack", "valuePerStack": 4, "durationTicks": 1 }
+                    "effect": {
+                      "type": "gain_attack_speed_pct_per_bleed_stack",
+                      "valuePerStack": 4,
+                      "durationTicks": 1
+                    }
                   }
                 },
                 {
                   "id": "bleeder_hemorrhage_mastery",
                   "name": "Hemorrhage Mastery",
-                  "summary": ["When Bleed deals damage at 4+ stacks: automatically apply Hemorrhage (4% max HP per second for 4 seconds)"],
+                  "summary": [
+                    "When Bleed deals damage at 4+ stacks: automatically apply Hemorrhage (4% max HP per second for 4 seconds)"
+                  ],
                   "proc": {
                     "trigger": "on_bleed_tick",
                     "chance": 100,
-                    "condition": { "bleed_stacks_gte": 4 },
-                    "effect": { "type": "apply_hemorrhage_auto" }
+                    "condition": {
+                      "bleed_stacks_gte": 4
+                    },
+                    "effect": {
+                      "type": "apply_hemorrhage_auto"
+                    }
                   }
                 },
                 {
@@ -673,7 +970,12 @@
                     "Instantly apply 2 Bleed stacks to the enemy.",
                     "Cooldown: 12 seconds."
                   ],
-                  "effects": [{ "type": "unlock_skill", "skillId": "open_vein" }]
+                  "effects": [
+                    {
+                      "type": "unlock_skill",
+                      "skillId": "open_vein"
+                    }
+                  ]
                 }
               ]
             },
@@ -684,34 +986,52 @@
                 {
                   "id": "bleeder_blood_fury",
                   "name": "Blood and Fury",
-                  "summary": ["Each Bleed damage pulse while Rage ≥ 30: gain +1 Rage (bridge into Berserker)"],
+                  "summary": [
+                    "Each Bleed damage pulse while Rage ≥ 30: gain +1 Rage (bridge into Berserker)"
+                  ],
                   "proc": {
                     "trigger": "on_bleed_tick",
                     "chance": 100,
-                    "condition": { "rage_above": 30 },
-                    "effect": { "type": "gain_rage", "value": 1 }
+                    "condition": {
+                      "rage_above": 30
+                    },
+                    "effect": {
+                      "type": "gain_rage",
+                      "value": 1
+                    }
                   }
                 },
                 {
                   "id": "bleeder_reopen_wounds",
                   "name": "Reopen",
-                  "summary": ["15% chance on hit while Hemorrhage is active: reset Hemorrhage duration"],
+                  "summary": [
+                    "15% chance on hit while Hemorrhage is active: reset Hemorrhage duration"
+                  ],
                   "proc": {
                     "trigger": "on_hit",
                     "chance": 15,
-                    "condition": { "hemorrhage_active": true },
-                    "effect": { "type": "reset_hemorrhage_duration" }
+                    "condition": {
+                      "hemorrhage_active": true
+                    },
+                    "effect": {
+                      "type": "reset_hemorrhage_duration"
+                    }
                   }
                 },
                 {
                   "id": "bleeder_relentless_wounds",
                   "name": "Relentless Wounds",
-                  "summary": ["Your first landed hit each fight applies 1 Bleed stack"],
+                  "summary": [
+                    "Your first landed hit each fight applies 1 Bleed stack"
+                  ],
                   "proc": {
                     "trigger": "on_first_hit",
                     "chance": 100,
                     "condition": null,
-                    "effect": { "type": "apply_bleed", "stacks": 1 }
+                    "effect": {
+                      "type": "apply_bleed",
+                      "stacks": 1
+                    }
                   }
                 }
               ]
@@ -723,12 +1043,21 @@
                 {
                   "id": "bleeder_exsanguinate",
                   "name": "Exsanguinate",
-                  "summary": ["When Bleed deals damage at 6+ stacks: deal 30% of enemy max HP as true damage, stun for 2 seconds, clear all Bleed. Cannot retrigger while on cooldown."],
+                  "summary": [
+                    "When Bleed deals damage at 6+ stacks: deal 30% of enemy max HP as true damage, stun for 2 seconds, clear all Bleed. Cannot retrigger while on cooldown."
+                  ],
                   "proc": {
                     "trigger": "on_bleed_tick",
                     "chance": 100,
-                    "condition": { "bleed_stacks_gte": 6, "once_per_combat": true },
-                    "effect": { "type": "exsanguinate_burst", "hpPct": 30, "stunTicks": 2 }
+                    "condition": {
+                      "bleed_stacks_gte": 6,
+                      "once_per_combat": true
+                    },
+                    "effect": {
+                      "type": "exsanguinate_burst",
+                      "hpPct": 30,
+                      "stunTicks": 2
+                    }
                   }
                 }
               ]
@@ -764,18 +1093,27 @@
                 {
                   "id": "beastmaster_rending_bite",
                   "name": "Rending Bite",
-                  "summary": ["Wolf auto-attacks have a 12% chance to apply Bleeding"],
+                  "summary": [
+                    "Wolf auto-attacks have a 12% chance to apply Bleeding"
+                  ],
                   "effects": [
                     {
                       "type": "pet_effect",
-                      "effect": { "type": "bleed_on_hit", "chance": 12, "duration": 2, "damagePct": 1 }
+                      "effect": {
+                        "type": "bleed_on_hit",
+                        "chance": 12,
+                        "duration": 2,
+                        "damagePct": 1
+                      }
                     }
                   ]
                 },
                 {
                   "id": "beastmaster_predatory_lunge",
                   "name": "Predatory Lunge",
-                  "summary": ["Wolf gains Lunge: a short cast pounce that deals 125% damage and staggers the target"],
+                  "summary": [
+                    "Wolf gains Lunge: a short cast pounce that deals 125% damage and staggers the target"
+                  ],
                   "effects": [
                     {
                       "type": "pet_unlock_ability",
@@ -799,9 +1137,14 @@
                 {
                   "id": "beastmaster_guardian_bond",
                   "name": "Guardian Bond",
-                  "summary": ["While your wolf is alive, you take 5% less damage"],
+                  "summary": [
+                    "While your wolf is alive, you take 5% less damage"
+                  ],
                   "effects": [
-                    { "type": "pet_alive_damage_taken_reduction_pct", "value": 5 }
+                    {
+                      "type": "pet_alive_damage_taken_reduction_pct",
+                      "value": 5
+                    }
                   ]
                 }
               ]
@@ -813,15 +1156,24 @@
                 {
                   "id": "beastmaster_flanking",
                   "name": "Flanking",
-                  "summary": ["When you and your wolf both hit within 2 seconds, your next shot gains +30% crit chance"],
+                  "summary": [
+                    "When you and your wolf both hit within 2 seconds, your next shot gains +30% crit chance"
+                  ],
                   "effects": [
-                    { "type": "pet_flanking", "windowTicks": 2, "critChanceBonus": 30, "durationTicks": 2 }
+                    {
+                      "type": "pet_flanking",
+                      "windowTicks": 2,
+                      "critChanceBonus": 30,
+                      "durationTicks": 2
+                    }
                   ]
                 },
                 {
                   "id": "beastmaster_howling_strike",
                   "name": "Howling Strike",
-                  "summary": ["Wolf Lunge applies Bleeding and grants you +10% crit chance for 2 seconds when it lands"],
+                  "summary": [
+                    "Wolf Lunge applies Bleeding and grants you +10% crit chance for 2 seconds when it lands"
+                  ],
                   "effects": [
                     {
                       "type": "wolf_lunge_upgrade",
@@ -836,9 +1188,17 @@
                 {
                   "id": "beastmaster_protective_instinct",
                   "name": "Protective Instinct",
-                  "summary": ["Once per fight, when your wolf drops below 50% HP, you take 30% less damage for 4 seconds"],
+                  "summary": [
+                    "Once per fight, when your wolf drops below 50% HP, you take 30% less damage for 4 seconds"
+                  ],
                   "effects": [
-                    { "type": "pet_low_hp_guard", "thresholdPct": 50, "reductionPct": 30, "durationTicks": 4, "oncePerFight": true }
+                    {
+                      "type": "pet_low_hp_guard",
+                      "thresholdPct": 50,
+                      "reductionPct": 30,
+                      "durationTicks": 4,
+                      "oncePerFight": true
+                    }
                   ]
                 }
               ]
@@ -850,27 +1210,49 @@
                 {
                   "id": "beastmaster_pack_leader",
                   "name": "Pack Leader",
-                  "summary": ["Wolf gains +12% damage, +25% max HP, and +6 armor"],
+                  "summary": [
+                    "Wolf gains +12% damage, +25% max HP, and +6 armor"
+                  ],
                   "effects": [
-                    { "type": "pet_damage_pct", "value": 12 },
-                    { "type": "pet_max_hp_pct", "value": 25 },
-                    { "type": "pet_armor", "value": 6 }
+                    {
+                      "type": "pet_damage_pct",
+                      "value": 12
+                    },
+                    {
+                      "type": "pet_max_hp_pct",
+                      "value": 25
+                    },
+                    {
+                      "type": "pet_armor",
+                      "value": 6
+                    }
                   ]
                 },
                 {
                   "id": "beastmaster_undying_will",
                   "name": "Undying Will",
-                  "summary": ["Once per fight, when your wolf would die, it survives at 1 HP"],
+                  "summary": [
+                    "Once per fight, when your wolf would die, it survives at 1 HP"
+                  ],
                   "effects": [
-                    { "type": "pet_death_save", "hp": 1, "oncePerFight": true }
+                    {
+                      "type": "pet_death_save",
+                      "hp": 1,
+                      "oncePerFight": true
+                    }
                   ]
                 },
                 {
                   "id": "beastmaster_unleash",
                   "name": "Unleash",
-                  "summary": ["Unlocks Unleash: command your wolf into a 4 second frenzy with +50% attack speed and +35% damage, but it takes 30% more damage and rests afterward"],
+                  "summary": [
+                    "Unlocks Unleash: command your wolf into a 4 second frenzy with +50% attack speed and +35% damage, but it takes 30% more damage and rests afterward"
+                  ],
                   "effects": [
-                    { "type": "unlock_skill", "skillId": "unleash" }
+                    {
+                      "type": "unlock_skill",
+                      "skillId": "unleash"
+                    }
                   ]
                 }
               ]
@@ -882,7 +1264,9 @@
                 {
                   "id": "beastmaster_apex_predator",
                   "name": "Apex Predator",
-                  "summary": ["Wolf gains Rend: a 1 second cast that applies Hemorrhage for 3 seconds"],
+                  "summary": [
+                    "Wolf gains Rend: a 1 second cast that applies Hemorrhage for 3 seconds"
+                  ],
                   "effects": [
                     {
                       "type": "pet_unlock_ability",
@@ -921,20 +1305,42 @@
                 {
                   "id": "sharpshooter_eagle_eye",
                   "name": "Eagle Eye",
-                  "summary": ["+8% critical strike chance with ranged weapons"],
-                  "effects": [{ "type": "crit_chance", "value": 8 }]
+                  "summary": [
+                    "+8% critical strike chance with ranged weapons"
+                  ],
+                  "effects": [
+                    {
+                      "type": "crit_chance",
+                      "value": 8
+                    }
+                  ]
                 },
                 {
                   "id": "sharpshooter_armor_pierce",
                   "name": "Armor Pierce",
-                  "summary": ["Arrows ignore 20% of enemy armor"],
-                  "effects": [{ "type": "armor_penetration_pct", "value": 20 }]
+                  "summary": [
+                    "Arrows ignore 20% of enemy armor"
+                  ],
+                  "effects": [
+                    {
+                      "type": "armor_penetration_pct",
+                      "value": 20
+                    }
+                  ]
                 },
                 {
                   "id": "sharpshooter_snipers_patience",
                   "name": "Sniper's Patience",
-                  "summary": ["Each consecutive second you do not attack increases your next shot's damage by +8%, up to +40%"],
-                  "effects": [{ "type": "sniper_patience", "valuePerSecond": 8, "maxPct": 40 }]
+                  "summary": [
+                    "Each consecutive second you do not attack increases your next shot's damage by +8%, up to +40%"
+                  ],
+                  "effects": [
+                    {
+                      "type": "sniper_patience",
+                      "valuePerSecond": 8,
+                      "maxPct": 40
+                    }
+                  ]
                 }
               ]
             },
@@ -945,29 +1351,51 @@
                 {
                   "id": "sharpshooter_hair_trigger",
                   "name": "Hair Trigger",
-                  "summary": ["On crit, 20% chance to fire a free extra arrow for 50% damage"],
+                  "summary": [
+                    "On crit, 20% chance to fire a free extra arrow for 50% damage"
+                  ],
                   "proc": {
                     "trigger": "on_crit",
                     "chance": 20,
                     "condition": null,
-                    "effect": { "type": "extra_arrow", "damageMult": 0.5 }
+                    "effect": {
+                      "type": "extra_arrow",
+                      "damageMult": 0.5
+                    }
                   }
                 },
                 {
                   "id": "sharpshooter_optics",
                   "name": "Optics",
-                  "summary": ["Your first shot is a guaranteed crit. If it lands, gain +20% crit damage for 4 seconds"],
+                  "summary": [
+                    "Your first shot is a guaranteed crit. If it lands, gain +20% crit damage for 4 seconds"
+                  ],
                   "effects": [
-                    { "type": "first_hit_force_crit", "value": 1 },
-                    { "type": "first_hit_crit_damage_bonus_pct", "value": 20, "durationTicks": 4 }
+                    {
+                      "type": "first_hit_force_crit",
+                      "value": 1
+                    },
+                    {
+                      "type": "first_hit_crit_damage_bonus_pct",
+                      "value": 20,
+                      "durationTicks": 4
+                    }
                   ]
                 },
                 {
                   "id": "sharpshooter_glass_arrow",
                   "name": "Glass Arrow",
-                  "summary": ["On hit: 20% chance to reduce enemy armor by 3 for 4 seconds, stacking up to -12 armor"],
+                  "summary": [
+                    "On hit: 20% chance to reduce enemy armor by 3 for 4 seconds, stacking up to -12 armor"
+                  ],
                   "effects": [
-                    { "type": "armor_shred_on_hit", "chance": 20, "armorReduction": 3, "durationTicks": 4, "maxReduction": 12 }
+                    {
+                      "type": "armor_shred_on_hit",
+                      "chance": 20,
+                      "armorReduction": 3,
+                      "durationTicks": 4,
+                      "maxReduction": 12
+                    }
                   ]
                 }
               ]
@@ -979,20 +1407,41 @@
                 {
                   "id": "sharpshooter_aimed_shot",
                   "name": "Aimed Shot",
-                  "summary": ["Unlocks Aimed Shot. After a critical hit, cast for 1 second to fire a heavy shot for 150% weapon damage"],
-                  "effects": [{ "type": "unlock_skill", "skillId": "aimed_shot" }]
+                  "summary": [
+                    "Unlocks Aimed Shot. After a critical hit, cast for 1 second to fire a heavy shot for 150% weapon damage"
+                  ],
+                  "effects": [
+                    {
+                      "type": "unlock_skill",
+                      "skillId": "aimed_shot"
+                    }
+                  ]
                 },
                 {
                   "id": "sharpshooter_killzone",
                   "name": "Killzone",
-                  "summary": ["While the enemy has any armor debuff, your critical strikes deal +25% additional damage"],
-                  "effects": [{ "type": "crit_damage_vs_armor_debuff_pct", "value": 25 }]
+                  "summary": [
+                    "While the enemy has any armor debuff, your critical strikes deal +25% additional damage"
+                  ],
+                  "effects": [
+                    {
+                      "type": "crit_damage_vs_armor_debuff_pct",
+                      "value": 25
+                    }
+                  ]
                 },
                 {
                   "id": "sharpshooter_covering_fire",
                   "name": "Covering Fire",
-                  "summary": ["Unlocks Covering Fire: fire 3 rapid arrows and make the enemy's next auto-attack miss"],
-                  "effects": [{ "type": "unlock_skill", "skillId": "covering_fire" }]
+                  "summary": [
+                    "Unlocks Covering Fire: fire 3 rapid arrows and make the enemy's next auto-attack miss"
+                  ],
+                  "effects": [
+                    {
+                      "type": "unlock_skill",
+                      "skillId": "covering_fire"
+                    }
+                  ]
                 }
               ]
             },
@@ -1003,8 +1452,15 @@
                 {
                   "id": "sharpshooter_headshot",
                   "name": "Headshot",
-                  "summary": ["Unlocks Headshot: once per combat, after landing 4 crits, cast a heavy armor-ignoring shot that stuns if it crits"],
-                  "effects": [{ "type": "unlock_skill", "skillId": "headshot" }]
+                  "summary": [
+                    "Unlocks Headshot: once per combat, after landing 4 crits, cast a heavy armor-ignoring shot that stuns if it crits"
+                  ],
+                  "effects": [
+                    {
+                      "type": "unlock_skill",
+                      "skillId": "headshot"
+                    }
+                  ]
                 }
               ]
             }
@@ -1024,29 +1480,49 @@
                 {
                   "id": "ranger_herbal_remedy",
                   "name": "Herbal Remedy",
-                  "summary": ["On kill: heal 10% max HP"],
+                  "summary": [
+                    "On kill: heal 10% max HP"
+                  ],
                   "proc": {
                     "trigger": "on_kill",
                     "chance": 100,
                     "condition": null,
-                    "effect": { "type": "heal_pct_max_hp", "value": 10 }
+                    "effect": {
+                      "type": "heal_pct_max_hp",
+                      "value": 10
+                    }
                   }
                 },
                 {
                   "id": "ranger_venom_tips",
                   "name": "Venom Tips",
-                  "summary": ["Auto-attacks have a 20% chance to apply Poison for 4 seconds"],
+                  "summary": [
+                    "Auto-attacks have a 20% chance to apply Poison for 4 seconds"
+                  ],
                   "effects": [
-                    { "type": "poison_on_hit", "chance": 20, "duration": 4, "damagePct": 3 }
+                    {
+                      "type": "poison_on_hit",
+                      "chance": 20,
+                      "duration": 4,
+                      "damagePct": 3
+                    }
                   ]
                 },
                 {
                   "id": "ranger_toxicology",
                   "name": "Toxicology",
-                  "summary": ["Poison deals +1% max HP damage per second and lasts 2 seconds longer"],
+                  "summary": [
+                    "Poison deals +1% max HP damage per second and lasts 2 seconds longer"
+                  ],
                   "effects": [
-                    { "type": "poison_damage_pct_bonus", "value": 1 },
-                    { "type": "poison_duration_bonus_ticks", "value": 2 }
+                    {
+                      "type": "poison_damage_pct_bonus",
+                      "value": 1
+                    },
+                    {
+                      "type": "poison_duration_bonus_ticks",
+                      "value": 2
+                    }
                   ]
                 }
               ]
@@ -1058,26 +1534,46 @@
                 {
                   "id": "ranger_field_dressing",
                   "name": "Field Dressing",
-                  "summary": ["Unlocks Mend Companion: heal your wolf for 30% max HP over 3 seconds"],
+                  "summary": [
+                    "Unlocks Mend Companion: heal your wolf for 30% max HP over 3 seconds"
+                  ],
                   "effects": [
-                    { "type": "unlock_skill", "skillId": "mend_companion" }
+                    {
+                      "type": "unlock_skill",
+                      "skillId": "mend_companion"
+                    }
                   ]
                 },
                 {
                   "id": "ranger_trapper",
                   "name": "Trapper",
-                  "summary": ["Unlocks Bear Trap: stop the target's next auto-attack and stun it"],
+                  "summary": [
+                    "Unlocks Bear Trap: stop the target's next auto-attack and stun it"
+                  ],
                   "effects": [
-                    { "type": "unlock_skill", "skillId": "bear_trap" }
+                    {
+                      "type": "unlock_skill",
+                      "skillId": "bear_trap"
+                    }
                   ]
                 },
                 {
                   "id": "ranger_pack_bonds",
                   "name": "Pack Bonds",
-                  "summary": ["Mend Companion also grants you +10% dodge for 4 seconds. When your wolf hits, your next shot gains +8% crit chance"],
+                  "summary": [
+                    "Mend Companion also grants you +10% dodge for 4 seconds. When your wolf hits, your next shot gains +8% crit chance"
+                  ],
                   "effects": [
-                    { "type": "mend_companion_self_dodge", "value": 10, "durationTicks": 4 },
-                    { "type": "pet_hit_next_shot_crit", "value": 8, "durationTicks": 2 }
+                    {
+                      "type": "mend_companion_self_dodge",
+                      "value": 10,
+                      "durationTicks": 4
+                    },
+                    {
+                      "type": "pet_hit_next_shot_crit",
+                      "value": 8,
+                      "durationTicks": 2
+                    }
                   ]
                 }
               ]
@@ -1089,25 +1585,46 @@
                 {
                   "id": "ranger_snare_specialist",
                   "name": "Snare Specialist",
-                  "summary": ["Bear Trap also Staggers the target for 2 attacks when it triggers"],
+                  "summary": [
+                    "Bear Trap also Staggers the target for 2 attacks when it triggers"
+                  ],
                   "effects": [
-                    { "type": "bear_trap_upgrade", "staggerAttacks": 2, "staggerDurationTicks": 4, "missPenalty": 35 }
+                    {
+                      "type": "bear_trap_upgrade",
+                      "staggerAttacks": 2,
+                      "staggerDurationTicks": 4,
+                      "missPenalty": 35
+                    }
                   ]
                 },
                 {
                   "id": "ranger_emergency_triage",
                   "name": "Emergency Triage",
-                  "summary": ["Mend Companion instantly heals a badly wounded wolf and gives it short damage reduction"],
+                  "summary": [
+                    "Mend Companion instantly heals a badly wounded wolf and gives it short damage reduction"
+                  ],
                   "effects": [
-                    { "type": "mend_companion_upgrade", "thresholdPct": 40, "instantHealPct": 10, "reductionPct": 30, "durationTicks": 3 }
+                    {
+                      "type": "mend_companion_upgrade",
+                      "thresholdPct": 40,
+                      "instantHealPct": 10,
+                      "reductionPct": 30,
+                      "durationTicks": 3
+                    }
                   ]
                 },
                 {
                   "id": "ranger_relentless_pressure",
                   "name": "Relentless Pressure",
-                  "summary": ["While the enemy has Poison or Bleeding, your attack speed is +12% and your wolf's attack speed is +15%"],
+                  "summary": [
+                    "While the enemy has Poison or Bleeding, your attack speed is +12% and your wolf's attack speed is +15%"
+                  ],
                   "effects": [
-                    { "type": "relentless_pressure", "heroAttackSpeedPct": 12, "petAttackSpeedPct": 15 }
+                    {
+                      "type": "relentless_pressure",
+                      "heroAttackSpeedPct": 12,
+                      "petAttackSpeedPct": 15
+                    }
                   ]
                 }
               ]
@@ -1119,17 +1636,27 @@
                 {
                   "id": "ranger_barbed_trap",
                   "name": "Barbed Trap",
-                  "summary": ["Unlocks Barbed Trap: punish the target's next auto-attack with Bleeding and attack speed slow"],
+                  "summary": [
+                    "Unlocks Barbed Trap: punish the target's next auto-attack with Bleeding and attack speed slow"
+                  ],
                   "effects": [
-                    { "type": "unlock_skill", "skillId": "barbed_trap" }
+                    {
+                      "type": "unlock_skill",
+                      "skillId": "barbed_trap"
+                    }
                   ]
                 },
                 {
                   "id": "ranger_wild_renewal",
                   "name": "Wild Renewal",
-                  "summary": ["Unlocks Wild Renewal: channel for 4 seconds, restoring 40% max HP to you and 20% max HP to your wolf. Your wolf takes 15% less damage while channeling. Scales with spell power."],
+                  "summary": [
+                    "Unlocks Wild Renewal: channel for 4 seconds, restoring 40% max HP to you and 20% max HP to your wolf. Your wolf takes 15% less damage while channeling. Scales with spell power."
+                  ],
                   "effects": [
-                    { "type": "unlock_skill", "skillId": "wild_renewal" }
+                    {
+                      "type": "unlock_skill",
+                      "skillId": "wild_renewal"
+                    }
                   ]
                 }
               ]

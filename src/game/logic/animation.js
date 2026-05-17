@@ -134,7 +134,10 @@ export function inferSpriteSheetFramesFromImageData(imageData, options = {}) {
     .filter(frame => frame.width * frame.height >= maxArea * minAreaRatio)
     .sort((a, b) => (a.y - b.y) || (a.x - b.x));
 
-  const finalFrames = (maxFrames ? filteredFrames.slice(0, maxFrames) : filteredFrames) || frames;
+  const startFrame = options.startFrame || 0;
+  const framesFromStart = startFrame > 0 ? filteredFrames.slice(startFrame) : filteredFrames;
+  const sliced = maxFrames ? framesFromStart.slice(0, maxFrames) : framesFromStart;
+  const finalFrames = sliced.length > 0 ? sliced : filteredFrames.length > 0 ? filteredFrames : frames;
   if (!options.normalizeToMaxBounds || !finalFrames.length) return finalFrames;
 
   const maxWidth = Math.max(...finalFrames.map(frame => frame.width));
@@ -151,20 +154,26 @@ export function inferSpriteSheetFramesFromImageData(imageData, options = {}) {
 function buildGridFrames(width, height, options = {}) {
   const frameWidth = Math.max(1, options.frameWidth || width);
   const frameHeight = Math.max(1, options.frameHeight || height);
-  const columns = Math.max(1, options.columns || Math.floor(width / frameWidth));
-  const rows = Math.max(1, options.rows || Math.floor(height / frameHeight));
+  const frameX = options.frameX || 0;
+  const frameY = options.frameY || 0;
+  const frameStride = options.frameStride || frameWidth;
+  const columns = Math.max(1, options.columns || Math.floor((width - frameX) / frameStride));
+  const rows = Math.max(1, options.rows || Math.floor((height - frameY) / frameHeight));
   const frames = [];
 
   for (let row = 0; row < rows; row++) {
     for (let column = 0; column < columns; column++) {
-      const x = column * frameWidth;
-      const y = row * frameHeight;
+      const x = frameX + column * frameStride;
+      const y = frameY + row * frameHeight;
       if (x + frameWidth > width || y + frameHeight > height) continue;
       frames.push({ x, y, width: frameWidth, height: frameHeight });
     }
   }
 
-  return options.maxFrames ? frames.slice(0, options.maxFrames) : frames;
+  const start = options.startFrame || 0;
+  const sliced = start > 0 ? frames.slice(start) : frames;
+  const result = options.maxFrames ? sliced.slice(0, options.maxFrames) : sliced;
+  return result.length > 0 ? result : frames;
 }
 
 function loadImage(src) {

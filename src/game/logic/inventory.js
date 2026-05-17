@@ -52,6 +52,21 @@ export function getItemStackKey(itemRef) {
       name: ref.name || null,
     };
     if (Object.values(variant).some(value => value != null)) {
+      // If the object is just the unmodified base item definition (e.g. a plain loot drop),
+      // treat it the same as its plain string ID so recipe ingredient counts work correctly.
+      const baseItem = getItem(baseId);
+      if (baseItem) {
+        const baseVariant = {
+          rarity: baseItem.rarity || null,
+          effects: baseItem.effects || null,
+          baseStats: baseItem.baseStats || null,
+          price: baseItem.price ?? null,
+          name: baseItem.name || null,
+        };
+        if (JSON.stringify(stableVariant(variant)) === JSON.stringify(stableVariant(baseVariant))) {
+          return baseId;
+        }
+      }
       return `${baseId}:variant:${JSON.stringify(stableVariant(variant))}`;
     }
   }

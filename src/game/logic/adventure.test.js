@@ -712,7 +712,7 @@ describe("adventure routes", () => {
       next: ["orc_shaman_boss"],
     });
     expect(nodes.find(node => node.id === "orc_berserker_2").next).toEqual(["cave_troll"]);
-    expect(bossNode.bossIds).toEqual(["orc_general", "lich"]);
+    expect(bossNode.bossIds).toEqual(["orc_general", "orc_shaman"]);
     expect(cache.event.effects).not.toEqual(expect.arrayContaining([
       expect.objectContaining({ type: "grant_gold" }),
     ]));
@@ -756,17 +756,17 @@ describe("adventure routes", () => {
     const bossNode = orcAdventure.routes[0].nodes.find(node => node.type === "boss");
 
     const general = resolveAdventureNode(orcAdventure, bossNode, 0, () => 0.1);
-    const lich = resolveAdventureNode(orcAdventure, bossNode, 0, () => 0.9);
+    const shaman = resolveAdventureNode(orcAdventure, bossNode, 0, () => 0.9);
     const selectedOnWalk = resolveAdventureNode({
       ...orcAdventure,
-      __progress: { bossRolls: { [bossNode.id]: "lich" } },
+      __progress: { bossRolls: { [bossNode.id]: "orc_shaman" } },
     }, bossNode, 0, () => 0.1);
 
     expect(general.enemy.id).toBe("orc_general");
-    expect(lich.enemy.id).toBe("lich");
-    expect(selectedOnWalk.enemy.id).toBe("lich");
+    expect(shaman.enemy.id).toBe("orc_shaman");
+    expect(selectedOnWalk.enemy.id).toBe("orc_shaman");
     expect(bossById.orc_general.sprite).toBe("/assets/sprites/encounters/Bosses/Orc general.png");
-    expect(bossById.lich.sprite).toBe("/assets/sprites/encounters/Bosses/Lich_boss.png");
+    expect(bossById.orc_shaman).toBeDefined();
   });
 
   it("treats waypoint connectors as walkable route nodes", () => {

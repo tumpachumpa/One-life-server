@@ -184,6 +184,18 @@ function isClothArmorBase(base) {
   return base.armorType === "cloth" || (base.tags || []).includes("cloth");
 }
 
+function isOneHandedWeaponBase(base) {
+  return base.slot === "weapon"
+    && Math.max(1, Math.floor(Number(base.hands) || 1)) === 1
+    && !(base.tags || []).includes("ranged");
+}
+
+function canRollBlockChanceAffix(base) {
+  return base.family === "shield"
+    || isOneHandedWeaponBase(base)
+    || base.id === "ring_of_thorns";
+}
+
 function getRarityRange(rangeMap, rarity) {
   if (!rangeMap || typeof rangeMap !== "object") return null;
   const rarityId = rarity?.id || "normal";
@@ -272,7 +284,9 @@ function materializeBaseEffect(definition, rarity, rng = Math.random) {
 
 export function isGeneratedEquipmentAffixAllowedForBase(definition, base = {}, rarity = null) {
   if (!definition?.type) return false;
-  if (BLOCK_AFFIX_TYPES.has(definition.type) && base.family !== "shield") return false;
+  if (definition.type === "counter_chance" && base.family !== "shield") return false;
+  if (definition.type === "block_chance" && !canRollBlockChanceAffix(base)) return false;
+  if (definition.type !== "block_chance" && BLOCK_AFFIX_TYPES.has(definition.type) && base.family !== "shield") return false;
   if (
     base.family === "armor"
     && !isClothArmorBase(base)

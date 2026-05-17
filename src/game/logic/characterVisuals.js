@@ -1,4 +1,5 @@
 const HERO_FALLBACK_SPRITE = "/assets/sprites/Hero_real.png";
+
 const CHARACTER_FRAME_INFERENCE = {
   minRowGap: 1,
   minColGap: 1,

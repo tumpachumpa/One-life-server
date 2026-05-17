@@ -71,12 +71,20 @@
       "unique": [11, 17]
     },
     "block_chance": {
-      "uncommon": [3, 5],
-      "rare": [4, 7],
-      "epic": [6, 10],
-      "legendary": [8, 13],
-      "artifact": [10, 16],
-      "unique": [12, 20]
+      "uncommon": [2, 3],
+      "rare": [3, 5],
+      "epic": [4, 7],
+      "legendary": [5, 9],
+      "artifact": [7, 11],
+      "unique": [9, 13]
+    },
+    "counter_chance": {
+      "uncommon": [2, 3],
+      "rare": [3, 4],
+      "epic": [4, 6],
+      "legendary": [5, 7],
+      "artifact": [6, 9],
+      "unique": [8, 11]
     },
     "block_power": {
       "uncommon": [6, 12],
@@ -199,7 +207,7 @@
       "attackSpeed": 1.35,
       "size": [1, 2],
       "materialPool": ["rusty", "worn", "iron", "steel", "bone"],
-      "affixPools": ["speed", "precision", "venom"],
+      "affixPools": ["speed", "precision", "venom", "weapon_guard"],
       "effects": [{ "type": "crit_chance", "value": 2 }],
       "tags": ["dagger", "weapon", "melee", "fast", "one_handed", "speed"],
       "price": 45,
@@ -216,7 +224,7 @@
       "attackSpeed": 1,
       "size": [1, 3],
       "materialPool": ["rusty", "worn", "iron", "steel", "bone"],
-      "affixPools": ["balanced", "precision", "blood", "dueling"],
+      "affixPools": ["balanced", "precision", "blood", "dueling", "weapon_guard"],
       "tags": ["sword", "weapon", "melee", "one_handed", "balanced"],
       "price": 60,
       "icon": "/assets/items/generated/sword.png"
@@ -232,7 +240,7 @@
       "attackSpeed": 1.15,
       "size": [1, 3],
       "materialPool": ["worn", "iron", "steel", "bone", "ancient"],
-      "affixPools": ["dueling", "precision"],
+      "affixPools": ["dueling", "precision", "weapon_guard"],
       "effects": [
         {
           "type": "parry_chance",
@@ -257,7 +265,7 @@
       "attackSpeed": 0.88,
       "size": [2, 3],
       "materialPool": ["rusty", "worn", "iron", "steel", "bone", "bloodiron"],
-      "affixPools": ["brutal", "blood"],
+      "affixPools": ["brutal", "blood", "weapon_guard"],
       "tags": ["axe", "weapon", "melee", "one_handed", "brutal"],
       "price": 72,
       "icon": "/assets/items/generated/axe.png"
@@ -273,7 +281,7 @@
       "attackSpeed": 0.9,
       "size": [2, 3],
       "materialPool": ["rusty", "worn", "iron", "steel", "bone", "bloodiron"],
-      "affixPools": ["crusher", "guard"],
+      "affixPools": ["crusher", "guard", "weapon_guard"],
       "effects": [{ "type": "stagger_on_hit", "chance": 4, "duration": 1, "missPenalty": 25 }],
       "tags": ["mace", "weapon", "melee", "one_handed", "crusher"],
       "price": 68,
@@ -420,7 +428,7 @@
       "attackSpeed": 1.25,
       "size": [1, 2],
       "materialPool": ["steel", "ash", "bone", "ancient"],
-      "affixPools": ["speed", "precision", "venom", "arcane"],
+      "affixPools": ["speed", "precision", "venom", "arcane", "weapon_guard"],
       "effects": [{ "type": "crit_chance", "value": 3 }],
       "tags": ["dagger", "weapon", "melee", "fast", "one_handed", "ritual"],
       "price": 82,
@@ -437,7 +445,7 @@
       "attackSpeed": 0.92,
       "size": [1, 3],
       "materialPool": ["steel", "ancient", "bloodiron"],
-      "affixPools": ["balanced", "precision", "blood", "dueling"],
+      "affixPools": ["balanced", "precision", "blood", "dueling", "weapon_guard"],
       "effects": [{ "type": "parry_chance", "value": 4 }],
       "tags": ["sword", "weapon", "melee", "one_handed", "balanced", "oathbound"],
       "price": 94,
@@ -454,7 +462,7 @@
       "attackSpeed": 0.78,
       "size": [2, 3],
       "materialPool": ["steel", "ancient", "bloodiron"],
-      "affixPools": ["crusher", "guard"],
+      "affixPools": ["crusher", "guard", "weapon_guard"],
       "effects": [{ "type": "stagger_on_hit", "chance": 6, "duration": 1, "missPenalty": 30 }],
       "tags": ["mace", "weapon", "melee", "one_handed", "crusher", "stoneguard"],
       "price": 92,
@@ -983,6 +991,42 @@
       "icon": "/assets/items/generated/buckler.png"
     },
     {
+      "id": "bone_shield",
+      "name": "Bone Shield",
+      "slot": "offhand",
+      "family": "shield",
+      "armorType": "shield",
+      "armorDice": { "count": 1, "sides": 8 },
+      "size": [2, 2],
+      "materialPool": ["bone"],
+      "affixPools": ["guard", "survival"],
+      "effects": [
+        { "type": "block_chance", "value": 5 },
+        { "type": "block_power", "value": 18 }
+      ],
+      "tags": ["shield", "medium", "bone"],
+      "price": 86,
+      "icon": "/assets/items/generated/buckler.png"
+    },
+    {
+      "id": "heater_shield",
+      "name": "Heater Shield",
+      "slot": "offhand",
+      "family": "shield",
+      "armorType": "shield",
+      "armorDice": { "count": 1, "sides": 8 },
+      "size": [2, 3],
+      "materialPool": ["iron", "steel", "bone", "bloodiron"],
+      "affixPools": ["guard", "survival"],
+      "effects": [
+        { "type": "block_chance", "value": 6 },
+        { "type": "block_power", "value": 20 }
+      ],
+      "tags": ["shield", "medium", "heater"],
+      "price": 98,
+      "icon": "/assets/items/generated/heater_shield.png"
+    },
+    {
       "id": "tower_shield",
       "name": "Tower Shield",
       "slot": "offhand",
@@ -1154,7 +1198,11 @@
       { "type": "armor_pct", "min": 4, "max": 10, "scalingProfile": "damage_pct_limited", "weight": 5 },
       { "type": "block_chance", "min": 3, "max": 8, "scalingProfile": "block_chance", "weight": 5 },
       { "type": "block_power", "min": 8, "max": 24, "scalingProfile": "block_power", "weight": 5 },
+      { "type": "counter_chance", "min": 2, "max": 5, "scalingProfile": "counter_chance", "weight": 3 },
       { "type": "max_hp", "min": 6, "max": 18, "scalingProfile": "max_hp_medium", "weight": 4 }
+    ],
+    "weapon_guard": [
+      { "type": "block_chance", "min": 2, "max": 5, "scalingProfile": "block_chance", "weight": 6 }
     ],
     "survival": [
       { "type": "max_hp", "min": 8, "max": 22, "scalingProfile": "max_hp_high", "weight": 7 },

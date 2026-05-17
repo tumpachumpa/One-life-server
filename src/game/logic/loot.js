@@ -320,11 +320,16 @@ function rollManualCombatLoot(enemy, rng = Math.random, contextLootBonus = 0) {
 export function rollCombatLoot(enemy, rng = Math.random, context = {}) {
   if (!enemy) return [];
   const contextLootBonus = getContextLootBonus(context);
-  if (shouldUseManualCombatLoot(enemy)) return rollManualCombatLoot(enemy, rng, contextLootBonus);
+  // Boss-type enemies always use their own manual tables regardless of adventure pool
+  const isBossEnemy = enemy?.phases || enemy?.boss || enemy?.isMiniBoss
+    || enemy?.threat === "boss" || enemy?.threat === "special";
+  if (isBossEnemy) return rollManualCombatLoot(enemy, rng, contextLootBonus);
+  // Adventure pool takes priority over per-enemy manualLoot flag
   const adventurePool = resolveAdventureLootPool(context.adventure, context.zone);
   if (adventurePool) {
     return rollAdventureLootPool(adventurePool, enemy, rng, (enemy.lootBonus || 0) + contextLootBonus, enemy.lootRarityTable || null);
   }
+  if (shouldUseManualCombatLoot(enemy)) return rollManualCombatLoot(enemy, rng, contextLootBonus);
   return rollManualCombatLoot(enemy, rng, contextLootBonus);
 }
 

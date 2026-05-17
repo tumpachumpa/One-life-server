@@ -156,6 +156,66 @@ describe("generated equipment", () => {
     ]));
   });
 
+  it("lets one-handed weapons roll modest block chance but not block power", () => {
+    const swordAffixes = rollEquipmentAffixes({
+      id: "test_guard_sword",
+      slot: "weapon",
+      family: "sword",
+      hands: 1,
+      affixPools: ["weapon_guard"],
+      effects: [],
+    }, "rare", () => 0);
+    const twoHandedAffixes = rollEquipmentAffixes({
+      id: "test_guard_greatsword",
+      slot: "weapon",
+      family: "sword",
+      hands: 2,
+      affixPools: ["weapon_guard"],
+      effects: [],
+    }, "rare", () => 0);
+
+    expect(swordAffixes).toEqual([{ type: "block_chance", value: 3 }]);
+    expect(swordAffixes.some(effect => effect.type === "block_power")).toBe(false);
+    expect(twoHandedAffixes).toEqual([]);
+  });
+
+  it("lets the Guard Ring roll block chance without opening block power to rings", () => {
+    const rolls = [0.6, 0, 0, 0];
+    const affixes = rollEquipmentAffixes({
+      id: "ring_of_thorns",
+      slot: "ring",
+      family: "ring",
+      affixPools: ["guard"],
+      effects: [],
+    }, "rare", () => rolls.shift() ?? 0);
+
+    expect(affixes).toContainEqual({ type: "block_chance", value: 3 });
+    expect(affixes.some(effect => effect.type === "block_power")).toBe(false);
+  });
+
+  it("lets shields roll counter chance from guard without opening it to other guard bases", () => {
+    const shieldRolls = [0.75, 0];
+    const shieldAffixes = rollEquipmentAffixes({
+      id: "test_counter_shield",
+      slot: "offhand",
+      family: "shield",
+      armorType: "shield",
+      affixPools: ["guard"],
+      effects: [],
+    }, "uncommon", () => shieldRolls.shift() ?? 0);
+    const armorAffixes = rollEquipmentAffixes({
+      id: "test_guard_plate",
+      slot: "chest",
+      family: "armor",
+      armorType: "heavy",
+      affixPools: ["guard"],
+      effects: [],
+    }, "uncommon", () => 0.99);
+
+    expect(shieldAffixes).toEqual([{ type: "counter_chance", value: 2 }]);
+    expect(armorAffixes.some(effect => effect.type === "counter_chance")).toBe(false);
+  });
+
   it("rolls rapier base parry from 3-5 and scales it with rarity", () => {
     const normal = rollGeneratedEquipment({
       baseId: "rapier",
@@ -423,6 +483,17 @@ describe("generated equipment", () => {
       rarity: "normal",
       itemLevel: 2,
     }, () => 0);
+    const boneShield = rollGeneratedEquipment({
+      baseId: "bone_shield",
+      rarity: "normal",
+      itemLevel: 2,
+    }, () => 0);
+    const heater = rollGeneratedEquipment({
+      baseId: "heater_shield",
+      materialId: "iron",
+      rarity: "normal",
+      itemLevel: 2,
+    }, () => 0);
 
     expect(buckler).toMatchObject({
       generated: true,
@@ -436,9 +507,32 @@ describe("generated equipment", () => {
       armorType: "shield",
       generation: { materialId: "bone" },
     });
+    expect(boneShield).toMatchObject({
+      generated: true,
+      name: "Carved Bone Shield",
+      family: "shield",
+      armorType: "shield",
+      generation: { baseId: "bone_shield", materialId: "bone" },
+      icon: "/assets/items/generated/buckler.png",
+    });
+    expect(heater).toMatchObject({
+      generated: true,
+      family: "shield",
+      armorType: "shield",
+      generation: { baseId: "heater_shield", materialId: "iron" },
+      icon: "/assets/items/generated/heater_shield.png",
+    });
     expect(buckler.effects).toEqual(expect.arrayContaining([
       { type: "block_chance", value: 4 },
       { type: "block_power", value: 12 },
+    ]));
+    expect(boneShield.effects).toEqual(expect.arrayContaining([
+      { type: "block_chance", value: 5 },
+      { type: "block_power", value: 18 },
+    ]));
+    expect(heater.effects).toEqual(expect.arrayContaining([
+      { type: "block_chance", value: 6 },
+      { type: "block_power", value: 20 },
     ]));
   });
 

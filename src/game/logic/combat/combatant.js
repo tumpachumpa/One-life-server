@@ -300,6 +300,7 @@ export function isPoisonImmune(combatant) {
     || family.includes("skeleton")
     || family.includes("zombie")
     || family.includes("ghoul")
+    || family.includes("spider")
     || tags.includes("undead")
     || tags.includes("poison_immune");
 }

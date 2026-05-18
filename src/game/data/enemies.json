@@ -53,7 +53,9 @@
           "stunDurationTicks": 2,
           "title": "Tail Swing!",
           "description": "The tail sweeps across the arena in a wide column. Move left or right to dodge!",
-          "waves": [{}]
+          "waves": [
+            {}
+          ]
         },
         {
           "id": "test_dodge_1",
@@ -61,7 +63,9 @@
           "pattern": "fire_sweep_h",
           "safeSpotCount": 4,
           "waves": [
-            { "safeSpotCount": 4 }
+            {
+              "safeSpotCount": 4
+            }
           ],
           "warningMs": 2000,
           "damage": 20,
@@ -75,8 +79,13 @@
           "safeSpotCount": 3,
           "waveDelayMs": 650,
           "waves": [
-            { "safeSpotCount": 3 },
-            { "safeSpotCount": 2, "warningMs": 1100 }
+            {
+              "safeSpotCount": 3
+            },
+            {
+              "safeSpotCount": 2,
+              "warningMs": 1100
+            }
           ],
           "warningMs": 1800,
           "damage": 20,
@@ -90,9 +99,17 @@
           "safeSpotCount": 2,
           "waveDelayMs": 600,
           "waves": [
-            { "safeSpotCount": 2 },
-            { "safeSpotCount": 1, "warningMs": 900 },
-            { "safeSpotCount": 1, "warningMs": 900 }
+            {
+              "safeSpotCount": 2
+            },
+            {
+              "safeSpotCount": 1,
+              "warningMs": 900
+            },
+            {
+              "safeSpotCount": 1,
+              "warningMs": 900
+            }
           ],
           "warningMs": 1500,
           "damage": 20,
@@ -105,7 +122,9 @@
       "id": "wolf",
       "name": "Grey Wolf",
       "family": "wolf",
-      "tags": ["beast"],
+      "tags": [
+        "beast"
+      ],
       "tier": 1,
       "threat": "minor",
       "sprite": "/assets/sprites/encounters/Gray wolf.png",
@@ -123,7 +142,7 @@
           "type": "bleed_on_hit",
           "chance": 15,
           "duration": 2,
-          "damagePct": 2
+          "damagePct": 0.6
         }
       ],
       "lootTable": "forest_wolf",
@@ -133,7 +152,9 @@
       "id": "young_stag",
       "name": "Young Stag",
       "family": "deer",
-      "tags": ["beast"],
+      "tags": [
+        "beast"
+      ],
       "tier": 1,
       "threat": "minor",
       "sprite": "/assets/sprites/encounters/Bosses/elder_stag_summon.png",
@@ -154,7 +175,9 @@
       "id": "white_wolf",
       "name": "White Wolf",
       "family": "wolf",
-      "tags": ["beast"],
+      "tags": [
+        "beast"
+      ],
       "tier": 2,
       "threat": "standard",
       "sprite": "/assets/sprites/encounters/White wolf.png",
@@ -197,7 +220,9 @@
       "id": "blood_rat",
       "name": "Blood Rat",
       "family": "rat",
-      "tags": ["beast"],
+      "tags": [
+        "beast"
+      ],
       "tier": 1,
       "threat": "minor",
       "sprite": "/assets/sprites/encounters/Blood rat.png",
@@ -215,13 +240,13 @@
           "type": "bleed_on_hit",
           "chance": 18,
           "duration": 2,
-          "damagePct": 2
+          "damagePct": 0.5
         },
         {
           "type": "poison_on_hit",
           "chance": 12,
           "duration": 3,
-          "damagePct": 1
+          "damagePct": 0.35
         }
       ],
       "lootTable": "forest_basic"
@@ -230,7 +255,9 @@
       "id": "crow_swarm",
       "name": "Crow Swarm",
       "family": "crow",
-      "tags": ["beast"],
+      "tags": [
+        "beast"
+      ],
       "tier": 1,
       "threat": "minor",
       "sprite": "/assets/sprites/encounters/Crow_Swarm.png",
@@ -270,7 +297,9 @@
       "id": "boar",
       "name": "Wild Boar",
       "family": "boar",
-      "tags": ["beast"],
+      "tags": [
+        "beast"
+      ],
       "tier": 1,
       "threat": "standard",
       "sprite": "/assets/sprites/encounters/Wild_boar 2.png",
@@ -332,7 +361,7 @@
           "type": "bleed_on_hit",
           "chance": 12,
           "duration": 2,
-          "damagePct": 2
+          "damagePct": 0.5
         }
       ],
       "lootTable": "forest_bandit"
@@ -407,40 +436,44 @@
     },
     {
       "id": "giant_spider",
-      "name": "Giant Spider",
+      "name": "Giant Webspinner",
       "family": "spider",
-      "tags": ["beast"],
+      "tags": [
+        "beast"
+      ],
       "tier": 1,
       "threat": "dangerous",
       "sprite": "/assets/sprites/encounters/Giant spider.png",
       "baseStats": {
-        "maxHp": 150,
+        "maxHp": 145,
         "attack": 9,
         "armor": 2,
-        "attackSpeed": 1.1
+        "attackSpeed": 1.15
       },
       "rewards": {
-        "xp": 34,
-        "gold": 8
+        "xp": 32,
+        "gold": 10
       },
       "effects": [
         {
           "type": "poison_on_hit",
-          "chance": 25,
+          "chance": 15,
           "duration": 3,
-          "damagePct": 1
+          "damagePct": 0.4
         }
       ],
       "abilities": [
         {
           "id": "web_snare",
           "name": "Web Snare",
-          "description": "Spits binding webbing that slows the player's attack speed by 40% for the next 3 auto attacks.",
-          "type": "attack_speed_slow",
+          "description": "Spits binding webbing that freezes the player's auto-attack for 2 seconds.",
+          "type": "web_snare",
           "castTicks": 1,
-          "cooldownSeconds": 8,
-          "attacks": 3,
-          "attackSpeedPenaltyPct": 40
+          "cooldownSeconds": 14,
+          "durationTicks": 2,
+          "aiPool": true,
+          "aiUseChance": 40,
+          "aiWeight": 2
         },
         {
           "id": "silken_recovery",
@@ -448,26 +481,32 @@
           "description": "Wraps itself in restorative silk, regenerating health over time.",
           "type": "heal_over_time",
           "castTicks": 1,
-          "cooldownSeconds": 12,
-          "healPct": 12,
-          "durationTicks": 3
+          "cooldownSeconds": 18,
+          "healPct": 9,
+          "durationTicks": 3,
+          "aiPool": true,
+          "aiUseChance": 30,
+          "aiWeight": 1
         }
       ],
-      "lootTable": "forest_basic"
+      "lootTable": "giant_webspinner_loot"
     },
     {
       "id": "venom_giant_spider",
-      "name": "Venom Giant Spider",
+      "name": "Venom Stalker",
       "family": "spider",
-      "tags": ["beast"],
-      "tier": 3,
+      "tags": [
+        "beast"
+      ],
+      "tier": 2,
       "threat": "dangerous",
       "sprite": "/assets/sprites/encounters/Giant spider.png",
       "baseStats": {
-        "maxHp": 180,
+        "maxHp": 190,
         "attack": 12,
         "armor": 3,
-        "attackSpeed": 1.4
+        "attackSpeed": 1.4,
+        "spellDamage": 12
       },
       "rewards": {
         "xp": 55,
@@ -476,18 +515,38 @@
       "effects": [
         {
           "type": "poison_on_hit",
-          "chance": 30,
+          "name": "Venom Bite",
+          "chance": 28,
           "duration": 3,
-          "damagePct": 1.5
+          "damagePct": 0.7
         }
       ],
-      "lootTable": "cave_spider"
+      "abilities": [
+        {
+          "id": "poison_spit",
+          "name": "Poison Spit",
+          "description": "Launches a glob of venom that deals poison damage and may apply Poison.",
+          "type": "poison_spit",
+          "castTicks": 1,
+          "cooldownSeconds": 10,
+          "damageMult": 0.9,
+          "poisonChance": 60,
+          "poisonDamagePct": 0.55,
+          "poisonDuration": 3,
+          "aiPool": true,
+          "aiUseChance": 55,
+          "aiWeight": 2
+        }
+      ],
+      "lootTable": "venom_stalker_loot"
     },
     {
       "id": "armored_bear",
       "name": "Armored Bear",
       "family": "bear",
-      "tags": ["beast"],
+      "tags": [
+        "beast"
+      ],
       "tier": 1,
       "threat": "special",
       "sprite": "/assets/sprites/encounters/Armored bear.png",
@@ -621,7 +680,9 @@
       "id": "warg",
       "name": "Warg",
       "family": "beast",
-      "tags": ["beast"],
+      "tags": [
+        "beast"
+      ],
       "tier": 3,
       "threat": "standard",
       "sprite": "/assets/sprites/encounters/Warg.png",
@@ -640,7 +701,7 @@
           "type": "bleed_on_hit",
           "chance": 20,
           "duration": 2,
-          "damagePct": 2
+          "damagePct": 0.6
         }
       ],
       "lootTable": "orc_warg",
@@ -911,7 +972,10 @@
       "id": "hellhound",
       "name": "Hellhound",
       "family": "hellhound",
-      "tags": ["fire", "beast"],
+      "tags": [
+        "fire",
+        "beast"
+      ],
       "tier": 2,
       "threat": "special",
       "sprite": "/assets/sprites/encounters/HellhounD.png",
@@ -1295,7 +1359,7 @@
           "type": "bleed_on_hit",
           "chance": 10,
           "duration": 2,
-          "damagePct": 2
+          "damagePct": 0.5
         }
       ],
       "tags": [
@@ -1682,13 +1746,13 @@
         "xp": 76,
         "gold": 28
       },
-        "effects": [
-          {
-            "type": "burn_on_hit",
-            "chance": 20,
-            "duration": 3,
-            "damagePct": 2
-          },
+      "effects": [
+        {
+          "type": "burn_on_hit",
+          "chance": 20,
+          "duration": 3,
+          "damagePct": 2
+        },
         {
           "type": "physical_reduction_pct",
           "value": 8
@@ -1728,7 +1792,7 @@
           "type": "bleed_on_hit",
           "chance": 10,
           "duration": 2,
-          "damagePct": 2
+          "damagePct": 0.6
         },
         {
           "type": "enemy_hit_chance",
@@ -1831,6 +1895,111 @@
         }
       ],
       "lootTable": "rootspire_elite"
+    },
+    {
+      "id": "cave_spiderling",
+      "name": "Cave Spiderling",
+      "family": "spider",
+      "tags": [
+        "beast"
+      ],
+      "tier": 1,
+      "threat": "weak",
+      "sprite": "/assets/sprites/encounters/Giant spider.png",
+      "baseStats": {
+        "maxHp": 55,
+        "attack": 5,
+        "armor": 0,
+        "attackSpeed": 1.5
+      },
+      "rewards": {
+        "xp": 8,
+        "gold": 2
+      },
+      "effects": [
+        {
+          "type": "poison_on_hit",
+          "name": "Weak Venom Bite",
+          "chance": 15,
+          "duration": 3,
+          "damagePct": 0.3
+        }
+      ],
+      "lootTable": "cave_spiderling_loot"
+    },
+    {
+      "id": "silkfang_matriarch",
+      "name": "Silkfang Matriarch",
+      "family": "spider",
+      "tags": [
+        "beast",
+        "elite"
+      ],
+      "tier": 3,
+      "threat": "elite",
+      "sprite": "/assets/sprites/encounters/Giant spider.png",
+      "baseStats": {
+        "maxHp": 400,
+        "attack": 16,
+        "armor": 5,
+        "attackSpeed": 1.2
+      },
+      "rewards": {
+        "xp": 100,
+        "gold": 40
+      },
+      "effects": [
+        {
+          "type": "poison_on_hit",
+          "name": "Venom Bite",
+          "chance": 25,
+          "duration": 3,
+          "damagePct": 0.72
+        }
+      ],
+      "abilities": [
+        {
+          "id": "web_snare_matriarch",
+          "name": "Web Snare",
+          "description": "Spits binding webbing that freezes the player's auto-attack for 2 seconds.",
+          "type": "web_snare",
+          "castTicks": 1,
+          "cooldownSeconds": 18,
+          "durationTicks": 2,
+          "aiPool": true,
+          "aiUseChance": 35,
+          "aiWeight": 2
+        },
+        {
+          "id": "brood_call_matriarch",
+          "name": "Brood Call",
+          "description": "Calls two Cave Spiderlings from the nest walls.",
+          "type": "summon_add",
+          "castTicks": 1,
+          "cooldownSeconds": 20,
+          "enemyId": "cave_spiderling",
+          "maxAdds": 2,
+          "maxSummons": 6,
+          "pauseMs": 1000,
+          "aiPool": true,
+          "aiUseChance": 50,
+          "aiWeight": 2
+        },
+        {
+          "id": "silken_recovery_matriarch",
+          "name": "Silken Recovery",
+          "description": "Wraps herself in restorative silk, regenerating health over time.",
+          "type": "heal_over_time",
+          "castTicks": 1,
+          "cooldownSeconds": 24,
+          "healPct": 11,
+          "durationTicks": 4,
+          "aiPool": true,
+          "aiUseChance": 30,
+          "aiWeight": 1
+        }
+      ],
+      "lootTable": "silkfang_matriarch_loot"
     }
   ]
 }

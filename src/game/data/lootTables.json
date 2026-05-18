@@ -296,7 +296,11 @@
       "rolls": 1,
       "tags": [],
       "dropChance": 1,
-      "relicDrop": { "itemId": "relic_bear_hide", "chance": 2, "chanceD4Bonus": 2 },
+      "relicDrop": {
+        "itemId": "relic_bear_hide",
+        "chance": 2,
+        "chanceD4Bonus": 2
+      },
       "includeItemIds": [
         "bear_meat",
         "campfire",
@@ -384,8 +388,16 @@
       ],
       "dropChance": 1,
       "rarityTable": "boss",
-      "relicDrop": { "itemId": "relic_shaman_mark", "chance": 4, "chanceD4Bonus": 4 },
-      "stoneDrop": { "maxRarity": "rare", "baseChance": 4, "chanceD4Bonus": 3 },
+      "relicDrop": {
+        "itemId": "relic_shaman_mark",
+        "chance": 4,
+        "chanceD4Bonus": 4
+      },
+      "stoneDrop": {
+        "maxRarity": "rare",
+        "baseChance": 4,
+        "chanceD4Bonus": 3
+      },
       "generatedEquipment": {
         "enabled": true,
         "weight": 42,
@@ -421,8 +433,16 @@
       ],
       "dropChance": 1,
       "rarityTable": "boss",
-      "relicDrop": { "itemId": "relic_broken_standard", "chance": 6, "chanceD4Bonus": 5 },
-      "stoneDrop": { "maxRarity": "rare", "baseChance": 4, "chanceD4Bonus": 3 },
+      "relicDrop": {
+        "itemId": "relic_broken_standard",
+        "chance": 6,
+        "chanceD4Bonus": 5
+      },
+      "stoneDrop": {
+        "maxRarity": "rare",
+        "baseChance": 4,
+        "chanceD4Bonus": 3
+      },
       "generatedEquipment": {
         "enabled": true,
         "weight": 42,
@@ -515,8 +535,16 @@
       "tags": [],
       "dropChance": 1,
       "rarityTable": "boss",
-      "relicDrop": { "itemId": "relic_sacred_horn", "chance": 8, "chanceD4Bonus": 6 },
-      "stoneDrop": { "maxRarity": "uncommon", "baseChance": 3, "chanceD4Bonus": 3 },
+      "relicDrop": {
+        "itemId": "relic_sacred_horn",
+        "chance": 8,
+        "chanceD4Bonus": 6
+      },
+      "stoneDrop": {
+        "maxRarity": "uncommon",
+        "baseChance": 3,
+        "chanceD4Bonus": 3
+      },
       "generatedEquipment": {
         "enabled": true,
         "weight": 32,
@@ -569,8 +597,16 @@
       ],
       "dropChance": 1,
       "rarityTable": "boss",
-      "relicDrop": { "itemId": "relic_soul_fragment", "chance": 6, "chanceD4Bonus": 5 },
-      "stoneDrop": { "maxRarity": "rare", "baseChance": 3, "chanceD4Bonus": 3 },
+      "relicDrop": {
+        "itemId": "relic_soul_fragment",
+        "chance": 6,
+        "chanceD4Bonus": 5
+      },
+      "stoneDrop": {
+        "maxRarity": "rare",
+        "baseChance": 3,
+        "chanceD4Bonus": 3
+      },
       "generatedEquipment": {
         "enabled": true,
         "weight": 34,
@@ -790,9 +826,23 @@
       "dropChance": 1,
       "rarityTable": "wyvern",
       "minimumRarity": "epic",
-      "relicDrop": { "itemId": "relic_igneous_scale", "chance": 5, "chanceD4Bonus": 4 },
-      "stoneDrop": { "maxRarity": "epic", "baseChance": 5, "chanceD4Bonus": 4 },
-      "ancestralDrop": { "itemId": null, "chance": 0, "chanceD1Plus": 0.8, "chancePerStarBonus": 0.4, "chanceCap": 2.5 },
+      "relicDrop": {
+        "itemId": "relic_igneous_scale",
+        "chance": 5,
+        "chanceD4Bonus": 4
+      },
+      "stoneDrop": {
+        "maxRarity": "epic",
+        "baseChance": 5,
+        "chanceD4Bonus": 4
+      },
+      "ancestralDrop": {
+        "itemId": null,
+        "chance": 0,
+        "chanceD1Plus": 0.8,
+        "chancePerStarBonus": 0.4,
+        "chanceCap": 2.5
+      },
       "generatedEquipment": {
         "enabled": true,
         "weight": 52,
@@ -862,77 +912,159 @@
       "rolls": 1,
       "tags": [],
       "dropChance": 0.8,
-      "relicDrop": { "itemId": "relic_infernal_fang", "chance": 2, "chanceD4Bonus": 2 },
+      "relicDrop": {
+        "itemId": "relic_infernal_fang",
+        "chance": 2,
+        "chanceD4Bonus": 2
+      },
       "rarityTable": "specialChest",
       "generatedEquipment": {
         "enabled": true,
         "weight": 16,
         "itemLevelBonus": 3,
-        "baseIds": ["dagger", "rapier", "leather_helm", "leather_chest", "leather_gloves"],
-        "materials": ["iron", "steel", "cured"]
+        "baseIds": [
+          "dagger",
+          "rapier",
+          "leather_helm",
+          "leather_chest",
+          "leather_gloves"
+        ],
+        "materials": [
+          "iron",
+          "steel",
+          "cured"
+        ]
       }
     },
     "cave_troll": {
       "rolls": 1,
       "tags": [],
       "dropChance": 0.85,
-      "relicDrop": { "itemId": "relic_troll_tooth", "chance": 1, "chanceD4Bonus": 2 },
+      "relicDrop": {
+        "itemId": "relic_troll_tooth",
+        "chance": 1,
+        "chanceD4Bonus": 2
+      },
       "rarityTable": "specialChest",
       "generatedEquipment": {
         "enabled": true,
         "weight": 20,
         "itemLevelBonus": 3,
-        "baseIds": ["mace_1h", "greatsword_2h", "plate_chest", "plate_legs", "heater_shield", "tower_shield"],
-        "materials": ["iron", "steel", "bone"]
+        "baseIds": [
+          "mace_1h",
+          "greatsword_2h",
+          "plate_chest",
+          "plate_legs",
+          "heater_shield",
+          "tower_shield"
+        ],
+        "materials": [
+          "iron",
+          "steel",
+          "bone"
+        ]
       }
     },
     "stone_golem": {
       "rolls": 1,
       "tags": [],
       "dropChance": 0.85,
-      "relicDrop": { "itemId": "relic_stone_core", "chance": 2, "chanceD4Bonus": 2 },
+      "relicDrop": {
+        "itemId": "relic_stone_core",
+        "chance": 2,
+        "chanceD4Bonus": 2
+      },
       "rarityTable": "specialChest",
       "generatedEquipment": {
         "enabled": true,
         "weight": 18,
         "itemLevelBonus": 4,
-        "baseIds": ["mace_1h", "greatsword_2h", "plate_helm", "plate_chest", "plate_legs", "heater_shield", "tower_shield"],
-        "materials": ["iron", "steel", "bone"]
+        "baseIds": [
+          "mace_1h",
+          "greatsword_2h",
+          "plate_helm",
+          "plate_chest",
+          "plate_legs",
+          "heater_shield",
+          "tower_shield"
+        ],
+        "materials": [
+          "iron",
+          "steel",
+          "bone"
+        ]
       }
     },
     "black_knight": {
       "rolls": 1,
       "tags": [],
       "dropChance": 1,
-      "relicDrop": { "itemId": "relic_black_armor", "chance": 1, "chanceD4Bonus": 2 },
+      "relicDrop": {
+        "itemId": "relic_black_armor",
+        "chance": 1,
+        "chanceD4Bonus": 2
+      },
       "rarityTable": "specialChest",
       "generatedEquipment": {
         "enabled": true,
         "weight": 24,
         "itemLevelBonus": 5,
-        "baseIds": ["sword_1h", "greatsword_2h", "plate_helm", "plate_chest", "plate_legs", "plate_boots", "plate_gloves", "heater_shield", "tower_shield"],
-        "materials": ["steel", "bone", "ancient"]
+        "baseIds": [
+          "sword_1h",
+          "greatsword_2h",
+          "plate_helm",
+          "plate_chest",
+          "plate_legs",
+          "plate_boots",
+          "plate_gloves",
+          "heater_shield",
+          "tower_shield"
+        ],
+        "materials": [
+          "steel",
+          "bone",
+          "ancient"
+        ]
       }
     },
     "abyssal_fiend": {
       "rolls": 1,
       "tags": [],
       "dropChance": 0.9,
-      "relicDrop": { "itemId": "relic_abyssal_seal", "chance": 1, "chanceD4Bonus": 1 },
+      "relicDrop": {
+        "itemId": "relic_abyssal_seal",
+        "chance": 1,
+        "chanceD4Bonus": 1
+      },
       "rarityTable": "specialChest",
       "generatedEquipment": {
         "enabled": true,
         "weight": 22,
         "itemLevelBonus": 5,
-        "baseIds": ["staff", "rapier", "cloth_chest", "leather_chest", "leather_gloves"],
-        "materials": ["ash", "ancient", "bone"]
+        "baseIds": [
+          "staff",
+          "rapier",
+          "cloth_chest",
+          "leather_chest",
+          "leather_gloves"
+        ],
+        "materials": [
+          "ash",
+          "ancient",
+          "bone"
+        ]
       }
     },
     "cave_spider": {
       "rolls": 1,
       "tags": [],
       "dropChance": 0.65,
-      "includeItemIds": ["spider_meat", "spider_web", "venom_ring", "venom_fang_dagger"],
+      "includeItemIds": [
+        "spider_meat",
+        "spider_web",
+        "venom_ring",
+        "venom_fang_dagger"
+      ],
       "itemWeights": {
         "spider_meat": 50,
         "spider_web": 45,
@@ -946,8 +1078,16 @@
       "dropChance": 1,
       "rarityTable": "wyvern",
       "minimumRarity": "epic",
-      "relicDrop": { "itemId": "relic_spectral_echo", "chance": 8, "chanceD4Bonus": 6 },
-      "stoneDrop": { "maxRarity": "epic", "baseChance": 8, "chanceD4Bonus": 6 },
+      "relicDrop": {
+        "itemId": "relic_spectral_echo",
+        "chance": 8,
+        "chanceD4Bonus": 6
+      },
+      "stoneDrop": {
+        "maxRarity": "epic",
+        "baseChance": 8,
+        "chanceD4Bonus": 6
+      },
       "generatedEquipment": {
         "enabled": true,
         "weight": 52,
@@ -966,7 +1106,12 @@
           "cinderward_amulet",
           "umbralward_amulet"
         ],
-        "materials": ["steel", "ancient", "bloodiron", "oathbound"]
+        "materials": [
+          "steel",
+          "ancient",
+          "bloodiron",
+          "oathbound"
+        ]
       },
       "includeItemIds": [
         "fang_of_the_red_viper",
@@ -983,6 +1128,97 @@
         "ward_amulet": 3,
         "protection_amulet": 3,
         "thorn_amulet": 3
+      }
+    },
+    "cave_spiderling_loot": {
+      "rolls": 1,
+      "tags": [],
+      "dropChance": 0.45,
+      "includeItemIds": [
+        "spider_meat",
+        "spider_web",
+        "venom_ring"
+      ],
+      "itemWeights": {
+        "spider_meat": 55,
+        "spider_web": 43,
+        "venom_ring": 2
+      }
+    },
+    "giant_webspinner_loot": {
+      "rolls": 1,
+      "tags": [],
+      "dropChance": 0.65,
+      "includeItemIds": [
+        "spider_meat",
+        "spider_web",
+        "venom_ring"
+      ],
+      "itemWeights": {
+        "spider_meat": 40,
+        "spider_web": 46,
+        "venom_ring": 4
+      }
+    },
+    "venom_stalker_loot": {
+      "rolls": 1,
+      "tags": [],
+      "dropChance": 0.65,
+      "includeItemIds": [
+        "spider_meat",
+        "spider_web",
+        "venom_ring",
+        "venom_fang_dagger"
+      ],
+      "itemWeights": {
+        "spider_meat": 36,
+        "spider_web": 42,
+        "venom_ring": 8,
+        "venom_fang_dagger": 4
+      }
+    },
+    "silkfang_matriarch_loot": {
+      "rolls": 2,
+      "tags": [],
+      "dropChance": 0.85,
+      "includeItemIds": [
+        "spider_web",
+        "spider_meat",
+        "venom_fang_dagger",
+        "venomveil_cape",
+        "royal_silk"
+      ],
+      "itemWeights": {
+        "spider_web": 38,
+        "spider_meat": 26,
+        "venom_fang_dagger": 9,
+        "venomveil_cape": 6,
+        "royal_silk": 14
+      }
+    },
+    "broodmother_loot": {
+      "rolls": 2,
+      "tags": [],
+      "dropChance": 0.9,
+      "relicDrop": {
+        "itemId": "relic_broodvenom",
+        "chance": 1
+      },
+      "includeItemIds": [
+        "spider_web",
+        "spider_meat",
+        "royal_silk",
+        "brood_chitin",
+        "venom_sac",
+        "chitin_shield"
+      ],
+      "itemWeights": {
+        "spider_web": 32,
+        "spider_meat": 20,
+        "royal_silk": 16,
+        "brood_chitin": 14,
+        "venom_sac": 12,
+        "chitin_shield": 6
       }
     }
   }

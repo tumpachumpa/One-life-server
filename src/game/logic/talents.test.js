@@ -335,7 +335,7 @@ describe("archer talent tree", () => {
     ]);
     expect(rendingBite.effects).toContainEqual({
       type: "pet_effect",
-      effect: { type: "bleed_on_hit", chance: 12, duration: 2, damagePct: 1 },
+      effect: { type: "bleed_on_hit", chance: 12, duration: 2, damagePct: 0.6 },
     });
     expect(predatoryLunge.effects).toContainEqual(expect.objectContaining({
       type: "pet_unlock_ability",
@@ -365,7 +365,7 @@ describe("archer talent tree", () => {
         castTicks: 1,
         cooldownSeconds: 12,
         hemorrhageDuration: 3,
-        hemorrhageDamagePct: 3,
+        hemorrhageDamagePct: 1.5,
       }),
     }));
     expect(eagleEye.effects).toContainEqual({ type: "crit_chance", value: 8 });
@@ -384,7 +384,7 @@ describe("archer talent tree", () => {
     expect(killzone.effects).toContainEqual({ type: "crit_damage_vs_armor_debuff_pct", value: 25 });
     expect(coveringFire.effects).toContainEqual(expect.objectContaining({ type: "unlock_skill", skillId: "covering_fire", energyCost: 35 }));
     expect(headshot.effects).toContainEqual({ type: "unlock_skill", skillId: "headshot" });
-    expect(venomTips.effects).toContainEqual({ type: "poison_on_hit", chance: 20, duration: 4, damagePct: 3 });
+    expect(venomTips.effects).toContainEqual({ type: "poison_on_hit", chance: 20, duration: 4, damagePct: 0.5 });
     expect(toxicology.effects).toEqual([
       { type: "poison_damage_pct_bonus", value: 1 },
       { type: "poison_duration_bonus_ticks", value: 2 },

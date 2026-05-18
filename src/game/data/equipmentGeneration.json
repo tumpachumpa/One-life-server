@@ -7,192 +7,612 @@
   },
   "affixScalingProfiles": {
     "all_elemental_resist": {
-      "uncommon": [3, 5],
-      "rare": [4, 8],
-      "epic": [6, 12],
-      "legendary": [9, 14],
-      "artifact": [11, 17],
-      "unique": [13, 22]
+      "uncommon": [
+        3,
+        5
+      ],
+      "rare": [
+        4,
+        8
+      ],
+      "epic": [
+        6,
+        12
+      ],
+      "legendary": [
+        9,
+        14
+      ],
+      "artifact": [
+        11,
+        17
+      ],
+      "unique": [
+        13,
+        22
+      ]
     },
     "single_elemental_resist": {
-      "uncommon": [4, 7],
-      "rare": [6, 10],
-      "epic": [9, 14],
-      "legendary": [12, 18],
-      "artifact": [15, 22],
-      "unique": [18, 28]
+      "uncommon": [
+        4,
+        7
+      ],
+      "rare": [
+        6,
+        10
+      ],
+      "epic": [
+        9,
+        14
+      ],
+      "legendary": [
+        12,
+        18
+      ],
+      "artifact": [
+        15,
+        22
+      ],
+      "unique": [
+        18,
+        28
+      ]
     },
     "hit_chance": {
-      "uncommon": [3, 5],
-      "rare": [4, 7],
-      "epic": [6, 10],
-      "legendary": [8, 12],
-      "artifact": [10, 15],
-      "unique": [12, 18]
+      "uncommon": [
+        3,
+        5
+      ],
+      "rare": [
+        4,
+        7
+      ],
+      "epic": [
+        6,
+        10
+      ],
+      "legendary": [
+        8,
+        12
+      ],
+      "artifact": [
+        10,
+        15
+      ],
+      "unique": [
+        12,
+        18
+      ]
     },
     "crit_chance_minor": {
-      "uncommon": [1, 2],
-      "rare": [2, 3],
-      "epic": [3, 4],
-      "legendary": [4, 5],
-      "artifact": [5, 6],
-      "unique": [6, 8]
+      "uncommon": [
+        1,
+        2
+      ],
+      "rare": [
+        2,
+        3
+      ],
+      "epic": [
+        3,
+        4
+      ],
+      "legendary": [
+        4,
+        5
+      ],
+      "artifact": [
+        5,
+        6
+      ],
+      "unique": [
+        6,
+        8
+      ]
     },
     "crit_chance_major": {
-      "uncommon": [2, 3],
-      "rare": [3, 4],
-      "epic": [4, 5],
-      "legendary": [5, 7],
-      "artifact": [6, 8],
-      "unique": [7, 10]
+      "uncommon": [
+        2,
+        3
+      ],
+      "rare": [
+        3,
+        4
+      ],
+      "epic": [
+        4,
+        5
+      ],
+      "legendary": [
+        5,
+        7
+      ],
+      "artifact": [
+        6,
+        8
+      ],
+      "unique": [
+        7,
+        10
+      ]
     },
     "crit_damage": {
-      "uncommon": [5, 6],
-      "rare": [5, 7],
-      "epic": [6, 8],
-      "legendary": [7, 9],
-      "artifact": [8, 10],
-      "unique": [8, 10]
+      "uncommon": [
+        5,
+        6
+      ],
+      "rare": [
+        5,
+        7
+      ],
+      "epic": [
+        6,
+        8
+      ],
+      "legendary": [
+        7,
+        9
+      ],
+      "artifact": [
+        8,
+        10
+      ],
+      "unique": [
+        8,
+        10
+      ]
     },
     "attack_speed": {
-      "uncommon": [3, 5],
-      "rare": [4, 7],
-      "epic": [6, 10],
-      "legendary": [8, 13],
-      "artifact": [10, 16],
-      "unique": [12, 20]
+      "uncommon": [
+        3,
+        5
+      ],
+      "rare": [
+        4,
+        7
+      ],
+      "epic": [
+        6,
+        10
+      ],
+      "legendary": [
+        8,
+        13
+      ],
+      "artifact": [
+        10,
+        16
+      ],
+      "unique": [
+        12,
+        20
+      ]
     },
     "minor_defense": {
-      "uncommon": [2, 4],
-      "rare": [3, 6],
-      "epic": [5, 8],
-      "legendary": [7, 11],
-      "artifact": [9, 14],
-      "unique": [11, 17]
+      "uncommon": [
+        2,
+        4
+      ],
+      "rare": [
+        3,
+        6
+      ],
+      "epic": [
+        5,
+        8
+      ],
+      "legendary": [
+        7,
+        11
+      ],
+      "artifact": [
+        9,
+        14
+      ],
+      "unique": [
+        11,
+        17
+      ]
     },
     "block_chance": {
-      "uncommon": [2, 3],
-      "rare": [3, 5],
-      "epic": [4, 7],
-      "legendary": [5, 9],
-      "artifact": [7, 11],
-      "unique": [9, 13]
+      "uncommon": [
+        2,
+        3
+      ],
+      "rare": [
+        3,
+        5
+      ],
+      "epic": [
+        4,
+        7
+      ],
+      "legendary": [
+        5,
+        9
+      ],
+      "artifact": [
+        7,
+        11
+      ],
+      "unique": [
+        9,
+        13
+      ]
     },
     "counter_chance": {
-      "uncommon": [2, 3],
-      "rare": [3, 4],
-      "epic": [4, 6],
-      "legendary": [5, 7],
-      "artifact": [6, 9],
-      "unique": [8, 11]
+      "uncommon": [
+        2,
+        3
+      ],
+      "rare": [
+        3,
+        4
+      ],
+      "epic": [
+        4,
+        6
+      ],
+      "legendary": [
+        5,
+        7
+      ],
+      "artifact": [
+        6,
+        9
+      ],
+      "unique": [
+        8,
+        11
+      ]
     },
     "block_power": {
-      "uncommon": [6, 12],
-      "rare": [9, 18],
-      "epic": [14, 25],
-      "legendary": [20, 34],
-      "artifact": [28, 44],
-      "unique": [35, 56]
+      "uncommon": [
+        6,
+        12
+      ],
+      "rare": [
+        9,
+        18
+      ],
+      "epic": [
+        14,
+        25
+      ],
+      "legendary": [
+        20,
+        34
+      ],
+      "artifact": [
+        28,
+        44
+      ],
+      "unique": [
+        35,
+        56
+      ]
     },
     "damage_pct_limited": {
-      "artifact": [5, 9],
-      "unique": [7, 12]
+      "artifact": [
+        5,
+        9
+      ],
+      "unique": [
+        7,
+        12
+      ]
     },
     "double_hit": {
-      "uncommon": [2, 4],
-      "rare": [3, 6],
-      "epic": [5, 8],
-      "legendary": [7, 10],
-      "artifact": [9, 13],
-      "unique": [11, 16]
+      "uncommon": [
+        2,
+        4
+      ],
+      "rare": [
+        3,
+        6
+      ],
+      "epic": [
+        5,
+        8
+      ],
+      "legendary": [
+        7,
+        10
+      ],
+      "artifact": [
+        9,
+        13
+      ],
+      "unique": [
+        11,
+        16
+      ]
     },
     "lifesteal": {
-      "uncommon": [1, 2],
-      "rare": [2, 3],
-      "epic": [3, 4],
-      "legendary": [4, 5],
-      "artifact": [5, 6],
-      "unique": [6, 8]
+      "uncommon": [
+        1,
+        2
+      ],
+      "rare": [
+        2,
+        3
+      ],
+      "epic": [
+        3,
+        4
+      ],
+      "legendary": [
+        4,
+        5
+      ],
+      "artifact": [
+        5,
+        6
+      ],
+      "unique": [
+        6,
+        8
+      ]
     },
     "magic_find": {
-      "uncommon": [3, 5],
-      "rare": [4, 8],
-      "epic": [6, 12],
-      "legendary": [9, 14],
-      "artifact": [11, 17],
-      "unique": [13, 22]
+      "uncommon": [
+        3,
+        5
+      ],
+      "rare": [
+        4,
+        8
+      ],
+      "epic": [
+        6,
+        12
+      ],
+      "legendary": [
+        9,
+        14
+      ],
+      "artifact": [
+        11,
+        17
+      ],
+      "unique": [
+        13,
+        22
+      ]
     },
     "max_hp_medium": {
-      "uncommon": [5, 10],
-      "rare": [8, 15],
-      "epic": [12, 22],
-      "legendary": [18, 30],
-      "artifact": [25, 40],
-      "unique": [32, 55]
+      "uncommon": [
+        5,
+        10
+      ],
+      "rare": [
+        8,
+        15
+      ],
+      "epic": [
+        12,
+        22
+      ],
+      "legendary": [
+        18,
+        30
+      ],
+      "artifact": [
+        25,
+        40
+      ],
+      "unique": [
+        32,
+        55
+      ]
     },
     "max_hp_high": {
-      "uncommon": [8, 14],
-      "rare": [12, 20],
-      "epic": [18, 30],
-      "legendary": [25, 40],
-      "artifact": [35, 55],
-      "unique": [45, 70]
+      "uncommon": [
+        8,
+        14
+      ],
+      "rare": [
+        12,
+        20
+      ],
+      "epic": [
+        18,
+        30
+      ],
+      "legendary": [
+        25,
+        40
+      ],
+      "artifact": [
+        35,
+        55
+      ],
+      "unique": [
+        45,
+        70
+      ]
     },
     "parry_chance": {
-      "uncommon": [3, 5],
-      "rare": [4, 7],
-      "epic": [6, 10],
-      "legendary": [8, 12],
-      "artifact": [10, 15],
-      "unique": [12, 18]
+      "uncommon": [
+        3,
+        5
+      ],
+      "rare": [
+        4,
+        7
+      ],
+      "epic": [
+        6,
+        10
+      ],
+      "legendary": [
+        8,
+        12
+      ],
+      "artifact": [
+        10,
+        15
+      ],
+      "unique": [
+        12,
+        18
+      ]
     },
     "major_percent": {
-      "uncommon": [4, 7],
-      "rare": [6, 10],
-      "epic": [9, 14],
-      "legendary": [12, 18],
-      "artifact": [15, 22],
-      "unique": [18, 28]
+      "uncommon": [
+        4,
+        7
+      ],
+      "rare": [
+        6,
+        10
+      ],
+      "epic": [
+        9,
+        14
+      ],
+      "legendary": [
+        12,
+        18
+      ],
+      "artifact": [
+        15,
+        22
+      ],
+      "unique": [
+        18,
+        28
+      ]
     },
     "bleed_on_hit": {
-      "uncommon": [5, 8],
-      "rare": [7, 10],
-      "epic": [9, 13],
-      "legendary": [11, 16],
-      "artifact": [14, 19],
-      "unique": [16, 24]
+      "uncommon": [
+        5,
+        8
+      ],
+      "rare": [
+        7,
+        10
+      ],
+      "epic": [
+        9,
+        13
+      ],
+      "legendary": [
+        11,
+        16
+      ],
+      "artifact": [
+        14,
+        19
+      ],
+      "unique": [
+        16,
+        24
+      ]
     },
     "poison_on_hit": {
-      "uncommon": [5, 8],
-      "rare": [7, 11],
-      "epic": [9, 14],
-      "legendary": [12, 17],
-      "artifact": [15, 21],
-      "unique": [18, 26]
+      "uncommon": [
+        5,
+        8
+      ],
+      "rare": [
+        7,
+        11
+      ],
+      "epic": [
+        9,
+        14
+      ],
+      "legendary": [
+        12,
+        17
+      ],
+      "artifact": [
+        15,
+        21
+      ],
+      "unique": [
+        18,
+        26
+      ]
     },
     "stagger_on_hit": {
-      "uncommon": [4, 7],
-      "rare": [6, 10],
-      "epic": [8, 13],
-      "legendary": [11, 16],
-      "artifact": [14, 20],
-      "unique": [17, 25]
+      "uncommon": [
+        4,
+        7
+      ],
+      "rare": [
+        6,
+        10
+      ],
+      "epic": [
+        8,
+        13
+      ],
+      "legendary": [
+        11,
+        16
+      ],
+      "artifact": [
+        14,
+        20
+      ],
+      "unique": [
+        17,
+        25
+      ]
     },
     "stun_on_hit": {
-      "uncommon": [2, 3],
-      "rare": [3, 4],
-      "epic": [4, 5],
-      "legendary": [5, 6],
-      "artifact": [6, 8],
-      "unique": [8, 10]
+      "uncommon": [
+        2,
+        3
+      ],
+      "rare": [
+        3,
+        4
+      ],
+      "epic": [
+        4,
+        5
+      ],
+      "legendary": [
+        5,
+        6
+      ],
+      "artifact": [
+        6,
+        8
+      ],
+      "unique": [
+        8,
+        10
+      ]
     },
     "stat_bonus": {
-      "uncommon": [1, 2],
-      "rare": [2, 3],
-      "epic": [3, 4],
-      "legendary": [4, 5],
-      "artifact": [5, 6],
-      "unique": [6, 8]
+      "uncommon": [
+        1,
+        2
+      ],
+      "rare": [
+        2,
+        3
+      ],
+      "epic": [
+        3,
+        4
+      ],
+      "legendary": [
+        4,
+        5
+      ],
+      "artifact": [
+        5,
+        6
+      ],
+      "unique": [
+        6,
+        8
+      ]
     }
   },
   "weaponBases": [
@@ -203,13 +623,42 @@
       "family": "dagger",
       "weaponType": "one_handed_dagger",
       "hands": 1,
-      "damageDice": { "count": 1, "sides": 4 },
+      "damageDice": {
+        "count": 1,
+        "sides": 4
+      },
       "attackSpeed": 1.35,
-      "size": [1, 2],
-      "materialPool": ["rusty", "worn", "iron", "steel", "bone"],
-      "affixPools": ["speed", "precision", "venom", "weapon_guard"],
-      "effects": [{ "type": "crit_chance", "value": 2 }],
-      "tags": ["dagger", "weapon", "melee", "fast", "one_handed", "speed"],
+      "size": [
+        1,
+        2
+      ],
+      "materialPool": [
+        "rusty",
+        "worn",
+        "iron",
+        "steel",
+        "bone"
+      ],
+      "affixPools": [
+        "speed",
+        "precision",
+        "venom",
+        "weapon_guard"
+      ],
+      "effects": [
+        {
+          "type": "crit_chance",
+          "value": 2
+        }
+      ],
+      "tags": [
+        "dagger",
+        "weapon",
+        "melee",
+        "fast",
+        "one_handed",
+        "speed"
+      ],
       "price": 45,
       "icon": "/assets/items/generated/dagger.png"
     },
@@ -220,12 +669,36 @@
       "family": "sword",
       "weaponType": "one_handed_sword",
       "hands": 1,
-      "damageDice": { "count": 1, "sides": 8 },
+      "damageDice": {
+        "count": 1,
+        "sides": 8
+      },
       "attackSpeed": 1,
-      "size": [1, 3],
-      "materialPool": ["rusty", "worn", "iron", "steel", "bone"],
-      "affixPools": ["balanced", "precision", "blood", "dueling", "weapon_guard"],
-      "tags": ["sword", "weapon", "melee", "one_handed", "balanced"],
+      "size": [
+        1,
+        3
+      ],
+      "materialPool": [
+        "rusty",
+        "worn",
+        "iron",
+        "steel",
+        "bone"
+      ],
+      "affixPools": [
+        "balanced",
+        "precision",
+        "blood",
+        "dueling",
+        "weapon_guard"
+      ],
+      "tags": [
+        "sword",
+        "weapon",
+        "melee",
+        "one_handed",
+        "balanced"
+      ],
       "price": 60,
       "icon": "/assets/items/generated/sword.png"
     },
@@ -236,21 +709,60 @@
       "family": "sword",
       "weaponType": "one_handed_rapier",
       "hands": 1,
-      "damageDice": { "count": 1, "sides": 6 },
+      "damageDice": {
+        "count": 1,
+        "sides": 6
+      },
       "attackSpeed": 1.15,
-      "size": [1, 3],
-      "materialPool": ["worn", "iron", "steel", "bone", "ancient"],
-      "affixPools": ["dueling", "precision", "weapon_guard"],
+      "size": [
+        1,
+        3
+      ],
+      "materialPool": [
+        "worn",
+        "iron",
+        "steel",
+        "bone",
+        "ancient"
+      ],
+      "affixPools": [
+        "dueling",
+        "precision",
+        "weapon_guard"
+      ],
       "effects": [
         {
           "type": "parry_chance",
           "min": 3,
           "max": 5,
-          "rarityMin": { "normal": 3, "uncommon": 4, "rare": 5, "epic": 6, "legendary": 7, "artifact": 8, "unique": 7 },
-          "rarityMax": { "normal": 5, "uncommon": 6, "rare": 7, "epic": 8, "legendary": 10, "artifact": 12, "unique": 10 }
+          "rarityMin": {
+            "normal": 3,
+            "uncommon": 4,
+            "rare": 5,
+            "epic": 6,
+            "legendary": 7,
+            "artifact": 8,
+            "unique": 7
+          },
+          "rarityMax": {
+            "normal": 5,
+            "uncommon": 6,
+            "rare": 7,
+            "epic": 8,
+            "legendary": 10,
+            "artifact": 12,
+            "unique": 10
+          }
         }
       ],
-      "tags": ["rapier", "sword", "weapon", "melee", "one_handed", "dueling"],
+      "tags": [
+        "rapier",
+        "sword",
+        "weapon",
+        "melee",
+        "one_handed",
+        "dueling"
+      ],
       "price": 68,
       "icon": "/assets/items/generated/sword.png"
     },
@@ -261,12 +773,35 @@
       "family": "axe",
       "weaponType": "one_handed_axe",
       "hands": 1,
-      "damageDice": { "count": 1, "sides": 10 },
+      "damageDice": {
+        "count": 1,
+        "sides": 10
+      },
       "attackSpeed": 0.88,
-      "size": [2, 3],
-      "materialPool": ["rusty", "worn", "iron", "steel", "bone", "bloodiron"],
-      "affixPools": ["brutal", "blood", "weapon_guard"],
-      "tags": ["axe", "weapon", "melee", "one_handed", "brutal"],
+      "size": [
+        2,
+        3
+      ],
+      "materialPool": [
+        "rusty",
+        "worn",
+        "iron",
+        "steel",
+        "bone",
+        "bloodiron"
+      ],
+      "affixPools": [
+        "brutal",
+        "blood",
+        "weapon_guard"
+      ],
+      "tags": [
+        "axe",
+        "weapon",
+        "melee",
+        "one_handed",
+        "brutal"
+      ],
       "price": 72,
       "icon": "/assets/items/generated/axe.png"
     },
@@ -277,13 +812,43 @@
       "family": "mace",
       "weaponType": "one_handed_mace",
       "hands": 1,
-      "damageDice": { "count": 1, "sides": 8 },
+      "damageDice": {
+        "count": 1,
+        "sides": 8
+      },
       "attackSpeed": 0.9,
-      "size": [2, 3],
-      "materialPool": ["rusty", "worn", "iron", "steel", "bone", "bloodiron"],
-      "affixPools": ["crusher", "guard", "weapon_guard"],
-      "effects": [{ "type": "stagger_on_hit", "chance": 4, "duration": 1, "missPenalty": 25 }],
-      "tags": ["mace", "weapon", "melee", "one_handed", "crusher"],
+      "size": [
+        2,
+        3
+      ],
+      "materialPool": [
+        "rusty",
+        "worn",
+        "iron",
+        "steel",
+        "bone",
+        "bloodiron"
+      ],
+      "affixPools": [
+        "crusher",
+        "guard",
+        "weapon_guard"
+      ],
+      "effects": [
+        {
+          "type": "stagger_on_hit",
+          "chance": 4,
+          "duration": 1,
+          "missPenalty": 25
+        }
+      ],
+      "tags": [
+        "mace",
+        "weapon",
+        "melee",
+        "one_handed",
+        "crusher"
+      ],
       "price": 68,
       "icon": "/assets/items/generated/stun_mace.png"
     },
@@ -294,13 +859,41 @@
       "family": "spear",
       "weaponType": "two_handed_spear",
       "hands": 2,
-      "damageDice": { "count": 1, "sides": 12 },
+      "damageDice": {
+        "count": 1,
+        "sides": 12
+      },
       "attackSpeed": 0.84,
-      "size": [1, 4],
-      "materialPool": ["rusty", "worn", "iron", "steel", "bone"],
-      "affixPools": ["balanced", "precision", "blood"],
-      "effects": [{ "type": "damage_vs_tag", "tag": "beast", "value": 15 }],
-      "tags": ["spear", "polearm", "weapon", "melee", "two_handed"],
+      "size": [
+        1,
+        4
+      ],
+      "materialPool": [
+        "rusty",
+        "worn",
+        "iron",
+        "steel",
+        "bone"
+      ],
+      "affixPools": [
+        "balanced",
+        "precision",
+        "blood"
+      ],
+      "effects": [
+        {
+          "type": "damage_vs_tag",
+          "tag": "beast",
+          "value": 15
+        }
+      ],
+      "tags": [
+        "spear",
+        "polearm",
+        "weapon",
+        "melee",
+        "two_handed"
+      ],
       "price": 82,
       "icon": "/assets/items/generated/hunter_spear.png"
     },
@@ -311,12 +904,34 @@
       "family": "sword",
       "weaponType": "two_handed_sword",
       "hands": 2,
-      "damageDice": { "count": 2, "sides": 8 },
+      "damageDice": {
+        "count": 2,
+        "sides": 8
+      },
       "attackSpeed": 0.76,
-      "size": [2, 4],
-      "materialPool": ["iron", "steel", "bone", "bloodiron"],
-      "affixPools": ["brutal", "balanced", "blood", "dueling"],
-      "tags": ["sword", "weapon", "melee", "two_handed", "heavy"],
+      "size": [
+        2,
+        4
+      ],
+      "materialPool": [
+        "iron",
+        "steel",
+        "bone",
+        "bloodiron"
+      ],
+      "affixPools": [
+        "brutal",
+        "balanced",
+        "blood",
+        "dueling"
+      ],
+      "tags": [
+        "sword",
+        "weapon",
+        "melee",
+        "two_handed",
+        "heavy"
+      ],
       "price": 115,
       "icon": "/assets/items/generated/longsword.png"
     },
@@ -327,12 +942,33 @@
       "family": "axe",
       "weaponType": "two_handed_axe",
       "hands": 2,
-      "damageDice": { "count": 2, "sides": 12 },
+      "damageDice": {
+        "count": 2,
+        "sides": 12
+      },
       "attackSpeed": 0.68,
-      "size": [2, 4],
-      "materialPool": ["iron", "steel", "bone", "bloodiron"],
-      "affixPools": ["brutal", "blood", "crusher"],
-      "tags": ["axe", "weapon", "melee", "two_handed", "heavy"],
+      "size": [
+        2,
+        4
+      ],
+      "materialPool": [
+        "iron",
+        "steel",
+        "bone",
+        "bloodiron"
+      ],
+      "affixPools": [
+        "brutal",
+        "blood",
+        "crusher"
+      ],
+      "tags": [
+        "axe",
+        "weapon",
+        "melee",
+        "two_handed",
+        "heavy"
+      ],
       "price": 132,
       "icon": "/assets/items/generated/axe.png"
     },
@@ -343,13 +979,38 @@
       "family": "staff",
       "weaponType": "two_handed_staff",
       "hands": 2,
-      "damageDice": { "count": 1, "sides": 6 },
+      "damageDice": {
+        "count": 1,
+        "sides": 6
+      },
       "attackSpeed": 1.06,
-      "size": [1, 4],
-      "materialPool": ["worn", "ash", "bone", "ancient"],
-      "affixPools": ["arcane", "balanced"],
-      "effects": [{ "type": "spell_damage", "value": 3 }],
-      "tags": ["staff", "weapon", "melee", "two_handed", "arcane"],
+      "size": [
+        1,
+        4
+      ],
+      "materialPool": [
+        "worn",
+        "ash",
+        "bone",
+        "ancient"
+      ],
+      "affixPools": [
+        "arcane",
+        "balanced"
+      ],
+      "effects": [
+        {
+          "type": "spell_damage",
+          "value": 3
+        }
+      ],
+      "tags": [
+        "staff",
+        "weapon",
+        "melee",
+        "two_handed",
+        "arcane"
+      ],
       "price": 58,
       "icon": "/assets/items/generated/apprentice_staff.png"
     },
@@ -360,12 +1021,30 @@
       "family": "bow",
       "weaponType": "two_handed_bow",
       "hands": 2,
-      "damageDice": { "count": 1, "sides": 4 },
+      "damageDice": {
+        "count": 1,
+        "sides": 4
+      },
       "attackSpeed": 1.05,
-      "size": [2, 3],
-      "materialPool": ["worn", "ash", "bone"],
-      "affixPools": ["speed", "precision"],
-      "tags": ["bow", "weapon", "ranged", "two_handed"],
+      "size": [
+        2,
+        3
+      ],
+      "materialPool": [
+        "worn",
+        "ash",
+        "bone"
+      ],
+      "affixPools": [
+        "speed",
+        "precision"
+      ],
+      "tags": [
+        "bow",
+        "weapon",
+        "ranged",
+        "two_handed"
+      ],
       "price": 58,
       "icon": "/assets/items/generated/training_bow.png"
     },
@@ -376,12 +1055,35 @@
       "family": "bow",
       "weaponType": "two_handed_bow",
       "hands": 2,
-      "damageDice": { "count": 1, "sides": 8 },
+      "damageDice": {
+        "count": 1,
+        "sides": 8
+      },
       "attackSpeed": 1.12,
-      "size": [2, 3],
-      "materialPool": ["worn", "ash", "bone", "iron", "steel", "ancient"],
-      "affixPools": ["speed", "precision", "balanced"],
-      "tags": ["bow", "weapon", "ranged", "two_handed", "precision"],
+      "size": [
+        2,
+        3
+      ],
+      "materialPool": [
+        "worn",
+        "ash",
+        "bone",
+        "iron",
+        "steel",
+        "ancient"
+      ],
+      "affixPools": [
+        "speed",
+        "precision",
+        "balanced"
+      ],
+      "tags": [
+        "bow",
+        "weapon",
+        "ranged",
+        "two_handed",
+        "precision"
+      ],
       "price": 86,
       "icon": "/assets/items/generated/Composite%20bow.png"
     },
@@ -392,12 +1094,31 @@
       "family": "crossbow",
       "weaponType": "two_handed_crossbow",
       "hands": 2,
-      "damageDice": { "count": 1, "sides": 10 },
+      "damageDice": {
+        "count": 1,
+        "sides": 10
+      },
       "attackSpeed": 0.72,
-      "size": [3, 3],
-      "materialPool": ["worn", "iron", "bone", "steel"],
-      "affixPools": ["precision", "brutal"],
-      "tags": ["crossbow", "weapon", "ranged", "two_handed"],
+      "size": [
+        3,
+        3
+      ],
+      "materialPool": [
+        "worn",
+        "iron",
+        "bone",
+        "steel"
+      ],
+      "affixPools": [
+        "precision",
+        "brutal"
+      ],
+      "tags": [
+        "crossbow",
+        "weapon",
+        "ranged",
+        "two_handed"
+      ],
       "price": 92,
       "icon": "/assets/items/generated/Heavy%20crossbow.png"
     },
@@ -408,12 +1129,32 @@
       "family": "crossbow",
       "weaponType": "two_handed_crossbow",
       "hands": 2,
-      "damageDice": { "count": 2, "sides": 6 },
+      "damageDice": {
+        "count": 2,
+        "sides": 6
+      },
       "attackSpeed": 0.72,
-      "size": [3, 3],
-      "materialPool": ["iron", "steel", "bone", "bloodiron"],
-      "affixPools": ["precision", "brutal"],
-      "tags": ["crossbow", "weapon", "ranged", "two_handed", "heavy"],
+      "size": [
+        3,
+        3
+      ],
+      "materialPool": [
+        "iron",
+        "steel",
+        "bone",
+        "bloodiron"
+      ],
+      "affixPools": [
+        "precision",
+        "brutal"
+      ],
+      "tags": [
+        "crossbow",
+        "weapon",
+        "ranged",
+        "two_handed",
+        "heavy"
+      ],
       "price": 124,
       "icon": "/assets/items/generated/Heavy%20crossbow.png"
     },
@@ -424,13 +1165,42 @@
       "family": "dagger",
       "weaponType": "one_handed_dagger",
       "hands": 1,
-      "damageDice": { "count": 1, "sides": 6 },
+      "damageDice": {
+        "count": 1,
+        "sides": 6
+      },
       "attackSpeed": 1.25,
-      "size": [1, 2],
-      "materialPool": ["steel", "ash", "bone", "ancient"],
-      "affixPools": ["speed", "precision", "venom", "arcane", "weapon_guard"],
-      "effects": [{ "type": "crit_chance", "value": 3 }],
-      "tags": ["dagger", "weapon", "melee", "fast", "one_handed", "ritual"],
+      "size": [
+        1,
+        2
+      ],
+      "materialPool": [
+        "steel",
+        "ash",
+        "bone",
+        "ancient"
+      ],
+      "affixPools": [
+        "speed",
+        "precision",
+        "venom",
+        "arcane",
+        "weapon_guard"
+      ],
+      "effects": [
+        {
+          "type": "crit_chance",
+          "value": 3
+        }
+      ],
+      "tags": [
+        "dagger",
+        "weapon",
+        "melee",
+        "fast",
+        "one_handed",
+        "ritual"
+      ],
       "price": 82,
       "icon": "/assets/items/generated/dagger.png"
     },
@@ -441,13 +1211,41 @@
       "family": "sword",
       "weaponType": "one_handed_sword",
       "hands": 1,
-      "damageDice": { "count": 1, "sides": 10 },
+      "damageDice": {
+        "count": 1,
+        "sides": 10
+      },
       "attackSpeed": 0.92,
-      "size": [1, 3],
-      "materialPool": ["steel", "ancient", "bloodiron"],
-      "affixPools": ["balanced", "precision", "blood", "dueling", "weapon_guard"],
-      "effects": [{ "type": "parry_chance", "value": 4 }],
-      "tags": ["sword", "weapon", "melee", "one_handed", "balanced", "oathbound"],
+      "size": [
+        1,
+        3
+      ],
+      "materialPool": [
+        "steel",
+        "ancient",
+        "bloodiron"
+      ],
+      "affixPools": [
+        "balanced",
+        "precision",
+        "blood",
+        "dueling",
+        "weapon_guard"
+      ],
+      "effects": [
+        {
+          "type": "parry_chance",
+          "value": 4
+        }
+      ],
+      "tags": [
+        "sword",
+        "weapon",
+        "melee",
+        "one_handed",
+        "balanced",
+        "oathbound"
+      ],
       "price": 94,
       "icon": "/assets/items/generated/sword.png"
     },
@@ -458,13 +1256,41 @@
       "family": "mace",
       "weaponType": "one_handed_mace",
       "hands": 1,
-      "damageDice": { "count": 1, "sides": 10 },
+      "damageDice": {
+        "count": 1,
+        "sides": 10
+      },
       "attackSpeed": 0.78,
-      "size": [2, 3],
-      "materialPool": ["steel", "ancient", "bloodiron"],
-      "affixPools": ["crusher", "guard", "weapon_guard"],
-      "effects": [{ "type": "stagger_on_hit", "chance": 6, "duration": 1, "missPenalty": 30 }],
-      "tags": ["mace", "weapon", "melee", "one_handed", "crusher", "stoneguard"],
+      "size": [
+        2,
+        3
+      ],
+      "materialPool": [
+        "steel",
+        "ancient",
+        "bloodiron"
+      ],
+      "affixPools": [
+        "crusher",
+        "guard",
+        "weapon_guard"
+      ],
+      "effects": [
+        {
+          "type": "stagger_on_hit",
+          "chance": 6,
+          "duration": 1,
+          "missPenalty": 30
+        }
+      ],
+      "tags": [
+        "mace",
+        "weapon",
+        "melee",
+        "one_handed",
+        "crusher",
+        "stoneguard"
+      ],
       "price": 92,
       "icon": "/assets/items/generated/stun_mace.png"
     },
@@ -475,12 +1301,34 @@
       "family": "sword",
       "weaponType": "two_handed_sword",
       "hands": 2,
-      "damageDice": { "count": 2, "sides": 10 },
+      "damageDice": {
+        "count": 2,
+        "sides": 10
+      },
       "attackSpeed": 0.68,
-      "size": [2, 4],
-      "materialPool": ["steel", "ancient", "bloodiron"],
-      "affixPools": ["brutal", "balanced", "blood", "dueling"],
-      "tags": ["sword", "weapon", "melee", "two_handed", "heavy", "blacksteel"],
+      "size": [
+        2,
+        4
+      ],
+      "materialPool": [
+        "steel",
+        "ancient",
+        "bloodiron"
+      ],
+      "affixPools": [
+        "brutal",
+        "balanced",
+        "blood",
+        "dueling"
+      ],
+      "tags": [
+        "sword",
+        "weapon",
+        "melee",
+        "two_handed",
+        "heavy",
+        "blacksteel"
+      ],
       "price": 152,
       "icon": "/assets/items/generated/longsword.png"
     },
@@ -491,12 +1339,32 @@
       "family": "bow",
       "weaponType": "two_handed_bow",
       "hands": 2,
-      "damageDice": { "count": 1, "sides": 6 },
+      "damageDice": {
+        "count": 1,
+        "sides": 6
+      },
       "attackSpeed": 1.25,
-      "size": [2, 3],
-      "materialPool": ["ash", "bone", "ancient"],
-      "affixPools": ["speed", "precision"],
-      "tags": ["bow", "weapon", "ranged", "two_handed", "fast", "ashenwood"],
+      "size": [
+        2,
+        3
+      ],
+      "materialPool": [
+        "ash",
+        "bone",
+        "ancient"
+      ],
+      "affixPools": [
+        "speed",
+        "precision"
+      ],
+      "tags": [
+        "bow",
+        "weapon",
+        "ranged",
+        "two_handed",
+        "fast",
+        "ashenwood"
+      ],
       "price": 92,
       "icon": "/assets/items/generated/training_bow.png"
     },
@@ -507,12 +1375,33 @@
       "family": "bow",
       "weaponType": "two_handed_bow",
       "hands": 2,
-      "damageDice": { "count": 1, "sides": 10 },
+      "damageDice": {
+        "count": 1,
+        "sides": 10
+      },
       "attackSpeed": 0.98,
-      "size": [2, 4],
-      "materialPool": ["ash", "bone", "ancient"],
-      "affixPools": ["speed", "precision", "balanced"],
-      "tags": ["bow", "weapon", "ranged", "two_handed", "precision", "ashenwood"],
+      "size": [
+        2,
+        4
+      ],
+      "materialPool": [
+        "ash",
+        "bone",
+        "ancient"
+      ],
+      "affixPools": [
+        "speed",
+        "precision",
+        "balanced"
+      ],
+      "tags": [
+        "bow",
+        "weapon",
+        "ranged",
+        "two_handed",
+        "precision",
+        "ashenwood"
+      ],
       "price": 108,
       "icon": "/assets/items/generated/Composite%20bow.png"
     },
@@ -523,12 +1412,32 @@
       "family": "crossbow",
       "weaponType": "two_handed_crossbow",
       "hands": 2,
-      "damageDice": { "count": 2, "sides": 8 },
+      "damageDice": {
+        "count": 2,
+        "sides": 8
+      },
       "attackSpeed": 0.65,
-      "size": [3, 3],
-      "materialPool": ["bone", "ancient", "bloodiron"],
-      "affixPools": ["precision", "brutal"],
-      "tags": ["crossbow", "weapon", "ranged", "two_handed", "heavy", "wyvernbone"],
+      "size": [
+        3,
+        3
+      ],
+      "materialPool": [
+        "bone",
+        "ancient",
+        "bloodiron"
+      ],
+      "affixPools": [
+        "precision",
+        "brutal"
+      ],
+      "tags": [
+        "crossbow",
+        "weapon",
+        "ranged",
+        "two_handed",
+        "heavy",
+        "wyvernbone"
+      ],
       "price": 158,
       "icon": "/assets/items/generated/Heavy%20crossbow.png"
     }
@@ -540,11 +1449,27 @@
       "slot": "chest",
       "family": "armor",
       "armorType": "cloth",
-      "armorDice": { "count": 1, "sides": 2 },
-      "size": [2, 3],
-      "materialPool": ["cloth", "worn"],
-      "affixPools": ["survival"],
-      "tags": ["chest", "cloth", "light", "armor_light"],
+      "armorDice": {
+        "count": 1,
+        "sides": 2
+      },
+      "size": [
+        2,
+        3
+      ],
+      "materialPool": [
+        "cloth",
+        "worn"
+      ],
+      "affixPools": [
+        "survival"
+      ],
+      "tags": [
+        "chest",
+        "cloth",
+        "light",
+        "armor_light"
+      ],
       "price": 14,
       "icon": "/assets/items/generated/traveler_chest.png"
     },
@@ -554,11 +1479,30 @@
       "slot": "helmet",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 4 },
-      "size": [2, 2],
-      "materialPool": ["worn", "cured", "studded"],
-      "affixPools": ["speed", "precision", "survival"],
-      "tags": ["helmet", "medium", "leather", "armor_medium"],
+      "armorDice": {
+        "count": 1,
+        "sides": 4
+      },
+      "size": [
+        2,
+        2
+      ],
+      "materialPool": [
+        "worn",
+        "cured",
+        "studded"
+      ],
+      "affixPools": [
+        "speed",
+        "precision",
+        "survival"
+      ],
+      "tags": [
+        "helmet",
+        "medium",
+        "leather",
+        "armor_medium"
+      ],
       "price": 42,
       "icon": "/assets/items/generated/leather_helm.png"
     },
@@ -568,11 +1512,30 @@
       "slot": "chest",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 8 },
-      "size": [2, 3],
-      "materialPool": ["worn", "cured", "studded"],
-      "affixPools": ["speed", "survival", "dueling"],
-      "tags": ["chest", "medium", "leather", "armor_medium"],
+      "armorDice": {
+        "count": 1,
+        "sides": 8
+      },
+      "size": [
+        2,
+        3
+      ],
+      "materialPool": [
+        "worn",
+        "cured",
+        "studded"
+      ],
+      "affixPools": [
+        "speed",
+        "survival",
+        "dueling"
+      ],
+      "tags": [
+        "chest",
+        "medium",
+        "leather",
+        "armor_medium"
+      ],
       "price": 70,
       "icon": "/assets/items/generated/traveler_chest.png"
     },
@@ -582,11 +1545,29 @@
       "slot": "legs",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 6 },
-      "size": [2, 3],
-      "materialPool": ["worn", "cured", "studded"],
-      "affixPools": ["speed", "survival"],
-      "tags": ["legs", "medium", "leather", "armor_medium"],
+      "armorDice": {
+        "count": 1,
+        "sides": 6
+      },
+      "size": [
+        2,
+        3
+      ],
+      "materialPool": [
+        "worn",
+        "cured",
+        "studded"
+      ],
+      "affixPools": [
+        "speed",
+        "survival"
+      ],
+      "tags": [
+        "legs",
+        "medium",
+        "leather",
+        "armor_medium"
+      ],
       "price": 58,
       "icon": "/assets/items/generated/leather_chausses.png"
     },
@@ -596,11 +1577,29 @@
       "slot": "boots",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 4 },
-      "size": [2, 2],
-      "materialPool": ["worn", "cured", "studded"],
-      "affixPools": ["speed", "survival"],
-      "tags": ["boots", "medium", "leather", "armor_medium"],
+      "armorDice": {
+        "count": 1,
+        "sides": 4
+      },
+      "size": [
+        2,
+        2
+      ],
+      "materialPool": [
+        "worn",
+        "cured",
+        "studded"
+      ],
+      "affixPools": [
+        "speed",
+        "survival"
+      ],
+      "tags": [
+        "boots",
+        "medium",
+        "leather",
+        "armor_medium"
+      ],
       "price": 46,
       "icon": "/assets/items/generated/Leather%20boots.png?v=2"
     },
@@ -610,11 +1609,30 @@
       "slot": "gloves",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 4 },
-      "size": [2, 2],
-      "materialPool": ["worn", "cured", "studded"],
-      "affixPools": ["speed", "precision", "dueling"],
-      "tags": ["gloves", "medium", "leather", "armor_medium"],
+      "armorDice": {
+        "count": 1,
+        "sides": 4
+      },
+      "size": [
+        2,
+        2
+      ],
+      "materialPool": [
+        "worn",
+        "cured",
+        "studded"
+      ],
+      "affixPools": [
+        "speed",
+        "precision",
+        "dueling"
+      ],
+      "tags": [
+        "gloves",
+        "medium",
+        "leather",
+        "armor_medium"
+      ],
       "price": 48,
       "icon": "/assets/items/generated/duelist_gloves.png"
     },
@@ -624,11 +1642,30 @@
       "slot": "chest",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 10 },
-      "size": [2, 3],
-      "materialPool": ["iron", "steel", "bone", "bloodiron"],
-      "affixPools": ["guard", "survival"],
-      "tags": ["chest", "mail", "medium", "armor_medium"],
+      "armorDice": {
+        "count": 1,
+        "sides": 10
+      },
+      "size": [
+        2,
+        3
+      ],
+      "materialPool": [
+        "iron",
+        "steel",
+        "bone",
+        "bloodiron"
+      ],
+      "affixPools": [
+        "guard",
+        "survival"
+      ],
+      "tags": [
+        "chest",
+        "mail",
+        "medium",
+        "armor_medium"
+      ],
       "price": 105,
       "icon": "/assets/items/generated/iron_chest.png"
     },
@@ -638,15 +1675,40 @@
       "slot": "helmet",
       "family": "armor",
       "armorType": "cloth",
-      "armorDice": { "count": 1, "sides": 4 },
-      "size": [2, 2],
-      "materialPool": ["worn", "ash", "ancient"],
-      "affixPools": ["arcane", "survival"],
-      "effects": [
-        { "type": "spell_damage", "value": 2 },
-        { "type": "magic_defense", "value": 2 }
+      "armorDice": {
+        "count": 1,
+        "sides": 4
+      },
+      "size": [
+        2,
+        2
       ],
-      "tags": ["helmet", "cloth", "light", "armor_light", "spireweave"],
+      "materialPool": [
+        "worn",
+        "ash",
+        "ancient"
+      ],
+      "affixPools": [
+        "arcane",
+        "survival"
+      ],
+      "effects": [
+        {
+          "type": "spell_damage",
+          "value": 2
+        },
+        {
+          "type": "magic_defense",
+          "value": 2
+        }
+      ],
+      "tags": [
+        "helmet",
+        "cloth",
+        "light",
+        "armor_light",
+        "spireweave"
+      ],
       "price": 68,
       "icon": "/assets/items/generated/leather_helm.png"
     },
@@ -656,15 +1718,40 @@
       "slot": "chest",
       "family": "armor",
       "armorType": "cloth",
-      "armorDice": { "count": 1, "sides": 6 },
-      "size": [2, 3],
-      "materialPool": ["worn", "ash", "ancient"],
-      "affixPools": ["arcane", "survival"],
-      "effects": [
-        { "type": "spell_damage", "value": 4 },
-        { "type": "magic_defense", "value": 3 }
+      "armorDice": {
+        "count": 1,
+        "sides": 6
+      },
+      "size": [
+        2,
+        3
       ],
-      "tags": ["chest", "cloth", "light", "armor_light", "spireweave"],
+      "materialPool": [
+        "worn",
+        "ash",
+        "ancient"
+      ],
+      "affixPools": [
+        "arcane",
+        "survival"
+      ],
+      "effects": [
+        {
+          "type": "spell_damage",
+          "value": 4
+        },
+        {
+          "type": "magic_defense",
+          "value": 3
+        }
+      ],
+      "tags": [
+        "chest",
+        "cloth",
+        "light",
+        "armor_light",
+        "spireweave"
+      ],
       "price": 92,
       "icon": "/assets/items/generated/traveler_chest.png"
     },
@@ -674,15 +1761,40 @@
       "slot": "legs",
       "family": "armor",
       "armorType": "cloth",
-      "armorDice": { "count": 1, "sides": 4 },
-      "size": [2, 3],
-      "materialPool": ["worn", "ash", "ancient"],
-      "affixPools": ["arcane", "survival"],
-      "effects": [
-        { "type": "magic_defense", "value": 2 },
-        { "type": "max_hp", "value": 4 }
+      "armorDice": {
+        "count": 1,
+        "sides": 4
+      },
+      "size": [
+        2,
+        3
       ],
-      "tags": ["legs", "cloth", "light", "armor_light", "spireweave"],
+      "materialPool": [
+        "worn",
+        "ash",
+        "ancient"
+      ],
+      "affixPools": [
+        "arcane",
+        "survival"
+      ],
+      "effects": [
+        {
+          "type": "magic_defense",
+          "value": 2
+        },
+        {
+          "type": "max_hp",
+          "value": 4
+        }
+      ],
+      "tags": [
+        "legs",
+        "cloth",
+        "light",
+        "armor_light",
+        "spireweave"
+      ],
       "price": 74,
       "icon": "/assets/items/generated/mail_legwraps.png"
     },
@@ -692,15 +1804,40 @@
       "slot": "boots",
       "family": "armor",
       "armorType": "cloth",
-      "armorDice": { "count": 1, "sides": 4 },
-      "size": [2, 2],
-      "materialPool": ["worn", "ash", "ancient"],
-      "affixPools": ["arcane", "speed"],
-      "effects": [
-        { "type": "dodge_chance", "value": 2 },
-        { "type": "magic_defense", "value": 1 }
+      "armorDice": {
+        "count": 1,
+        "sides": 4
+      },
+      "size": [
+        2,
+        2
       ],
-      "tags": ["boots", "cloth", "light", "armor_light", "spireweave"],
+      "materialPool": [
+        "worn",
+        "ash",
+        "ancient"
+      ],
+      "affixPools": [
+        "arcane",
+        "speed"
+      ],
+      "effects": [
+        {
+          "type": "dodge_chance",
+          "value": 2
+        },
+        {
+          "type": "magic_defense",
+          "value": 1
+        }
+      ],
+      "tags": [
+        "boots",
+        "cloth",
+        "light",
+        "armor_light",
+        "spireweave"
+      ],
       "price": 66,
       "icon": "/assets/items/generated/Leather%20boots.png?v=2"
     },
@@ -710,15 +1847,40 @@
       "slot": "gloves",
       "family": "armor",
       "armorType": "cloth",
-      "armorDice": { "count": 1, "sides": 4 },
-      "size": [2, 2],
-      "materialPool": ["worn", "ash", "ancient"],
-      "affixPools": ["arcane", "precision"],
-      "effects": [
-        { "type": "spell_damage", "value": 2 },
-        { "type": "crit_chance", "value": 1 }
+      "armorDice": {
+        "count": 1,
+        "sides": 4
+      },
+      "size": [
+        2,
+        2
       ],
-      "tags": ["gloves", "cloth", "light", "armor_light", "spireweave"],
+      "materialPool": [
+        "worn",
+        "ash",
+        "ancient"
+      ],
+      "affixPools": [
+        "arcane",
+        "precision"
+      ],
+      "effects": [
+        {
+          "type": "spell_damage",
+          "value": 2
+        },
+        {
+          "type": "crit_chance",
+          "value": 1
+        }
+      ],
+      "tags": [
+        "gloves",
+        "cloth",
+        "light",
+        "armor_light",
+        "spireweave"
+      ],
       "price": 68,
       "icon": "/assets/items/generated/duelist_gloves.png"
     },
@@ -728,15 +1890,44 @@
       "slot": "helmet",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 6 },
-      "size": [2, 2],
-      "materialPool": ["worn", "cured", "studded", "ash", "bone", "ancient"],
-      "affixPools": ["speed", "precision", "survival"],
-      "effects": [
-        { "type": "dodge_chance", "value": 2 },
-        { "type": "hit_chance", "value": 1 }
+      "armorDice": {
+        "count": 1,
+        "sides": 6
+      },
+      "size": [
+        2,
+        2
       ],
-      "tags": ["helmet", "medium", "leather", "armor_medium", "duskrunner"],
+      "materialPool": [
+        "worn",
+        "cured",
+        "studded",
+        "ash",
+        "bone",
+        "ancient"
+      ],
+      "affixPools": [
+        "speed",
+        "precision",
+        "survival"
+      ],
+      "effects": [
+        {
+          "type": "dodge_chance",
+          "value": 2
+        },
+        {
+          "type": "hit_chance",
+          "value": 1
+        }
+      ],
+      "tags": [
+        "helmet",
+        "medium",
+        "leather",
+        "armor_medium",
+        "duskrunner"
+      ],
       "price": 78,
       "icon": "/assets/items/generated/leather_helm.png"
     },
@@ -746,15 +1937,44 @@
       "slot": "chest",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 10 },
-      "size": [2, 3],
-      "materialPool": ["worn", "cured", "studded", "ash", "bone", "ancient"],
-      "affixPools": ["speed", "survival", "dueling"],
-      "effects": [
-        { "type": "dodge_chance", "value": 3 },
-        { "type": "attack_speed", "value": 1 }
+      "armorDice": {
+        "count": 1,
+        "sides": 10
+      },
+      "size": [
+        2,
+        3
       ],
-      "tags": ["chest", "medium", "leather", "armor_medium", "duskrunner"],
+      "materialPool": [
+        "worn",
+        "cured",
+        "studded",
+        "ash",
+        "bone",
+        "ancient"
+      ],
+      "affixPools": [
+        "speed",
+        "survival",
+        "dueling"
+      ],
+      "effects": [
+        {
+          "type": "dodge_chance",
+          "value": 3
+        },
+        {
+          "type": "attack_speed",
+          "value": 1
+        }
+      ],
+      "tags": [
+        "chest",
+        "medium",
+        "leather",
+        "armor_medium",
+        "duskrunner"
+      ],
       "price": 112,
       "icon": "/assets/items/generated/traveler_chest.png"
     },
@@ -764,15 +1984,43 @@
       "slot": "legs",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 8 },
-      "size": [2, 3],
-      "materialPool": ["worn", "cured", "studded", "ash", "bone", "ancient"],
-      "affixPools": ["speed", "survival"],
-      "effects": [
-        { "type": "dodge_chance", "value": 2 },
-        { "type": "attack_speed", "value": 1 }
+      "armorDice": {
+        "count": 1,
+        "sides": 8
+      },
+      "size": [
+        2,
+        3
       ],
-      "tags": ["legs", "medium", "leather", "armor_medium", "duskrunner"],
+      "materialPool": [
+        "worn",
+        "cured",
+        "studded",
+        "ash",
+        "bone",
+        "ancient"
+      ],
+      "affixPools": [
+        "speed",
+        "survival"
+      ],
+      "effects": [
+        {
+          "type": "dodge_chance",
+          "value": 2
+        },
+        {
+          "type": "attack_speed",
+          "value": 1
+        }
+      ],
+      "tags": [
+        "legs",
+        "medium",
+        "leather",
+        "armor_medium",
+        "duskrunner"
+      ],
       "price": 92,
       "icon": "/assets/items/generated/leather_chausses.png"
     },
@@ -782,15 +2030,44 @@
       "slot": "boots",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 6 },
-      "size": [2, 2],
-      "materialPool": ["worn", "cured", "studded", "ash", "bone", "ancient"],
-      "affixPools": ["speed", "survival", "dueling"],
-      "effects": [
-        { "type": "dodge_chance", "value": 3 },
-        { "type": "attack_speed", "value": 2 }
+      "armorDice": {
+        "count": 1,
+        "sides": 6
+      },
+      "size": [
+        2,
+        2
       ],
-      "tags": ["boots", "medium", "leather", "armor_medium", "duskrunner"],
+      "materialPool": [
+        "worn",
+        "cured",
+        "studded",
+        "ash",
+        "bone",
+        "ancient"
+      ],
+      "affixPools": [
+        "speed",
+        "survival",
+        "dueling"
+      ],
+      "effects": [
+        {
+          "type": "dodge_chance",
+          "value": 3
+        },
+        {
+          "type": "attack_speed",
+          "value": 2
+        }
+      ],
+      "tags": [
+        "boots",
+        "medium",
+        "leather",
+        "armor_medium",
+        "duskrunner"
+      ],
       "price": 78,
       "icon": "/assets/items/generated/Leather%20boots.png?v=2"
     },
@@ -800,15 +2077,44 @@
       "slot": "gloves",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 6 },
-      "size": [2, 2],
-      "materialPool": ["worn", "cured", "studded", "ash", "bone", "ancient"],
-      "affixPools": ["speed", "precision", "dueling"],
-      "effects": [
-        { "type": "attack_speed", "value": 2 },
-        { "type": "crit_chance", "value": 2 }
+      "armorDice": {
+        "count": 1,
+        "sides": 6
+      },
+      "size": [
+        2,
+        2
       ],
-      "tags": ["gloves", "medium", "leather", "armor_medium", "duskrunner"],
+      "materialPool": [
+        "worn",
+        "cured",
+        "studded",
+        "ash",
+        "bone",
+        "ancient"
+      ],
+      "affixPools": [
+        "speed",
+        "precision",
+        "dueling"
+      ],
+      "effects": [
+        {
+          "type": "attack_speed",
+          "value": 2
+        },
+        {
+          "type": "crit_chance",
+          "value": 2
+        }
+      ],
+      "tags": [
+        "gloves",
+        "medium",
+        "leather",
+        "armor_medium",
+        "duskrunner"
+      ],
       "price": 82,
       "icon": "/assets/items/generated/duelist_gloves.png"
     },
@@ -818,15 +2124,42 @@
       "slot": "helmet",
       "family": "armor",
       "armorType": "heavy",
-      "armorDice": { "count": 1, "sides": 10 },
-      "size": [2, 2],
-      "materialPool": ["iron", "steel", "bone", "bloodiron", "ancient"],
-      "affixPools": ["guard", "survival"],
-      "effects": [
-        { "type": "armor", "value": 2 },
-        { "type": "crit_resist", "value": 2 }
+      "armorDice": {
+        "count": 1,
+        "sides": 10
+      },
+      "size": [
+        2,
+        2
       ],
-      "tags": ["helmet", "heavy", "plate", "armor_heavy", "oathbound"],
+      "materialPool": [
+        "iron",
+        "steel",
+        "bone",
+        "bloodiron",
+        "ancient"
+      ],
+      "affixPools": [
+        "guard",
+        "survival"
+      ],
+      "effects": [
+        {
+          "type": "armor",
+          "value": 2
+        },
+        {
+          "type": "crit_resist",
+          "value": 2
+        }
+      ],
+      "tags": [
+        "helmet",
+        "heavy",
+        "plate",
+        "armor_heavy",
+        "oathbound"
+      ],
       "price": 122,
       "icon": "/assets/items/generated/plate_helm.png"
     },
@@ -836,15 +2169,42 @@
       "slot": "chest",
       "family": "armor",
       "armorType": "heavy",
-      "armorDice": { "count": 2, "sides": 10 },
-      "size": [2, 3],
-      "materialPool": ["iron", "steel", "bone", "bloodiron", "ancient"],
-      "affixPools": ["guard", "survival"],
-      "effects": [
-        { "type": "armor", "value": 4 },
-        { "type": "max_hp", "value": 12 }
+      "armorDice": {
+        "count": 2,
+        "sides": 10
+      },
+      "size": [
+        2,
+        3
       ],
-      "tags": ["chest", "heavy", "plate", "armor_heavy", "oathbound"],
+      "materialPool": [
+        "iron",
+        "steel",
+        "bone",
+        "bloodiron",
+        "ancient"
+      ],
+      "affixPools": [
+        "guard",
+        "survival"
+      ],
+      "effects": [
+        {
+          "type": "armor",
+          "value": 4
+        },
+        {
+          "type": "max_hp",
+          "value": 12
+        }
+      ],
+      "tags": [
+        "chest",
+        "heavy",
+        "plate",
+        "armor_heavy",
+        "oathbound"
+      ],
       "price": 178,
       "icon": "/assets/items/generated/iron_chest.png"
     },
@@ -854,15 +2214,42 @@
       "slot": "legs",
       "family": "armor",
       "armorType": "heavy",
-      "armorDice": { "count": 1, "sides": 12 },
-      "size": [2, 3],
-      "materialPool": ["iron", "steel", "bone", "bloodiron", "ancient"],
-      "affixPools": ["guard", "survival"],
-      "effects": [
-        { "type": "armor", "value": 3 },
-        { "type": "max_hp", "value": 8 }
+      "armorDice": {
+        "count": 1,
+        "sides": 12
+      },
+      "size": [
+        2,
+        3
       ],
-      "tags": ["legs", "heavy", "plate", "armor_heavy", "oathbound"],
+      "materialPool": [
+        "iron",
+        "steel",
+        "bone",
+        "bloodiron",
+        "ancient"
+      ],
+      "affixPools": [
+        "guard",
+        "survival"
+      ],
+      "effects": [
+        {
+          "type": "armor",
+          "value": 3
+        },
+        {
+          "type": "max_hp",
+          "value": 8
+        }
+      ],
+      "tags": [
+        "legs",
+        "heavy",
+        "plate",
+        "armor_heavy",
+        "oathbound"
+      ],
       "price": 142,
       "icon": "/assets/items/generated/plate_legguards.png"
     },
@@ -872,15 +2259,42 @@
       "slot": "boots",
       "family": "armor",
       "armorType": "heavy",
-      "armorDice": { "count": 1, "sides": 8 },
-      "size": [2, 2],
-      "materialPool": ["iron", "steel", "bone", "bloodiron", "ancient"],
-      "affixPools": ["guard", "survival"],
-      "effects": [
-        { "type": "armor", "value": 2 },
-        { "type": "crit_resist", "value": 2 }
+      "armorDice": {
+        "count": 1,
+        "sides": 8
+      },
+      "size": [
+        2,
+        2
       ],
-      "tags": ["boots", "heavy", "plate", "armor_heavy", "oathbound"],
+      "materialPool": [
+        "iron",
+        "steel",
+        "bone",
+        "bloodiron",
+        "ancient"
+      ],
+      "affixPools": [
+        "guard",
+        "survival"
+      ],
+      "effects": [
+        {
+          "type": "armor",
+          "value": 2
+        },
+        {
+          "type": "crit_resist",
+          "value": 2
+        }
+      ],
+      "tags": [
+        "boots",
+        "heavy",
+        "plate",
+        "armor_heavy",
+        "oathbound"
+      ],
       "price": 104,
       "icon": "/assets/items/generated/Leather%20boots.png?v=2"
     },
@@ -890,15 +2304,42 @@
       "slot": "gloves",
       "family": "armor",
       "armorType": "heavy",
-      "armorDice": { "count": 1, "sides": 8 },
-      "size": [2, 2],
-      "materialPool": ["iron", "steel", "bone", "bloodiron", "ancient"],
-      "affixPools": ["guard", "crusher"],
-      "effects": [
-        { "type": "armor", "value": 2 },
-        { "type": "max_hp", "value": 6 }
+      "armorDice": {
+        "count": 1,
+        "sides": 8
+      },
+      "size": [
+        2,
+        2
       ],
-      "tags": ["gloves", "heavy", "plate", "armor_heavy", "oathbound"],
+      "materialPool": [
+        "iron",
+        "steel",
+        "bone",
+        "bloodiron",
+        "ancient"
+      ],
+      "affixPools": [
+        "guard",
+        "crusher"
+      ],
+      "effects": [
+        {
+          "type": "armor",
+          "value": 2
+        },
+        {
+          "type": "max_hp",
+          "value": 6
+        }
+      ],
+      "tags": [
+        "gloves",
+        "heavy",
+        "plate",
+        "armor_heavy",
+        "oathbound"
+      ],
       "price": 108,
       "icon": "/assets/items/generated/duelist_gloves.png"
     },
@@ -908,11 +2349,30 @@
       "slot": "helmet",
       "family": "armor",
       "armorType": "heavy",
-      "armorDice": { "count": 1, "sides": 8 },
-      "size": [2, 2],
-      "materialPool": ["iron", "steel", "bone", "bloodiron"],
-      "affixPools": ["guard", "survival"],
-      "tags": ["helmet", "heavy", "plate", "armor_heavy"],
+      "armorDice": {
+        "count": 1,
+        "sides": 8
+      },
+      "size": [
+        2,
+        2
+      ],
+      "materialPool": [
+        "iron",
+        "steel",
+        "bone",
+        "bloodiron"
+      ],
+      "affixPools": [
+        "guard",
+        "survival"
+      ],
+      "tags": [
+        "helmet",
+        "heavy",
+        "plate",
+        "armor_heavy"
+      ],
       "price": 95,
       "icon": "/assets/items/generated/plate_helm.png"
     },
@@ -922,11 +2382,30 @@
       "slot": "chest",
       "family": "armor",
       "armorType": "heavy",
-      "armorDice": { "count": 2, "sides": 8 },
-      "size": [2, 3],
-      "materialPool": ["iron", "steel", "bone", "bloodiron"],
-      "affixPools": ["guard", "survival"],
-      "tags": ["chest", "heavy", "plate", "armor_heavy"],
+      "armorDice": {
+        "count": 2,
+        "sides": 8
+      },
+      "size": [
+        2,
+        3
+      ],
+      "materialPool": [
+        "iron",
+        "steel",
+        "bone",
+        "bloodiron"
+      ],
+      "affixPools": [
+        "guard",
+        "survival"
+      ],
+      "tags": [
+        "chest",
+        "heavy",
+        "plate",
+        "armor_heavy"
+      ],
       "price": 145,
       "icon": "/assets/items/generated/iron_chest.png"
     },
@@ -936,11 +2415,30 @@
       "slot": "legs",
       "family": "armor",
       "armorType": "heavy",
-      "armorDice": { "count": 1, "sides": 10 },
-      "size": [2, 3],
-      "materialPool": ["iron", "steel", "bone", "bloodiron"],
-      "affixPools": ["guard", "survival"],
-      "tags": ["legs", "heavy", "plate", "armor_heavy"],
+      "armorDice": {
+        "count": 1,
+        "sides": 10
+      },
+      "size": [
+        2,
+        3
+      ],
+      "materialPool": [
+        "iron",
+        "steel",
+        "bone",
+        "bloodiron"
+      ],
+      "affixPools": [
+        "guard",
+        "survival"
+      ],
+      "tags": [
+        "legs",
+        "heavy",
+        "plate",
+        "armor_heavy"
+      ],
       "price": 115,
       "icon": "/assets/items/generated/plate_legguards.png"
     },
@@ -950,11 +2448,30 @@
       "slot": "boots",
       "family": "armor",
       "armorType": "heavy",
-      "armorDice": { "count": 1, "sides": 6 },
-      "size": [2, 2],
-      "materialPool": ["iron", "steel", "bone", "bloodiron"],
-      "affixPools": ["guard", "survival"],
-      "tags": ["boots", "heavy", "plate", "armor_heavy"],
+      "armorDice": {
+        "count": 1,
+        "sides": 6
+      },
+      "size": [
+        2,
+        2
+      ],
+      "materialPool": [
+        "iron",
+        "steel",
+        "bone",
+        "bloodiron"
+      ],
+      "affixPools": [
+        "guard",
+        "survival"
+      ],
+      "tags": [
+        "boots",
+        "heavy",
+        "plate",
+        "armor_heavy"
+      ],
       "price": 82,
       "icon": "/assets/items/generated/Leather%20boots.png?v=2"
     },
@@ -964,11 +2481,30 @@
       "slot": "gloves",
       "family": "armor",
       "armorType": "heavy",
-      "armorDice": { "count": 1, "sides": 6 },
-      "size": [2, 2],
-      "materialPool": ["iron", "steel", "bone", "bloodiron"],
-      "affixPools": ["guard", "crusher"],
-      "tags": ["gloves", "heavy", "plate", "armor_heavy"],
+      "armorDice": {
+        "count": 1,
+        "sides": 6
+      },
+      "size": [
+        2,
+        2
+      ],
+      "materialPool": [
+        "iron",
+        "steel",
+        "bone",
+        "bloodiron"
+      ],
+      "affixPools": [
+        "guard",
+        "crusher"
+      ],
+      "tags": [
+        "gloves",
+        "heavy",
+        "plate",
+        "armor_heavy"
+      ],
       "price": 88,
       "icon": "/assets/items/generated/duelist_gloves.png"
     },
@@ -978,15 +2514,39 @@
       "slot": "offhand",
       "family": "shield",
       "armorType": "shield",
-      "armorDice": { "count": 1, "sides": 6 },
-      "size": [2, 2],
-      "materialPool": ["worn", "iron", "steel", "bone"],
-      "affixPools": ["guard", "speed"],
-      "effects": [
-        { "type": "block_chance", "value": 4 },
-        { "type": "block_power", "value": 12 }
+      "armorDice": {
+        "count": 1,
+        "sides": 6
+      },
+      "size": [
+        2,
+        2
       ],
-      "tags": ["shield", "light", "buckler"],
+      "materialPool": [
+        "worn",
+        "iron",
+        "steel",
+        "bone"
+      ],
+      "affixPools": [
+        "guard",
+        "speed"
+      ],
+      "effects": [
+        {
+          "type": "block_chance",
+          "value": 4
+        },
+        {
+          "type": "block_power",
+          "value": 12
+        }
+      ],
+      "tags": [
+        "shield",
+        "light",
+        "buckler"
+      ],
       "price": 62,
       "icon": "/assets/items/generated/buckler.png"
     },
@@ -996,15 +2556,36 @@
       "slot": "offhand",
       "family": "shield",
       "armorType": "shield",
-      "armorDice": { "count": 1, "sides": 8 },
-      "size": [2, 2],
-      "materialPool": ["bone"],
-      "affixPools": ["guard", "survival"],
-      "effects": [
-        { "type": "block_chance", "value": 5 },
-        { "type": "block_power", "value": 18 }
+      "armorDice": {
+        "count": 1,
+        "sides": 8
+      },
+      "size": [
+        2,
+        2
       ],
-      "tags": ["shield", "medium", "bone"],
+      "materialPool": [
+        "bone"
+      ],
+      "affixPools": [
+        "guard",
+        "survival"
+      ],
+      "effects": [
+        {
+          "type": "block_chance",
+          "value": 5
+        },
+        {
+          "type": "block_power",
+          "value": 18
+        }
+      ],
+      "tags": [
+        "shield",
+        "medium",
+        "bone"
+      ],
       "price": 86,
       "icon": "/assets/items/generated/buckler.png"
     },
@@ -1014,15 +2595,39 @@
       "slot": "offhand",
       "family": "shield",
       "armorType": "shield",
-      "armorDice": { "count": 1, "sides": 8 },
-      "size": [2, 3],
-      "materialPool": ["iron", "steel", "bone", "bloodiron"],
-      "affixPools": ["guard", "survival"],
-      "effects": [
-        { "type": "block_chance", "value": 6 },
-        { "type": "block_power", "value": 20 }
+      "armorDice": {
+        "count": 1,
+        "sides": 8
+      },
+      "size": [
+        2,
+        3
       ],
-      "tags": ["shield", "medium", "heater"],
+      "materialPool": [
+        "iron",
+        "steel",
+        "bone",
+        "bloodiron"
+      ],
+      "affixPools": [
+        "guard",
+        "survival"
+      ],
+      "effects": [
+        {
+          "type": "block_chance",
+          "value": 6
+        },
+        {
+          "type": "block_power",
+          "value": 20
+        }
+      ],
+      "tags": [
+        "shield",
+        "medium",
+        "heater"
+      ],
       "price": 98,
       "icon": "/assets/items/generated/heater_shield.png"
     },
@@ -1032,15 +2637,39 @@
       "slot": "offhand",
       "family": "shield",
       "armorType": "shield",
-      "armorDice": { "count": 1, "sides": 10 },
-      "size": [2, 3],
-      "materialPool": ["iron", "steel", "bone", "bloodiron"],
-      "affixPools": ["guard", "survival"],
-      "effects": [
-        { "type": "block_chance", "value": 7 },
-        { "type": "block_power", "value": 22 }
+      "armorDice": {
+        "count": 1,
+        "sides": 10
+      },
+      "size": [
+        2,
+        3
       ],
-      "tags": ["shield", "heavy", "tower"],
+      "materialPool": [
+        "iron",
+        "steel",
+        "bone",
+        "bloodiron"
+      ],
+      "affixPools": [
+        "guard",
+        "survival"
+      ],
+      "effects": [
+        {
+          "type": "block_chance",
+          "value": 7
+        },
+        {
+          "type": "block_power",
+          "value": 22
+        }
+      ],
+      "tags": [
+        "shield",
+        "heavy",
+        "tower"
+      ],
       "price": 120,
       "icon": "/assets/items/generated/tower_shield.png"
     },
@@ -1050,11 +2679,32 @@
       "slot": "ring",
       "family": "ring",
       "armorType": "ring",
-      "size": [1, 1],
-      "materialPool": ["ash", "bone", "ancient"],
-      "affixPools": ["elemental", "treasure", "survival"],
-      "effects": [{ "type": "fire_resist", "value": 8 }],
-      "tags": ["ring", "accessory", "fire", "rootspire"],
+      "size": [
+        1,
+        1
+      ],
+      "materialPool": [
+        "ash",
+        "bone",
+        "ancient"
+      ],
+      "affixPools": [
+        "elemental",
+        "treasure",
+        "survival"
+      ],
+      "effects": [
+        {
+          "type": "fire_resist",
+          "value": 8
+        }
+      ],
+      "tags": [
+        "ring",
+        "accessory",
+        "fire",
+        "rootspire"
+      ],
       "price": 155,
       "icon": "/assets/items/generated/ring_of_thorns.png"
     },
@@ -1064,11 +2714,32 @@
       "slot": "ring",
       "family": "ring",
       "armorType": "ring",
-      "size": [1, 1],
-      "materialPool": ["ash", "bone", "ancient"],
-      "affixPools": ["elemental", "treasure", "arcane"],
-      "effects": [{ "type": "shadow_resist", "value": 8 }],
-      "tags": ["ring", "accessory", "shadow", "rootspire"],
+      "size": [
+        1,
+        1
+      ],
+      "materialPool": [
+        "ash",
+        "bone",
+        "ancient"
+      ],
+      "affixPools": [
+        "elemental",
+        "treasure",
+        "arcane"
+      ],
+      "effects": [
+        {
+          "type": "shadow_resist",
+          "value": 8
+        }
+      ],
+      "tags": [
+        "ring",
+        "accessory",
+        "shadow",
+        "rootspire"
+      ],
       "price": 155,
       "icon": "/assets/items/generated/ring_of_thorns.png"
     },
@@ -1078,14 +2749,36 @@
       "slot": "amulet",
       "family": "amulet",
       "armorType": "amulet",
-      "size": [1, 2],
-      "materialPool": ["ash", "bone", "ancient"],
-      "affixPools": ["elemental", "treasure", "survival"],
-      "effects": [
-        { "type": "fire_resist", "value": 14 },
-        { "type": "magic_defense", "value": 2 }
+      "size": [
+        1,
+        2
       ],
-      "tags": ["amulet", "accessory", "fire", "rootspire"],
+      "materialPool": [
+        "ash",
+        "bone",
+        "ancient"
+      ],
+      "affixPools": [
+        "elemental",
+        "treasure",
+        "survival"
+      ],
+      "effects": [
+        {
+          "type": "fire_resist",
+          "value": 14
+        },
+        {
+          "type": "magic_defense",
+          "value": 2
+        }
+      ],
+      "tags": [
+        "amulet",
+        "accessory",
+        "fire",
+        "rootspire"
+      ],
       "price": 190,
       "icon": "/assets/items/generated/thorn_amulet.png"
     },
@@ -1095,14 +2788,36 @@
       "slot": "amulet",
       "family": "amulet",
       "armorType": "amulet",
-      "size": [1, 2],
-      "materialPool": ["ash", "bone", "ancient"],
-      "affixPools": ["elemental", "treasure", "arcane"],
-      "effects": [
-        { "type": "shadow_resist", "value": 14 },
-        { "type": "magic_defense", "value": 2 }
+      "size": [
+        1,
+        2
       ],
-      "tags": ["amulet", "accessory", "shadow", "rootspire"],
+      "materialPool": [
+        "ash",
+        "bone",
+        "ancient"
+      ],
+      "affixPools": [
+        "elemental",
+        "treasure",
+        "arcane"
+      ],
+      "effects": [
+        {
+          "type": "shadow_resist",
+          "value": 14
+        },
+        {
+          "type": "magic_defense",
+          "value": 2
+        }
+      ],
+      "tags": [
+        "amulet",
+        "accessory",
+        "shadow",
+        "rootspire"
+      ],
       "price": 190,
       "icon": "/assets/items/generated/ward_amulet.png"
     },
@@ -1112,15 +2827,43 @@
       "slot": "cloak",
       "family": "cloak",
       "armorType": "light",
-      "armorDice": { "count": 1, "sides": 6 },
-      "size": [2, 2],
-      "materialPool": ["worn", "ash", "bone", "ancient"],
-      "affixPools": ["elemental", "treasure", "survival"],
-      "effects": [
-        { "type": "fire_resist", "value": 10 },
-        { "type": "magic_find", "value": 2 }
+      "armorDice": {
+        "count": 1,
+        "sides": 6
+      },
+      "size": [
+        2,
+        2
       ],
-      "tags": ["cloak", "cape", "light", "armor_light", "fire", "rootspire"],
+      "materialPool": [
+        "worn",
+        "ash",
+        "bone",
+        "ancient"
+      ],
+      "affixPools": [
+        "elemental",
+        "treasure",
+        "survival"
+      ],
+      "effects": [
+        {
+          "type": "fire_resist",
+          "value": 10
+        },
+        {
+          "type": "magic_find",
+          "value": 2
+        }
+      ],
+      "tags": [
+        "cloak",
+        "cape",
+        "light",
+        "armor_light",
+        "fire",
+        "rootspire"
+      ],
       "price": 165,
       "icon": "/assets/items/generated/cape.png?v=2"
     },
@@ -1130,119 +2873,595 @@
       "slot": "cloak",
       "family": "cloak",
       "armorType": "light",
-      "armorDice": { "count": 1, "sides": 6 },
-      "size": [2, 2],
-      "materialPool": ["worn", "ash", "bone", "ancient"],
-      "affixPools": ["elemental", "treasure", "arcane"],
-      "effects": [
-        { "type": "shadow_resist", "value": 10 },
-        { "type": "magic_find", "value": 2 }
+      "armorDice": {
+        "count": 1,
+        "sides": 6
+      },
+      "size": [
+        2,
+        2
       ],
-      "tags": ["cloak", "cape", "light", "armor_light", "shadow", "rootspire"],
+      "materialPool": [
+        "worn",
+        "ash",
+        "bone",
+        "ancient"
+      ],
+      "affixPools": [
+        "elemental",
+        "treasure",
+        "arcane"
+      ],
+      "effects": [
+        {
+          "type": "shadow_resist",
+          "value": 10
+        },
+        {
+          "type": "magic_find",
+          "value": 2
+        }
+      ],
+      "tags": [
+        "cloak",
+        "cape",
+        "light",
+        "armor_light",
+        "shadow",
+        "rootspire"
+      ],
       "price": 165,
       "icon": "/assets/items/generated/cape.png?v=2"
     }
   ],
   "materials": [
-    { "id": "rusty", "name": "Crude", "itemLevelMin": 1, "powerMult": 0.74, "priceMult": 0.4, "weight": 8 },
-    { "id": "cloth", "name": "Threadbare", "itemLevelMin": 1, "powerMult": 0.8, "priceMult": 0.35, "weight": 10 },
-    { "id": "worn", "name": "Worn", "itemLevelMin": 1, "powerMult": 0.85, "priceMult": 0.6, "weight": 10 },
-    { "id": "cured", "name": "Cured", "itemLevelMin": 1, "powerMult": 1, "priceMult": 1, "weight": 10 },
-    { "id": "studded", "name": "Studded", "itemLevelMin": 2, "powerMult": 1.08, "priceMult": 1.25, "weight": 5, "extraAffixPools": ["guard"] },
-    { "id": "iron", "name": "Iron", "itemLevelMin": 1, "powerMult": 1, "priceMult": 1, "weight": 10 },
-    { "id": "steel", "name": "Tempered", "itemLevelMin": 3, "powerMult": 1.14, "priceMult": 1.45, "weight": 5 },
-    { "id": "bloodiron", "name": "Bloodforged", "itemLevelMin": 4, "powerMult": 1.2, "priceMult": 1.75, "weight": 3, "extraAffixPools": ["crusher", "blood"] },
-    { "id": "bone", "name": "Carved", "itemLevelMin": 2, "powerMult": 0.96, "priceMult": 1.1, "weight": 4, "extraAffixPools": ["blood"] },
-    { "id": "ash", "name": "Runed", "itemLevelMin": 1, "powerMult": 1, "priceMult": 1.1, "weight": 8, "extraAffixPools": ["arcane"] },
-    { "id": "ancient", "name": "Relic", "itemLevelMin": 5, "powerMult": 1.24, "priceMult": 2.1, "weight": 2, "extraAffixPools": ["arcane", "survival"] }
+    {
+      "id": "rusty",
+      "name": "Crude",
+      "itemLevelMin": 1,
+      "powerMult": 0.74,
+      "priceMult": 0.4,
+      "weight": 8
+    },
+    {
+      "id": "cloth",
+      "name": "Threadbare",
+      "itemLevelMin": 1,
+      "powerMult": 0.8,
+      "priceMult": 0.35,
+      "weight": 10
+    },
+    {
+      "id": "worn",
+      "name": "Worn",
+      "itemLevelMin": 1,
+      "powerMult": 0.85,
+      "priceMult": 0.6,
+      "weight": 10
+    },
+    {
+      "id": "cured",
+      "name": "Cured",
+      "itemLevelMin": 1,
+      "powerMult": 1,
+      "priceMult": 1,
+      "weight": 10
+    },
+    {
+      "id": "studded",
+      "name": "Studded",
+      "itemLevelMin": 2,
+      "powerMult": 1.08,
+      "priceMult": 1.25,
+      "weight": 5,
+      "extraAffixPools": [
+        "guard"
+      ]
+    },
+    {
+      "id": "iron",
+      "name": "Iron",
+      "itemLevelMin": 1,
+      "powerMult": 1,
+      "priceMult": 1,
+      "weight": 10
+    },
+    {
+      "id": "steel",
+      "name": "Tempered",
+      "itemLevelMin": 3,
+      "powerMult": 1.14,
+      "priceMult": 1.45,
+      "weight": 5
+    },
+    {
+      "id": "bloodiron",
+      "name": "Bloodforged",
+      "itemLevelMin": 4,
+      "powerMult": 1.2,
+      "priceMult": 1.75,
+      "weight": 3,
+      "extraAffixPools": [
+        "crusher",
+        "blood"
+      ]
+    },
+    {
+      "id": "bone",
+      "name": "Carved",
+      "itemLevelMin": 2,
+      "powerMult": 0.96,
+      "priceMult": 1.1,
+      "weight": 4,
+      "extraAffixPools": [
+        "blood"
+      ]
+    },
+    {
+      "id": "ash",
+      "name": "Runed",
+      "itemLevelMin": 1,
+      "powerMult": 1,
+      "priceMult": 1.1,
+      "weight": 8,
+      "extraAffixPools": [
+        "arcane"
+      ]
+    },
+    {
+      "id": "ancient",
+      "name": "Relic",
+      "itemLevelMin": 5,
+      "powerMult": 1.24,
+      "priceMult": 2.1,
+      "weight": 2,
+      "extraAffixPools": [
+        "arcane",
+        "survival"
+      ]
+    }
   ],
   "affixPools": {
     "balanced": [
-      { "type": "hit_chance", "min": 4, "max": 8, "scalingProfile": "hit_chance", "weight": 8 },
-      { "type": "crit_chance", "min": 2, "max": 4, "scalingProfile": "crit_chance_minor", "weight": 5 },
-      { "type": "stat_bonus", "stat": "dex", "min": 2, "max": 4, "scalingProfile": "stat_bonus", "weight": 4 },
-      { "type": "stat_bonus", "stat": "str", "min": 2, "max": 4, "scalingProfile": "stat_bonus", "weight": 4 }
+      {
+        "type": "hit_chance",
+        "min": 4,
+        "max": 8,
+        "scalingProfile": "hit_chance",
+        "weight": 8
+      },
+      {
+        "type": "crit_chance",
+        "min": 2,
+        "max": 4,
+        "scalingProfile": "crit_chance_minor",
+        "weight": 5
+      },
+      {
+        "type": "stat_bonus",
+        "stat": "dex",
+        "min": 2,
+        "max": 4,
+        "scalingProfile": "stat_bonus",
+        "weight": 4
+      },
+      {
+        "type": "stat_bonus",
+        "stat": "str",
+        "min": 2,
+        "max": 4,
+        "scalingProfile": "stat_bonus",
+        "weight": 4
+      }
     ],
     "precision": [
-      { "type": "crit_chance", "min": 3, "max": 5, "scalingProfile": "crit_chance_major", "weight": 8 },
-      { "type": "crit_damage", "min": 5, "max": 10, "scalingProfile": "crit_damage", "weight": 5 },
-      { "type": "double_hit", "min": 3, "max": 7, "scalingProfile": "double_hit", "weight": 4 },
-      { "type": "hit_chance", "min": 4, "max": 7, "scalingProfile": "hit_chance", "weight": 4 }
+      {
+        "type": "crit_chance",
+        "min": 3,
+        "max": 5,
+        "scalingProfile": "crit_chance_major",
+        "weight": 8
+      },
+      {
+        "type": "crit_damage",
+        "min": 5,
+        "max": 10,
+        "scalingProfile": "crit_damage",
+        "weight": 5
+      },
+      {
+        "type": "double_hit",
+        "min": 3,
+        "max": 7,
+        "scalingProfile": "double_hit",
+        "weight": 4
+      },
+      {
+        "type": "hit_chance",
+        "min": 4,
+        "max": 7,
+        "scalingProfile": "hit_chance",
+        "weight": 4
+      }
     ],
     "speed": [
-      { "type": "attack_speed", "min": 5, "max": 12, "scalingProfile": "attack_speed", "weight": 7 },
-      { "type": "dodge_chance", "min": 3, "max": 7, "scalingProfile": "minor_defense", "weight": 6 },
-      { "type": "stat_bonus", "stat": "dex", "min": 2, "max": 5, "scalingProfile": "stat_bonus", "weight": 5 }
+      {
+        "type": "attack_speed",
+        "min": 5,
+        "max": 12,
+        "scalingProfile": "attack_speed",
+        "weight": 7
+      },
+      {
+        "type": "dodge_chance",
+        "min": 3,
+        "max": 7,
+        "scalingProfile": "minor_defense",
+        "weight": 6
+      },
+      {
+        "type": "stat_bonus",
+        "stat": "dex",
+        "min": 2,
+        "max": 5,
+        "scalingProfile": "stat_bonus",
+        "weight": 5
+      }
     ],
     "brutal": [
-      { "type": "damage_bonus_pct", "min": 5, "max": 12, "scalingProfile": "damage_pct_limited", "weight": 7 },
-      { "type": "crit_damage", "min": 5, "max": 10, "scalingProfile": "crit_damage", "weight": 5 },
-      { "type": "stat_bonus", "stat": "str", "min": 2, "max": 5, "scalingProfile": "stat_bonus", "weight": 5 }
+      {
+        "type": "damage_bonus_pct",
+        "min": 5,
+        "max": 12,
+        "scalingProfile": "damage_pct_limited",
+        "weight": 7
+      },
+      {
+        "type": "crit_damage",
+        "min": 5,
+        "max": 10,
+        "scalingProfile": "crit_damage",
+        "weight": 5
+      },
+      {
+        "type": "stat_bonus",
+        "stat": "str",
+        "min": 2,
+        "max": 5,
+        "scalingProfile": "stat_bonus",
+        "weight": 5
+      }
     ],
     "blood": [
-      { "type": "bleed_on_hit", "chanceMin": 8, "chanceMax": 14, "scalingProfile": "bleed_on_hit", "duration": 2, "damagePct": 1, "weight": 7 },
-      { "type": "lifesteal", "min": 2, "max": 5, "scalingProfile": "lifesteal", "weight": 4 },
-      { "type": "max_hp", "min": 10, "max": 22, "scalingProfile": "max_hp_high", "weight": 3 }
+      {
+        "type": "bleed_on_hit",
+        "chanceMin": 8,
+        "chanceMax": 14,
+        "scalingProfile": "bleed_on_hit",
+        "duration": 2,
+        "damagePct": 0.55,
+        "weight": 7
+      },
+      {
+        "type": "lifesteal",
+        "min": 2,
+        "max": 5,
+        "scalingProfile": "lifesteal",
+        "weight": 4
+      },
+      {
+        "type": "max_hp",
+        "min": 10,
+        "max": 22,
+        "scalingProfile": "max_hp_high",
+        "weight": 3
+      }
     ],
     "venom": [
-      { "type": "poison_on_hit", "chanceMin": 8, "chanceMax": 15, "scalingProfile": "poison_on_hit", "duration": 3, "damagePct": 1, "weight": 7 },
-      { "type": "crit_chance", "min": 2, "max": 4, "scalingProfile": "crit_chance_minor", "weight": 4 }
+      {
+        "type": "poison_on_hit",
+        "chanceMin": 8,
+        "chanceMax": 15,
+        "scalingProfile": "poison_on_hit",
+        "duration": 3,
+        "damagePct": 0.4,
+        "weight": 7
+      },
+      {
+        "type": "crit_chance",
+        "min": 2,
+        "max": 4,
+        "scalingProfile": "crit_chance_minor",
+        "weight": 4
+      }
     ],
     "crusher": [
-      { "type": "stagger_on_hit", "chanceMin": 6, "chanceMax": 14, "scalingProfile": "stagger_on_hit", "duration": 2, "missPenalty": 35, "weight": 6 },
-      { "type": "stun_on_hit", "chanceMin": 3, "chanceMax": 6, "scalingProfile": "stun_on_hit", "durationSeconds": 1, "weight": 3 },
-      { "type": "damage_bonus_pct", "min": 3, "max": 8, "scalingProfile": "damage_pct_limited", "weight": 4 }
+      {
+        "type": "stagger_on_hit",
+        "chanceMin": 6,
+        "chanceMax": 14,
+        "scalingProfile": "stagger_on_hit",
+        "duration": 2,
+        "missPenalty": 35,
+        "weight": 6
+      },
+      {
+        "type": "stun_on_hit",
+        "chanceMin": 3,
+        "chanceMax": 6,
+        "scalingProfile": "stun_on_hit",
+        "durationSeconds": 1,
+        "weight": 3
+      },
+      {
+        "type": "damage_bonus_pct",
+        "min": 3,
+        "max": 8,
+        "scalingProfile": "damage_pct_limited",
+        "weight": 4
+      }
     ],
     "guard": [
-      { "type": "armor", "min": 2, "max": 7, "scalingProfile": "minor_defense", "weight": 8 },
-      { "type": "armor_pct", "min": 4, "max": 10, "scalingProfile": "damage_pct_limited", "weight": 5 },
-      { "type": "block_chance", "min": 3, "max": 8, "scalingProfile": "block_chance", "weight": 5 },
-      { "type": "block_power", "min": 8, "max": 24, "scalingProfile": "block_power", "weight": 5 },
-      { "type": "counter_chance", "min": 2, "max": 5, "scalingProfile": "counter_chance", "weight": 3 },
-      { "type": "max_hp", "min": 6, "max": 18, "scalingProfile": "max_hp_medium", "weight": 4 }
+      {
+        "type": "armor",
+        "min": 2,
+        "max": 7,
+        "scalingProfile": "minor_defense",
+        "weight": 8
+      },
+      {
+        "type": "armor_pct",
+        "min": 4,
+        "max": 10,
+        "scalingProfile": "damage_pct_limited",
+        "weight": 5
+      },
+      {
+        "type": "block_chance",
+        "min": 3,
+        "max": 8,
+        "scalingProfile": "block_chance",
+        "weight": 5
+      },
+      {
+        "type": "block_power",
+        "min": 8,
+        "max": 24,
+        "scalingProfile": "block_power",
+        "weight": 5
+      },
+      {
+        "type": "counter_chance",
+        "min": 2,
+        "max": 5,
+        "scalingProfile": "counter_chance",
+        "weight": 3
+      },
+      {
+        "type": "max_hp",
+        "min": 6,
+        "max": 18,
+        "scalingProfile": "max_hp_medium",
+        "weight": 4
+      }
     ],
     "weapon_guard": [
-      { "type": "block_chance", "min": 2, "max": 5, "scalingProfile": "block_chance", "weight": 6 }
+      {
+        "type": "block_chance",
+        "min": 2,
+        "max": 5,
+        "scalingProfile": "block_chance",
+        "weight": 6
+      }
     ],
     "survival": [
-      { "type": "max_hp", "min": 8, "max": 22, "scalingProfile": "max_hp_high", "weight": 7 },
-      { "type": "armor", "min": 2, "max": 6, "scalingProfile": "minor_defense", "weight": 5 },
-      { "type": "magic_defense", "min": 2, "max": 6, "scalingProfile": "minor_defense", "weight": 3 },
-      { "type": "crit_resist", "min": 2, "max": 6, "scalingProfile": "minor_defense", "weight": 3 }
+      {
+        "type": "max_hp",
+        "min": 8,
+        "max": 22,
+        "scalingProfile": "max_hp_high",
+        "weight": 7
+      },
+      {
+        "type": "armor",
+        "min": 2,
+        "max": 6,
+        "scalingProfile": "minor_defense",
+        "weight": 5
+      },
+      {
+        "type": "magic_defense",
+        "min": 2,
+        "max": 6,
+        "scalingProfile": "minor_defense",
+        "weight": 3
+      },
+      {
+        "type": "crit_resist",
+        "min": 2,
+        "max": 6,
+        "scalingProfile": "minor_defense",
+        "weight": 3
+      }
     ],
     "arcane": [
-      { "type": "spell_damage", "min": 4, "max": 12, "scalingProfile": "major_percent", "weight": 8 },
-      { "type": "magic_defense", "min": 2, "max": 7, "scalingProfile": "minor_defense", "weight": 5 },
-      { "type": "crit_resist", "min": 2, "max": 6, "scalingProfile": "minor_defense", "weight": 4 },
-      { "type": "stat_bonus", "stat": "int", "min": 1, "max": 4, "scalingProfile": "stat_bonus", "weight": 5 }
+      {
+        "type": "spell_damage",
+        "min": 4,
+        "max": 12,
+        "scalingProfile": "major_percent",
+        "weight": 8
+      },
+      {
+        "type": "magic_defense",
+        "min": 2,
+        "max": 7,
+        "scalingProfile": "minor_defense",
+        "weight": 5
+      },
+      {
+        "type": "crit_resist",
+        "min": 2,
+        "max": 6,
+        "scalingProfile": "minor_defense",
+        "weight": 4
+      },
+      {
+        "type": "stat_bonus",
+        "stat": "int",
+        "min": 1,
+        "max": 4,
+        "scalingProfile": "stat_bonus",
+        "weight": 5
+      }
     ],
     "elemental": [
-      { "type": "fire_resist",      "min": 5, "max": 18, "scalingProfile": "single_elemental_resist", "weight": 6 },
-      { "type": "cold_resist",      "min": 5, "max": 18, "scalingProfile": "single_elemental_resist", "weight": 6 },
-      { "type": "lightning_resist", "min": 5, "max": 18, "scalingProfile": "single_elemental_resist", "weight": 6 },
-      { "type": "shadow_resist",    "min": 5, "max": 18, "scalingProfile": "single_elemental_resist", "weight": 6 },
-      { "type": "poison_resist",    "min": 5, "max": 18, "scalingProfile": "single_elemental_resist", "weight": 6 },
-      { "type": "all_elemental_resist", "min": 4, "max": 9, "scalingProfile": "all_elemental_resist", "weight": 1 }
+      {
+        "type": "fire_resist",
+        "min": 5,
+        "max": 18,
+        "scalingProfile": "single_elemental_resist",
+        "weight": 6
+      },
+      {
+        "type": "cold_resist",
+        "min": 5,
+        "max": 18,
+        "scalingProfile": "single_elemental_resist",
+        "weight": 6
+      },
+      {
+        "type": "lightning_resist",
+        "min": 5,
+        "max": 18,
+        "scalingProfile": "single_elemental_resist",
+        "weight": 6
+      },
+      {
+        "type": "shadow_resist",
+        "min": 5,
+        "max": 18,
+        "scalingProfile": "single_elemental_resist",
+        "weight": 6
+      },
+      {
+        "type": "poison_resist",
+        "min": 5,
+        "max": 18,
+        "scalingProfile": "single_elemental_resist",
+        "weight": 6
+      },
+      {
+        "type": "all_elemental_resist",
+        "min": 4,
+        "max": 9,
+        "scalingProfile": "all_elemental_resist",
+        "weight": 1
+      }
     ],
     "treasure": [
-      { "type": "magic_find", "min": 3, "max": 8, "scalingProfile": "magic_find", "weight": 8 },
-      { "type": "hit_chance", "min": 4, "max": 8, "scalingProfile": "hit_chance", "weight": 3 },
-      { "type": "crit_chance", "min": 2, "max": 4, "scalingProfile": "crit_chance_minor", "weight": 3 },
-      { "type": "all_elemental_resist", "min": 4, "max": 9, "scalingProfile": "all_elemental_resist", "weight": 1 }
+      {
+        "type": "magic_find",
+        "min": 3,
+        "max": 8,
+        "scalingProfile": "magic_find",
+        "weight": 8
+      },
+      {
+        "type": "hit_chance",
+        "min": 4,
+        "max": 8,
+        "scalingProfile": "hit_chance",
+        "weight": 3
+      },
+      {
+        "type": "crit_chance",
+        "min": 2,
+        "max": 4,
+        "scalingProfile": "crit_chance_minor",
+        "weight": 3
+      },
+      {
+        "type": "all_elemental_resist",
+        "min": 4,
+        "max": 9,
+        "scalingProfile": "all_elemental_resist",
+        "weight": 1
+      }
     ],
     "dueling": [
-      { "type": "parry_chance", "min": 5, "max": 10, "scalingProfile": "parry_chance", "weight": 8 },
-      { "type": "crit_chance",  "min": 3, "max": 5, "scalingProfile": "crit_chance_major", "weight": 5 },
-      { "type": "hit_chance",   "min": 4, "max": 7, "scalingProfile": "hit_chance", "weight": 4 }
+      {
+        "type": "parry_chance",
+        "min": 5,
+        "max": 10,
+        "scalingProfile": "parry_chance",
+        "weight": 8
+      },
+      {
+        "type": "crit_chance",
+        "min": 3,
+        "max": 5,
+        "scalingProfile": "crit_chance_major",
+        "weight": 5
+      },
+      {
+        "type": "hit_chance",
+        "min": 4,
+        "max": 7,
+        "scalingProfile": "hit_chance",
+        "weight": 4
+      }
     ],
     "quiver": [
-      { "type": "damage_bonus_pct", "min": 4, "max": 9, "scalingProfile": "damage_pct_limited", "weight": 7 },
-      { "type": "attack_speed", "min": 4, "max": 10, "scalingProfile": "attack_speed", "weight": 7 },
-      { "type": "double_hit", "min": 2, "max": 6, "scalingProfile": "double_hit", "weight": 5 },
-      { "type": "crit_chance", "min": 2, "max": 4, "scalingProfile": "crit_chance_minor", "weight": 6 },
-      { "type": "hit_chance", "min": 4, "max": 8, "scalingProfile": "hit_chance", "weight": 5 },
-      { "type": "lifesteal", "min": 2, "max": 4, "scalingProfile": "lifesteal", "weight": 3 },
-      { "type": "pet_damage_pct", "min": 5, "max": 12, "scalingProfile": "major_percent", "weight": 5 }
+      {
+        "type": "damage_bonus_pct",
+        "min": 4,
+        "max": 9,
+        "scalingProfile": "damage_pct_limited",
+        "weight": 7
+      },
+      {
+        "type": "attack_speed",
+        "min": 4,
+        "max": 10,
+        "scalingProfile": "attack_speed",
+        "weight": 7
+      },
+      {
+        "type": "double_hit",
+        "min": 2,
+        "max": 6,
+        "scalingProfile": "double_hit",
+        "weight": 5
+      },
+      {
+        "type": "crit_chance",
+        "min": 2,
+        "max": 4,
+        "scalingProfile": "crit_chance_minor",
+        "weight": 6
+      },
+      {
+        "type": "hit_chance",
+        "min": 4,
+        "max": 8,
+        "scalingProfile": "hit_chance",
+        "weight": 5
+      },
+      {
+        "type": "lifesteal",
+        "min": 2,
+        "max": 4,
+        "scalingProfile": "lifesteal",
+        "weight": 3
+      },
+      {
+        "type": "pet_damage_pct",
+        "min": 5,
+        "max": 12,
+        "scalingProfile": "major_percent",
+        "weight": 5
+      }
     ]
   }
 }

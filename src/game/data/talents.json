@@ -778,7 +778,7 @@
                     "effect": {
                       "type": "apply_poison",
                       "duration": 4,
-                      "damagePct": 3
+                      "damagePct": 0.5
                     }
                   }
                 }
@@ -1331,7 +1331,7 @@
                         "type": "bleed_on_hit",
                         "chance": 12,
                         "duration": 2,
-                        "damagePct": 1
+                        "damagePct": 0.6
                       }
                     }
                   ]
@@ -1407,7 +1407,7 @@
                       "type": "wolf_lunge_upgrade",
                       "bleedChance": 100,
                       "bleedDuration": 2,
-                      "bleedDamagePct": 1,
+                      "bleedDamagePct": 0.75,
                       "heroCritChanceBonus": 10,
                       "heroCritDurationTicks": 2
                     }
@@ -1507,7 +1507,7 @@
                         "cooldownSeconds": 12,
                         "damageMult": 1,
                         "hemorrhageDuration": 3,
-                        "hemorrhageDamagePct": 3,
+                        "hemorrhageDamagePct": 1.5,
                         "aiPool": true,
                         "aiUseChance": 35,
                         "aiWeight": 1.5
@@ -1732,7 +1732,7 @@
                       "type": "poison_on_hit",
                       "chance": 20,
                       "duration": 4,
-                      "damagePct": 3
+                      "damagePct": 0.5
                     }
                   ]
                 },

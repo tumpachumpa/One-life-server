@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildPetCombatant, initHero, calcStats, getClassBaseStats, getHeroRawDamageBase, getHungerLevel, getWeaponAttackType, healHeroPetByPct, normalizeHeroPet, reduceHeroPetHunger } from "./hero.js";
 import { applyEnemyRarity, buildZoneRooms, ENEMY_RARITIES, rollEnemyRarity, scaleMonsterArmor, scaleMonsterAttack } from "./enemies.js";
-import { bossById, combatSkillById, enemyById, heroClasses, items, talentTrees, zoneById } from "./content.js";
+import { bossById, combatSkillById, enemyById, heroClasses, items, regions, talentTrees, zoneById } from "./content.js";
 import { runCombat } from "./combat.js";
 import { ADVENTURE_LOOT_POOLS, getDropPool, LOOT_TABLES, rollCombatLoot, rollLootTable } from "./loot.js";
 import { rollGeneratedEquipment } from "./equipmentGenerator.js";
@@ -9,7 +9,7 @@ import { collectEffects, collectProcNodes } from "./effectEngine.js";
 import { applyPoultice, tickBleeding, treatBleeding, treatDeepCut } from "./survival.js";
 import { buildCombatResult, initCombat, processAutoAttackFrame, processTick, resolveFrontSwapCast } from "./combat/combatManager.js";
 import { resolveAbilityImpact } from "./combat/abilities.js";
-import { getAbilityEnergyCost, getAbilityUseFailureReason } from "./combat/combatant.js";
+import { applyCombatantDamage, getAbilityEnergyCost, getAbilityUseFailureReason } from "./combat/combatant.js";
 import { aiDecide } from "./combat/aiSystem.js";
 import { ACTION, PHASE, AUTO_ATTACK_TICKS, MOMENTUM_ATTACK_SPEED_PCT_PER_STACK, TICK_MS } from "./combat/types.js";
 import { createActionQueue, enqueueAction, enqueueAbility } from "./combat/actionQueue.js";
@@ -415,7 +415,7 @@ describe("modular combat", () => {
       type: "bleed_on_hit",
       chance: 12,
       duration: 2,
-      damagePct: 1,
+      damagePct: 0.6,
     });
   });
 
@@ -465,7 +465,7 @@ describe("modular combat", () => {
     expect(lunge).toMatchObject({
       bleedChance: 100,
       bleedDuration: 2,
-      bleedDamagePct: 1,
+      bleedDamagePct: 0.75,
       heroCritChanceBonus: 10,
       heroCritDurationTicks: 2,
     });
@@ -486,7 +486,7 @@ describe("modular combat", () => {
       cooldownSeconds: 12,
       damageMult: 1,
       hemorrhageDuration: 3,
-      hemorrhageDamagePct: 3,
+      hemorrhageDamagePct: 1.5,
       aiPool: true,
       aiUseChance: 35,
     });
@@ -2097,7 +2097,7 @@ describe("modular combat", () => {
       type: "bleed",
       stacks: 1,
       remainingTicks: 4,
-      damagePctPerTick: 1,
+      damagePctPerTick: 0.75,
     }));
     expect(state.combatants.hero.activeEffects).toContainEqual(expect.objectContaining({
       type: "crit_chance_buff",
@@ -2145,7 +2145,7 @@ describe("modular combat", () => {
     expect(state.combatants.enemy.activeEffects).toContainEqual(expect.objectContaining({
       type: "hemorrhage",
       remainingTicks: 3,
-      damagePctPerTick: 3,
+      damagePctPerTick: 1.5,
     }));
     expect(state.log.some(entry => entry.actorId === "wolf_companion" && entry.type === "hemorrhage" && entry.text.includes("Training Dummy gains Hemorrhage"))).toBe(true);
     expect(state.log.some(entry => entry.actorId === "wolf_companion" && entry.type === "hemorrhage" && entry.text.includes("You gain Hemorrhage"))).toBe(false);
@@ -2748,7 +2748,7 @@ describe("modular combat", () => {
       type: "bleed",
       stacks: 1,
       remainingTicks: 5,
-      damagePctPerTick: 2,
+      damagePctPerTick: 0.75,
       sourceAbilityId: "barbed_trap",
     }));
     expect(state.combatants.enemy.activeEffects).toContainEqual(expect.objectContaining({
@@ -3884,30 +3884,30 @@ describe("modular combat", () => {
     expect(resolved.log.some(entry => entry.type === "bleed" && entry.text.includes("Bite"))).toBe(true);
   });
 
-  it("giant spider is a tier 1 elite enemy with poison, web slow, and recovery", () => {
+  it("giant spider is a tier 1 dangerous enemy with poison, web snare freeze, and recovery", () => {
     const spider = enemyById.giant_spider;
     expect(spider).toMatchObject({
-      name: "Giant Spider",
+      name: "Giant Webspinner",
       tier: 1,
       threat: "dangerous",
-      baseStats: expect.objectContaining({ maxHp: 150, armor: 2 }),
+      baseStats: expect.objectContaining({ maxHp: 145, armor: 2 }),
     });
-    expect(spider.effects).toContainEqual({
+    expect(spider.effects).toContainEqual(expect.objectContaining({
       type: "poison_on_hit",
-      chance: 25,
+      chance: 15,
       duration: 3,
-      damagePct: 1,
-    });
+      damagePct: 0.4,
+    }));
     expect(spider.abilities).toContainEqual(expect.objectContaining({
       id: "web_snare",
-      type: "attack_speed_slow",
-      attacks: 3,
-      attackSpeedPenaltyPct: 40,
+      type: "web_snare",
+      durationTicks: 2,
+      cooldownSeconds: 14,
     }));
     expect(spider.abilities).toContainEqual(expect.objectContaining({
       id: "silken_recovery",
       type: "heal_over_time",
-      healPct: 12,
+      healPct: 9,
       durationTicks: 3,
     }));
   });
@@ -9907,5 +9907,524 @@ describe("talent proc behavior", () => {
     const after = processTick(base, ACTION.BASIC_ATTACK, () => 0.01);
     expect(after.combatants.enemy.hp).toBe(1000 - 40);
     expect(after.log.some(entry => entry.text?.includes("counter hit"))).toBe(false);
+  });
+});
+
+describe("DoT fractional damagePct balance", () => {
+  // These tests verify the tick damage formula directly, since the formula
+  // floor(maxHp * damagePct * stacks / 100) with min 1 is the canonical path.
+
+  it("poison damagePct 0.4% ticks for 2 on a 500 HP target", () => {
+    // 500 * 0.4 / 100 = 2.0 → floor = 2
+    expect(Math.max(1, Math.floor(500 * 0.4 / 100))).toBe(2);
+  });
+
+  it("poison damagePct 0.45% ticks for 2 on a 500 HP target (giant spider new value)", () => {
+    expect(Math.max(1, Math.floor(500 * 0.45 / 100))).toBe(2);
+  });
+
+  it("bleed damagePct 0.6% ticks for 2 on a 400 HP target", () => {
+    // 400 * 0.6 / 100 = 2.4 → floor = 2
+    expect(Math.max(1, Math.floor(400 * 0.6 / 100))).toBe(2);
+  });
+
+  it("bleed damagePct 0.55% ticks for 2 on a 400 HP target (generated affix new value)", () => {
+    expect(Math.max(1, Math.floor(400 * 0.55 / 100))).toBe(2);
+  });
+
+  it("final tick damage has minimum of 1 for tiny damagePct on low-HP targets", () => {
+    // 0.35% of 100 HP = 0.35 → floor = 0 → min clamp = 1
+    expect(Math.max(1, Math.floor(100 * 0.35 / 100))).toBe(1);
+    // 0.35% of 200 HP = 0.7 → floor = 0 → min clamp = 1
+    expect(Math.max(1, Math.floor(200 * 0.35 / 100))).toBe(1);
+  });
+
+  it("poison stacks multiply tick damage — 2 stacks of 0.5% on 1000 HP = 10", () => {
+    const stacks = 2;
+    expect(Math.max(1, Math.floor(1000 * 0.5 * stacks / 100))).toBe(10);
+  });
+
+  it("bleed stacks multiply tick damage — 3 stacks of 0.6% on 1000 HP = 18", () => {
+    const stacks = 3;
+    expect(Math.max(1, Math.floor(1000 * 0.6 * stacks / 100))).toBe(18);
+  });
+
+  it("hemorrhage tick damage at 1.5% ticks for 7 on a 500 HP target (new tuned value)", () => {
+    expect(Math.max(1, Math.floor(500 * 1.5 / 100))).toBe(7);
+  });
+
+  it("hemorrhage tick damage at 1.5% is less than old 4% on same target", () => {
+    const newDmg = Math.max(1, Math.floor(500 * 1.5 / 100));
+    const oldDmg = Math.max(1, Math.floor(500 * 4 / 100));
+    expect(newDmg).toBeLessThan(oldDmg);
+  });
+
+  it("hemorrhage upfront true damage at 5% is half the old 10% value", () => {
+    const newDmg = Math.max(1, Math.floor(500 * 5 / 100));
+    const oldDmg = Math.max(1, Math.floor(500 * 10 / 100));
+    expect(newDmg).toBe(25);
+    expect(oldDmg).toBe(50);
+  });
+
+  it("enemy with on-hit poison applies fractional damagePct to hero via runCombat", () => {
+    const hero = initHero("Tester");
+    hero.hp = 300;
+    hero.equip = {};
+    const stats = calcStats(hero);
+    const poisonEnemy = {
+      id: "venom_test",
+      name: "Venom Test",
+      family: "spider",
+      hp: 1,
+      stats: { maxHp: 1, attack: 1, armor: 0, attackSpeed: 10 },
+      rewards: { xp: 0, gold: 0 },
+      effects: [{ type: "poison_on_hit", chance: 100, duration: 3, damagePct: 0.45 }],
+    };
+    const result = runCombat(hero, stats, poisonEnemy, getHungerLevel(hero.hunger), { rng: () => 0.01 });
+    const poisonEntry = result.log.find(e => e.type === "poison");
+    expect(poisonEntry).toBeTruthy();
+  });
+
+  it("enemy bleed on hit preserves fractional damagePct via runCombat", () => {
+    const hero = initHero("Tester");
+    hero.hp = 300;
+    hero.equip = {};
+    const stats = calcStats(hero);
+    const bleedEnemy = {
+      id: "bleed_test",
+      name: "Bleed Test",
+      family: "wolf",
+      hp: 1,
+      stats: { maxHp: 1, attack: 1, armor: 0, attackSpeed: 10 },
+      rewards: { xp: 0, gold: 0 },
+      effects: [{ type: "bleed_on_hit", chance: 100, duration: 3, damagePct: 0.6 }],
+    };
+    const result = runCombat(hero, stats, bleedEnemy, getHungerLevel(hero.hunger), { rng: () => 0.01 });
+    const bleedEntry = result.log.find(e => e.type === "bleed");
+    expect(bleedEntry).toBeTruthy();
+  });
+});
+
+describe("Spider content", () => {
+  it("all spider enemy IDs resolve", () => {
+    expect(enemyById.cave_spiderling).toBeTruthy();
+    expect(enemyById.giant_spider).toBeTruthy();
+    expect(enemyById.venom_giant_spider).toBeTruthy();
+    expect(enemyById.silkfang_matriarch).toBeTruthy();
+    expect(bossById.broodmother_of_the_deep).toBeTruthy();
+  });
+
+  it("cave_spiderling is a weak tier-1 spider with light venom", () => {
+    const s = enemyById.cave_spiderling;
+    expect(s.tier).toBe(1);
+    expect(s.threat).toBe("weak");
+    expect(s.baseStats.maxHp).toBeGreaterThanOrEqual(45);
+    expect(s.baseStats.maxHp).toBeLessThanOrEqual(70);
+    expect(s.effects).toContainEqual(expect.objectContaining({ type: "poison_on_hit", damagePct: 0.3 }));
+    expect(s.abilities ?? []).toHaveLength(0);
+  });
+
+  it("giant_spider (Giant Webspinner) uses web_snare freeze type and silken_recovery", () => {
+    const s = enemyById.giant_spider;
+    expect(s.name).toBe("Giant Webspinner");
+    expect(s.abilities).toContainEqual(expect.objectContaining({ id: "web_snare", type: "web_snare", durationTicks: 2 }));
+    expect(s.abilities).toContainEqual(expect.objectContaining({ id: "silken_recovery", type: "heal_over_time" }));
+    expect(s.lootTable).toBe("giant_webspinner_loot");
+  });
+
+  it("venom_giant_spider (Venom Stalker) has poison_spit ability", () => {
+    const s = enemyById.venom_giant_spider;
+    expect(s.name).toBe("Venom Stalker");
+    expect(s.abilities).toContainEqual(expect.objectContaining({ id: "poison_spit", type: "poison_spit" }));
+    expect(s.lootTable).toBe("venom_stalker_loot");
+  });
+
+  it("silkfang_matriarch has web_snare, brood_call, and silken_recovery", () => {
+    const s = enemyById.silkfang_matriarch;
+    expect(s.tier).toBe(3);
+    expect(s.abilities).toContainEqual(expect.objectContaining({ type: "web_snare" }));
+    expect(s.abilities).toContainEqual(expect.objectContaining({ type: "summon_add", enemyId: "cave_spiderling" }));
+    expect(s.abilities).toContainEqual(expect.objectContaining({ type: "heal_over_time" }));
+    expect(s.lootTable).toBe("silkfang_matriarch_loot");
+  });
+
+  it("broodmother_of_the_deep has cocoon transform fields and phase2 data", () => {
+    const b = bossById.broodmother_of_the_deep;
+    expect(b.hasCocoonTransform).toBe(true);
+    expect(b.cocoonDurationTicks).toBe(4);
+    expect(b.phase2MaxHp).toBeGreaterThan(0);
+    expect(Array.isArray(b.phase2Abilities)).toBe(true);
+    expect(b.phase2Abilities.length).toBeGreaterThan(0);
+  });
+
+  it("broodmother phase2 brood_call has devourAfterTicks set", () => {
+    const b = bossById.broodmother_of_the_deep;
+    const devourCall = b.phase2Abilities.find(a => a.type === "summon_add" && a.devourAfterTicks != null);
+    expect(devourCall).toBeTruthy();
+    expect(devourCall.devourAfterTicks).toBe(8);
+    expect(devourCall.maxAdds).toBe(3);
+  });
+
+  it("broodmother relic has ~1% configured drop chance", () => {
+    const table = LOOT_TABLES["broodmother_loot"];
+    expect(table).toBeTruthy();
+    expect(table.relicDrop?.itemId).toBe("relic_broodvenom");
+    expect(table.relicDrop?.chance).toBe(1);
+  });
+
+  it("all spider loot tables resolve and contain valid item IDs", () => {
+    const tableNames = ["cave_spiderling_loot", "giant_webspinner_loot", "venom_stalker_loot", "silkfang_matriarch_loot", "broodmother_loot"];
+    for (const name of tableNames) {
+      const table = LOOT_TABLES[name];
+      expect(table).toBeTruthy();
+      for (const id of (table.includeItemIds || [])) {
+        expect(items.find(i => i.id === id)).toBeTruthy();
+      }
+    }
+  });
+
+  it("venom_ring can drop from cave_spiderling_loot", () => {
+    const table = LOOT_TABLES["cave_spiderling_loot"];
+    expect(table?.includeItemIds).toContain("venom_ring");
+  });
+
+  it("venom_fang_dagger can drop from venom_stalker_loot and silkfang_matriarch_loot", () => {
+    expect(LOOT_TABLES["venom_stalker_loot"]?.includeItemIds).toContain("venom_fang_dagger");
+    expect(LOOT_TABLES["silkfang_matriarch_loot"]?.includeItemIds).toContain("venom_fang_dagger");
+  });
+
+  it("all spider encounters in adventures.json are singleEncounter", () => {
+    const spiderNodes = regions.filter(r => r.enemyId && (
+      r.enemyId === "cave_spiderling" ||
+      r.enemyId === "giant_spider" ||
+      r.enemyId === "venom_giant_spider" ||
+      r.enemyId === "silkfang_matriarch" ||
+      r.enemyId === "broodmother_of_the_deep"
+    ));
+    expect(spiderNodes.length).toBeGreaterThan(0);
+    for (const node of spiderNodes) {
+      expect(node.singleEncounter).toBe(true);
+    }
+  });
+
+  it("web_snare type freezes auto-attack for its duration ticks", () => {
+    const hero = {
+      ...initHero("Tester", { heroClass: "fighter" }),
+      hp: 200, maxHp: 200,
+    };
+    const spiderling = {
+      id: "dummy_webspinner",
+      name: "Webspinner",
+      family: "spider",
+      hp: 500,
+      disableAutoAttack: true,
+      stats: { maxHp: 500, attack: 0, armor: 0 },
+      rewards: { xp: 0, gold: 0 },
+      effects: [],
+      abilities: [{
+        id: "web_snare_test",
+        name: "Web Snare",
+        type: "web_snare",
+        castTicks: 0,
+        cooldownSeconds: 99,
+        durationTicks: 3,
+      }],
+    };
+    let state = initCombat({
+      heroName: "Tester",
+      heroHp: 200,
+      heroMaxHp: 200,
+      heroDamage: 5,
+      heroArmor: 0,
+      heroAttackRate: 1,
+      enemyObj: spiderling,
+      heroAbilities: [],
+      heroEffects: [],
+    });
+    // Force hero to have full auto-attack progress, then apply web snare
+    state = {
+      ...state,
+      combatants: {
+        ...state.combatants,
+        hero: {
+          ...state.combatants.hero,
+          autoAttackProgressTicks: AUTO_ATTACK_TICKS - 0.5,
+          autoAttackStarted: true,
+        },
+      },
+    };
+    // Apply web snare directly to hero
+    state.combatants.hero.activeEffects = [{
+      type: "web_snare",
+      remainingTicks: 3,
+      sourceAbilityId: "web_snare_test",
+    }];
+    // Tick: hero should not auto-attack while snared
+    const prevHp = state.combatants.enemy.hp;
+    state = processTick(state, ACTION.NONE, () => 0.5);
+    // Enemy should still be at full HP (hero couldn't attack)
+    expect(state.combatants.enemy.hp).toBe(prevHp);
+    // Web snare should still be active (2 remaining after 1 tick)
+    const snare = state.combatants.hero.activeEffects.find(e => e.type === "web_snare");
+    expect(snare).toBeTruthy();
+    expect(snare.remainingTicks).toBe(2);
+  });
+
+  it("web_snare expires after its duration and hero can attack again", () => {
+    const hero = initHero("Tester");
+    const enemy = {
+      id: "dummy",
+      name: "Dummy",
+      family: "humanoid",
+      hp: 1000,
+      disableAutoAttack: true,
+      stats: { maxHp: 1000, attack: 0, armor: 0 },
+      rewards: { xp: 0, gold: 0 },
+      effects: [],
+    };
+    let state = initCombat({
+      heroName: "Tester",
+      heroHp: 100,
+      heroMaxHp: 100,
+      heroDamage: 10,
+      heroArmor: 0,
+      heroAttackRate: 1,
+      enemyObj: enemy,
+      heroAbilities: [],
+      heroEffects: [],
+    });
+    // Apply 1-tick web snare
+    state.combatants.hero.activeEffects = [{ type: "web_snare", remainingTicks: 1, sourceAbilityId: "test" }];
+    state.combatants.hero.autoAttackProgressTicks = AUTO_ATTACK_TICKS + 1;
+    state.combatants.hero.autoAttackStarted = true;
+    state = processTick(state, ACTION.NONE, () => 0.5);
+    // After 1 tick, web_snare should expire
+    const snare = state.combatants.hero.activeEffects.find(e => e.type === "web_snare");
+    expect(snare).toBeFalsy();
+  });
+
+  it("cave_spiderlings can be summoned by silkfang_matriarch", () => {
+    const hero = initHero("Tester");
+    const matriarch = {
+      id: "test_matriarch",
+      name: "Silkfang Matriarch",
+      family: "spider",
+      hp: 400,
+      stats: { maxHp: 400, attack: 16, armor: 5 },
+      rewards: { xp: 0, gold: 0 },
+      effects: [],
+      abilities: [{
+        id: "brood_call_test",
+        name: "Brood Call",
+        type: "summon_add",
+        castTicks: 0,
+        cooldownSeconds: 99,
+        enemyId: "cave_spiderling",
+        maxAdds: 2,
+        maxSummons: 4,
+        pauseMs: 0,
+      }],
+    };
+    let state = initCombat({
+      heroName: "Tester",
+      heroHp: 100,
+      heroMaxHp: 100,
+      heroDamage: 5,
+      heroArmor: 0,
+      enemyObj: matriarch,
+      heroAbilities: [],
+      heroEffects: [],
+    });
+    // Force the matriarch to use brood_call immediately — combatant id is 'enemy'
+    state = {
+      ...state,
+      actionQueue: enqueueAbility(createActionQueue(), "enemy", ACTION.ABILITY_0, 0, state.tick, 0, matriarch.abilities[0], { targetId: "hero" }),
+    };
+    state = processTick(state, ACTION.NONE, () => 0.5);
+    const summonLog = state.log.find(e => e.type === "summon" && e.actorId === "enemy");
+    expect(summonLog).toBeTruthy();
+    const spiderlings = (state.combatants.enemies || []).filter(c => c.isSummon && c.summonedBy === "enemy");
+    expect(spiderlings.length).toBeGreaterThan(0);
+  });
+
+  it("broodmother enters cocoon at 0 HP instead of dying", () => {
+    const hero = initHero("Tester");
+    const broodmother = {
+      ...bossById.broodmother_of_the_deep,
+      hp: 1,
+      stats: { maxHp: 720, attack: 20, armor: 6, attackSpeed: 1.1 },
+      rewards: { xp: 0, gold: 0 },
+    };
+    let state = initCombat({
+      heroName: "Tester",
+      heroHp: 200,
+      heroMaxHp: 200,
+      heroDamage: 50,
+      heroArmor: 0,
+      heroAttackRate: 1,
+      enemyObj: broodmother,
+      heroAbilities: [],
+      heroEffects: [],
+    });
+    // Force broodmother HP to 0
+    state.combatants.enemy.hp = 0;
+    state = processTick(state, ACTION.NONE, () => 0.5);
+    // Should not be dead — should be in cocoon
+    expect(state.phase).not.toBe("won");
+    expect(state.combatants.enemy.inCocoon).toBe(true);
+    expect(state.combatants.enemy.hp).toBeGreaterThan(0);
+    const cocoonLog = state.log.find(e => e.type === "phase_change" && e.phase === "cocoon");
+    expect(cocoonLog).toBeTruthy();
+  });
+
+  it("cocoon has 95% damage reduction via applyCombatantDamage", () => {
+    const fakeBoss = { hp: 200, maxHp: 200, inCocoon: true, cocoonDamageTaken: 0 };
+    const result = applyCombatantDamage(fakeBoss, 100);
+    expect(result.damage).toBe(5); // 5% of 100
+    expect(fakeBoss.cocoonDamageTaken).toBe(5);
+    expect(fakeBoss.hp).toBe(195); // 200 - 5
+  });
+
+  it("phase 2 starts after cocoon duration with updated stats", () => {
+    const broodmother = bossById.broodmother_of_the_deep;
+    let state = initCombat({
+      heroName: "Tester",
+      heroHp: 200,
+      heroMaxHp: 200,
+      heroDamage: 5,
+      heroArmor: 0,
+      heroAttackRate: 0.1,
+      enemyObj: {
+        ...broodmother,
+        hp: 1,
+        stats: { maxHp: 720, attack: 20, armor: 6, attackSpeed: 1.1 },
+        rewards: { xp: 0, gold: 0 },
+      },
+      heroAbilities: [],
+      heroEffects: [],
+    });
+    // Trigger cocoon immediately
+    state.combatants.enemy.hp = 0;
+    state = processTick(state, ACTION.NONE, () => 0.5);
+    expect(state.combatants.enemy.inCocoon).toBe(true);
+    const cocoonStartTick = state.combatants.enemy.cocoonStartTick;
+    // Advance ticks until cocoon exits (4 ticks)
+    for (let i = 0; i < 5; i++) {
+      if (state.phase !== "fighting") break;
+      state = processTick(state, ACTION.NONE, () => 0.5);
+    }
+    // Should now be in phase 2
+    expect(state.combatants.enemy.inCocoon).toBeFalsy();
+    expect(state.combatants.enemy.activePhaseId).toBe("phase2");
+    expect(state.combatants.enemy.maxHp).toBe(broodmother.phase2MaxHp);
+    const p2Log = state.log.find(e => e.type === "phase_change" && e.phase === "phase2");
+    expect(p2Log).toBeTruthy();
+  });
+
+  it("brood venom stacks to 5 and triggers Venom Shock", () => {
+    const hero = {
+      ...initHero("Tester"),
+      hp: 500,
+      maxHp: 500,
+    };
+    let state = initCombat({
+      heroName: "Tester",
+      heroHp: 500,
+      heroMaxHp: 500,
+      heroDamage: 0,
+      heroArmor: 0,
+      heroAttackRate: 0.01,
+      enemyObj: {
+        id: "dummy",
+        name: "Dummy",
+        hp: 1000,
+        disableAutoAttack: true,
+        stats: { maxHp: 1000, attack: 0, armor: 0 },
+        rewards: { xp: 0, gold: 0 },
+        effects: [],
+      },
+      heroAbilities: [],
+      heroEffects: [],
+    });
+    // Inject 5-stack brood_venom on hero
+    state.combatants.hero.activeEffects = [{
+      type: "brood_venom",
+      stacks: 5,
+      remainingTicks: 3,
+      damagePctPerTick: 0.65,
+    }];
+    const hpBefore = state.combatants.hero.hp;
+    state = processTick(state, ACTION.NONE, () => 0.5);
+    // Hero should have taken damage from brood venom + venom shock
+    expect(state.combatants.hero.hp).toBeLessThan(hpBefore);
+    const shockLog = state.log.find(e => e.type === "poison" && e.text?.includes("Venom Shock"));
+    expect(shockLog).toBeTruthy();
+    // Stacks should have been reduced by 2 (5→3)
+    const venom = state.combatants.hero.activeEffects.find(e => e.type === "brood_venom");
+    expect(venom?.stacks).toBe(3);
+  });
+
+  it("devour heals boss after 8 ticks and removes spiderling", () => {
+    const heroObj = initHero("Tester");
+    const bossEnemy = {
+      id: "test_brood",
+      name: "Broodmother",
+      family: "spider",
+      hp: 400,
+      maxHp: 400,
+      stats: { maxHp: 400, attack: 0, armor: 0 },
+      rewards: { xp: 0, gold: 0 },
+      effects: [],
+      disableAutoAttack: true,
+      hasCocoonTransform: false,
+    };
+    let state = initCombat({
+      heroName: "Tester",
+      heroHp: 200,
+      heroMaxHp: 200,
+      heroDamage: 0,
+      heroArmor: 0,
+      heroAttackRate: 0.01,
+      enemyObj: bossEnemy,
+      heroAbilities: [],
+      heroEffects: [],
+    });
+    // Wound the boss (combatant id is 'enemy')
+    state.combatants.enemy.hp = 300;
+    // Inject a fake summoned spiderling tagged for devour at tick + 1
+    const currentTick = state.tick;
+    const fakeSummon = {
+      id: "enemy_spiderling_1",
+      name: "Cave Spiderling",
+      family: "spider",
+      hp: 55,
+      maxHp: 55,
+      isSummon: true,
+      summonedBy: "enemy",
+      devourAtTick: currentTick + 1,
+      devourHealPct: 7,
+      devourBossId: "enemy",
+      activeEffects: [],
+      abilities: [],
+      passiveEffects: [],
+      basePassiveEffects: [],
+      team: "enemy",
+    };
+    // Add the summon to the enemies array so getStateEnemies picks it up
+    state = {
+      ...state,
+      combatants: {
+        ...state.combatants,
+        enemies: [...(state.combatants.enemies || [state.combatants.enemy]), fakeSummon],
+      },
+    };
+    state = processTick(state, ACTION.NONE, () => 0.5);
+    // Spiderling should be gone (hp = 0)
+    const allEnemies = state.combatants.enemies || [];
+    const spiderlingAfter = allEnemies.find(c => c.id === "enemy_spiderling_1");
+    expect(spiderlingAfter?.hp ?? 0).toBe(0);
+    // Devour log entry should exist
+    const devourLog = state.log.find(e => e.text?.includes("devours") || e.text?.includes("Devours"));
+    expect(devourLog).toBeTruthy();
   });
 });

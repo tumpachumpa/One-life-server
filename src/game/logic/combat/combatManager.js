@@ -252,6 +252,14 @@ function createEnemyCombatant(enemyObj, id = 'enemy') {
     isDuelPlayer: enemyObj.isDuelPlayer || false,
     isDuelCompanion: enemyObj.isDuelCompanion || false,
     dodgePhaseConfig: enemyObj.dodgePhaseConfig || null,
+    hasCocoonTransform: enemyObj.hasCocoonTransform || false,
+    hasTransformed: false,
+    cocoonDurationTicks: enemyObj.cocoonDurationTicks ?? 4,
+    phase2MaxHp: enemyObj.phase2MaxHp ?? null,
+    phase2Attack: enemyObj.phase2Attack ?? null,
+    phase2Armor: enemyObj.phase2Armor ?? null,
+    phase2AttackSpeed: enemyObj.phase2AttackSpeed ?? null,
+    phase2Abilities: enemyObj.phase2Abilities ?? null,
   };
 }
 
@@ -645,6 +653,11 @@ function summonAdd(summoner, effect, enemies, tick, log, hero) {
   summon.summonedBy = summoner.id;
   summon.summonKey = summonKey;
   summon.isSummon = true;
+  if (effect.devourAfterTicks != null) {
+    summon.devourAtTick = tick + effect.devourAfterTicks;
+    summon.devourHealPct = effect.devourHealPct || 7;
+    summon.devourBossId = summoner.id;
+  }
   summoner.summonCounts = { ...summonCounts, [summonKey]: nextCount };
   log.push(makeEntry(tick, summoner.id, 'summon', `${summoner.name} summons ${summon.name} (${nextCount}/${maxSummons}).`, 0, hero.hp, summoner.hp, {
     targetId: summon.id,
@@ -1990,6 +2003,70 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
     foe.isCasting = isCasting(queue, foe.id, tick);
   }
 
+  // Cocoon transformation: intercept first death for bosses with hasCocoonTransform
+  for (const foe of enemies) {
+    if (foe.hp <= 0 && foe.hasCocoonTransform && !foe.hasTransformed) {
+      foe.hp = 1;
+      foe.inCocoon = true;
+      foe.hasTransformed = true;
+      foe.cocoonStartTick = tick;
+      foe.cocoonDamageTaken = 0;
+      foe.disableAutoAttack = true;
+      log.push(makeEntry(tick, foe.id, 'phase_change',
+        `${foe.name} seals herself in a hardened cocoon! The cocoon absorbs most damage, but attacking it weakens her next form.`,
+        0, hero.hp, 1, { phase: 'cocoon', targetId: foe.id }));
+    }
+    // Cocoon exit after duration
+    if (foe.inCocoon && tick >= (foe.cocoonStartTick || 0) + (foe.cocoonDurationTicks || 4)) {
+      const p2MaxHp = foe.phase2MaxHp || foe.maxHp;
+      const rawDmg = foe.cocoonDamageTaken || 0;
+      const reducePct = Math.min(rawDmg / p2MaxHp, 0.65);
+      const p2Hp = Math.max(Math.floor(p2MaxHp * 0.35), Math.floor(p2MaxHp * (1 - reducePct)));
+      foe.maxHp = p2MaxHp;
+      foe.hp = p2Hp;
+      if (foe.phase2Attack != null) {
+        foe.damage = scaleMonsterAttack(foe.phase2Attack);
+        foe.baseDamage = foe.damage;
+      }
+      if (foe.phase2Armor != null) {
+        foe.armor = scaleMonsterArmor(foe.phase2Armor);
+        foe.baseArmor = foe.armor;
+      }
+      if (foe.phase2AttackSpeed != null) {
+        foe.autoAttackRate = foe.phase2AttackSpeed;
+        foe.baseAutoAttackRate = foe.autoAttackRate;
+      }
+      if (Array.isArray(foe.phase2Abilities)) {
+        foe.abilities = scaleMonsterAbilities(foe.phase2Abilities);
+      }
+      foe.inCocoon = false;
+      foe.disableAutoAttack = false;
+      foe.activePhaseId = 'phase2';
+      log.push(makeEntry(tick, foe.id, 'phase_change',
+        `The cocoon shatters! ${foe.name} emerges transformed — Phase 2! (${p2Hp} HP)`,
+        0, hero.hp, p2Hp, { phase: 'phase2', targetId: foe.id }));
+    }
+  }
+  // Brood Devour: surviving tagged summons heal their boss after devourAtTick
+  for (const summon of enemies) {
+    if (!summon.isSummon || !summon.devourAtTick || summon.hp <= 0) continue;
+    if (tick < summon.devourAtTick) continue;
+    const bossForDevour = enemies.find(b => b.id === summon.devourBossId && b.hp > 0);
+    const healPct = summon.devourHealPct || 7;
+    if (bossForDevour) {
+      const healAmt = Math.floor(bossForDevour.maxHp * healPct / 100);
+      bossForDevour.hp = Math.min(bossForDevour.maxHp, bossForDevour.hp + healAmt);
+      log.push(makeEntry(tick, bossForDevour.id, 'heal',
+        `${bossForDevour.name} devours ${summon.name}, recovering ${healAmt} HP!`,
+        0, hero.hp, bossForDevour.hp, { targetId: bossForDevour.id }));
+    }
+    summon.hp = 0;
+    summon.devourAtTick = null;
+    log.push(makeEntry(tick, summon.id, 'death',
+      `${summon.name} is devoured by ${bossForDevour?.name || 'the Broodmother'}!`,
+      0, hero.hp, bossForDevour?.hp ?? 0));
+  }
+
   let phase = state.phase;
   const boss = enemies.find(foe => foe.id === (state.bossEnemyId || 'enemy')) || enemies[0] || null;
   const bossDead = !!boss && state.bossDeathEndsFight !== false && boss.hp <= 0;
@@ -2384,6 +2461,35 @@ function tickActiveEffects(combatant, tick, log, procParams = null) {
       if (combatant.isPlayer && procParams?.procState) {
         const { procState, heroProcNodes, hero, enemy, rng } = procParams;
         maybeFireHpCrossBelowProcs(hpBeforePoison, hero, procState, heroProcNodes, enemy, tick, log, rng);
+        preventDeathWithLastBreath(hero, tick, log, enemy, procState);
+      }
+    }
+    if (effect.type === 'brood_venom' && effect.remainingTicks > 0) {
+      if (isPoisonImmune(combatant)) continue;
+      const hpBeforeVenom = combatant.hp;
+      const stacks = Math.max(1, Math.min(5, effect.stacks || 1));
+      const raw = Math.max(1, Math.floor((combatant.maxHp || combatant.hp) * (effect.damagePctPerTick || 0.65) * stacks / 100));
+      const dmg = resolveElementalDamage(raw, 'poison', combatant);
+      combatant.hp = Math.max(0, combatant.hp - dmg);
+      const stackText = stacks > 1 ? ` (${stacks} stacks)` : '';
+      const text = combatant.isPlayer
+        ? `Brood Venom${stackText} deals ${dmg} poison damage. (${effect.remainingTicks} tick${effect.remainingTicks !== 1 ? 's' : ''} left)`
+        : `Brood Venom${stackText}: ${combatant.name} takes ${dmg} poison damage.`;
+      log.push(makeEntry(tick, combatant.id, 'poison', text, dmg, null, null, { element: 'poison' }));
+      if (stacks >= 5) {
+        const shockRaw = Math.max(1, Math.floor((combatant.maxHp || combatant.hp) * 6.5 / 100));
+        const shockDmg = resolveElementalDamage(shockRaw, 'poison', combatant);
+        combatant.hp = Math.max(0, combatant.hp - shockDmg);
+        log.push(makeEntry(tick, combatant.id, 'poison',
+          combatant.isPlayer
+            ? `Venom Shock! ${shockDmg} burst poison damage. Stacks reduced by 2.`
+            : `Venom Shock: ${combatant.name} takes ${shockDmg} burst poison damage!`,
+          shockDmg, null, null, { element: 'poison' }));
+        effect.stacks = Math.max(1, stacks - 2);
+      }
+      if (combatant.isPlayer && procParams?.procState) {
+        const { procState, heroProcNodes, hero, enemy, rng } = procParams;
+        maybeFireHpCrossBelowProcs(hpBeforeVenom, hero, procState, heroProcNodes, enemy, tick, log, rng);
         preventDeathWithLastBreath(hero, tick, log, enemy, procState);
       }
     }
@@ -3412,6 +3518,7 @@ function addRapidFireCharge(combatant, sourceEffect) {
 function getEffectiveAutoAttackRate(combatant) {
   if (!combatant || combatant.disableAutoAttack) return 0;
   if ((combatant.activeEffects || []).some(effect => effect.type === 'cannot_auto_attack' && isEffectActive(effect))) return 0;
+  if ((combatant.activeEffects || []).some(e => e.type === 'web_snare' && (e.remainingTicks == null || e.remainingTicks > 0))) return 0;
   const parsedBaseRate = Number(combatant.autoAttackRate ?? 1);
   const baseRate = Number.isFinite(parsedBaseRate) ? parsedBaseRate : 1;
   if (baseRate <= 0) return combatant.isPlayer ? 1 : 0;
@@ -3695,13 +3802,13 @@ function applyEnemyBleed(enemy, tick, log, attacker = null, procState = null) {
   }
   const dotDmgMult = getRelicDotDamageMult(procState);
   const dotDurBonus = getRelicDotDurationBonus(procState);
-  const damagePctPerTick = applyBleedDamageBonus(attacker, 2) * dotDmgMult;
+  const damagePctPerTick = applyBleedDamageBonus(attacker, 0.75) * dotDmgMult;
   const refreshTicks = getPlayerBleedRefreshTicks(attacker) + dotDurBonus;
   const existing = (enemy.activeEffects || []).find(e => e.type === 'bleed');
   if (existing) {
     existing.remainingTicks = Math.max(existing.remainingTicks || 0, refreshTicks);
     existing.stacks = Math.min(6, (existing.stacks || 1) + 1);
-    existing.damagePctPerTick = Math.max(existing.damagePctPerTick || 2, damagePctPerTick);
+    existing.damagePctPerTick = Math.max(existing.damagePctPerTick || 0, damagePctPerTick);
   } else {
     enemy.activeEffects.push({ type: 'bleed', remainingTicks: refreshTicks, stacks: 1, damagePctPerTick });
   }
@@ -4553,7 +4660,7 @@ function tryApplyOnHitEffects(attacker, defender, tick, log, rng, heroConditions
         continue;
       }
       const poisonDuration = Math.max(1, (effect.duration || 3) + getPoisonDurationBonusTicks(attacker));
-      const poisonDamagePct = Math.max(1, (effect.damagePct || 1) + getPoisonDamagePctBonus(attacker));
+      const poisonDamagePct = (effect.damagePct || 0.5) + getPoisonDamagePctBonus(attacker);
       if (defender.isPlayer && heroConditions) {
         const current = heroConditions.poison?.stacks || 0;
         const nextStacks = Math.min(6, current + 1);
@@ -4580,7 +4687,7 @@ function tryApplyOnHitEffects(attacker, defender, tick, log, rng, heroConditions
         const relicPoisonDurBonus = attackerIsPlayerSide ? getRelicDotDurationBonus(options.procState) : 0;
         const relicPoisonDmgMult = attackerIsPlayerSide ? getRelicDotDamageMult(options.procState) : 1;
         const adjPoisonDuration = poisonDuration + relicPoisonDurBonus;
-        const adjPoisonDamagePct = Math.max(1, Math.round(poisonDamagePct * relicPoisonDmgMult));
+        const adjPoisonDamagePct = poisonDamagePct * relicPoisonDmgMult;
         const currentPoison = (defender.activeEffects || []).find(active => active.type === 'poison');
         const nextStacks = Math.min(6, (currentPoison?.stacks || 0) + 1);
         const remainingTicks = Math.max(currentPoison?.remainingTicks || 0, adjPoisonDuration);
@@ -4589,7 +4696,7 @@ function tryApplyOnHitEffects(attacker, defender, tick, log, rng, heroConditions
           type: 'poison',
           stacks: nextStacks,
           remainingTicks,
-          damagePctPerTick: Math.max(adjPoisonDamagePct, currentPoison?.damagePctPerTick || 1),
+          damagePctPerTick: Math.max(adjPoisonDamagePct, currentPoison?.damagePctPerTick || 0),
         });
         const text = attackerIsPlayerSide ? `Status: ${defender.name} gains Poisoned (${nextStacks} stack${nextStacks !== 1 ? 's' : ''}).` : `Status: You are Poisoned by ${attacker.name}.`;
         log.push(makeEntry(tick, attacker.id, 'poison', text, 0, null, null, targetMeta));
@@ -4612,7 +4719,7 @@ function tryApplyOnHitEffects(attacker, defender, tick, log, rng, heroConditions
         heroConditions.bleeding = {
           type: 'bleeding',
           stacks: nextStacks,
-          damagePct: effect.damagePct || 2,
+          damagePct: effect.damagePct || 0.6,
         };
         const currentBleed = (defender.activeEffects || []).find(active => active.type === 'bleed');
         const remainingTicks = Math.max(currentBleed?.remainingTicks || 0, bleedDuration);
@@ -4621,14 +4728,14 @@ function tryApplyOnHitEffects(attacker, defender, tick, log, rng, heroConditions
           type: 'bleed',
           stacks: nextStacks,
           remainingTicks,
-          damagePctPerTick: effect.damagePct || currentBleed?.damagePctPerTick || 2,
+          damagePctPerTick: effect.damagePct || currentBleed?.damagePctPerTick || 0.6,
         });
         log.push(makeEntry(tick, attacker.id, 'bleed', `Status: You gain Bleeding (${nextStacks} stack${nextStacks !== 1 ? 's' : ''}) from ${attacker.name}.`, 0, null, null, targetMeta));
       } else {
         const relicBleedDurBonus = attackerIsPlayerSide ? getRelicDotDurationBonus(options.procState) : 0;
         const relicBleedDmgMult = attackerIsPlayerSide ? getRelicDotDamageMult(options.procState) : 1;
         const adjBleedDuration = bleedDuration + relicBleedDurBonus;
-        const adjBleedDamagePct = Math.max(1, Math.round((effect.damagePct || 2) * relicBleedDmgMult));
+        const adjBleedDamagePct = (effect.damagePct || 0.6) * relicBleedDmgMult;
         const currentBleed = (defender.activeEffects || []).find(active => active.type === 'bleed');
         const nextStacks = Math.min(6, (currentBleed?.stacks || 0) + 1);
         const remainingTicks = Math.max(currentBleed?.remainingTicks || 0, adjBleedDuration);
@@ -4637,7 +4744,7 @@ function tryApplyOnHitEffects(attacker, defender, tick, log, rng, heroConditions
           type: 'bleed',
           stacks: nextStacks,
           remainingTicks,
-          damagePctPerTick: adjBleedDamagePct || currentBleed?.damagePctPerTick || 2,
+          damagePctPerTick: adjBleedDamagePct || currentBleed?.damagePctPerTick || 0.6,
         });
         log.push(makeEntry(tick, attacker.id, 'bleed', `Status: ${defender.name} gains Bleeding (${nextStacks} stack${nextStacks !== 1 ? 's' : ''}).`, 0, null, null, targetMeta));
       }
@@ -5119,7 +5226,7 @@ function applyProcEffect(effect, ctx, procState, heroProcNodes, hero, enemy, tic
         const existing = (enemy.activeEffects || []).find(e => e.type === 'hemorrhage');
         if (!existing) {
           enemy.activeEffects = enemy.activeEffects || [];
-          enemy.activeEffects.push({ type: 'hemorrhage', remainingTicks: 4, damagePctPerTick: 4, stacks: 1 });
+          enemy.activeEffects.push({ type: 'hemorrhage', remainingTicks: 4, damagePctPerTick: 1.5, stacks: 1 });
           log.push(makeEntry(tick, 'hero', 'bleed', `Hemorrhage Mastery: ${enemy.name} begins hemorrhaging!`, 0, hero.hp, enemy.hp, {}));
         }
       }

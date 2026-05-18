@@ -222,7 +222,7 @@ function tryApplyAbilityBleed(attacker, defender, ability, tick, rng, entries, h
   }
 
   const duration = getAppliedBleedDuration(attacker, ability.bleedDuration || 2);
-  const damagePct = ability.bleedDamagePct || 2;
+  const damagePct = ability.bleedDamagePct || 0.75;
   const currentBleed = (defender.activeEffects || []).find(active => active.type === 'bleed');
   const nextStacks = Math.min(6, (currentBleed?.stacks || 0) + 1);
   const remainingTicks = Math.max(currentBleed?.remainingTicks || 0, duration);
@@ -264,7 +264,7 @@ function applyDirectBleedStacks(attacker, defender, ability, entries, heroCondit
   }
 
   const duration = getAppliedBleedDuration(attacker, ability.bleedDuration || ability.durationTicks || 2);
-  const damagePct = ability.bleedDamagePct || 2;
+  const damagePct = ability.bleedDamagePct || 0.75;
   const currentBleed = (defender.activeEffects || []).find(active => active.type === 'bleed');
   const nextStacks = Math.min(6, (currentBleed?.stacks || 0) + stacksToAdd);
   const remainingTicks = Math.max(currentBleed?.remainingTicks || 0, duration);
@@ -972,6 +972,74 @@ export function resolveAbilityImpact(action, attacker, defender, tick, rng, cont
           : `${attacker.name} uses ${ability.name}. Your attack speed is slowed by ${penalty}% for ${attacks} auto attacks.`,
         damage: 0,
       });
+      break;
+    }
+
+    case 'web_snare': {
+      const durationTicks = ability.durationTicks ?? 2;
+      defender.activeEffects = (defender.activeEffects || []).filter(e => e.type !== 'web_snare');
+      defender.activeEffects.push({
+        type: 'web_snare',
+        remainingTicks: durationTicks,
+        sourceAbilityId: ability.id,
+      });
+      entries.push({
+        type: 'web_snare',
+        text: attacker.isPlayer
+          ? `${ability.name}: ${defender.name} is caught in sticky webbing and cannot attack for ${durationTicks}s.`
+          : `${attacker.name} uses ${ability.name}. Sticky webbing snares you — you cannot attack for ${durationTicks}s!`,
+        damage: 0,
+      });
+      break;
+    }
+
+    case 'poison_spit': {
+      const spellDmg = attacker.spellDamage ?? attacker.damage ?? 0;
+      const rawDmg = Math.max(1, Math.floor(spellDmg * (ability.damageMult || 1.0)));
+      const poisonResist = defender.poisonResist || 0;
+      let spitDmg = rawDmg;
+      if (defender.inCocoon) {
+        spitDmg = Math.max(1, Math.floor(rawDmg * 0.05));
+        defender.cocoonDamageTaken = (defender.cocoonDamageTaken || 0) + spitDmg;
+      }
+      const actualDmg = Math.max(1, Math.floor(spitDmg * Math.max(0, 1 - poisonResist / 100)));
+      defender.hp = Math.max(0, defender.hp - actualDmg);
+      entries.push({
+        type: 'spell',
+        text: attacker.isPlayer
+          ? `${ability.name} hits ${defender.name} for ${actualDmg} poison damage.`
+          : `${attacker.name} uses ${ability.name}, spraying ${actualDmg} corrosive venom at you.`,
+        damage: actualDmg,
+        damageType: 'poison',
+      });
+      if (ability.usesBroodVenom) {
+        const damagePct = ability.broodVenomDamagePct || 0.65;
+        const existingIdx = (defender.activeEffects || []).findIndex(e => e.type === 'brood_venom');
+        if (existingIdx >= 0) {
+          const existing = defender.activeEffects[existingIdx];
+          const newStacks = Math.min(5, (existing.stacks || 1) + 1);
+          defender.activeEffects.splice(existingIdx, 1);
+          defender.activeEffects.push({ ...existing, stacks: newStacks, remainingTicks: 3, damagePctPerTick: damagePct });
+          entries.push({ type: 'poison', text: attacker.isPlayer ? `${defender.name} suffers Brood Venom (${newStacks}/5 stacks).` : `Brood Venom intensifies (${newStacks}/5 stacks)!`, damage: 0 });
+        } else {
+          defender.activeEffects.push({ type: 'brood_venom', stacks: 1, remainingTicks: 3, damagePctPerTick: damagePct });
+          entries.push({ type: 'poison', text: attacker.isPlayer ? `${defender.name} suffers Brood Venom (1/5 stacks).` : `You suffer Brood Venom (1/5 stacks)!`, damage: 0 });
+        }
+      } else {
+        const poisonChance = ability.poisonChance ?? 60;
+        if (rng() * 100 < poisonChance) {
+          const pDamagePct = ability.poisonDamagePct ?? 0.55;
+          const pDuration = ability.poisonDuration ?? 3;
+          const existing = (defender.activeEffects || []).find(e => e.type === 'poison');
+          if (existing) {
+            existing.remainingTicks = Math.max(existing.remainingTicks || 0, pDuration);
+            existing.damagePctPerTick = Math.max(existing.damagePctPerTick || 0, pDamagePct);
+          } else {
+            (defender.activeEffects = defender.activeEffects || []).push({ type: 'poison', remainingTicks: pDuration, damagePctPerTick: pDamagePct, stacks: 1 });
+          }
+          entries.push({ type: 'poison', text: attacker.isPlayer ? `${defender.name} is poisoned.` : `You are poisoned.`, damage: 0 });
+        }
+      }
       break;
     }
 
@@ -1862,13 +1930,13 @@ export function resolveAbilityImpact(action, attacker, defender, tick, rng, cont
         });
         break;
       }
-      const trueDmg = Math.max(1, Math.floor((defender.maxHp || defender.hp) * (ability.trueDamagePct || 10) / 100));
+      const trueDmg = Math.max(1, Math.floor((defender.maxHp || defender.hp) * (ability.trueDamagePct || 5) / 100));
       defender.hp = Math.max(0, defender.hp - trueDmg);
       defender.activeEffects = (defender.activeEffects || []).filter(e => e.type !== 'bleed' && e.type !== 'hemorrhage');
       defender.activeEffects.push({
         type: 'hemorrhage',
         remainingTicks: applyBleedDurationBonus(attacker, ability.hemorrhageDuration || 4),
-        damagePctPerTick: applyBleedDamageBonus(attacker, ability.hemorrhageDamagePct || 4),
+        damagePctPerTick: applyBleedDamageBonus(attacker, ability.hemorrhageDamagePct || 1.5),
       });
       const text = attackerIsPlayerSide
         ? `Hemorrhage: ${trueDmg} true damage — the wound tears open into severe hemorrhaging!`

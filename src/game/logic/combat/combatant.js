@@ -253,7 +253,12 @@ export function absorbDamageShield(combatant, amount) {
 }
 
 export function applyCombatantDamage(combatant, amount) {
-  const result = absorbDamageShield(combatant, amount);
+  let finalAmount = amount;
+  if (combatant.inCocoon) {
+    finalAmount = Math.max(1, Math.floor(amount * 0.05));
+    combatant.cocoonDamageTaken = (combatant.cocoonDamageTaken || 0) + finalAmount;
+  }
+  const result = absorbDamageShield(combatant, finalAmount);
   if (result.damage > 0) {
     combatant.hp = Math.max(0, combatant.hp - result.damage);
   }

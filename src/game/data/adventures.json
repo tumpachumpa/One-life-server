@@ -83,11 +83,11 @@
       "x": 19,
       "y": 42,
       "singleEncounter": true,
-      "enemyId": "venom_giant_spider",
-      "lootPoolId": "cave_spider",
+      "enemyId": "cave_spiderling",
+      "lootPoolId": "cave_spiderling_loot",
       "charges": {
-        "max": 4,
-        "rechargeSeconds": 180,
+        "max": 5,
+        "rechargeSeconds": 120,
         "campRequired": false
       },
       "adventures": []
@@ -99,11 +99,11 @@
       "x": 44,
       "y": 68,
       "singleEncounter": true,
-      "enemyId": "venom_giant_spider",
-      "lootPoolId": "cave_spider",
+      "enemyId": "giant_spider",
+      "lootPoolId": "giant_webspinner_loot",
       "charges": {
         "max": 4,
-        "rechargeSeconds": 180,
+        "rechargeSeconds": 150,
         "campRequired": false
       },
       "adventures": []
@@ -116,7 +116,7 @@
       "y": 47,
       "singleEncounter": true,
       "enemyId": "venom_giant_spider",
-      "lootPoolId": "cave_spider",
+      "lootPoolId": "venom_stalker_loot",
       "charges": {
         "max": 4,
         "rechargeSeconds": 180,
@@ -387,6 +387,38 @@
           "dr": 1
         }
       ]
+    },
+    {
+      "id": "silkfang_matriarch_lair",
+      "name": "Matriarch's Lair",
+      "layer": "cave",
+      "x": 25,
+      "y": 55,
+      "singleEncounter": true,
+      "enemyId": "silkfang_matriarch",
+      "lootPoolId": "silkfang_matriarch_loot",
+      "charges": {
+        "max": 2,
+        "rechargeSeconds": 300,
+        "campRequired": true
+      },
+      "adventures": []
+    },
+    {
+      "id": "broodmother_lair",
+      "name": "Broodmother's Lair",
+      "layer": "cave",
+      "x": 21,
+      "y": 62,
+      "singleEncounter": true,
+      "enemyId": "broodmother_of_the_deep",
+      "lootPoolId": "broodmother_loot",
+      "charges": {
+        "max": 1,
+        "rechargeSeconds": 600,
+        "campRequired": true
+      },
+      "adventures": []
     }
   ],
   "adventures": [

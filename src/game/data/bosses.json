@@ -5,7 +5,9 @@
       "id": "elder_stag",
       "name": "Elder Stag",
       "family": "deer",
-      "tags": ["beast"],
+      "tags": [
+        "beast"
+      ],
       "tier": 1,
       "threat": "boss",
       "sprite": "/assets/sprites/encounters/Bosses/elder_stag_boss.png",
@@ -572,7 +574,10 @@
         "armor": 0,
         "attackSpeed": 0
       },
-      "rewards": { "xp": 0, "gold": 0 },
+      "rewards": {
+        "xp": 0,
+        "gold": 0
+      },
       "dodgePhaseConfig": [
         {
           "id": "test_dodge_1",
@@ -580,7 +585,9 @@
           "pattern": "fire_sweep_h",
           "safeSpotCount": 4,
           "waves": [
-            { "safeSpotCount": 4 }
+            {
+              "safeSpotCount": 4
+            }
           ],
           "warningMs": 2000,
           "damage": 20,
@@ -594,8 +601,13 @@
           "safeSpotCount": 3,
           "waveDelayMs": 650,
           "waves": [
-            { "safeSpotCount": 3 },
-            { "safeSpotCount": 2, "warningMs": 1100 }
+            {
+              "safeSpotCount": 3
+            },
+            {
+              "safeSpotCount": 2,
+              "warningMs": 1100
+            }
           ],
           "warningMs": 1800,
           "damage": 20,
@@ -609,9 +621,17 @@
           "safeSpotCount": 2,
           "waveDelayMs": 600,
           "waves": [
-            { "safeSpotCount": 2 },
-            { "safeSpotCount": 1, "warningMs": 900 },
-            { "safeSpotCount": 1, "warningMs": 900 }
+            {
+              "safeSpotCount": 2
+            },
+            {
+              "safeSpotCount": 1,
+              "warningMs": 900
+            },
+            {
+              "safeSpotCount": 1,
+              "warningMs": 900
+            }
           ],
           "warningMs": 1500,
           "damage": 20,
@@ -624,7 +644,11 @@
           "id": "standing",
           "label": "Standing",
           "thresholdPct": 100,
-          "stats": { "attack": 0, "armor": 0, "attackSpeed": 0 },
+          "stats": {
+            "attack": 0,
+            "armor": 0,
+            "attackSpeed": 0
+          },
           "effects": []
         }
       ]
@@ -653,7 +677,10 @@
         "blockPower": 10,
         "blockPowerRegen": 1
       },
-      "rewards": { "xp": 0, "gold": 0 },
+      "rewards": {
+        "xp": 0,
+        "gold": 0
+      },
       "lootTable": null,
       "abilities": [
         {
@@ -738,17 +765,33 @@
           "id": "fallen_champion",
           "label": "Fallen Champion",
           "thresholdPct": 100,
-          "stats": { "attack": 1, "armor": 0, "attackSpeed": 0.78 },
+          "stats": {
+            "attack": 1,
+            "armor": 0,
+            "attackSpeed": 0.78
+          },
           "effects": [
-            { "type": "counter_chance", "value": 10 },
-            { "type": "stagger_on_hit", "chance": 14, "duration": 1, "missPenalty": 30 }
+            {
+              "type": "counter_chance",
+              "value": 10
+            },
+            {
+              "type": "stagger_on_hit",
+              "chance": 14,
+              "duration": 1,
+              "missPenalty": 30
+            }
           ]
         },
         {
           "id": "called_to_judgment",
           "label": "Called to Judgment",
           "thresholdPct": 70,
-          "stats": { "attack": 1, "armor": 0, "attackSpeed": 0.88 },
+          "stats": {
+            "attack": 1,
+            "armor": 0,
+            "attackSpeed": 0.88
+          },
           "effects": [
             {
               "id": "fallen_knight_test_oath_pillars",
@@ -766,7 +809,12 @@
           "id": "spectral_intercession",
           "label": "Spectral Intercession",
           "thresholdPct": 50,
-          "stats": { "attack": 1, "armor": 0, "attackSpeed": 0.98, "spellDamage": 1 },
+          "stats": {
+            "attack": 1,
+            "armor": 0,
+            "attackSpeed": 0.98,
+            "spellDamage": 1
+          },
           "effects": [
             {
               "type": "boss_shield",
@@ -790,10 +838,20 @@
           "id": "last_oath",
           "label": "Last Oath",
           "thresholdPct": 20,
-          "stats": { "attack": 1, "armor": 0, "attackSpeed": 1.18 },
+          "stats": {
+            "attack": 1,
+            "armor": 0,
+            "attackSpeed": 1.18
+          },
           "effects": [
-            { "type": "attack_mult", "value": 1 },
-            { "type": "double_attack", "chance": 10 }
+            {
+              "type": "attack_mult",
+              "value": 1
+            },
+            {
+              "type": "double_attack",
+              "chance": 10
+            }
           ]
         }
       ]
@@ -856,7 +914,9 @@
           "pattern": "fire_sweep_h",
           "safeSpotCount": 4,
           "waves": [
-            { "safeSpotCount": 4 }
+            {
+              "safeSpotCount": 4
+            }
           ],
           "warningMs": 1200,
           "damage": 28,
@@ -873,7 +933,9 @@
           "stunDurationTicks": 2,
           "title": "Tail Swing!",
           "description": "The wyvern sweeps its massive tail in a wide arc. Move left or right out of its path!",
-          "waves": [{}]
+          "waves": [
+            {}
+          ]
         },
         {
           "id": "wyvern_dodge_2",
@@ -882,8 +944,13 @@
           "safeSpotCount": 3,
           "waveDelayMs": 650,
           "waves": [
-            { "safeSpotCount": 3 },
-            { "safeSpotCount": 2, "warningMs": 1100 }
+            {
+              "safeSpotCount": 3
+            },
+            {
+              "safeSpotCount": 2,
+              "warningMs": 1100
+            }
           ],
           "warningMs": 1100,
           "damage": 36,
@@ -897,9 +964,17 @@
           "safeSpotCount": 2,
           "waveDelayMs": 600,
           "waves": [
-            { "safeSpotCount": 2 },
-            { "safeSpotCount": 1, "warningMs": 900 },
-            { "safeSpotCount": 1, "warningMs": 900 }
+            {
+              "safeSpotCount": 2
+            },
+            {
+              "safeSpotCount": 1,
+              "warningMs": 900
+            },
+            {
+              "safeSpotCount": 1,
+              "warningMs": 900
+            }
           ],
           "warningMs": 1100,
           "damage": 44,
@@ -1257,6 +1332,133 @@
               "chance": 10
             }
           ]
+        }
+      ]
+    },
+    {
+      "id": "broodmother_of_the_deep",
+      "name": "Broodmother of the Deep",
+      "family": "spider",
+      "tags": [
+        "beast",
+        "boss"
+      ],
+      "tier": 4,
+      "threat": "boss",
+      "sprite": "/assets/sprites/encounters/Giant spider.png",
+      "baseStats": {
+        "maxHp": 720,
+        "attack": 20,
+        "armor": 6,
+        "attackSpeed": 1.1,
+        "spellDamage": 20
+      },
+      "rewards": {
+        "xp": 300,
+        "gold": 120
+      },
+      "lootTable": "broodmother_loot",
+      "hasCocoonTransform": true,
+      "cocoonDurationTicks": 4,
+      "phase2MaxHp": 580,
+      "phase2Attack": 24,
+      "phase2Armor": 7,
+      "phase2AttackSpeed": 1.3,
+      "effects": [
+        {
+          "type": "poison_on_hit",
+          "name": "Brood Venom Bite",
+          "chance": 25,
+          "duration": 3,
+          "damagePct": 0.65
+        }
+      ],
+      "abilities": [
+        {
+          "id": "poison_spit_brood_p1",
+          "name": "Poison Spit",
+          "description": "Launches a venom glob that deals poison damage and applies Brood Venom.",
+          "type": "poison_spit",
+          "castTicks": 1,
+          "cooldownSeconds": 7,
+          "damageMult": 0.8,
+          "usesBroodVenom": true,
+          "broodVenomDamagePct": 0.65,
+          "aiPool": true,
+          "aiUseChance": 60,
+          "aiWeight": 3
+        },
+        {
+          "id": "web_snare_brood_p1",
+          "name": "Web Snare",
+          "description": "Freezes the player's auto-attack for 2 seconds.",
+          "type": "web_snare",
+          "castTicks": 1,
+          "cooldownSeconds": 20,
+          "durationTicks": 2,
+          "aiPool": true,
+          "aiUseChance": 35,
+          "aiWeight": 2
+        },
+        {
+          "id": "brood_call_p1",
+          "name": "Brood Call",
+          "description": "Summons 2 Cave Spiderlings from the nest.",
+          "type": "summon_add",
+          "castTicks": 1,
+          "cooldownSeconds": 22,
+          "enemyId": "cave_spiderling",
+          "maxAdds": 2,
+          "maxSummons": 8,
+          "pauseMs": 1000,
+          "aiPool": true,
+          "aiUseChance": 45,
+          "aiWeight": 2
+        }
+      ],
+      "phase2Abilities": [
+        {
+          "id": "poison_spit_brood_p2",
+          "name": "Poison Spit",
+          "description": "Stronger venom spray that builds Brood Venom stacks faster.",
+          "type": "poison_spit",
+          "castTicks": 1,
+          "cooldownSeconds": 6,
+          "damageMult": 0.9,
+          "usesBroodVenom": true,
+          "broodVenomDamagePct": 0.9,
+          "aiPool": true,
+          "aiUseChance": 65,
+          "aiWeight": 3
+        },
+        {
+          "id": "web_snare_brood_p2",
+          "name": "Web Snare",
+          "description": "Freezes the player's auto-attack for 2 seconds.",
+          "type": "web_snare",
+          "castTicks": 1,
+          "cooldownSeconds": 18,
+          "durationTicks": 2,
+          "aiPool": true,
+          "aiUseChance": 35,
+          "aiWeight": 2
+        },
+        {
+          "id": "brood_call_p2",
+          "name": "Brood Call",
+          "description": "Summons 3 Spiderlings. After 8 seconds, surviving ones are devoured to heal the Broodmother.",
+          "type": "summon_add",
+          "castTicks": 1,
+          "cooldownSeconds": 24,
+          "enemyId": "cave_spiderling",
+          "maxAdds": 3,
+          "maxSummons": 12,
+          "devourAfterTicks": 8,
+          "devourHealPct": 7,
+          "pauseMs": 1000,
+          "aiPool": true,
+          "aiUseChance": 50,
+          "aiWeight": 2
         }
       ]
     }

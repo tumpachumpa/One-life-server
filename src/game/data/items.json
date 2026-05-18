@@ -113,14 +113,14 @@
           "type": "poison_on_hit",
           "chance": 100,
           "duration": 4,
-          "damagePct": 1
+          "damagePct": 0.85
         },
         {
           "name": "Crimson Covenant",
           "type": "bleed_on_hit",
           "chance": 100,
           "duration": 4,
-          "damagePct": 2
+          "damagePct": 0.95
         }
       ],
       "tags": [
@@ -249,41 +249,69 @@
       "name": "Venom Fang",
       "description": "A crooked blade coated in venom that never quite dries.",
       "rarity": "rare",
-      "size": [1, 2],
+      "size": [
+        1,
+        2
+      ],
       "type": "gear",
       "slot": "weapon",
       "family": "dagger",
       "weaponType": "one_handed_dagger",
       "hands": 1,
       "attackSpeed": 1.45,
-      "baseStats": { "damage": 7 },
+      "baseStats": {
+        "damage": 7
+      },
       "effects": [
         {
           "name": "Venom Coat",
           "type": "poison_on_hit",
           "chance": 35,
           "duration": 3,
-          "damagePct": 1.5
+          "damagePct": 0.85
         }
       ],
-      "tags": ["dagger", "weapon", "melee", "fast", "one_handed", "poison"],
+      "tags": [
+        "dagger",
+        "weapon",
+        "melee",
+        "fast",
+        "one_handed",
+        "poison"
+      ],
       "price": 320,
       "dropWeight": 0,
-      "rarityAffixPools": ["venom", "precision"],
+      "rarityAffixPools": [
+        "venom",
+        "precision"
+      ],
       "icon": "/assets/items/generated/dagger.png"
     },
     {
       "id": "venom_ring",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "name": "Venom Ring",
       "type": "gear",
       "slot": "ring",
       "family": "ring",
       "effects": [
-        { "type": "poison_resist", "value": 8 }
+        {
+          "type": "poison_resist",
+          "value": 8
+        }
       ],
-      "tags": ["ring", "defense", "poison"],
-      "rarityAffixPools": ["venom", "survival"],
+      "tags": [
+        "ring",
+        "defense",
+        "poison"
+      ],
+      "rarityAffixPools": [
+        "venom",
+        "survival"
+      ],
       "price": 180,
       "dropWeight": 0,
       "icon": "/assets/items/generated/ring_of_thorns.png"
@@ -705,13 +733,26 @@
     {
       "id": "spider_meat",
       "name": "Raw Spider Meat",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "consumable",
       "family": "raw_meat",
       "effects": [
-        { "type": "restore_hunger", "value": 8 }
+        {
+          "type": "restore_hunger",
+          "value": 8
+        }
       ],
-      "tags": ["food", "raw", "meat", "raw_meat", "spider_meat", "consumable_raw"],
+      "tags": [
+        "food",
+        "raw",
+        "meat",
+        "raw_meat",
+        "spider_meat",
+        "consumable_raw"
+      ],
       "price": 12,
       "dropWeight": 0,
       "stackable": true,
@@ -1148,7 +1189,9 @@
         },
         {
           "type": "active_buff",
-          "stats": { "maxHpPct": 5 },
+          "stats": {
+            "maxHpPct": 5
+          },
           "combats": 1
         }
       ],
@@ -1176,7 +1219,9 @@
         },
         {
           "type": "active_buff",
-          "stats": { "maxHpPct": 7 },
+          "stats": {
+            "maxHpPct": 7
+          },
           "combats": 1
         }
       ],
@@ -1204,7 +1249,9 @@
         },
         {
           "type": "active_buff",
-          "stats": { "maxHpPct": 10 },
+          "stats": {
+            "maxHpPct": 10
+          },
           "combats": 1
         }
       ],
@@ -1238,10 +1285,18 @@
     {
       "id": "pine_wood",
       "name": "Pine Wood",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "resource",
       "family": "raw_material",
-      "tags": ["resource", "wood", "fuel", "crafting_material"],
+      "tags": [
+        "resource",
+        "wood",
+        "fuel",
+        "crafting_material"
+      ],
       "price": 3,
       "stackable": true,
       "icon": "/assets/items/generated/wood.png"
@@ -1249,10 +1304,18 @@
     {
       "id": "oak_wood",
       "name": "Oak Wood",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "resource",
       "family": "raw_material",
-      "tags": ["resource", "wood", "fuel", "crafting_material"],
+      "tags": [
+        "resource",
+        "wood",
+        "fuel",
+        "crafting_material"
+      ],
       "price": 8,
       "stackable": true,
       "icon": "/assets/items/generated/wood.png"
@@ -1260,10 +1323,18 @@
     {
       "id": "ironwood",
       "name": "Ironwood",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "resource",
       "family": "raw_material",
-      "tags": ["resource", "wood", "fuel", "crafting_material"],
+      "tags": [
+        "resource",
+        "wood",
+        "fuel",
+        "crafting_material"
+      ],
       "price": 18,
       "stackable": true,
       "icon": "/assets/items/generated/wood.png"
@@ -1271,10 +1342,18 @@
     {
       "id": "ancient_heartwood",
       "name": "Ancient Heartwood",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "resource",
       "family": "raw_material",
-      "tags": ["resource", "wood", "fuel", "crafting_material"],
+      "tags": [
+        "resource",
+        "wood",
+        "fuel",
+        "crafting_material"
+      ],
       "price": 45,
       "stackable": true,
       "icon": "/assets/items/generated/wood.png"
@@ -1282,10 +1361,17 @@
     {
       "id": "spider_web",
       "name": "Spider Web",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "resource",
       "family": "raw_material",
-      "tags": ["resource", "spider_web", "crafting_material"],
+      "tags": [
+        "resource",
+        "spider_web",
+        "crafting_material"
+      ],
       "price": 6,
       "dropWeight": 0,
       "stackable": true,
@@ -1466,10 +1552,18 @@
     {
       "id": "silverleaf",
       "name": "Silverleaf",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "resource",
       "family": "herb",
-      "tags": ["resource", "herb", "rare_herb", "crafting_material"],
+      "tags": [
+        "resource",
+        "herb",
+        "rare_herb",
+        "crafting_material"
+      ],
       "price": 25,
       "stackable": true,
       "icon": "/assets/items/generated/yarrow.png"
@@ -2364,513 +2458,847 @@
       "stackable": true,
       "icon": "/assets/items/generated/cooked_wolf_meat.png"
     },
-
     {
       "id": "forge_fragment",
       "name": "Forge Fragment",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "material",
-      "tags": ["material", "repair"],
+      "tags": [
+        "material",
+        "repair"
+      ],
       "dropWeight": 0,
       "stackable": true,
       "price": 120,
       "icon": "/assets/items/generated/bone.png"
     },
-
     {
       "id": "stone_ember_common",
       "name": "Ember Stone (Rough)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "ember",
       "stoneRarity": "common",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 40,
       "icon": "/assets/items/stones/placeholder_stone_ember.png",
       "enchantmentPool": [
-        { "type": "fire_proc_on_hit", "chance": 3, "minDamage": 3, "maxDamage": 5 }
+        {
+          "type": "fire_proc_on_hit",
+          "chance": 3,
+          "minDamage": 3,
+          "maxDamage": 5
+        }
       ]
     },
     {
       "id": "stone_ember_uncommon",
       "name": "Ember Stone (Polished)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "ember",
       "stoneRarity": "uncommon",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 90,
       "icon": "/assets/items/stones/placeholder_stone_ember.png",
       "enchantmentPool": [
-        { "type": "fire_proc_on_hit", "chance": 5, "minDamage": 5, "maxDamage": 8 }
+        {
+          "type": "fire_proc_on_hit",
+          "chance": 5,
+          "minDamage": 5,
+          "maxDamage": 8
+        }
       ]
     },
     {
       "id": "stone_ember_rare",
       "name": "Ember Stone (Carved)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "ember",
       "stoneRarity": "rare",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 200,
       "icon": "/assets/items/stones/placeholder_stone_ember.png",
       "enchantmentPool": [
-        { "type": "fire_proc_on_hit", "chance": 7, "minDamage": 8, "maxDamage": 12, "burnChanceBonus": 20, "burnDurationSecs": 2, "burnDamagePct": 3 }
+        {
+          "type": "fire_proc_on_hit",
+          "chance": 7,
+          "minDamage": 8,
+          "maxDamage": 12,
+          "burnChanceBonus": 20,
+          "burnDurationSecs": 2,
+          "burnDamagePct": 3
+        }
       ]
     },
     {
       "id": "stone_ember_epic",
       "name": "Ember Stone (Perfect)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "ember",
       "stoneRarity": "epic",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 450,
       "icon": "/assets/items/stones/placeholder_stone_ember.png",
       "enchantmentPool": [
-        { "type": "fire_proc_on_hit", "chance": 10, "minDamage": 12, "maxDamage": 17, "burnGuaranteed": true, "burnDurationSecs": 2, "burnDamagePct": 3 }
+        {
+          "type": "fire_proc_on_hit",
+          "chance": 10,
+          "minDamage": 12,
+          "maxDamage": 17,
+          "burnGuaranteed": true,
+          "burnDurationSecs": 2,
+          "burnDamagePct": 3
+        }
       ]
     },
     {
       "id": "stone_ember_legendary",
       "name": "Ember Stone (Ancestral)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "ember",
       "stoneRarity": "legendary",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 900,
       "icon": "/assets/items/stones/placeholder_stone_ember.png",
       "enchantmentPool": [
-        { "type": "fire_proc_on_hit", "chance": 14, "minDamage": 17, "maxDamage": 23, "burnGuaranteed": true, "burnDurationSecs": 2, "burnDamagePct": 3, "burnVictimDamageTakenBonus": 15 }
+        {
+          "type": "fire_proc_on_hit",
+          "chance": 14,
+          "minDamage": 17,
+          "maxDamage": 23,
+          "burnGuaranteed": true,
+          "burnDurationSecs": 2,
+          "burnDamagePct": 3,
+          "burnVictimDamageTakenBonus": 15
+        }
       ]
     },
-
     {
       "id": "stone_shadow_common",
       "name": "Shadow Stone (Rough)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "shadow",
       "stoneRarity": "common",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 40,
       "icon": "/assets/items/stones/placeholder_stone_shadow.png",
       "enchantmentPool": [
-        { "type": "armor_reduce_on_hit", "chance": 3, "reduction": 2, "durationSecs": 3 }
+        {
+          "type": "armor_reduce_on_hit",
+          "chance": 3,
+          "reduction": 2,
+          "durationSecs": 3
+        }
       ]
     },
     {
       "id": "stone_shadow_uncommon",
       "name": "Shadow Stone (Polished)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "shadow",
       "stoneRarity": "uncommon",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 90,
       "icon": "/assets/items/stones/placeholder_stone_shadow.png",
       "enchantmentPool": [
-        { "type": "armor_reduce_on_hit", "chance": 5, "minReduction": 3, "maxReduction": 4, "durationSecs": 3 }
+        {
+          "type": "armor_reduce_on_hit",
+          "chance": 5,
+          "minReduction": 3,
+          "maxReduction": 4,
+          "durationSecs": 3
+        }
       ]
     },
     {
       "id": "stone_shadow_rare",
       "name": "Shadow Stone (Carved)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "shadow",
       "stoneRarity": "rare",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 200,
       "icon": "/assets/items/stones/placeholder_stone_shadow.png",
       "enchantmentPool": [
-        { "type": "armor_reduce_on_hit", "chance": 7, "reduction": 4, "durationSecs": 3, "blindChance": 10 }
+        {
+          "type": "armor_reduce_on_hit",
+          "chance": 7,
+          "reduction": 4,
+          "durationSecs": 3,
+          "blindChance": 10
+        }
       ]
     },
     {
       "id": "stone_shadow_epic",
       "name": "Shadow Stone (Perfect)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "shadow",
       "stoneRarity": "epic",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 450,
       "icon": "/assets/items/stones/placeholder_stone_shadow.png",
       "enchantmentPool": [
-        { "type": "debilitated_on_crit", "chance": 10, "debuffDurationSecs": 2, "damageReductionPct": 20 }
+        {
+          "type": "debilitated_on_crit",
+          "chance": 10,
+          "debuffDurationSecs": 2,
+          "damageReductionPct": 20
+        }
       ]
     },
     {
       "id": "stone_shadow_legendary",
       "name": "Shadow Stone (Ancestral)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "shadow",
       "stoneRarity": "legendary",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 900,
       "icon": "/assets/items/stones/placeholder_stone_shadow.png",
       "enchantmentPool": [
-        { "type": "consecutive_hit_scale", "chance": 14, "scalePerHit": 5, "maxStacks": 5 }
+        {
+          "type": "consecutive_hit_scale",
+          "chance": 14,
+          "scalePerHit": 5,
+          "maxStacks": 5
+        }
       ]
     },
-
     {
       "id": "stone_storm_common",
       "name": "Storm Stone (Rough)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "storm",
       "stoneRarity": "common",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 40,
       "icon": "/assets/items/stones/placeholder_stone_storm.png",
       "enchantmentPool": [
-        { "type": "lightning_proc_on_hit", "chance": 3, "minDamage": 2, "maxDamage": 4 }
+        {
+          "type": "lightning_proc_on_hit",
+          "chance": 3,
+          "minDamage": 2,
+          "maxDamage": 4
+        }
       ]
     },
     {
       "id": "stone_storm_uncommon",
       "name": "Storm Stone (Polished)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "storm",
       "stoneRarity": "uncommon",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 90,
       "icon": "/assets/items/stones/placeholder_stone_storm.png",
       "enchantmentPool": [
-        { "type": "lightning_proc_on_hit", "chance": 5, "minDamage": 4, "maxDamage": 7 }
+        {
+          "type": "lightning_proc_on_hit",
+          "chance": 5,
+          "minDamage": 4,
+          "maxDamage": 7
+        }
       ]
     },
     {
       "id": "stone_storm_rare",
       "name": "Storm Stone (Carved)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "storm",
       "stoneRarity": "rare",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 200,
       "icon": "/assets/items/stones/placeholder_stone_storm.png",
       "enchantmentPool": [
-        { "type": "lightning_proc_on_hit", "chance": 7, "minDamage": 5, "maxDamage": 8, "attackSpeedBonus": 1 }
+        {
+          "type": "lightning_proc_on_hit",
+          "chance": 7,
+          "minDamage": 5,
+          "maxDamage": 8,
+          "attackSpeedBonus": 1
+        }
       ]
     },
     {
       "id": "stone_storm_epic",
       "name": "Storm Stone (Perfect)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "storm",
       "stoneRarity": "epic",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 450,
       "icon": "/assets/items/stones/placeholder_stone_storm.png",
       "enchantmentPool": [
-        { "type": "lightning_proc_on_hit", "chance": 10, "minDamage": 8, "maxDamage": 13, "critStunSecs": 0.5 }
+        {
+          "type": "lightning_proc_on_hit",
+          "chance": 10,
+          "minDamage": 8,
+          "maxDamage": 13,
+          "critStunSecs": 0.5
+        }
       ]
     },
     {
       "id": "stone_storm_legendary",
       "name": "Storm Stone (Ancestral)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "storm",
       "stoneRarity": "legendary",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 900,
       "icon": "/assets/items/stones/placeholder_stone_storm.png",
       "enchantmentPool": [
-        { "type": "lightning_proc_on_hit", "chance": 14, "minDamage": 10, "maxDamage": 10, "chainChance": 10 }
+        {
+          "type": "lightning_proc_on_hit",
+          "chance": 14,
+          "minDamage": 10,
+          "maxDamage": 10,
+          "chainChance": 10
+        }
       ]
     },
-
     {
       "id": "stone_frost_common",
       "name": "Frost Stone (Rough)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "frost",
       "stoneRarity": "common",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 40,
       "icon": "/assets/items/stones/placeholder_stone_frost.png",
       "enchantmentPool": [
-        { "type": "passive_armor_bonus", "minArmor": 3, "maxArmor": 5 }
+        {
+          "type": "passive_armor_bonus",
+          "minArmor": 3,
+          "maxArmor": 5
+        }
       ]
     },
     {
       "id": "stone_frost_uncommon",
       "name": "Frost Stone (Polished)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "frost",
       "stoneRarity": "uncommon",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 90,
       "icon": "/assets/items/stones/placeholder_stone_frost.png",
       "enchantmentPool": [
-        { "type": "passive_armor_bonus", "minArmor": 5, "maxArmor": 8 }
+        {
+          "type": "passive_armor_bonus",
+          "minArmor": 5,
+          "maxArmor": 8
+        }
       ]
     },
     {
       "id": "stone_frost_rare",
       "name": "Frost Stone (Carved)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "frost",
       "stoneRarity": "rare",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 200,
       "icon": "/assets/items/stones/placeholder_stone_frost.png",
       "enchantmentPool": [
-        { "type": "passive_armor_bonus", "minArmor": 6, "maxArmor": 9, "enemyAttackSpeedSlow": 10 }
+        {
+          "type": "passive_armor_bonus",
+          "minArmor": 6,
+          "maxArmor": 9,
+          "enemyAttackSpeedSlow": 10
+        }
       ]
     },
     {
       "id": "stone_frost_epic",
       "name": "Frost Stone (Perfect)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "frost",
       "stoneRarity": "epic",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 450,
       "icon": "/assets/items/stones/placeholder_stone_frost.png",
       "enchantmentPool": [
-        { "type": "passive_damage_reduction", "reductionPct": 6 }
+        {
+          "type": "passive_damage_reduction",
+          "reductionPct": 6
+        }
       ]
     },
     {
       "id": "stone_frost_legendary",
       "name": "Frost Stone (Ancestral)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "frost",
       "stoneRarity": "legendary",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 900,
       "icon": "/assets/items/stones/placeholder_stone_frost.png",
       "enchantmentPool": [
-        { "type": "frost_reflect", "reflectDamage": 8 }
+        {
+          "type": "frost_reflect",
+          "reflectDamage": 8
+        }
       ]
     },
-
     {
       "id": "stone_blood_common",
       "name": "Blood Stone (Rough)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "blood",
       "stoneRarity": "common",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 40,
       "icon": "/assets/items/stones/placeholder_stone_blood.png",
       "enchantmentPool": [
-        { "type": "passive_lifesteal", "lifestealPct": 1 }
+        {
+          "type": "passive_lifesteal",
+          "lifestealPct": 1
+        }
       ]
     },
     {
       "id": "stone_blood_uncommon",
       "name": "Blood Stone (Polished)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "blood",
       "stoneRarity": "uncommon",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 90,
       "icon": "/assets/items/stones/placeholder_stone_blood.png",
       "enchantmentPool": [
-        { "type": "passive_lifesteal", "lifestealPct": 2 }
+        {
+          "type": "passive_lifesteal",
+          "lifestealPct": 2
+        }
       ]
     },
     {
       "id": "stone_blood_rare",
       "name": "Blood Stone (Carved)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "blood",
       "stoneRarity": "rare",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 200,
       "icon": "/assets/items/stones/placeholder_stone_blood.png",
       "enchantmentPool": [
-        { "type": "passive_lifesteal", "lifestealPct": 3, "lowHpDamageBonus": 5 }
+        {
+          "type": "passive_lifesteal",
+          "lifestealPct": 3,
+          "lowHpDamageBonus": 5
+        }
       ]
     },
     {
       "id": "stone_blood_epic",
       "name": "Blood Stone (Perfect)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "blood",
       "stoneRarity": "epic",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 450,
       "icon": "/assets/items/stones/placeholder_stone_blood.png",
       "enchantmentPool": [
-        { "type": "passive_lifesteal", "lifestealPct": 4, "outOfCombatRegenPerSec": 2 }
+        {
+          "type": "passive_lifesteal",
+          "lifestealPct": 4,
+          "outOfCombatRegenPerSec": 2
+        }
       ]
     },
     {
       "id": "stone_blood_legendary",
       "name": "Blood Stone (Ancestral)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "blood",
       "stoneRarity": "legendary",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 900,
       "icon": "/assets/items/stones/placeholder_stone_blood.png",
       "enchantmentPool": [
-        { "type": "passive_lifesteal", "lifestealPct": 4, "killRestoreHpPct": 5 }
+        {
+          "type": "passive_lifesteal",
+          "lifestealPct": 4,
+          "killRestoreHpPct": 5
+        }
       ]
     },
-
     {
       "id": "stone_earth_common",
       "name": "Earth Stone (Rough)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "earth",
       "stoneRarity": "common",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 40,
       "icon": "/assets/items/stones/placeholder_stone_earth.png",
       "enchantmentPool": [
-        { "type": "passive_max_hp_bonus", "minHp": 5, "maxHp": 8 }
+        {
+          "type": "passive_max_hp_bonus",
+          "minHp": 5,
+          "maxHp": 8
+        }
       ]
     },
     {
       "id": "stone_earth_uncommon",
       "name": "Earth Stone (Polished)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "earth",
       "stoneRarity": "uncommon",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 90,
       "icon": "/assets/items/stones/placeholder_stone_earth.png",
       "enchantmentPool": [
-        { "type": "passive_max_hp_bonus", "minHp": 10, "maxHp": 15 }
+        {
+          "type": "passive_max_hp_bonus",
+          "minHp": 10,
+          "maxHp": 15
+        }
       ]
     },
     {
       "id": "stone_earth_rare",
       "name": "Earth Stone (Carved)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "earth",
       "stoneRarity": "rare",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 200,
       "icon": "/assets/items/stones/placeholder_stone_earth.png",
       "enchantmentPool": [
-        { "type": "passive_max_hp_bonus", "minHp": 15, "maxHp": 20, "physicalDamageReductionPct": 3 }
+        {
+          "type": "passive_max_hp_bonus",
+          "minHp": 15,
+          "maxHp": 20,
+          "physicalDamageReductionPct": 3
+        }
       ]
     },
     {
       "id": "stone_earth_epic",
       "name": "Earth Stone (Perfect)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "earth",
       "stoneRarity": "epic",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 450,
       "icon": "/assets/items/stones/placeholder_stone_earth.png",
       "enchantmentPool": [
-        { "type": "passive_max_hp_bonus", "minHp": 22, "maxHp": 28, "absorbHitCooldownSecs": 30 }
+        {
+          "type": "passive_max_hp_bonus",
+          "minHp": 22,
+          "maxHp": 28,
+          "absorbHitCooldownSecs": 30
+        }
       ]
     },
     {
       "id": "stone_earth_legendary",
       "name": "Earth Stone (Ancestral)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "earth",
       "stoneRarity": "legendary",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 900,
       "icon": "/assets/items/stones/placeholder_stone_earth.png",
       "enchantmentPool": [
-        { "type": "passive_max_hp_bonus", "minHp": 22, "maxHp": 28, "scalesWithArmor": true }
+        {
+          "type": "passive_max_hp_bonus",
+          "minHp": 22,
+          "maxHp": 28,
+          "scalesWithArmor": true
+        }
       ]
     },
-
     {
       "id": "stone_void_epic",
       "name": "Void Stone (Perfect)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "void",
       "stoneRarity": "epic",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 600,
@@ -2880,24 +3308,34 @@
     {
       "id": "stone_void_legendary",
       "name": "Void Stone (Ancestral)",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "enchantment_stone",
       "stoneType": "void",
       "stoneRarity": "legendary",
-      "tags": ["enchantment_stone", "consumable"],
+      "tags": [
+        "enchantment_stone",
+        "consumable"
+      ],
       "dropWeight": 0,
       "stackable": false,
       "price": 1200,
       "icon": "/assets/items/stones/placeholder_stone_void.png",
       "enchantmentPool": "random_combined"
     },
-
     {
       "id": "relic_sacred_horn",
       "name": "Sacred Horn",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "relic",
-      "tags": ["relic"],
+      "tags": [
+        "relic"
+      ],
       "soulbound": false,
       "source": "elder_stag",
       "dropWeight": 0,
@@ -2912,9 +3350,14 @@
     {
       "id": "relic_soul_fragment",
       "name": "Soul Fragment",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "relic",
-      "tags": ["relic"],
+      "tags": [
+        "relic"
+      ],
       "soulbound": false,
       "source": "lich",
       "dropWeight": 0,
@@ -2930,9 +3373,14 @@
     {
       "id": "relic_broken_standard",
       "name": "Broken Standard",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "relic",
-      "tags": ["relic"],
+      "tags": [
+        "relic"
+      ],
       "soulbound": false,
       "source": "orc_general",
       "dropWeight": 0,
@@ -2949,9 +3397,14 @@
     {
       "id": "relic_shaman_mark",
       "name": "Shaman's Mark",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "relic",
-      "tags": ["relic"],
+      "tags": [
+        "relic"
+      ],
       "soulbound": false,
       "source": "orc_shaman",
       "dropWeight": 0,
@@ -2968,9 +3421,14 @@
     {
       "id": "relic_igneous_scale",
       "name": "Igneous Scale",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "relic",
-      "tags": ["relic"],
+      "tags": [
+        "relic"
+      ],
       "soulbound": true,
       "source": "wyvern",
       "dropWeight": 0,
@@ -2987,9 +3445,14 @@
     {
       "id": "relic_spectral_echo",
       "name": "Spectral Echo",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "relic",
-      "tags": ["relic"],
+      "tags": [
+        "relic"
+      ],
       "soulbound": true,
       "source": "fallen_knight",
       "dropWeight": 0,
@@ -3004,9 +3467,14 @@
     {
       "id": "relic_bear_hide",
       "name": "Bear Hide",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "relic",
-      "tags": ["relic"],
+      "tags": [
+        "relic"
+      ],
       "soulbound": false,
       "source": "armored_bear",
       "dropWeight": 0,
@@ -3022,9 +3490,14 @@
     {
       "id": "relic_infernal_fang",
       "name": "Infernal Fang",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "relic",
-      "tags": ["relic"],
+      "tags": [
+        "relic"
+      ],
       "soulbound": false,
       "source": "hellhound",
       "dropWeight": 0,
@@ -3042,9 +3515,14 @@
     {
       "id": "relic_troll_tooth",
       "name": "Troll Tooth",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "relic",
-      "tags": ["relic"],
+      "tags": [
+        "relic"
+      ],
       "soulbound": false,
       "source": "cave_troll",
       "dropWeight": 0,
@@ -3060,9 +3538,14 @@
     {
       "id": "relic_stone_core",
       "name": "Stone Core",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "relic",
-      "tags": ["relic"],
+      "tags": [
+        "relic"
+      ],
       "soulbound": false,
       "source": "stone_golem",
       "dropWeight": 0,
@@ -3078,9 +3561,14 @@
     {
       "id": "relic_black_armor",
       "name": "Black Armor",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "relic",
-      "tags": ["relic"],
+      "tags": [
+        "relic"
+      ],
       "soulbound": false,
       "source": "black_knight",
       "dropWeight": 0,
@@ -3097,9 +3585,14 @@
     {
       "id": "relic_abyssal_seal",
       "name": "Seal of the Abyss",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "relic",
-      "tags": ["relic"],
+      "tags": [
+        "relic"
+      ],
       "soulbound": false,
       "source": "abyssal_fiend",
       "dropWeight": 0,
@@ -3110,6 +3603,270 @@
         "type": "active_skill_damage_bonus",
         "value": 8,
         "description": "Your active skills deal +8% additional damage."
+      }
+    },
+    {
+      "id": "chitin_shield",
+      "name": "Silkguard Buckler",
+      "description": "A light buckler crafted from layered spider chitin. Favours evasion and countering over raw blocking.",
+      "rarity": "rare",
+      "size": [
+        2,
+        2
+      ],
+      "type": "gear",
+      "slot": "offhand",
+      "family": "shield",
+      "armorType": "shield",
+      "baseStats": {
+        "armor": 2
+      },
+      "effects": [
+        {
+          "type": "block_chance",
+          "value": 4
+        },
+        {
+          "type": "dodge_chance",
+          "value": 4
+        },
+        {
+          "type": "counter_chance",
+          "value": 5
+        }
+      ],
+      "tags": [
+        "shield",
+        "offhand",
+        "defense",
+        "chitin",
+        "spider",
+        "armor_light"
+      ],
+      "price": 220,
+      "dropWeight": 0,
+      "icon": "/assets/items/generated/shield.png"
+    },
+    {
+      "id": "spider_silk_cape",
+      "name": "Spider Silk Cape",
+      "description": "Woven from tough cave spider silk. Whisper-light and harder to hit in.",
+      "rarity": "rare",
+      "size": [
+        2,
+        2
+      ],
+      "type": "gear",
+      "slot": "cloak",
+      "family": "cloak",
+      "armorType": "light",
+      "baseStats": {
+        "armor": 2
+      },
+      "effects": [
+        {
+          "type": "dodge_chance",
+          "value": 8
+        }
+      ],
+      "tags": [
+        "cloak",
+        "cape",
+        "light",
+        "spider",
+        "armor_light"
+      ],
+      "price": 280,
+      "dropWeight": 0,
+      "icon": "/assets/items/generated/cape.png?v=2"
+    },
+    {
+      "id": "brood_venom_gland",
+      "name": "Brood Venom Gland",
+      "description": "A sac of concentrated venom harvested from the Broodmother. Pulsates faintly.",
+      "size": [
+        1,
+        1
+      ],
+      "type": "resource",
+      "family": "raw_material",
+      "tags": [
+        "resource",
+        "venom",
+        "crafting_material",
+        "spider"
+      ],
+      "price": 45,
+      "dropWeight": 0,
+      "stackable": true,
+      "icon": "/assets/items/generated/plant_fiber.png"
+    },
+    {
+      "id": "chitin_plate",
+      "name": "Chitin Plate",
+      "description": "Brittle shell plating stripped from cave spiders. Useful for crafting.",
+      "size": [
+        1,
+        1
+      ],
+      "type": "resource",
+      "family": "raw_material",
+      "tags": [
+        "resource",
+        "chitin",
+        "crafting_material",
+        "spider"
+      ],
+      "price": 12,
+      "dropWeight": 0,
+      "stackable": true,
+      "icon": "/assets/items/generated/bone.png"
+    },
+    {
+      "id": "venomveil_cape",
+      "name": "Venomveil Cape",
+      "description": "A cape woven from matriarch silk, imbued with venom-filtering properties.",
+      "rarity": "rare",
+      "size": [
+        2,
+        2
+      ],
+      "type": "gear",
+      "slot": "cloak",
+      "family": "cloak",
+      "armorType": "light",
+      "baseStats": {
+        "armor": 2
+      },
+      "effects": [
+        {
+          "type": "poison_resist",
+          "value": 12
+        },
+        {
+          "type": "dodge_chance",
+          "value": 4
+        }
+      ],
+      "tags": [
+        "cloak",
+        "light",
+        "spider",
+        "armor_light"
+      ],
+      "price": 280,
+      "dropWeight": 0,
+      "icon": "/assets/items/generated/cape.png?v=2"
+    },
+    {
+      "id": "spider_silk_bag",
+      "name": "Spider-Silk Satchel",
+      "description": "A satchel woven from dense spider silk. Holds up to five extra campfires.",
+      "size": [
+        2,
+        2
+      ],
+      "type": "gear",
+      "slot": "bag",
+      "family": "bag",
+      "effects": [
+        {
+          "type": "campfire_carry_limit",
+          "value": 2
+        }
+      ],
+      "tags": [
+        "bag",
+        "spider"
+      ],
+      "price": 120,
+      "dropWeight": 0,
+      "icon": "/assets/items/generated/small_bag.png"
+    },
+    {
+      "id": "royal_silk",
+      "name": "Royal Silk",
+      "description": "Thick strands of silk spun by a spider matriarch.",
+      "size": [
+        1,
+        1
+      ],
+      "type": "resource",
+      "family": "raw_material",
+      "tags": [
+        "resource",
+        "spider_silk",
+        "crafting_material"
+      ],
+      "price": 18,
+      "dropWeight": 0,
+      "stackable": true,
+      "icon": "/assets/items/generated/plant_fiber.png"
+    },
+    {
+      "id": "brood_chitin",
+      "name": "Brood Chitin",
+      "description": "A shard of dark chitinous plating from a broodmother.",
+      "size": [
+        1,
+        1
+      ],
+      "type": "resource",
+      "family": "raw_material",
+      "tags": [
+        "resource",
+        "chitin",
+        "crafting_material"
+      ],
+      "price": 22,
+      "dropWeight": 0,
+      "stackable": true,
+      "icon": "/assets/items/generated/bone.png"
+    },
+    {
+      "id": "venom_sac",
+      "name": "Venom Sac",
+      "description": "A swollen gland filled with concentrated spider venom.",
+      "size": [
+        1,
+        1
+      ],
+      "type": "resource",
+      "family": "raw_material",
+      "tags": [
+        "resource",
+        "venom",
+        "crafting_material"
+      ],
+      "price": 30,
+      "dropWeight": 0,
+      "stackable": true,
+      "icon": "/assets/items/generated/plant_fiber.png"
+    },
+    {
+      "id": "relic_broodvenom",
+      "name": "Queen's Venom Sac",
+      "description": "A relic from the deepest broodmother. Coats your strikes with lingering venom.",
+      "size": [
+        1,
+        1
+      ],
+      "type": "relic",
+      "tags": [
+        "relic"
+      ],
+      "soulbound": false,
+      "source": "broodmother_of_the_deep",
+      "dropWeight": 0,
+      "stackable": false,
+      "price": 0,
+      "icon": "/assets/items/relics/placeholder_relic.png",
+      "relicPassive": {
+        "type": "poison_on_hit",
+        "chance": 6,
+        "duration": 3,
+        "damagePct": 0.4,
+        "description": "Your attacks have a 6% chance to apply Poison (0.4% max HP/tick for 3 ticks)."
       }
     }
   ]

@@ -85,7 +85,11 @@
       "singleEncounter": true,
       "enemyId": "venom_giant_spider",
       "lootPoolId": "cave_spider",
-      "charges": { "max": 4, "rechargeSeconds": 180, "campRequired": false },
+      "charges": {
+        "max": 4,
+        "rechargeSeconds": 180,
+        "campRequired": false
+      },
       "adventures": []
     },
     {
@@ -97,7 +101,11 @@
       "singleEncounter": true,
       "enemyId": "venom_giant_spider",
       "lootPoolId": "cave_spider",
-      "charges": { "max": 4, "rechargeSeconds": 180, "campRequired": false },
+      "charges": {
+        "max": 4,
+        "rechargeSeconds": 180,
+        "campRequired": false
+      },
       "adventures": []
     },
     {
@@ -109,7 +117,11 @@
       "singleEncounter": true,
       "enemyId": "venom_giant_spider",
       "lootPoolId": "cave_spider",
-      "charges": { "max": 4, "rechargeSeconds": 180, "campRequired": false },
+      "charges": {
+        "max": 4,
+        "rechargeSeconds": 180,
+        "campRequired": false
+      },
       "adventures": []
     },
     {
@@ -235,6 +247,10 @@
       "cityNode": true,
       "footprint": [
         {
+          "dc": 0,
+          "dr": 0
+        },
+        {
           "dc": 1,
           "dr": 0
         },
@@ -294,7 +310,11 @@
           "dc": 3,
           "dr": 3
         }
-      ]
+      ],
+      "entranceOffset": {
+        "dc": 4,
+        "dr": 0
+      }
     },
     {
       "id": "pine_forest",

@@ -2115,7 +2115,12 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
     hero.offhandAutoAttackProgressTicks = offhandProxy.autoAttackProgressTicks;
     hero.offhandAutoAttackStarted = offhandProxy.autoAttackStarted;
     hero.offhandLastAutoAttackTick = offhandProxy.lastAutoAttackTick;
-    hero.offhandNextAutoAttackTick = offhandProxy.nextAutoAttackTick;
+    // Re-anchor schedule to actual game tick so the UI bar stays in sync
+    // (getReadyAutoAttackCountForElapsed uses tick=0 internally, which drifts from currentTick)
+    {
+      const offhandRemaining = Math.max(0, AUTO_ATTACK_TICKS - (hero.offhandAutoAttackProgressTicks ?? 0));
+      hero.offhandNextAutoAttackTick = tick + Math.max(1, Math.ceil(offhandRemaining / Math.max(0.01, hero.offhandAutoAttackRate)));
+    }
     for (let i = 0; i < offhandAttackCount; i++) {
       if (hero.hp <= 0 || enemy.hp <= 0) break;
       const attack = createBasicAttackImpact(hero, enemy, tick, playerRng, ACTION.BASIC_ATTACK, { frontId, enemyFrontId, procState });

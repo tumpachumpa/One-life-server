@@ -147,6 +147,12 @@ async function heroRoutes(fastify) {
         data.hero.gold = (data.hero.gold || 0) + earnedGold;
         dirtySlotId = row.slot_id;
       }
+      // Rescue players stuck on the mountain layer (no passable cells exist there yet)
+      if (data.worldLayer === 'mountain') {
+        data.worldLayer = 'surface';
+        data.playerTilePos = { col: 10, row: 120 };
+        dirtySlotId = dirtySlotId || row.slot_id;
+      }
       slots[row.slot_id] = data;
     }
 

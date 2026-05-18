@@ -1401,6 +1401,7 @@ export function initCombat({
   heroFireResist = 0, heroColdResist = 0, heroLightningResist = 0, heroShadowResist = 0, heroPoisonResist = 0,
   heroWeaponDamageDice = null, heroWeaponDamageMult = 1,
   heroWeaponFamily = null, heroWeaponTags = [], heroAttackType = null, heroOffhandFamily = null,
+  heroOffhandRate = 0, heroOffhandDamageMult = 0.5,
   heroInitialRage = 0,
   heroClass = null,
   enemyFrontId = null,
@@ -1448,6 +1449,12 @@ export function initCombat({
         weaponTags: normalizedHeroWeaponTags,
         attackType: heroAttackType || (normalizedHeroWeaponTags.includes('ranged') ? 'ranged' : null),
         offhandFamily: heroOffhandFamily,
+        offhandAutoAttackRate: heroOffhandRate,
+        offhandAutoAttackProgressTicks: 0,
+        offhandAutoAttackStarted: false,
+        offhandLastAutoAttackTick: null,
+        offhandNextAutoAttackTick: null,
+        offhandDamageMult: heroOffhandDamageMult,
         rageGainFlat: heroEffects
           .filter(effect => effect.type === 'rage_gain_flat')
           .reduce((sum, effect) => sum + (effect.value || 0), 0),
@@ -2095,6 +2102,28 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
   };
 
   processCombatantAuto(hero, enemy, procState, { skipAuto: !!options.skipHeroAuto });
+
+  if (!options.skipHeroAuto && hero.offhandAutoAttackRate > 0 && hero.hp > 0 && enemy.hp > 0 && !hero.disableAutoAttack && !isStunned(hero, tick) && !isCasting(queue, hero.id, tick)) {
+    const offhandProxy = {
+      autoAttackRate: hero.offhandAutoAttackRate,
+      autoAttackProgressTicks: hero.offhandAutoAttackProgressTicks ?? 0,
+      autoAttackStarted: hero.offhandAutoAttackStarted ?? false,
+      lastAutoAttackTick: hero.offhandLastAutoAttackTick,
+      nextAutoAttackTick: hero.offhandNextAutoAttackTick,
+    };
+    const offhandAttackCount = getReadyAutoAttackCountForElapsed(offhandProxy, elapsedTicks);
+    hero.offhandAutoAttackProgressTicks = offhandProxy.autoAttackProgressTicks;
+    hero.offhandAutoAttackStarted = offhandProxy.autoAttackStarted;
+    hero.offhandLastAutoAttackTick = offhandProxy.lastAutoAttackTick;
+    hero.offhandNextAutoAttackTick = offhandProxy.nextAutoAttackTick;
+    for (let i = 0; i < offhandAttackCount; i++) {
+      if (hero.hp <= 0 || enemy.hp <= 0) break;
+      const attack = createBasicAttackImpact(hero, enemy, tick, playerRng, ACTION.BASIC_ATTACK, { frontId, enemyFrontId, procState });
+      attack.damage = Math.max(1, Math.floor(attack.damage * hero.offhandDamageMult));
+      resolveBasicAttackImpact(attack, hero, enemy, tick, log, playerRng, hero, enemy, heroResources, heroConditions, heroWounds, procState, heroProcNodes, { frontId, enemyFrontId, allies });
+    }
+  }
+
   applyPetRageAttackSpeed(hero, allies, procState, tick, log);
 
   for (const ally of allies) {

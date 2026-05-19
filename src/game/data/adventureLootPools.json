@@ -48,7 +48,7 @@
           "bone_shield",
           "heater_shield",
           "tower_shield"
-        ],
+        ]
       },
       "items": [
         {
@@ -136,7 +136,7 @@
           "legs",
           "boots",
           "gloves"
-        ],
+        ]
       },
       "items": [
         {

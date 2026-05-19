@@ -970,7 +970,8 @@
               "next": [
                 "crypts_boss"
               ],
-              "stepIndex": 6
+              "stepIndex": 6,
+              "special": true
             },
             {
               "id": "crypts_boss",
@@ -1181,7 +1182,8 @@
               "next": [
                 "orc_shaman_boss"
               ],
-              "stepIndex": 6
+              "stepIndex": 6,
+              "special": true
             },
             {
               "id": "orc_shaman_boss",
@@ -3173,7 +3175,8 @@
               "next": [
                 "af_boss"
               ],
-              "stepIndex": 7
+              "stepIndex": 7,
+              "special": true
             },
             {
               "id": "af_boss",
@@ -3198,7 +3201,7 @@
       "lootPoolId": "ancient_forest",
       "regionId": "spider_nest_region",
       "description": "A dark cave choked with webs. Spiders grow deadlier the deeper you venture.",
-      "requiredLevel": 8,
+      "requiredLevel": 5,
       "disableChoiceRun": true,
       "linearAdventure": true,
       "routes": [
@@ -3249,7 +3252,8 @@
               "next": [
                 "sn_boss"
               ],
-              "stepIndex": 2
+              "stepIndex": 2,
+              "special": true
             },
             {
               "id": "sn_boss",
@@ -3265,8 +3269,7 @@
             }
           ]
         }
-      ],
-      "requiredLevel": 5
+      ]
     },
     {
       "id": "rootspire_tower",
@@ -3475,7 +3478,8 @@
               "next": [
                 "rst_boss"
               ],
-              "stepIndex": 12
+              "stepIndex": 12,
+              "special": true
             },
             {
               "id": "rst_boss",

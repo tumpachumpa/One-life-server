@@ -1499,12 +1499,27 @@ export function resolveAdventureNode(adventure, node, totalCombats = 0, rng = Ma
   const rolledEnemies = scaledEnemies.map(entry => (
     applyEnemyRarity(entry, forceNormalRarity ? getNormalEnemyRarity() : rollEnemyRarity(rng, { difficultyStars }))
   ));
+  let finalEnemies = rolledEnemies;
+  if (rolledEnemies.length === 1 && !node.noGroup) {
+    const roll = rng();
+    let groupSize = 1;
+    if (node.special) {
+      if (roll < 0.05) groupSize = 2;
+    } else {
+      if (roll < 0.03) groupSize = 3;
+      else if (roll < 0.13) groupSize = 2;
+    }
+    if (groupSize > 1) {
+      finalEnemies = Array.from({ length: groupSize }, () => ({ ...rolledEnemies[0] }));
+    }
+  }
   return {
     type: "combat",
     idx: node.stepIndex ?? 0,
-    enemy: rolledEnemies[0],
-    enemies: rolledEnemies,
-    bossDeathEndsFight: node.bossDeathEndsFight ?? tableRoll?.entry?.bossDeathEndsFight ?? (rolledEnemies.length <= 1),
+    enemy: finalEnemies[0],
+    enemies: finalEnemies,
+    groupSize: finalEnemies.length,
+    bossDeathEndsFight: node.bossDeathEndsFight ?? tableRoll?.entry?.bossDeathEndsFight ?? (finalEnemies.length <= 1),
     addsDespawnOnBossDeath: node.addsDespawnOnBossDeath ?? tableRoll?.entry?.addsDespawnOnBossDeath ?? true,
     node,
   };

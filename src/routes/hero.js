@@ -266,14 +266,9 @@ async function heroRoutes(fastify) {
           hero.hero.xp = dbHero.xp;
           heroWasClamped = true;
         }
-        if (typeof dbHero.gold === 'number' && (hero.hero.gold ?? 0) < dbHero.gold) {
-          hero.hero.gold = dbHero.gold;
-          heroWasClamped = true;
-        }
       } else {
         // First save for this slot — new heroes start at 0; clamp any inflated client values
         if ((hero.hero.xp ?? 0) > 0) { hero.hero.xp = 0; heroWasClamped = true; }
-        if ((hero.hero.gold ?? 0) > 0) { hero.hero.gold = 0; heroWasClamped = true; }
       }
     }
 

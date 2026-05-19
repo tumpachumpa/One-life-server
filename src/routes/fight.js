@@ -210,9 +210,18 @@ function resolveAbilityPvP(attacker, defender, abilityId, rng, tick) {
   }
 
   // Energy gate — rogues must have enough energy to fire the ability
-  const energyCost = ability.energyCost || 0;
+  // Mirror getAbilityEnergyCost logic: rageCost>0 takes priority; rageCost===0 means free; energyCost is the rogue/energy fallback
+  const energyCost = (ability.rageCost != null && ability.rageCost > 0)
+    ? ability.rageCost
+    : (ability.energyCost != null ? ability.energyCost : (ability.rageCost === 0 ? 0 : 10));
   if (attacker.energy !== null && energyCost > 0 && (attacker.energy || 0) < energyCost) {
     return { dmg: 0, isCrit: false, sideEffects };
+  }
+
+  // Deduct energy upfront so all ability branches (including self-buffs that return early) pay their cost
+  const energyBeforeAbility = attacker.energy || 0;
+  if (attacker.energy !== null && energyCost > 0) {
+    attacker.energy = Math.max(0, energyBeforeAbility - energyCost);
   }
 
   // ── Self-buff / no-damage abilities ──────────────────────────────────────
@@ -307,8 +316,7 @@ function resolveAbilityPvP(attacker, defender, abilityId, rng, tick) {
       const markEff = (defender.activeEffects || []).find(e => e.type === 'shadow_mark');
       const markStacks = markEff?.stacks || 0;
       if (markStacks === 0) return { dmg: 0, isCrit: false, sideEffects };
-      const currentEnergy = attacker.energy || 0;
-      if (attacker.energy !== null) attacker.energy = Math.max(0, currentEnergy - energyCost);
+      const currentEnergy = energyBeforeAbility;
       const damagePerMark = ability.damagePerMark || 0.5;
       const dmg = Math.max(1, Math.floor(attacker.damage * damagePerMark * markStacks));
       defender.hp = Math.max(0, defender.hp - dmg);
@@ -325,11 +333,6 @@ function resolveAbilityPvP(attacker, defender, abilityId, rng, tick) {
       }
       return { dmg, isCrit: false, sideEffects };
     }
-  }
-
-  // Deduct energy for damage abilities
-  if (attacker.energy !== null && energyCost > 0) {
-    attacker.energy = Math.max(0, (attacker.energy || 0) - energyCost);
   }
 
   // ── Damage abilities ───────────────────────────────────────────────────────

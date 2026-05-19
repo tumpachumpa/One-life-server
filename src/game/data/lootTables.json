@@ -79,6 +79,18 @@
         "boar_fat": 3,
         "cured_boar_meat": 2,
         "spiced_boar_strips": 1
+      },
+      "generatedEquipment": {
+        "enabled": true,
+        "dropChance": 0.10,
+        "itemLevel": 1,
+        "baseIds": [
+          "leather_helm",
+          "leather_chest",
+          "leather_legs",
+          "leather_boots",
+          "leather_gloves"
+        ]
       }
     },
     "forest_chest_equipment": {
@@ -226,6 +238,8 @@
           "sword_1h",
           "rapier",
           "mace_1h",
+          "bow",
+          "composite_bow",
           "leather_helm",
           "leather_chest",
           "leather_legs",
@@ -326,11 +340,13 @@
         "dropChance": 0.18,
         "itemLevel": 4,
         "baseIds": [
+          "plate_helm",
           "plate_chest",
           "plate_legs",
+          "plate_boots",
           "plate_gloves",
           "heater_shield",
-          "tower_shield"
+          "crossbow"
         ]
       }
     },

@@ -857,6 +857,7 @@
       "regionId": "crypts_region",
       "name": "Crypts",
       "description": "Undead horrors lurk in the dark halls and chambers beneath the earth.",
+      "requiredLevel": 5,
       "mapImage": "/assets/adventure-maps/crypts-map.svg",
       "choiceRunConfig": {
         "multiEncounterTableId": "crypts_floor_1_multi"
@@ -3197,6 +3198,7 @@
       "lootPoolId": "ancient_forest",
       "regionId": "spider_nest_region",
       "description": "A dark cave choked with webs. Spiders grow deadlier the deeper you venture.",
+      "requiredLevel": 8,
       "disableChoiceRun": true,
       "linearAdventure": true,
       "routes": [

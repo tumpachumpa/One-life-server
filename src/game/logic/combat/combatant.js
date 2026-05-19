@@ -90,8 +90,9 @@ export function applyDamageTakenReduction(amount, combatant) {
 
 export function getAbilityEnergyCost(ability) {
   if (!ability) return 0;
-  if (ability.rageCost != null) return Math.max(0, Math.ceil(ability.rageCost));
+  if (ability.rageCost != null && ability.rageCost > 0) return Math.max(0, Math.ceil(ability.rageCost));
   if (ability.energyCost != null) return Math.max(0, Math.ceil(ability.energyCost));
+  if (ability.rageCost === 0) return 0; // explicitly free (no energyCost fallback)
   return DEFAULT_ABILITY_RAGE_COST;
 }
 

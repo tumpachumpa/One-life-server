@@ -71,14 +71,16 @@
       "includeItemIds": [
         "boar_fat",
         "cured_boar_meat",
-        "spiced_boar_strips"
+        "spiced_boar_strips",
+        "ring_of_thorns"
       ],
       "itemWeights": {
         "boar_meat": 6,
         "bone": 4,
         "boar_fat": 3,
         "cured_boar_meat": 2,
-        "spiced_boar_strips": 1
+        "spiced_boar_strips": 1,
+        "ring_of_thorns": 1
       },
       "generatedEquipment": {
         "enabled": true,

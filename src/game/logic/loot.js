@@ -101,12 +101,14 @@ export function weightedPick(list, rng = Math.random) {
 export function getDropPool(tags = [], options = {}) {
   const includeIds = new Set(options.includeItemIds || options.includeIds || []);
   const excludeIds = new Set(options.excludeItemIds || options.excludeIds || []);
+  const excludeTags = new Set(options.excludeTags || []);
   const weightOverrides = options.itemWeights || options.weights || {};
   return items.flatMap(item => {
     const override = weightOverrides[item.id];
     const dropWeight = override == null ? item.dropWeight : Number(override);
     if (!Number.isFinite(dropWeight) || dropWeight <= 0) return [];
     if (excludeIds.has(item.id)) return [];
+    if (excludeTags.size && item.tags?.some(tag => excludeTags.has(tag))) return [];
     const included = includeIds.has(item.id) || (tags.length ? tags.some(tag => item.tags?.includes(tag)) : includeIds.size === 0);
     if (!included) return [];
     return dropWeight === item.dropWeight ? [item] : [{ ...item, dropWeight }];

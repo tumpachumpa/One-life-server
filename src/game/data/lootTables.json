@@ -179,6 +179,7 @@
         "camp",
         "bag"
       ],
+      "excludeTags": ["rootspire"],
       "dropChance": 0.9
     },
     "forest_bandit": {
@@ -438,6 +439,7 @@
         "bag",
         "camp"
       ],
+      "excludeTags": ["rootspire"],
       "dropChance": 1,
       "rarityTable": "boss",
       "generatedEquipment": {
@@ -534,6 +536,7 @@
         "ring",
         "camp"
       ],
+      "excludeTags": ["rootspire"],
       "dropChance": 1,
       "rarityTable": "boss",
       "relicDrop": {

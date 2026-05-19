@@ -201,7 +201,7 @@ async function adventureRoutes(fastify) {
         const enemyTier    = (enemy.tier || 1) + diffStars / 5;
         const overlevelMult = getOverlevelXpMult(heroLevel, enemyTier, enemy.rarity?.id, hero.energy);
 
-        xpGained   = Math.floor((enemy.rewards.xp   || 0) * (hungerLevel.xpMult ?? 1) * overlevelMult * 0.7);
+        xpGained   = Math.floor((enemy.rewards.xp   || 0) * (hungerLevel.xpMult ?? 1) * overlevelMult * 0.56);
         goldGained = enemy.rewards.gold || 0;
       }
       if (!suppressLoot) {

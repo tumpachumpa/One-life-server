@@ -5561,9 +5561,11 @@ function applyThresholdEffects(heroProcNodes, procState, hero, enemy, allies = [
   }
   procState.activeThresholdIds = [];
   const activeThresholds = [];
+  const procNodeIds = new Set(nodes.map(n => n.id));
   for (const node of nodes) {
     if (!node.threshold) continue;
-    const { stat, min, max, effects: threshEffects } = node.threshold;
+    const { stat, min, max, effects: threshEffects, replacesThresholdIds: replIds } = node.threshold;
+    if (replIds?.length && !replIds.every(id => procNodeIds.has(id))) continue;
     let value = 0;
     if (stat === 'rage') value = procState.rage;
     else if (stat === 'hp_pct') value = getHpPct(hero);

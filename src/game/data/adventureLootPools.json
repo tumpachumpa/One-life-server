@@ -49,14 +49,6 @@
           "heater_shield",
           "tower_shield"
         ],
-        "materials": [
-          "steel",
-          "ancient",
-          "ash",
-          "bloodiron",
-          "iron",
-          "bone"
-        ]
       },
       "items": [
         {
@@ -145,12 +137,6 @@
           "boots",
           "gloves"
         ],
-        "materials": [
-          "worn",
-          "cured",
-          "iron",
-          "bone"
-        ]
       },
       "items": [
         {
@@ -211,13 +197,6 @@
           "heater_shield",
           "tower_shield"
         ],
-        "materials": [
-          "iron",
-          "steel",
-          "bone",
-          "ash",
-          "ancient"
-        ]
       },
       "items": [
         {
@@ -289,12 +268,6 @@
           "heater_shield",
           "tower_shield"
         ],
-        "materials": [
-          "iron",
-          "steel",
-          "bone",
-          "bloodiron"
-        ]
       },
       "items": [
         {

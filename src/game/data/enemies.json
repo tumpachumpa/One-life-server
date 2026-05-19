@@ -980,7 +980,7 @@
       "threat": "special",
       "sprite": "/assets/sprites/encounters/HellhounD.png",
       "baseStats": {
-        "maxHp": 115,
+        "maxHp": 185,
         "attack": 16,
         "armor": 12,
         "attackSpeed": 1.25

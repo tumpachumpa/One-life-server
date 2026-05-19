@@ -19,6 +19,18 @@
       "itemWeights": {
         "wolf_meat": 6,
         "bone": 4
+      },
+      "generatedEquipment": {
+        "enabled": true,
+        "dropChance": 0.12,
+        "itemLevel": 1,
+        "baseIds": [
+          "leather_helm",
+          "leather_chest",
+          "leather_legs",
+          "leather_boots",
+          "leather_gloves"
+        ]
       }
     },
     "forest_white_wolf": {
@@ -35,6 +47,18 @@
         "wolf_meat": 6,
         "bone": 4,
         "fur_cloak": 3
+      },
+      "generatedEquipment": {
+        "enabled": true,
+        "dropChance": 0.15,
+        "itemLevel": 2,
+        "baseIds": [
+          "leather_helm",
+          "leather_chest",
+          "leather_legs",
+          "leather_boots",
+          "leather_gloves"
+        ]
       }
     },
     "forest_boar": {
@@ -202,8 +226,11 @@
           "sword_1h",
           "rapier",
           "mace_1h",
+          "leather_helm",
           "leather_chest",
           "leather_legs",
+          "leather_boots",
+          "leather_gloves",
           "buckler",
           "bone_shield"
         ]

@@ -675,9 +675,9 @@ export function rollLootTable(tableOrId, rng = Math.random, lootBonus = 0, force
       || (table.includeItemIds || []).length
       || (table.includeIds || []).length
       || (table.items || []).length;
-    const dropPool = (generatedConfig && !hasLegacyFilters && !useIndependentEquipment)
-      ? []
-      : filterUnpickedItems(getDropPool(table.tags || [], table), preventDuplicateItems ? pickedItemIds : new Set());
+    const dropPool = hasLegacyFilters
+      ? filterUnpickedItems(getDropPool(table.tags || [], table), preventDuplicateItems ? pickedItemIds : new Set())
+      : [];
     const weightedPool = (!useIndependentEquipment && generatedConfig)
       ? [...dropPool, { generatedEquipment: true, dropWeight: generatedConfig.weight }]
       : dropPool;

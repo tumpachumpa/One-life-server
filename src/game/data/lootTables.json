@@ -463,9 +463,18 @@
     },
     "orc_shaman_boss": {
       "rolls": 2,
-      "tags": [
-        "food"
+      "preventDuplicateItems": true,
+      "tags": [],
+      "includeItemIds": [
+        "warg_fang_necklace",
+        "ward_amulet",
+        "protection_amulet"
       ],
+      "itemWeights": {
+        "warg_fang_necklace": 3,
+        "ward_amulet": 3,
+        "protection_amulet": 2
+      },
       "dropChance": 1,
       "rarityTable": "boss",
       "relicDrop": {
@@ -503,9 +512,20 @@
     },
     "orc_general_boss": {
       "rolls": 2,
-      "tags": [
-        "food"
+      "preventDuplicateItems": true,
+      "tags": [],
+      "includeItemIds": [
+        "warg_fang_necklace",
+        "troll_hide_vest",
+        "troll_hide_legs",
+        "protection_amulet"
       ],
+      "itemWeights": {
+        "warg_fang_necklace": 3,
+        "troll_hide_vest": 2,
+        "troll_hide_legs": 2,
+        "protection_amulet": 2
+      },
       "dropChance": 1,
       "rarityTable": "boss",
       "relicDrop": {
@@ -543,12 +563,18 @@
     },
     "boss": {
       "rolls": 2,
-      "tags": [
-        "ring",
-        "bag",
-        "camp"
+      "preventDuplicateItems": true,
+      "tags": [],
+      "includeItemIds": [
+        "ward_amulet",
+        "protection_amulet",
+        "thorn_amulet"
       ],
-      "excludeTags": ["rootspire"],
+      "itemWeights": {
+        "ward_amulet": 3,
+        "protection_amulet": 3,
+        "thorn_amulet": 2
+      },
       "dropChance": 1,
       "rarityTable": "boss",
       "generatedEquipment": {
@@ -588,6 +614,7 @@
     },
     "elder_stag_boss": {
       "rolls": 2,
+      "preventDuplicateItems": true,
       "tags": [],
       "dropChance": 1,
       "rarityTable": "boss",
@@ -721,11 +748,17 @@
     },
     "lich_boss": {
       "rolls": 1,
-      "tags": [
-        "ring",
-        "camp"
+      "tags": [],
+      "includeItemIds": [
+        "vampire_ring",
+        "ward_amulet",
+        "protection_amulet"
       ],
-      "excludeTags": ["rootspire"],
+      "itemWeights": {
+        "vampire_ring": 2,
+        "ward_amulet": 3,
+        "protection_amulet": 2
+      },
       "dropChance": 1,
       "rarityTable": "boss",
       "relicDrop": {
@@ -1195,6 +1228,7 @@
     },
     "wyvern_boss": {
       "rolls": 2,
+      "preventDuplicateItems": true,
       "tags": [],
       "dropChance": 1,
       "rarityTable": "wyvern",
@@ -1258,18 +1292,16 @@
         ]
       },
       "includeItemIds": [
-        "campfire",
         "quiver",
-        "ward_amulet",
-        "protection_amulet",
-        "thorn_amulet"
+        "emberglass_ring",
+        "cinderward_amulet",
+        "emberward_cape"
       ],
       "itemWeights": {
-        "campfire": 2,
         "quiver": 3,
-        "ward_amulet": 3,
-        "protection_amulet": 3,
-        "thorn_amulet": 3
+        "emberglass_ring": 2,
+        "cinderward_amulet": 2,
+        "emberward_cape": 2
       },
       "guaranteedDrops": [
         "fragment_fire_scale"
@@ -1424,6 +1456,7 @@
     },
     "fallen_knight_boss": {
       "rolls": 2,
+      "preventDuplicateItems": true,
       "tags": [],
       "dropChance": 1,
       "rarityTable": "wyvern",
@@ -1459,19 +1492,19 @@
       },
       "includeItemIds": [
         "fang_of_the_red_viper",
-        "campfire",
-        "quiver",
-        "ward_amulet",
-        "protection_amulet",
-        "thorn_amulet"
+        "veilstone_ring",
+        "umbralward_amulet",
+        "nightfall_cape",
+        "black_knight_boots",
+        "black_knight_gauntlets"
       ],
       "itemWeights": {
         "fang_of_the_red_viper": 1,
-        "campfire": 2,
-        "quiver": 3,
-        "ward_amulet": 3,
-        "protection_amulet": 3,
-        "thorn_amulet": 3
+        "veilstone_ring": 3,
+        "umbralward_amulet": 3,
+        "nightfall_cape": 2,
+        "black_knight_boots": 2,
+        "black_knight_gauntlets": 2
       }
     },
     "cave_spiderling_loot": {
@@ -1523,6 +1556,7 @@
     },
     "silkfang_matriarch_loot": {
       "rolls": 2,
+      "preventDuplicateItems": true,
       "tags": [],
       "dropChance": 0.85,
       "includeItemIds": [
@@ -1542,6 +1576,7 @@
     },
     "broodmother_loot": {
       "rolls": 2,
+      "preventDuplicateItems": true,
       "tags": [],
       "dropChance": 0.9,
       "relicDrop": {

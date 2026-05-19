@@ -847,7 +847,8 @@
           "chargesGranted": 3,
           "attackSpeedBonusPct": 50
         }
-      ]
+      ],
+      "lootTable": "forest_basic"
     },
     {
       "id": "ghoul",

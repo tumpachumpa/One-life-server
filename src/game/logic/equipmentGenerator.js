@@ -20,14 +20,14 @@ const SPECIAL_SCALING_AFFIX_TYPES = new Set(["armor_pct", "damage_bonus_pct"]);
 export const STARTER_LOADOUT_IDS = ["sword", "mace", "spear", "bow", "dagger"];
 
 const STARTER_WEAPON_SPECS = {
-  sword: { baseId: "sword_1h", materialId: "rusty", name: "Crude Sword" },
-  mace: { baseId: "mace_1h", materialId: "rusty", name: "Crude Mace" },
-  spear: { baseId: "spear_2h", materialId: "rusty", name: "Crude Spear" },
-  bow: { baseId: "bow", materialId: "worn", name: "Worn Bow" },
-  dagger: { baseId: "dagger", materialId: "rusty", name: "Crude Dagger" },
+  sword:  { baseId: "sword_1h",  grade: "worn", name: "Worn Sword" },
+  mace:   { baseId: "mace_1h",   grade: "worn", name: "Worn Mace" },
+  spear:  { baseId: "spear_2h",  grade: "worn", name: "Worn Spear" },
+  bow:    { baseId: "bow",       grade: "worn", name: "Worn Bow" },
+  dagger: { baseId: "dagger",    grade: "worn", name: "Worn Dagger" },
 };
 
-const STARTER_CHEST_SPEC = { baseId: "cloth_chest", materialId: "cloth", name: "Threadbare Tunic" };
+const STARTER_CHEST_SPEC = { baseId: "cloth_chest", grade: "worn", name: "Worn Tunic" };
 
 function clone(value) {
   return value == null ? value : JSON.parse(JSON.stringify(value));
@@ -88,7 +88,7 @@ export function rollDice(dice = {}, rng = Math.random) {
   return Math.max(1, total);
 }
 
-function materializeDice(baseDice, itemLevel, material, rarity, kind) {
+function materializeDice(baseDice, itemLevel, grade, rarity, kind) {
   const count = Math.max(1, Math.floor(Number(baseDice?.count) || 1));
   const sides = Math.max(1, Math.floor(Number(baseDice?.sides) || 1));
   const baseBonus = Math.floor(Number(baseDice?.bonus) || 0);
@@ -98,7 +98,7 @@ function materializeDice(baseDice, itemLevel, material, rarity, kind) {
     : Number(defaults.levelDamageBonus ?? 0.65);
   const levelBonus = Math.max(0, itemLevel - 1) * levelBonusRate;
   const baseAverage = getDiceAverage({ count, sides });
-  const materialBonus = baseAverage * ((Number(material?.powerMult) || 1) - 1);
+  const materialBonus = baseAverage * ((Number(grade?.powerMult) || 1) - 1);
   const rarityBonus = baseAverage * ((Number(rarity?.statMult) || 1) - 1);
   const bonus = Math.round(baseBonus + levelBonus + materialBonus + rarityBonus);
   const dice = { count, sides, bonus };
@@ -112,8 +112,21 @@ function materializeDice(baseDice, itemLevel, material, rarity, kind) {
   };
 }
 
-function materialById(id) {
-  return (equipmentGenerationData.materials || []).find(material => material.id === id) || null;
+function gradeById(id) {
+  return (equipmentGenerationData.grades || []).find(g => g.id === id) || null;
+}
+
+function rollGradeMult(grade, rng = Math.random) {
+  const min = Number(grade.multMin) || 1;
+  const max = Number(grade.multMax) || 1;
+  return Math.round((min + rng() * (max - min)) * 1000) / 1000;
+}
+
+function rollGrade(options = {}, rng = Math.random) {
+  const grades = equipmentGenerationData.grades || [];
+  const forced = options.grade ? gradeById(options.grade) : null;
+  const picked = forced || weightedPickByWeight(grades, rng) || { id: "normal", label: "", multMin: 1, multMax: 1.12, priceMult: 1 };
+  return { ...picked, powerMult: rollGradeMult(picked, rng) };
 }
 
 function rarityFromOption(rarity = "normal") {
@@ -164,17 +177,6 @@ export function getGeneratedEquipmentBases(options = {}) {
   return getBaseList().filter(base => matchesBase(base, options));
 }
 
-function rollMaterial(base, itemLevel, options = {}, rng = Math.random) {
-  const allowedMaterialIds = asArray(options.materialId || options.materialIds || options.materials);
-  const basePool = asArray(base.materialPool);
-  const materials = (equipmentGenerationData.materials || [])
-    .filter(material => basePool.includes(material.id))
-    .filter(material => !allowedMaterialIds.length || allowedMaterialIds.includes(material.id))
-    .filter(material => (material.itemLevelMin || 1) <= itemLevel);
-  if (materials.length) return weightedPickByWeight(materials, rng);
-  const fallbackId = allowedMaterialIds.find(id => basePool.includes(id)) || basePool[0];
-  return materialById(fallbackId) || (equipmentGenerationData.materials || [])[0] || { id: "plain", name: "", powerMult: 1, priceMult: 1 };
-}
 
 function affixIdentity(effect) {
   if (!effect?.type) return "";
@@ -306,10 +308,10 @@ export function isGeneratedEquipmentAffixAllowedForBase(definition, base = {}, r
   return true;
 }
 
-function rollAffixes(base, material, rarity, rng = Math.random) {
+function rollAffixes(base, rarity, rng = Math.random) {
   const slots = Math.max(0, Number(rarity?.affixSlots) || 0);
   if (!slots) return [];
-  const poolIds = unique([...(base.affixPools || []), ...(material?.extraAffixPools || [])]);
+  const poolIds = unique([...(base.affixPools || [])]);
   const definitions = poolIds.flatMap(id => equipmentGenerationData.affixPools?.[id] || []);
   const result = [];
   const used = new Set((base.effects || []).map(affixIdentity));
@@ -327,16 +329,15 @@ function rollAffixes(base, material, rarity, rng = Math.random) {
 }
 
 export function rollEquipmentAffixes(base, rarity, rng = Math.random) {
-  return rollAffixes(base, null, rarityFromOption(rarity), rng);
+  return rollAffixes(base, rarityFromOption(rarity), rng);
 }
 
-export function rollReplacementEquipmentAffix({ baseId, materialId = null, rarity = "normal", usedEffects = [], disallowedTypes = [] } = {}, rng = Math.random) {
+export function rollReplacementEquipmentAffix({ baseId, rarity = "normal", usedEffects = [], disallowedTypes = [] } = {}, rng = Math.random) {
   const base = getGeneratedEquipmentBases({ baseId })[0];
   if (!base) return null;
-  const material = materialId ? materialById(materialId) : null;
   const rarityDef = rarityFromOption(rarity);
   const disallowed = new Set(disallowedTypes || []);
-  const poolIds = unique([...(base.affixPools || []), ...(material?.extraAffixPools || [])]);
+  const poolIds = unique([...(base.affixPools || [])]);
   const definitions = poolIds.flatMap(id => equipmentGenerationData.affixPools?.[id] || []);
   const used = new Set([...(base.effects || []), ...(usedEffects || [])].map(affixIdentity));
   const candidates = definitions.filter(definition =>
@@ -360,35 +361,37 @@ export function rollGeneratedEquipment(options = {}, rng = Math.random) {
     || weightedPickByWeight(bases, rng);
   if (!base) return null;
   const rarity = rarityFromOption(options.rarity);
-  const material = rollMaterial(base, itemLevel, options, rng);
+  const grade = rollGrade(options, rng);
   const isWeapon = base.slot === "weapon";
   const diceKey = isWeapon ? "damageDice" : "armorDice";
   const baseStats = clone(base.baseStats || {});
   const hasDice = !!base[diceKey];
-  const dice = hasDice ? materializeDice(base[diceKey], itemLevel, material, rarity, isWeapon ? "weapon" : "armor") : null;
+  const dice = hasDice ? materializeDice(base[diceKey], itemLevel, grade, rarity, isWeapon ? "weapon" : "armor") : null;
   if (isWeapon) baseStats.damage = Math.max(1, Math.round(dice.average));
   else if (dice) baseStats.armor = Math.max(1, Math.round(dice.average));
   const effects = [
     ...(base.effects || []).map(effect => materializeBaseEffect(effect, rarity, rng)),
-    ...rollAffixes(base, material, rarity, rng),
+    ...rollAffixes(base, rarity, rng),
   ];
   const rarityLabel = rarity.label ? `${rarity.label} ` : "";
-  const materialName = material.name ? `${material.name} ` : "";
-  const name = `${rarityLabel}${materialName}${base.name}`.replace(/\s+/g, " ").trim();
+  const gradeLabel = grade.label ? `${grade.label} ` : "";
+  const name = `${rarityLabel}${gradeLabel}${base.name}`.replace(/\s+/g, " ").trim();
   const basePrice = Number(base.price || 25);
   const pricePerLevel = Number(equipmentGenerationData.defaults?.pricePerLevel ?? 12);
-  const price = Math.max(1, Math.round((basePrice + itemLevel * pricePerLevel) * (material.priceMult || 1) * rarity.priceMult));
+  const price = Math.max(1, Math.round((basePrice + itemLevel * pricePerLevel) * (grade.priceMult || 1) * rarity.priceMult));
   const id = `generated_${base.id}`;
   return {
     id,
-    uid: createGeneratedUid(base, material, rarity, rng),
+    uid: createGeneratedUid(base, grade, rarity, rng),
     baseId: id,
     generated: true,
     generation: {
       system: "dice_v1",
       baseId: base.id,
-      materialId: material.id,
+      gradeId: grade.id,
+      gradeMult: grade.powerMult,
       itemLevel,
+      ...(options.materialId != null ? { materialId: options.materialId } : {}),
     },
     name,
     type: "gear",
@@ -403,8 +406,10 @@ export function rollGeneratedEquipment(options = {}, rng = Math.random) {
     itemLevel,
     rarity: rarity.id,
     rarityColor: rarity.color,
+    grade: grade.id,
+    gradeColor: grade.color || null,
     effects,
-    tags: unique([...(base.tags || []), "generated", "dice_v1", material.id, `ilvl_${itemLevel}`]),
+    tags: unique([...(base.tags || []), "generated", "dice_v1", grade.id, `ilvl_${itemLevel}`]),
     price,
     icon: base.icon,
     ...(dice ? { [diceKey]: dice } : {}),
@@ -414,7 +419,7 @@ export function rollGeneratedEquipment(options = {}, rng = Math.random) {
 function createStarterGeneratedItem(spec, kind, loadoutId, rng = () => 0) {
   const item = rollGeneratedEquipment({
     baseId: spec.baseId,
-    materialId: spec.materialId,
+    grade: spec.grade || "worn",
     rarity: "normal",
     itemLevel: 1,
   }, rng);

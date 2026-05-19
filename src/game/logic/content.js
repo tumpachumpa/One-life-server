@@ -123,6 +123,8 @@ const generatedEquipmentBaseById = byId([
   ...(equipmentGenerationData.armorBases || []),
 ]);
 
+export const equipmentSets = equipmentGenerationData.sets || {};
+
 const DEPRECATED_GENERATED_BASE_EFFECTS = {
   leather_helm: [
     { type: "dodge_chance", value: 1 },

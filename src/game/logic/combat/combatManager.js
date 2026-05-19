@@ -185,6 +185,7 @@ function createEnemyCombatant(enemyObj, id = 'enemy') {
   const enemyAbilities = scaleMonsterAbilities(enemyObj.abilities || []);
   const enemySpellDamage = enemyObj.stats?.spellDamage ?? enemyObj.baseStats?.spellDamage ?? enemyObj.spellDamage ?? 0;
   const disableAutoAttack = !!(enemyObj.disableAutoAttack || enemyObj.stats?.disableAutoAttack);
+  const baseDisableAutoAttack = disableAutoAttack;
   const enemyAttackSpeed = disableAutoAttack
     ? 0
     : enemyObj.stats?.attackSpeed ?? enemyObj.baseStats?.attackSpeed ?? enemyObj.attackSpeed ?? 1;
@@ -252,13 +253,16 @@ function createEnemyCombatant(enemyObj, id = 'enemy') {
     isDuelPlayer: enemyObj.isDuelPlayer || false,
     isDuelCompanion: enemyObj.isDuelCompanion || false,
     dodgePhaseConfig: enemyObj.dodgePhaseConfig || null,
+    _baseDisableAutoAttack: baseDisableAutoAttack,
     hasCocoonTransform: enemyObj.hasCocoonTransform || false,
     hasTransformed: false,
     cocoonDurationTicks: enemyObj.cocoonDurationTicks ?? 4,
+    cocoonMaxHp: enemyObj.cocoonMaxHp ?? null,
     phase2MaxHp: enemyObj.phase2MaxHp ?? null,
     phase2Attack: enemyObj.phase2Attack ?? null,
     phase2Armor: enemyObj.phase2Armor ?? null,
     phase2AttackSpeed: enemyObj.phase2AttackSpeed ?? null,
+    phase2SpellDamage: enemyObj.phase2SpellDamage ?? null,
     phase2Abilities: enemyObj.phase2Abilities ?? null,
   };
 }
@@ -1671,7 +1675,7 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
   for (const ally of allies) applyPassiveTickEffects(ally, tick, log);
   for (const foe of enemies) applyPassiveTickEffects(foe, tick, log);
   // Apply relic per-tick effects (hp_regen_in_combat etc.)
-  applyRelicTickEffectsForHeroTick(hero, procState, tick, log);
+  applyRelicTickEffectsForHeroTick(hero, allies, procState, tick, log);
   processGroupRevives(enemies, tick, log, hero);
   applyPetRageAttackSpeed(hero, allies, procState, tick, log);
   applySummonAuras(enemies);
@@ -2006,24 +2010,27 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
   // Cocoon transformation: intercept first death for bosses with hasCocoonTransform
   for (const foe of enemies) {
     if (foe.hp <= 0 && foe.hasCocoonTransform && !foe.hasTransformed) {
-      foe.hp = 1;
+      const cocoonHp = foe.cocoonMaxHp || 400;
+      foe.hp = cocoonHp;
+      foe.maxHp = cocoonHp;
       foe.inCocoon = true;
       foe.hasTransformed = true;
       foe.cocoonStartTick = tick;
       foe.cocoonDamageTaken = 0;
       foe.disableAutoAttack = true;
       log.push(makeEntry(tick, foe.id, 'phase_change',
-        `${foe.name} seals herself in a hardened cocoon! The cocoon absorbs most damage, but attacking it weakens her next form.`,
-        0, hero.hp, 1, { phase: 'cocoon', targetId: foe.id }));
+        `${foe.name} seals herself in a hardened cocoon! (${cocoonHp} HP — 95% damage resistance)`,
+        0, hero.hp, cocoonHp, { phase: 'cocoon', targetId: foe.id }));
     }
-    // Cocoon exit after duration
+    // Guard HP during cocoon: prevent premature boss death (applyCombatantDamage handles 95% resistance)
+    if (foe.inCocoon && foe.hp < 1) {
+      foe.hp = 1;
+    }
+    // Cocoon exit after duration — queen always emerges at full phase 2 HP
     if (foe.inCocoon && tick >= (foe.cocoonStartTick || 0) + (foe.cocoonDurationTicks || 4)) {
       const p2MaxHp = foe.phase2MaxHp || foe.maxHp;
-      const rawDmg = foe.cocoonDamageTaken || 0;
-      const reducePct = Math.min(rawDmg / p2MaxHp, 0.65);
-      const p2Hp = Math.max(Math.floor(p2MaxHp * 0.35), Math.floor(p2MaxHp * (1 - reducePct)));
       foe.maxHp = p2MaxHp;
-      foe.hp = p2Hp;
+      foe.hp = p2MaxHp;
       if (foe.phase2Attack != null) {
         foe.damage = scaleMonsterAttack(foe.phase2Attack);
         foe.baseDamage = foe.damage;
@@ -2036,15 +2043,19 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
         foe.autoAttackRate = foe.phase2AttackSpeed;
         foe.baseAutoAttackRate = foe.autoAttackRate;
       }
+      if (foe.phase2SpellDamage != null) {
+        foe.spellDamage = foe.phase2SpellDamage;
+        foe.baseSpellDamage = foe.spellDamage;
+      }
       if (Array.isArray(foe.phase2Abilities)) {
         foe.abilities = scaleMonsterAbilities(foe.phase2Abilities);
       }
       foe.inCocoon = false;
-      foe.disableAutoAttack = false;
+      foe.disableAutoAttack = !!foe._baseDisableAutoAttack;
       foe.activePhaseId = 'phase2';
       log.push(makeEntry(tick, foe.id, 'phase_change',
-        `The cocoon shatters! ${foe.name} emerges transformed — Phase 2! (${p2Hp} HP)`,
-        0, hero.hp, p2Hp, { phase: 'phase2', targetId: foe.id }));
+        `The cocoon shatters! ${foe.name} emerges reborn — Phase 2! (${p2MaxHp} HP)`,
+        0, hero.hp, p2MaxHp, { phase: 'phase2', targetId: foe.id }));
     }
   }
   // Brood Devour: surviving tagged summons heal their boss after devourAtTick
@@ -2236,6 +2247,26 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
   enemyFrontId = getEnemyFrontId(enemies, enemyFrontId);
   enemy = getLivingEnemy(enemies, selectedTargetId) || getLivingEnemy(enemies, enemyFrontId) || enemies[0];
   selectedTargetId = enemy?.id || selectedTargetId;
+
+  // Cocoon transformation: intercept first death and guard HP during cocoon phase
+  for (const foe of enemies) {
+    if (foe.hp <= 0 && foe.hasCocoonTransform && !foe.hasTransformed) {
+      const cocoonHp = foe.cocoonMaxHp || 400;
+      foe.hp = cocoonHp;
+      foe.maxHp = cocoonHp;
+      foe.inCocoon = true;
+      foe.hasTransformed = true;
+      foe.cocoonStartTick = tick;
+      foe.cocoonDamageTaken = 0;
+      foe.disableAutoAttack = true;
+      log.push(makeEntry(tick, foe.id, 'phase_change',
+        `${foe.name} seals herself in a hardened cocoon! (${cocoonHp} HP — 95% damage resistance)`,
+        0, hero.hp, cocoonHp, { phase: 'cocoon', targetId: foe.id }));
+    }
+    if (foe.inCocoon && foe.hp < 1) {
+      foe.hp = 1;
+    }
+  }
 
   let phase = state.phase;
   const boss = enemies.find(foe => foe.id === (state.bossEnemyId || 'enemy')) || enemies[0] || null;
@@ -2449,7 +2480,7 @@ function tickActiveEffects(combatant, tick, log, procParams = null) {
       }
       const hpBeforePoison = combatant.hp;
       const stacks = Math.max(1, effect.stacks || 1);
-      const raw = Math.max(1, Math.floor((combatant.maxHp || combatant.hp) * (effect.damagePctPerTick || 1) * stacks / 100));
+      const raw = Math.max(1, Math.floor((combatant.maxHp || combatant.hp) * (effect.damagePctPerTick || 1.4) * stacks / 100));
       const dmg = resolveElementalDamage(raw, 'poison', combatant);
       combatant.hp = Math.max(0, combatant.hp - dmg);
       const text = combatant.isPlayer
@@ -3802,7 +3833,7 @@ function applyEnemyBleed(enemy, tick, log, attacker = null, procState = null) {
   }
   const dotDmgMult = getRelicDotDamageMult(procState);
   const dotDurBonus = getRelicDotDurationBonus(procState);
-  const damagePctPerTick = applyBleedDamageBonus(attacker, 0.75) * dotDmgMult;
+  const damagePctPerTick = applyBleedDamageBonus(attacker, 1.15) * dotDmgMult;
   const refreshTicks = getPlayerBleedRefreshTicks(attacker) + dotDurBonus;
   const existing = (enemy.activeEffects || []).find(e => e.type === 'bleed');
   if (existing) {
@@ -4168,7 +4199,7 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
         }
       }
       syncHeroProcEffects(heroProcNodes, procState, hero, enemy, tick, opts.allies || []);
-      // Relic on-hit effects (armor_reduce_on_hit, burn_on_crit)
+      // Relic on-hit effects (armor_reduce_on_hit, burn_on_crit, poison_on_hit)
       if (applied.damage > 0 && enemy.hp > 0 && procState) {
         for (const relic of procState.activeRelics || []) {
           const p = relic?.relicPassive;
@@ -4184,6 +4215,16 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
             enemy.activeEffects = (enemy.activeEffects || []).filter(e => !(e.type === 'burning' && e.source === 'relic_igneous_scale'));
             enemy.activeEffects.push({ type: 'burning', damagePctPerTick: p.burnDamagePct || 3, remainingTicks: burnTicks, source: 'relic_igneous_scale', element: 'fire', label: 'Igneous Scale' });
             log.push(makeEntry(tick, 'hero', 'proc', `Igneous Scale: burn applied to ${enemy.name}!`, 0, hero.hp, enemy.hp, {}));
+          }
+          if (p.type === 'poison_on_hit' && !isPoisonImmune(enemy) && procRng() * 100 < (p.chance || 0)) {
+            const baseDur = Math.max(1, p.duration || 3) + getRelicDotDurationBonus(procState);
+            const adjDmgPct = (p.damagePct || 0.4) * getRelicDotDamageMult(procState);
+            const currentPoison = (enemy.activeEffects || []).find(e => e.type === 'poison');
+            const nextStacks = Math.min(6, (currentPoison?.stacks || 0) + 1);
+            const remainingTicks = Math.max(currentPoison?.remainingTicks || 0, baseDur);
+            enemy.activeEffects = (enemy.activeEffects || []).filter(e => e.type !== 'poison');
+            enemy.activeEffects.push({ type: 'poison', stacks: nextStacks, remainingTicks, damagePctPerTick: Math.max(adjDmgPct, currentPoison?.damagePctPerTick || 0) });
+            log.push(makeEntry(tick, 'hero', 'poison', `Queen's Venom: ${enemy.name} gains Poisoned (${nextStacks} stack${nextStacks !== 1 ? 's' : ''}).`, 0, hero.hp, enemy.hp, {}));
           }
         }
         // Enchantment procs (fired once per auto-attack hit)
@@ -4660,7 +4701,7 @@ function tryApplyOnHitEffects(attacker, defender, tick, log, rng, heroConditions
         continue;
       }
       const poisonDuration = Math.max(1, (effect.duration || 3) + getPoisonDurationBonusTicks(attacker));
-      const poisonDamagePct = (effect.damagePct || 0.5) + getPoisonDamagePctBonus(attacker);
+      const poisonDamagePct = (effect.damagePct || 0.9) + getPoisonDamagePctBonus(attacker);
       if (defender.isPlayer && heroConditions) {
         const current = heroConditions.poison?.stacks || 0;
         const nextStacks = Math.min(6, current + 1);
@@ -4728,7 +4769,7 @@ function tryApplyOnHitEffects(attacker, defender, tick, log, rng, heroConditions
           type: 'bleed',
           stacks: nextStacks,
           remainingTicks,
-          damagePctPerTick: effect.damagePct || currentBleed?.damagePctPerTick || 0.6,
+          damagePctPerTick: effect.damagePct || currentBleed?.damagePctPerTick || 1.0,
         });
         log.push(makeEntry(tick, attacker.id, 'bleed', `Status: You gain Bleeding (${nextStacks} stack${nextStacks !== 1 ? 's' : ''}) from ${attacker.name}.`, 0, null, null, targetMeta));
       } else {
@@ -4744,7 +4785,7 @@ function tryApplyOnHitEffects(attacker, defender, tick, log, rng, heroConditions
           type: 'bleed',
           stacks: nextStacks,
           remainingTicks,
-          damagePctPerTick: adjBleedDamagePct || currentBleed?.damagePctPerTick || 0.6,
+          damagePctPerTick: adjBleedDamagePct || currentBleed?.damagePctPerTick || 1.0,
         });
         log.push(makeEntry(tick, attacker.id, 'bleed', `Status: ${defender.name} gains Bleeding (${nextStacks} stack${nextStacks !== 1 ? 's' : ''}).`, 0, null, null, targetMeta));
       }
@@ -5408,7 +5449,7 @@ function applyProcEffect(effect, ctx, procState, heroProcNodes, hero, enemy, tic
     case 'apply_poison': {
       if (!enemy || enemy.hp <= 0 || isPoisonImmune(enemy)) break;
       const durationTicks = effect.duration || 4;
-      const damagePctPerTick = effect.damagePct || 1;
+      const damagePctPerTick = effect.damagePct || 1.4;
       const existingPoison = (enemy.activeEffects || []).find(e => e.type === 'poison');
       if (existingPoison) {
         existingPoison.remainingTicks = Math.max(existingPoison.remainingTicks || 0, durationTicks);
@@ -5586,21 +5627,34 @@ function applyRelicKillEffects(hero, procState, tick, log) {
   }
 }
 
-function applyRelicTickEffectsForHeroTick(hero, procState, tick, log) {
+function applyRelicTickEffectsForHeroTick(hero, allies, procState, tick, log) {
   if (!hero?.isPlayer || !procState) return;
   const relics = procState.activeRelics || [];
   for (const relic of relics) {
     const passive = relic?.relicPassive;
     if (!passive) continue;
-    if (passive.type === 'hp_regen_in_combat' && hero.hp > 0 && hero.hp < hero.maxHp) {
+    if (passive.type === 'hp_regen_in_combat') {
       const regenPerSec = passive.value || 2;
-      // Each tick is TICK_MS ms; we accumulate fractional heal
       const regenThisTick = regenPerSec * TICK_MS / 1000;
-      procState.relicRegenAccum = (procState.relicRegenAccum || 0) + regenThisTick;
-      if (procState.relicRegenAccum >= 1) {
-        const healAmt = Math.floor(procState.relicRegenAccum);
-        procState.relicRegenAccum -= healAmt;
-        hero.hp = Math.min(hero.maxHp, hero.hp + healAmt);
+      if (hero.hp > 0 && hero.hp < hero.maxHp) {
+        procState.relicRegenAccum = (procState.relicRegenAccum || 0) + regenThisTick;
+        if (procState.relicRegenAccum >= 1) {
+          const healAmt = Math.floor(procState.relicRegenAccum);
+          procState.relicRegenAccum -= healAmt;
+          hero.hp = Math.min(hero.maxHp, hero.hp + healAmt);
+        }
+      }
+      if (Array.isArray(allies)) {
+        procState.allyRegenAccums = procState.allyRegenAccums || {};
+        for (const ally of allies) {
+          if (!ally?.isAlly || ally.hp <= 0 || ally.hp >= ally.maxHp) continue;
+          procState.allyRegenAccums[ally.id] = (procState.allyRegenAccums[ally.id] || 0) + regenThisTick;
+          if (procState.allyRegenAccums[ally.id] >= 1) {
+            const healAmt = Math.floor(procState.allyRegenAccums[ally.id]);
+            procState.allyRegenAccums[ally.id] -= healAmt;
+            ally.hp = Math.min(ally.maxHp, ally.hp + healAmt);
+          }
+        }
       }
     }
   }

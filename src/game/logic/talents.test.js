@@ -20,9 +20,7 @@ describe("fighter talent tree", () => {
     expect(branches.map(branch => branch.id)).toEqual([
       "berserker",
       "speed_demon",
-      "duelist",
       "warmonger",
-      "momentum_bleeder",
     ]);
     expect(tree.classId).toBe("fighter");
     expect(branches.every(branch => branch.pointType === "talent")).toBe(true);
@@ -33,21 +31,8 @@ describe("fighter talent tree", () => {
       .find(branch => branch.id === "berserker")
       .tiers.flatMap(tier => tier.choices || [])
       .find(choice => choice.id === "berserker_frenzy_state");
-    const duelistFlow = branches
-      .find(branch => branch.id === "duelist")
-      .tiers.flatMap(tier => tier.choices || [])
-      .find(choice => choice.id === "duelist_flow");
-    const relentlessWounds = branches
-      .find(branch => branch.id === "momentum_bleeder")
-      .tiers.flatMap(tier => tier.choices || [])
-      .find(choice => choice.id === "bleeder_relentless_wounds");
 
     expect(berserkerFrenzy.threshold.effects).toContainEqual({ type: "attack_speed_bonus_pct", value: 12 });
-    expect(duelistFlow.proc.effect).toMatchObject({ type: "gain_attack_speed_pct", value: 25, durationTicks: 3 });
-    expect(relentlessWounds.proc).toMatchObject({
-      trigger: "on_first_hit",
-      effect: { type: "apply_bleed", stacks: 1 },
-    });
   });
 
   it("does not learn removed or not-yet-created talents", () => {
@@ -67,10 +52,8 @@ describe("fighter talent tree", () => {
     expect(byId.berserker_stance.name).toBe("Whirlwind");
     expect(byId.berserker_stance.effects).toContainEqual(expect.objectContaining({ type: "unlock_skill", skillId: "whirlwind" }));
     expect(byId.speed_burnout.effects).toContainEqual(expect.objectContaining({ type: "unlock_skill", skillId: "burnout" }));
-    expect(byId.duelist_en_garde.effects).toContainEqual(expect.objectContaining({ type: "unlock_skill", skillId: "en_garde" }));
     expect(byId.warmonger_retribution.name).toBe("Retribution");
     expect(byId.warmonger_retribution.proc).toMatchObject({ trigger: "on_block", effect: { type: "counter_hit", damageMult: 0.3 } });
-    expect(byId.bleeder_open_vein.effects).toContainEqual(expect.objectContaining({ type: "unlock_skill", skillId: "open_vein" }));
 
     expect(byId.berserker_cornered_beast).toBeUndefined();
     expect(byId.speed_afterimage).toBeUndefined();
@@ -84,34 +67,34 @@ describe("fighter talent tree", () => {
     const tree = getFighterTree();
     const hero = { ...initHero("Tester"), talentPoints: 1, talents: {} };
 
-    expect(canLearnTalent(hero, tree, "duelist_blade_stack")).toBe(true);
+    expect(canLearnTalent(hero, tree, "warmonger_scar_tissue")).toBe(true);
 
-    const learned = learnTalent(hero, tree, "duelist_blade_stack");
+    const learned = learnTalent(hero, tree, "warmonger_scar_tissue");
     expect(learned.talentPoints).toBe(0);
-    expect(learned.talents.duelist_blade_stack).toBe(1);
+    expect(learned.talents.warmonger_scar_tissue).toBe(1);
   });
 
   it("keeps fighter talents locked to fighter characters", () => {
     const tree = getFighterTree();
     const hero = { ...initHero("Tester", { heroClass: "archer" }), talentPoints: 1, talents: {} };
 
-    expect(canLearnTalent(hero, tree, "duelist_blade_stack")).toBe(false);
-    expect(learnTalent(hero, tree, "duelist_blade_stack")).toBe(hero);
+    expect(canLearnTalent(hero, tree, "warmonger_scar_tissue")).toBe(false);
+    expect(learnTalent(hero, tree, "warmonger_scar_tissue")).toBe(hero);
   });
 
   it("locks higher fighter tiers until the previous tier has two learned choices", () => {
     const tree = getFighterTree();
     const hero = { ...initHero("Tester"), talentPoints: 1, talents: {} };
 
-    expect(canLearnTalent(hero, tree, "duelist_flow")).toBe(false);
+    expect(canLearnTalent(hero, tree, "warmonger_pain_is_power")).toBe(false);
 
-    const learnedTierOne = learnTalent(hero, tree, "duelist_blade_stack");
+    const learnedTierOne = learnTalent(hero, tree, "warmonger_scar_tissue");
     const beforeSecondTierOne = { ...learnedTierOne, talentPoints: 1 };
-    expect(canLearnTalent(beforeSecondTierOne, tree, "duelist_flow")).toBe(false);
+    expect(canLearnTalent(beforeSecondTierOne, tree, "warmonger_pain_is_power")).toBe(false);
 
-    const learnedSecondTierOne = learnTalent(beforeSecondTierOne, tree, "duelist_counter_stance");
+    const learnedSecondTierOne = learnTalent(beforeSecondTierOne, tree, "warmonger_fortress_stance");
     const withAnotherPoint = { ...learnedSecondTierOne, talentPoints: 1 };
-    expect(canLearnTalent(withAnotherPoint, tree, "duelist_flow")).toBe(true);
+    expect(canLearnTalent(withAnotherPoint, tree, "warmonger_pain_is_power")).toBe(true);
   });
 
   it("requires Frenzy State before Berserk State can be learned", () => {
@@ -165,13 +148,13 @@ describe("fighter talent tree", () => {
     const tree = getFighterTree();
     const hero = { ...initHero("Tester"), talentPoints: 1, talents: {} };
 
-    const learnedDuelist = learnTalent(hero, tree, "duelist_blade_stack");
-    const withAnotherPoint = { ...learnedDuelist, talentPoints: 1 };
+    const learnedWarmonger = learnTalent(hero, tree, "warmonger_scar_tissue");
+    const withAnotherPoint = { ...learnedWarmonger, talentPoints: 1 };
     expect(canLearnTalent(withAnotherPoint, tree, "berserker_battle_high")).toBe(false);
-    expect(canLearnTalent(withAnotherPoint, tree, "duelist_counter_stance")).toBe(true);
+    expect(canLearnTalent(withAnotherPoint, tree, "warmonger_fortress_stance")).toBe(true);
 
-    const committedDuelist = learnTalent(withAnotherPoint, tree, "duelist_counter_stance");
-    const canBranch = { ...committedDuelist, talentPoints: 1 };
+    const committedWarmonger = learnTalent(withAnotherPoint, tree, "warmonger_fortress_stance");
+    const canBranch = { ...committedWarmonger, talentPoints: 1 };
     expect(canLearnTalent(canBranch, tree, "berserker_battle_high")).toBe(true);
   });
 
@@ -179,12 +162,12 @@ describe("fighter talent tree", () => {
     const tree = getFighterTree();
     let hero = { ...initHero("Tester"), talentPoints: 10, talents: {} };
 
-    hero = learnTalent(hero, tree, "duelist_blade_stack");
-    hero = learnTalent(hero, tree, "duelist_counter_stance");
+    hero = learnTalent(hero, tree, "warmonger_scar_tissue");
+    hero = learnTalent(hero, tree, "warmonger_fortress_stance");
     hero = learnTalent(hero, tree, "berserker_battle_high");
 
     expect(canLearnTalent(hero, tree, "speed_opening_blitz")).toBe(false);
-    expect(canLearnTalent(hero, tree, "duelist_patience")).toBe(true);
+    expect(canLearnTalent(hero, tree, "warmonger_iron_will")).toBe(true);
     expect(canLearnTalent(hero, tree, "berserker_blood_price")).toBe(true);
   });
 
@@ -194,7 +177,7 @@ describe("fighter talent tree", () => {
       ...initHero("Tester"),
       talentPoints: 1,
       talents: {
-        duelist_blade_stack: 1,
+        warmonger_scar_tissue: 1,
         berserker_battle_high: 1,
       },
     };

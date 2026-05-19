@@ -104,6 +104,7 @@
       "weaponType": "spear",
       "hands": 2,
       "attackSpeed": 0.9,
+      "damageDice": { "count": 1, "sides": 12 },
       "baseStats": {
         "damage": 11
       },
@@ -259,6 +260,7 @@
       "weaponType": "one_handed_dagger",
       "hands": 1,
       "attackSpeed": 1.45,
+      "damageDice": { "count": 1, "sides": 4 },
       "baseStats": {
         "damage": 7
       },
@@ -754,7 +756,7 @@
         "consumable_raw"
       ],
       "price": 12,
-      "dropWeight": 0,
+      "dropWeight": 8,
       "stackable": true,
       "icon": "/assets/items/generated/wolf_meat.png"
     },
@@ -808,6 +810,7 @@
         "consumable_raw"
       ],
       "price": 44,
+      "dropWeight": 6,
       "stackable": true,
       "icon": "/assets/items/generated/boar_meat.png"
     },
@@ -1453,7 +1456,7 @@
         "crafting_material"
       ],
       "price": 4,
-      "dropWeight": 6,
+      "dropWeight": 0,
       "stackable": true,
       "icon": "/assets/items/generated/yarrow.png"
     },
@@ -2492,7 +2495,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 40,
-      "icon": "/assets/items/stones/placeholder_stone_ember.png",
+      "icon": "/assets/items/stones/Fire stone.png",
       "enchantmentPool": [
         {
           "type": "fire_proc_on_hit",
@@ -2519,7 +2522,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 90,
-      "icon": "/assets/items/stones/placeholder_stone_ember.png",
+      "icon": "/assets/items/stones/Fire stone.png",
       "enchantmentPool": [
         {
           "type": "fire_proc_on_hit",
@@ -2546,7 +2549,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 200,
-      "icon": "/assets/items/stones/placeholder_stone_ember.png",
+      "icon": "/assets/items/stones/Fire stone.png",
       "enchantmentPool": [
         {
           "type": "fire_proc_on_hit",
@@ -2576,7 +2579,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 450,
-      "icon": "/assets/items/stones/placeholder_stone_ember.png",
+      "icon": "/assets/items/stones/Fire stone.png",
       "enchantmentPool": [
         {
           "type": "fire_proc_on_hit",
@@ -2606,7 +2609,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 900,
-      "icon": "/assets/items/stones/placeholder_stone_ember.png",
+      "icon": "/assets/items/stones/Fire stone.png",
       "enchantmentPool": [
         {
           "type": "fire_proc_on_hit",
@@ -2637,7 +2640,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 40,
-      "icon": "/assets/items/stones/placeholder_stone_shadow.png",
+      "icon": "/assets/items/stones/Shadow Stone.png",
       "enchantmentPool": [
         {
           "type": "armor_reduce_on_hit",
@@ -2664,7 +2667,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 90,
-      "icon": "/assets/items/stones/placeholder_stone_shadow.png",
+      "icon": "/assets/items/stones/Shadow Stone.png",
       "enchantmentPool": [
         {
           "type": "armor_reduce_on_hit",
@@ -2692,7 +2695,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 200,
-      "icon": "/assets/items/stones/placeholder_stone_shadow.png",
+      "icon": "/assets/items/stones/Shadow Stone.png",
       "enchantmentPool": [
         {
           "type": "armor_reduce_on_hit",
@@ -2720,7 +2723,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 450,
-      "icon": "/assets/items/stones/placeholder_stone_shadow.png",
+      "icon": "/assets/items/stones/Shadow Stone.png",
       "enchantmentPool": [
         {
           "type": "debilitated_on_crit",
@@ -2747,7 +2750,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 900,
-      "icon": "/assets/items/stones/placeholder_stone_shadow.png",
+      "icon": "/assets/items/stones/Shadow Stone.png",
       "enchantmentPool": [
         {
           "type": "consecutive_hit_scale",
@@ -2774,7 +2777,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 40,
-      "icon": "/assets/items/stones/placeholder_stone_storm.png",
+      "icon": "/assets/items/stones/Storm stone.png",
       "enchantmentPool": [
         {
           "type": "lightning_proc_on_hit",
@@ -2801,7 +2804,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 90,
-      "icon": "/assets/items/stones/placeholder_stone_storm.png",
+      "icon": "/assets/items/stones/Storm stone.png",
       "enchantmentPool": [
         {
           "type": "lightning_proc_on_hit",
@@ -2828,7 +2831,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 200,
-      "icon": "/assets/items/stones/placeholder_stone_storm.png",
+      "icon": "/assets/items/stones/Storm stone.png",
       "enchantmentPool": [
         {
           "type": "lightning_proc_on_hit",
@@ -2856,7 +2859,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 450,
-      "icon": "/assets/items/stones/placeholder_stone_storm.png",
+      "icon": "/assets/items/stones/Storm stone.png",
       "enchantmentPool": [
         {
           "type": "lightning_proc_on_hit",
@@ -2884,7 +2887,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 900,
-      "icon": "/assets/items/stones/placeholder_stone_storm.png",
+      "icon": "/assets/items/stones/Storm stone.png",
       "enchantmentPool": [
         {
           "type": "lightning_proc_on_hit",
@@ -2912,7 +2915,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 40,
-      "icon": "/assets/items/stones/placeholder_stone_frost.png",
+      "icon": "/assets/items/stones/Frost stone.png",
       "enchantmentPool": [
         {
           "type": "passive_armor_bonus",
@@ -2938,7 +2941,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 90,
-      "icon": "/assets/items/stones/placeholder_stone_frost.png",
+      "icon": "/assets/items/stones/Frost stone.png",
       "enchantmentPool": [
         {
           "type": "passive_armor_bonus",
@@ -2964,7 +2967,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 200,
-      "icon": "/assets/items/stones/placeholder_stone_frost.png",
+      "icon": "/assets/items/stones/Frost stone.png",
       "enchantmentPool": [
         {
           "type": "passive_armor_bonus",
@@ -2991,7 +2994,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 450,
-      "icon": "/assets/items/stones/placeholder_stone_frost.png",
+      "icon": "/assets/items/stones/Frost stone.png",
       "enchantmentPool": [
         {
           "type": "passive_damage_reduction",
@@ -3016,7 +3019,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 900,
-      "icon": "/assets/items/stones/placeholder_stone_frost.png",
+      "icon": "/assets/items/stones/Frost stone.png",
       "enchantmentPool": [
         {
           "type": "frost_reflect",
@@ -3041,7 +3044,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 40,
-      "icon": "/assets/items/stones/placeholder_stone_blood.png",
+      "icon": "/assets/items/stones/Blood stone.png",
       "enchantmentPool": [
         {
           "type": "passive_lifesteal",
@@ -3066,7 +3069,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 90,
-      "icon": "/assets/items/stones/placeholder_stone_blood.png",
+      "icon": "/assets/items/stones/Blood stone.png",
       "enchantmentPool": [
         {
           "type": "passive_lifesteal",
@@ -3091,7 +3094,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 200,
-      "icon": "/assets/items/stones/placeholder_stone_blood.png",
+      "icon": "/assets/items/stones/Blood stone.png",
       "enchantmentPool": [
         {
           "type": "passive_lifesteal",
@@ -3117,7 +3120,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 450,
-      "icon": "/assets/items/stones/placeholder_stone_blood.png",
+      "icon": "/assets/items/stones/Blood stone.png",
       "enchantmentPool": [
         {
           "type": "passive_lifesteal",
@@ -3143,7 +3146,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 900,
-      "icon": "/assets/items/stones/placeholder_stone_blood.png",
+      "icon": "/assets/items/stones/Blood stone.png",
       "enchantmentPool": [
         {
           "type": "passive_lifesteal",
@@ -3169,7 +3172,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 40,
-      "icon": "/assets/items/stones/placeholder_stone_earth.png",
+      "icon": "/assets/items/stones/Earth stone.png",
       "enchantmentPool": [
         {
           "type": "passive_max_hp_bonus",
@@ -3195,7 +3198,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 90,
-      "icon": "/assets/items/stones/placeholder_stone_earth.png",
+      "icon": "/assets/items/stones/Earth stone.png",
       "enchantmentPool": [
         {
           "type": "passive_max_hp_bonus",
@@ -3221,7 +3224,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 200,
-      "icon": "/assets/items/stones/placeholder_stone_earth.png",
+      "icon": "/assets/items/stones/Earth stone.png",
       "enchantmentPool": [
         {
           "type": "passive_max_hp_bonus",
@@ -3248,7 +3251,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 450,
-      "icon": "/assets/items/stones/placeholder_stone_earth.png",
+      "icon": "/assets/items/stones/Earth stone.png",
       "enchantmentPool": [
         {
           "type": "passive_max_hp_bonus",
@@ -3275,7 +3278,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 900,
-      "icon": "/assets/items/stones/placeholder_stone_earth.png",
+      "icon": "/assets/items/stones/Earth stone.png",
       "enchantmentPool": [
         {
           "type": "passive_max_hp_bonus",
@@ -3302,7 +3305,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 600,
-      "icon": "/assets/items/stones/placeholder_stone_void.png",
+      "icon": "/assets/items/stones/Void stone.png",
       "enchantmentPool": "random_combined"
     },
     {
@@ -3322,7 +3325,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 1200,
-      "icon": "/assets/items/stones/placeholder_stone_void.png",
+      "icon": "/assets/items/stones/Void stone.png",
       "enchantmentPool": "random_combined"
     },
     {
@@ -3341,7 +3344,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 0,
-      "icon": "/assets/items/relics/placeholder_relic.png",
+      "icon": "/assets/items/relics/Sacred horn.png",
       "relicPassive": {
         "type": "first_hit_guaranteed",
         "description": "Your first attack in each combat has 100% hit chance."
@@ -3363,7 +3366,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 0,
-      "icon": "/assets/items/relics/placeholder_relic.png",
+      "icon": "/assets/items/relics/soul fragment.png",
       "relicPassive": {
         "type": "kill_heal_pct",
         "value": 10,
@@ -3386,7 +3389,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 0,
-      "icon": "/assets/items/relics/placeholder_relic.png",
+      "icon": "/assets/items/relics/Broken standard.png",
       "relicPassive": {
         "type": "ally_hit_impetus_stack",
         "maxStacks": 3,
@@ -3410,7 +3413,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 0,
-      "icon": "/assets/items/relics/placeholder_relic.png",
+      "icon": "/assets/items/relics/Shaman's mark.png",
       "relicPassive": {
         "type": "dot_bonus",
         "durationBonus": 2,
@@ -3434,7 +3437,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 0,
-      "icon": "/assets/items/relics/placeholder_relic.png",
+      "icon": "/assets/items/relics/Igneous scale.png",
       "relicPassive": {
         "type": "burn_on_crit",
         "burnDurationSecs": 2,
@@ -3458,7 +3461,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 0,
-      "icon": "/assets/items/relics/placeholder_relic.png",
+      "icon": "/assets/items/relics/Spectral echo.png",
       "relicPassive": {
         "type": "death_cheat_once",
         "description": "Once per combat: a hit that would kill you leaves you at 1 HP."
@@ -3480,7 +3483,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 0,
-      "icon": "/assets/items/relics/placeholder_relic.png",
+      "icon": "/assets/items/relics/Bear Hide.png",
       "relicPassive": {
         "type": "max_hp_pct_bonus",
         "value": 5,
@@ -3503,7 +3506,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 0,
-      "icon": "/assets/items/relics/placeholder_relic.png",
+      "icon": "/assets/items/relics/Infernal fang.png",
       "relicPassive": {
         "type": "armor_reduce_on_hit",
         "chance": 8,
@@ -3528,7 +3531,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 0,
-      "icon": "/assets/items/relics/placeholder_relic.png",
+      "icon": "/assets/items/relics/Troll Tooth.png",
       "relicPassive": {
         "type": "hp_regen_in_combat",
         "value": 2,
@@ -3551,7 +3554,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 0,
-      "icon": "/assets/items/relics/placeholder_relic.png",
+      "icon": "/assets/items/relics/Stone Core.png",
       "relicPassive": {
         "type": "first_seconds_dot_immunity",
         "durationSecs": 5,
@@ -3574,7 +3577,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 0,
-      "icon": "/assets/items/relics/placeholder_relic.png",
+      "icon": "/assets/items/relics/Black armor relic.png",
       "relicPassive": {
         "type": "barrier_on_heavy_hit",
         "threshold": 15,
@@ -3598,7 +3601,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 0,
-      "icon": "/assets/items/relics/placeholder_relic.png",
+      "icon": "/assets/items/relics/Seal of the abyss.png",
       "relicPassive": {
         "type": "active_skill_damage_bonus",
         "value": 8,
@@ -3860,7 +3863,7 @@
       "dropWeight": 0,
       "stackable": false,
       "price": 0,
-      "icon": "/assets/items/relics/placeholder_relic.png",
+      "icon": "/assets/items/relics/Queen's blood relic.png",
       "relicPassive": {
         "type": "poison_on_hit",
         "chance": 6,
@@ -3868,6 +3871,302 @@
         "damagePct": 0.4,
         "description": "Your attacks have a 6% chance to apply Poison (0.4% max HP/tick for 3 ticks)."
       }
+    },
+    {
+      "id": "gargoyle_stone_ring",
+      "name": "Gargoyle Stone Ring",
+      "description": "Carved from a gargoyle's petrified knuckle. Dense and unyielding.",
+      "size": [1, 1],
+      "type": "gear",
+      "slot": "ring",
+      "family": "ring",
+      "baseStats": { "armor": 4 },
+      "effects": [
+        { "type": "block_chance", "value": 4 }
+      ],
+      "tags": ["ring", "defense", "gargoyle", "rootspire"],
+      "rarityAffixPools": ["guard", "survival"],
+      "price": 220,
+      "dropWeight": 4,
+      "icon": "/assets/items/generated/ring_of_thorns.png"
+    },
+    {
+      "id": "imp_ember_ring",
+      "name": "Imp Ember Ring",
+      "description": "A scorched band still warm to the touch. Speeds the wearer's strikes.",
+      "size": [1, 1],
+      "type": "gear",
+      "slot": "ring",
+      "family": "ring",
+      "effects": [
+        { "type": "fire_resist", "value": 8 },
+        { "type": "attack_speed", "value": 5 }
+      ],
+      "tags": ["ring", "fire", "speed", "imp", "rootspire"],
+      "rarityAffixPools": ["swift", "fire"],
+      "price": 200,
+      "dropWeight": 4,
+      "icon": "/assets/items/generated/vampire_ring.png"
+    },
+    {
+      "id": "sentinel_focus_ring",
+      "name": "Sentinel's Focus Ring",
+      "description": "Worn by the animated guardians of Rootspire. Sharpens every blow.",
+      "size": [1, 1],
+      "type": "gear",
+      "slot": "ring",
+      "family": "ring",
+      "baseStats": { "damage": 3 },
+      "effects": [
+        { "type": "attack_speed", "value": 6 }
+      ],
+      "tags": ["ring", "offense", "sentinel", "rootspire"],
+      "rarityAffixPools": ["swift", "might"],
+      "price": 240,
+      "dropWeight": 3,
+      "icon": "/assets/items/generated/ring_of_thorns.png"
+    },
+    {
+      "id": "emberglass_ring",
+      "name": "Emberglass Ring",
+      "description": "Fused from volcanic glass and ember shard. Deflects heat and arrows alike.",
+      "size": [1, 1],
+      "type": "gear",
+      "slot": "ring",
+      "family": "ring",
+      "effects": [
+        { "type": "fire_resist", "value": 10 },
+        { "type": "dodge_chance", "value": 5 }
+      ],
+      "tags": ["ring", "fire", "evasion", "rootspire"],
+      "rarityAffixPools": ["evasion", "fire"],
+      "price": 230,
+      "dropWeight": 3,
+      "icon": "/assets/items/generated/vampire_ring.png"
+    },
+    {
+      "id": "veilstone_ring",
+      "name": "Veilstone Ring",
+      "description": "A ring of dark obsidian that drinks in shadow. Rogues favor it for its uncanny lightness.",
+      "size": [1, 1],
+      "type": "gear",
+      "slot": "ring",
+      "family": "ring",
+      "effects": [
+        { "type": "shadow_resist", "value": 10 },
+        { "type": "dodge_chance", "value": 6 }
+      ],
+      "tags": ["ring", "shadow", "evasion", "rootspire"],
+      "rarityAffixPools": ["evasion", "shadow"],
+      "price": 230,
+      "dropWeight": 3,
+      "icon": "/assets/items/generated/vampire_ring.png"
+    },
+    {
+      "id": "hellhound_collar",
+      "name": "Hellhound Collar",
+      "description": "Scorched iron links torn from a hellhound's neck. Still radiates hatred.",
+      "size": [1, 2],
+      "type": "gear",
+      "slot": "amulet",
+      "family": "amulet",
+      "baseStats": { "str": 3 },
+      "effects": [
+        { "type": "fire_resist", "value": 10 }
+      ],
+      "tags": ["amulet", "strength", "fire", "hellhound"],
+      "rarityAffixPools": ["might", "fire"],
+      "price": 260,
+      "dropWeight": 4,
+      "icon": "/assets/items/generated/thorn_amulet.png"
+    },
+    {
+      "id": "warg_fang_necklace",
+      "name": "Warg Fang Necklace",
+      "description": "A string of massive fangs from a warg alpha. Warriors wear it as a battle trophy.",
+      "size": [1, 2],
+      "type": "gear",
+      "slot": "amulet",
+      "family": "amulet",
+      "baseStats": { "str": 2 },
+      "effects": [
+        { "type": "attack_speed", "value": 8 }
+      ],
+      "tags": ["amulet", "strength", "speed", "warg", "orc"],
+      "rarityAffixPools": ["might", "swift"],
+      "price": 240,
+      "dropWeight": 4,
+      "icon": "/assets/items/generated/thorn_amulet.png"
+    },
+    {
+      "id": "cinderward_amulet",
+      "name": "Cinderward Amulet",
+      "description": "Forged in a furnace and quenched in saltwater. Turns flame aside.",
+      "size": [1, 2],
+      "type": "gear",
+      "slot": "amulet",
+      "family": "amulet",
+      "baseStats": { "armor": 4 },
+      "effects": [
+        { "type": "fire_resist", "value": 15 }
+      ],
+      "tags": ["amulet", "defense", "fire", "rootspire"],
+      "rarityAffixPools": ["guard", "fire"],
+      "price": 250,
+      "dropWeight": 3,
+      "icon": "/assets/items/generated/ward_amulet.png"
+    },
+    {
+      "id": "umbralward_amulet",
+      "name": "Umbralward Amulet",
+      "description": "A pendant carved from shadow-infused stone. Muffles dark energies.",
+      "size": [1, 2],
+      "type": "gear",
+      "slot": "amulet",
+      "family": "amulet",
+      "effects": [
+        { "type": "shadow_resist", "value": 15 },
+        { "type": "dodge_chance", "value": 5 }
+      ],
+      "tags": ["amulet", "defense", "shadow", "evasion", "rootspire"],
+      "rarityAffixPools": ["evasion", "shadow"],
+      "price": 250,
+      "dropWeight": 3,
+      "icon": "/assets/items/generated/ward_amulet.png"
+    },
+    {
+      "id": "troll_hide_vest",
+      "name": "Troll Hide Vest",
+      "description": "Cured troll skin — thick and surprisingly flexible. Smells terrible.",
+      "size": [2, 3],
+      "type": "gear",
+      "slot": "chest",
+      "family": "armor",
+      "armorType": "medium",
+      "baseStats": { "armor": 18 },
+      "tags": ["chest", "medium", "hide", "troll", "armor_medium"],
+      "rarityAffixPools": ["guard", "survival"],
+      "price": 380,
+      "dropWeight": 3,
+      "icon": "/assets/items/generated/traveler_chest.png"
+    },
+    {
+      "id": "troll_hide_legs",
+      "name": "Troll Hide Legwraps",
+      "description": "Heavy strips of troll hide bound around the thighs and shins.",
+      "size": [2, 2],
+      "type": "gear",
+      "slot": "legs",
+      "family": "armor",
+      "armorType": "medium",
+      "baseStats": { "armor": 12 },
+      "tags": ["legs", "medium", "hide", "troll", "armor_medium"],
+      "rarityAffixPools": ["guard", "survival"],
+      "price": 280,
+      "dropWeight": 3,
+      "icon": "/assets/items/generated/leather_chausses.png"
+    },
+    {
+      "id": "black_knight_boots",
+      "name": "Black Knight Greaves",
+      "description": "Heavy iron greaves stripped from a fallen knight of Rootspire.",
+      "size": [2, 2],
+      "type": "gear",
+      "slot": "boots",
+      "family": "armor",
+      "armorType": "heavy",
+      "baseStats": { "armor": 9 },
+      "tags": ["boots", "heavy", "plate", "knight", "rootspire", "armor_heavy"],
+      "rarityAffixPools": ["guard", "might"],
+      "price": 320,
+      "dropWeight": 3,
+      "icon": "/assets/items/generated/Leather boots.png"
+    },
+    {
+      "id": "black_knight_gauntlets",
+      "name": "Black Knight Gauntlets",
+      "description": "Plated gauntlets engraved with Rootspire's sigil. Iron-hard, battle-worn.",
+      "size": [2, 2],
+      "type": "gear",
+      "slot": "gloves",
+      "family": "armor",
+      "armorType": "heavy",
+      "baseStats": { "armor": 8 },
+      "tags": ["gloves", "heavy", "plate", "knight", "rootspire", "armor_heavy"],
+      "rarityAffixPools": ["guard", "might"],
+      "price": 300,
+      "dropWeight": 3,
+      "icon": "/assets/items/generated/iron_knuckles.png"
+    },
+    {
+      "id": "halberd_2h",
+      "name": "Halberd",
+      "description": "A long-hafted blade favored by knights and mercenaries. Slow but devastating.",
+      "size": [1, 4],
+      "type": "gear",
+      "slot": "weapon",
+      "family": "polearm",
+      "weaponType": "two_handed_polearm",
+      "hands": 2,
+      "attackSpeed": 0.75,
+      "damageDice": { "count": 1, "sides": 10 },
+      "baseStats": { "damage": 16 },
+      "tags": ["weapon", "melee", "two_handed", "polearm", "warrior"],
+      "rarityAffixPools": ["might", "guard"],
+      "price": 420,
+      "dropWeight": 3,
+      "icon": "/assets/items/generated/hunter_spear.png"
+    },
+    {
+      "id": "emberward_cape",
+      "name": "Emberward Cape",
+      "description": "A treated wool cape with fire-resistant lining. Standard issue for Rootspire's elite.",
+      "size": [2, 2],
+      "type": "gear",
+      "slot": "cloak",
+      "family": "cloak",
+      "armorType": "medium",
+      "baseStats": { "armor": 4 },
+      "effects": [
+        { "type": "fire_resist", "value": 10 }
+      ],
+      "tags": ["cloak", "cape", "medium", "fire", "rootspire", "armor_medium"],
+      "rarityAffixPools": ["guard", "fire"],
+      "price": 290,
+      "dropWeight": 3,
+      "icon": "/assets/items/generated/cape.png"
+    },
+    {
+      "id": "nightfall_cape",
+      "name": "Nightfall Cape",
+      "description": "A black silk cape that swallows light. Rogues love how it blurs their silhouette.",
+      "size": [2, 2],
+      "type": "gear",
+      "slot": "cloak",
+      "family": "cloak",
+      "armorType": "light",
+      "baseStats": { "armor": 2 },
+      "effects": [
+        { "type": "shadow_resist", "value": 8 },
+        { "type": "dodge_chance", "value": 8 }
+      ],
+      "tags": ["cloak", "cape", "light", "shadow", "evasion", "rogue", "armor_light"],
+      "rarityAffixPools": ["evasion", "shadow"],
+      "price": 270,
+      "dropWeight": 3,
+      "icon": "/assets/items/generated/cape.png"
+    },
+    {
+      "id": "ash",
+      "name": "Ash",
+      "size": [1, 1],
+      "type": "resource",
+      "family": "raw_material",
+      "tags": ["resource", "ash", "crafting_material"],
+      "price": 3,
+      "dropWeight": 2,
+      "stackable": true,
+      "icon": "/assets/items/generated/bone.png"
     }
   ]
 }

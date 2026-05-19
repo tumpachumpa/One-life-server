@@ -224,6 +224,7 @@ export function getAdventureDropPool(adventureOrPool, enemy = null, options = {}
 function getGeneratedEquipmentConfig(pool = {}) {
   const config = pool.generatedEquipment;
   if (!config || config.enabled === false) return null;
+  if (config.dropChance != null) return config;
   const weight = Number(config.weight ?? 0);
   return weight > 0 ? { ...config, weight } : null;
 }
@@ -249,6 +250,8 @@ function rollGeneratedEquipmentFromPool(pool = {}, enemy = null, rng = Math.rand
   const {
     enabled,
     weight,
+    dropChance,
+    materials,
     rarityTable: generatedRarityTable,
     itemLevel,
     itemLevelBonus,
@@ -397,19 +400,8 @@ export function rollCombatLoot(enemy, rng = Math.random, context = {}) {
     const table = getManualCombatLootTable(enemy);
     return appendCombatBonusDrops(rollManualCombatLoot(enemy, rng, contextLootBonus), enemy, table, rng, context);
   }
-  // Adventure pool takes priority over per-enemy manualLoot flag
-  const adventurePool = resolveAdventureLootPool(context.adventure, context.zone);
-  if (adventurePool) {
-    return appendCombatBonusDrops(
-      rollAdventureLootPool(adventurePool, enemy, rng, (enemy.lootBonus || 0) + contextLootBonus, enemy.lootRarityTable || null),
-      enemy,
-      null,
-      rng,
-      context,
-    );
-  }
+  // Each enemy uses its own individual table (adventure pools disabled)
   const table = getManualCombatLootTable(enemy);
-  if (shouldUseManualCombatLoot(enemy)) return appendCombatBonusDrops(rollManualCombatLoot(enemy, rng, contextLootBonus), enemy, table, rng, context);
   return appendCombatBonusDrops(rollManualCombatLoot(enemy, rng, contextLootBonus), enemy, table, rng, context);
 }
 
@@ -617,15 +609,16 @@ export function rollLootTable(tableOrId, rng = Math.random, lootBonus = 0, force
   const rarityTable = forcedRarityTable || table.rarityTable || "normal";
   const minimumRarity = table.minimumRarity || table.minRarity || null;
   let minimumApplied = false;
+  const generatedConfig = getGeneratedEquipmentConfig(table);
+  const useIndependentEquipment = generatedConfig?.dropChance != null;
   for (let i = 0; i < rolls; i++) {
     if (rng() > dropChance) continue;
-    const generatedConfig = getGeneratedEquipmentConfig(table);
     const hasLegacyFilters = (table.tags || []).length
       || (table.includeItemIds || []).length
       || (table.includeIds || []).length
       || (table.items || []).length;
-    const dropPool = generatedConfig && !hasLegacyFilters ? [] : getDropPool(table.tags || [], table);
-    const weightedPool = generatedConfig
+    const dropPool = (generatedConfig && !hasLegacyFilters && !useIndependentEquipment) ? [] : getDropPool(table.tags || [], table);
+    const weightedPool = (!useIndependentEquipment && generatedConfig)
       ? [...dropPool, { generatedEquipment: true, dropWeight: generatedConfig.weight }]
       : dropPool;
     const drop = weightedPool.length ? weightedPick(weightedPool, rng) : null;
@@ -639,6 +632,25 @@ export function rollLootTable(tableOrId, rng = Math.random, lootBonus = 0, force
     }
     if (minimumForDrop && drops.slice(previousDropCount).some(rolledDrop => isRarityAtLeast(rolledDrop?.rarity, minimumForDrop))) {
       minimumApplied = true;
+    }
+  }
+  if (useIndependentEquipment) {
+    const equipChance = Math.min(1, (generatedConfig.dropChance || 0) + lootBonus / 200);
+    if (rng() <= equipChance) {
+      const generated = rollGeneratedEquipmentFromPool(table, null, rng, rarityTable, minimumApplied ? null : minimumRarity);
+      if (generated) {
+        drops.push(generated);
+        minimumApplied = true;
+      }
+    }
+  }
+  if (table.equipmentDrops) {
+    const eqChance = Math.min(1, (table.equipmentDrops.dropChance || 0) + lootBonus / 200);
+    if (rng() <= eqChance) {
+      const eqWeights = table.equipmentDrops.items || {};
+      const eqPool = getDropPool([], { includeItemIds: Object.keys(eqWeights), itemWeights: eqWeights });
+      const drop = eqPool.length ? weightedPick(eqPool, rng) : null;
+      if (drop) drops.push(createLootItem(drop, rarityTable, rng, minimumApplied ? null : minimumRarity));
     }
   }
   return drops;

@@ -94,7 +94,10 @@
           "buckler",
           "bone_shield",
           "heater_shield",
-          "tower_shield"
+          "tower_shield",
+          "tracker_hood",
+          "tracker_vest",
+          "tracker_legs"
         ],
         "slots": [
           "weapon",
@@ -104,13 +107,6 @@
           "legs",
           "boots",
           "gloves"
-        ],
-        "materials": [
-          "worn",
-          "cured",
-          "iron",
-          "bone",
-          "studded"
         ]
       },
       "includeItemIds": [
@@ -154,14 +150,9 @@
           "buckler",
           "bone_shield",
           "heater_shield",
-          "tower_shield"
-        ],
-        "materials": [
-          "iron",
-          "steel",
-          "bone",
-          "ash",
-          "ancient"
+          "tower_shield",
+          "bonewarden_helm",
+          "bonewarden_vest"
         ]
       },
       "includeItemIds": [
@@ -203,7 +194,7 @@
       "rarityTable": "normal",
       "generatedEquipment": {
         "enabled": true,
-        "weight": 24,
+        "dropChance": 0.18,
         "itemLevel": 2,
         "baseIds": [
           "dagger",
@@ -214,12 +205,6 @@
           "leather_legs",
           "buckler",
           "bone_shield"
-        ],
-        "materials": [
-          "rusty",
-          "worn",
-          "cured",
-          "iron"
         ]
       }
     },
@@ -275,7 +260,7 @@
       "rarityTable": "normal",
       "generatedEquipment": {
         "enabled": true,
-        "weight": 16,
+        "dropChance": 0.15,
         "itemLevel": 3,
         "baseIds": [
           "staff",
@@ -283,12 +268,6 @@
           "leather_helm",
           "leather_chest",
           "leather_gloves"
-        ],
-        "materials": [
-          "bone",
-          "ash",
-          "ancient",
-          "cured"
         ]
       }
     },
@@ -316,7 +295,7 @@
       "rarityTable": "specialChest",
       "generatedEquipment": {
         "enabled": true,
-        "weight": 18,
+        "dropChance": 0.18,
         "itemLevel": 4,
         "baseIds": [
           "plate_chest",
@@ -324,11 +303,6 @@
           "plate_gloves",
           "heater_shield",
           "tower_shield"
-        ],
-        "materials": [
-          "iron",
-          "steel",
-          "bone"
         ]
       }
     },
@@ -341,7 +315,7 @@
       "rarityTable": "normal",
       "generatedEquipment": {
         "enabled": true,
-        "weight": 24,
+        "dropChance": 0.10,
         "itemLevelBonus": 2,
         "baseIds": [
           "axe_1h",
@@ -356,12 +330,6 @@
           "plate_gloves",
           "heater_shield",
           "tower_shield"
-        ],
-        "materials": [
-          "iron",
-          "steel",
-          "bone",
-          "bloodiron"
         ]
       }
     },
@@ -373,12 +341,14 @@
       ],
       "dropChance": 0.6,
       "includeItemIds": [
-        "warg_fat"
+        "warg_fat",
+        "warg_fang_necklace"
       ],
       "itemWeights": {
         "warg_meat": 6,
         "bone": 4,
-        "warg_fat": 2
+        "warg_fat": 2,
+        "warg_fang_necklace": 1
       }
     },
     "orc_shaman_boss": {
@@ -400,7 +370,7 @@
       },
       "generatedEquipment": {
         "enabled": true,
-        "weight": 42,
+        "dropChance": 0.28,
         "itemLevelBonus": 5,
         "baseIds": [
           "axe_1h",
@@ -415,11 +385,6 @@
           "plate_gloves",
           "heater_shield",
           "tower_shield"
-        ],
-        "materials": [
-          "steel",
-          "bone",
-          "bloodiron"
         ]
       },
       "guaranteedDrops": [
@@ -445,7 +410,7 @@
       },
       "generatedEquipment": {
         "enabled": true,
-        "weight": 42,
+        "dropChance": 0.30,
         "itemLevelBonus": 5,
         "baseIds": [
           "axe_1h",
@@ -460,11 +425,6 @@
           "plate_gloves",
           "heater_shield",
           "tower_shield"
-        ],
-        "materials": [
-          "steel",
-          "bone",
-          "bloodiron"
         ]
       },
       "guaranteedDrops": [
@@ -482,7 +442,7 @@
       "rarityTable": "boss",
       "generatedEquipment": {
         "enabled": true,
-        "weight": 38,
+        "dropChance": 0.25,
         "itemLevelBonus": 4,
         "baseIds": [
           "dagger",
@@ -512,21 +472,6 @@
           "bone_shield",
           "heater_shield",
           "tower_shield"
-        ],
-        "slots": [
-          "weapon",
-          "offhand",
-          "helmet",
-          "chest",
-          "legs",
-          "boots",
-          "gloves"
-        ],
-        "materials": [
-          "steel",
-          "bone",
-          "ash",
-          "ancient"
         ]
       }
     },
@@ -547,7 +492,7 @@
       },
       "generatedEquipment": {
         "enabled": true,
-        "weight": 32,
+        "dropChance": 0.25,
         "itemLevel": 5,
         "baseIds": [
           "spear_2h",
@@ -561,12 +506,6 @@
           "leather_gloves",
           "buckler",
           "bone_shield"
-        ],
-        "materials": [
-          "bone",
-          "ancient",
-          "cured",
-          "studded"
         ]
       },
       "includeItemIds": [
@@ -609,7 +548,7 @@
       },
       "generatedEquipment": {
         "enabled": true,
-        "weight": 34,
+        "dropChance": 0.28,
         "itemLevel": 6,
         "baseIds": [
           "staff",
@@ -619,12 +558,6 @@
           "plate_chest",
           "heater_shield",
           "tower_shield"
-        ],
-        "materials": [
-          "ancient",
-          "bone",
-          "ash",
-          "steel"
         ]
       },
       "guaranteedDrops": [
@@ -638,9 +571,19 @@
       ],
       "dropChance": 0.55,
       "rarityTable": "rootspire",
+      "includeItemIds": [
+        "gargoyle_stone_ring",
+        "imp_ember_ring",
+        "sentinel_focus_ring"
+      ],
+      "itemWeights": {
+        "gargoyle_stone_ring": 1,
+        "imp_ember_ring": 1,
+        "sentinel_focus_ring": 1
+      },
       "generatedEquipment": {
         "enabled": true,
-        "weight": 32,
+        "dropChance": 0.08,
         "itemLevelBonus": 4,
         "baseIds": [
           "ritual_dagger",
@@ -680,14 +623,6 @@
           "bone_shield",
           "heater_shield",
           "tower_shield"
-        ],
-        "materials": [
-          "iron",
-          "steel",
-          "ancient",
-          "ash",
-          "bone",
-          "bloodiron"
         ]
       }
     },
@@ -698,7 +633,7 @@
       "rarityTable": "rootspireElite",
       "generatedEquipment": {
         "enabled": true,
-        "weight": 44,
+        "dropChance": 0.10,
         "itemLevel": 9,
         "baseIds": [
           "ritual_dagger",
@@ -732,13 +667,12 @@
           "emberward_cape",
           "nightfall_cape",
           "heater_shield",
-          "tower_shield"
-        ],
-        "materials": [
-          "steel",
-          "ancient",
-          "ash",
-          "bloodiron"
+          "tower_shield",
+          "pathfinder_hood",
+          "pathfinder_jacket",
+          "pathfinder_legs",
+          "pathfinder_boots",
+          "pathfinder_gloves"
         ]
       },
       "includeItemIds": [
@@ -761,7 +695,7 @@
       "rarityTable": "rootspireElite",
       "generatedEquipment": {
         "enabled": true,
-        "weight": 46,
+        "dropChance": 0.08,
         "itemLevelBonus": 6,
         "baseIds": [
           "ritual_dagger",
@@ -797,12 +731,6 @@
           "nightfall_cape",
           "heater_shield",
           "tower_shield"
-        ],
-        "materials": [
-          "steel",
-          "ancient",
-          "ash",
-          "bloodiron"
         ]
       },
       "includeItemIds": [
@@ -845,7 +773,7 @@
       },
       "generatedEquipment": {
         "enabled": true,
-        "weight": 52,
+        "dropChance": 0.35,
         "itemLevelBonus": 7,
         "baseIds": [
           "ritual_dagger",
@@ -882,12 +810,6 @@
           "nightfall_cape",
           "heater_shield",
           "tower_shield"
-        ],
-        "materials": [
-          "steel",
-          "ancient",
-          "ash",
-          "bloodiron"
         ]
       },
       "includeItemIds": [
@@ -910,17 +832,18 @@
     },
     "hellhound": {
       "rolls": 1,
-      "tags": [],
-      "dropChance": 0.8,
+      "dropChance": 0.5,
       "relicDrop": {
         "itemId": "relic_infernal_fang",
         "chance": 2,
         "chanceD4Bonus": 2
       },
       "rarityTable": "specialChest",
+      "includeItemIds": ["ash"],
+      "itemWeights": { "ash": 1 },
       "generatedEquipment": {
         "enabled": true,
-        "weight": 16,
+        "dropChance": 0.08,
         "itemLevelBonus": 3,
         "baseIds": [
           "dagger",
@@ -928,18 +851,16 @@
           "leather_helm",
           "leather_chest",
           "leather_gloves"
-        ],
-        "materials": [
-          "iron",
-          "steel",
-          "cured"
         ]
+      },
+      "equipmentDrops": {
+        "dropChance": 0.06,
+        "items": { "hellhound_collar": 1 }
       }
     },
     "cave_troll": {
       "rolls": 1,
-      "tags": [],
-      "dropChance": 0.85,
+      "dropChance": 0,
       "relicDrop": {
         "itemId": "relic_troll_tooth",
         "chance": 1,
@@ -948,7 +869,7 @@
       "rarityTable": "specialChest",
       "generatedEquipment": {
         "enabled": true,
-        "weight": 20,
+        "dropChance": 0.08,
         "itemLevelBonus": 3,
         "baseIds": [
           "mace_1h",
@@ -957,12 +878,11 @@
           "plate_legs",
           "heater_shield",
           "tower_shield"
-        ],
-        "materials": [
-          "iron",
-          "steel",
-          "bone"
         ]
+      },
+      "equipmentDrops": {
+        "dropChance": 0.07,
+        "items": { "troll_hide_vest": 1, "troll_hide_legs": 1 }
       }
     },
     "stone_golem": {
@@ -977,7 +897,7 @@
       "rarityTable": "specialChest",
       "generatedEquipment": {
         "enabled": true,
-        "weight": 18,
+        "dropChance": 0.07,
         "itemLevelBonus": 4,
         "baseIds": [
           "mace_1h",
@@ -987,44 +907,25 @@
           "plate_legs",
           "heater_shield",
           "tower_shield"
-        ],
-        "materials": [
-          "iron",
-          "steel",
-          "bone"
         ]
       }
     },
     "black_knight": {
       "rolls": 1,
-      "tags": [],
-      "dropChance": 1,
+      "dropChance": 0,
       "relicDrop": {
         "itemId": "relic_black_armor",
         "chance": 1,
         "chanceD4Bonus": 2
       },
       "rarityTable": "specialChest",
-      "generatedEquipment": {
-        "enabled": true,
-        "weight": 24,
-        "itemLevelBonus": 5,
-        "baseIds": [
-          "sword_1h",
-          "greatsword_2h",
-          "plate_helm",
-          "plate_chest",
-          "plate_legs",
-          "plate_boots",
-          "plate_gloves",
-          "heater_shield",
-          "tower_shield"
-        ],
-        "materials": [
-          "steel",
-          "bone",
-          "ancient"
-        ]
+      "equipmentDrops": {
+        "dropChance": 0.06,
+        "items": {
+          "halberd_2h": 4,
+          "black_knight_boots": 3,
+          "black_knight_gauntlets": 3
+        }
       }
     },
     "abyssal_fiend": {
@@ -1039,7 +940,7 @@
       "rarityTable": "specialChest",
       "generatedEquipment": {
         "enabled": true,
-        "weight": 22,
+        "dropChance": 0.08,
         "itemLevelBonus": 5,
         "baseIds": [
           "staff",
@@ -1047,11 +948,6 @@
           "cloth_chest",
           "leather_chest",
           "leather_gloves"
-        ],
-        "materials": [
-          "ash",
-          "ancient",
-          "bone"
         ]
       }
     },
@@ -1090,7 +986,7 @@
       },
       "generatedEquipment": {
         "enabled": true,
-        "weight": 52,
+        "dropChance": 0.35,
         "itemLevelBonus": 8,
         "baseIds": [
           "spear_2h",
@@ -1105,12 +1001,6 @@
           "veilstone_ring",
           "cinderward_amulet",
           "umbralward_amulet"
-        ],
-        "materials": [
-          "steel",
-          "ancient",
-          "bloodiron",
-          "oathbound"
         ]
       },
       "includeItemIds": [
@@ -1219,6 +1109,61 @@
         "brood_chitin": 14,
         "venom_sac": 12,
         "chitin_shield": 6
+      }
+    },
+    "blood_rat": {
+      "rolls": 1,
+      "dropChance": 0.55,
+      "tags": ["bone"],
+      "generatedEquipment": {
+        "enabled": true,
+        "dropChance": 0.12,
+        "itemLevel": 1,
+        "baseIds": [
+          "dagger",
+          "leather_helm",
+          "leather_chest",
+          "buckler"
+        ]
+      }
+    },
+    "orc_patrol": {
+      "rolls": 1,
+      "dropChance": 0.55,
+      "tags": ["food"],
+      "rarityTable": "normal",
+      "generatedEquipment": {
+        "enabled": true,
+        "dropChance": 0.10,
+        "itemLevelBonus": 2,
+        "baseIds": [
+          "axe_1h",
+          "mace_1h",
+          "plate_helm",
+          "plate_legs",
+          "plate_boots",
+          "plate_gloves",
+          "heater_shield"
+        ]
+      }
+    },
+    "orc_berserker": {
+      "rolls": 1,
+      "dropChance": 0.55,
+      "tags": ["food"],
+      "rarityTable": "normal",
+      "generatedEquipment": {
+        "enabled": true,
+        "dropChance": 0.10,
+        "itemLevelBonus": 2,
+        "baseIds": [
+          "greataxe_2h",
+          "greatsword_2h",
+          "plate_chest",
+          "heater_shield",
+          "tower_shield",
+          "tracker_vest"
+        ]
       }
     }
   }

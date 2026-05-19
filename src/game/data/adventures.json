@@ -40,8 +40,9 @@
       "locked": true,
       "campEnabled": true,
       "adventures": [
-        "rootspire_floor_1"
-      ]
+        "rootspire_tower"
+      ],
+      "staminaCost": 15
     },
     {
       "id": "fallen_summit_region",
@@ -62,6 +63,16 @@
       "devOnly": true,
       "adventures": [
         "fallen_knight_mechanics_lab"
+      ]
+    },
+    {
+      "id": "broodmother_mechanics_lab_region",
+      "name": "Broodmother Phase Lab",
+      "x": 86,
+      "y": 32,
+      "devOnly": true,
+      "adventures": [
+        "broodmother_mechanics_lab"
       ]
     },
     {
@@ -419,6 +430,24 @@
         "campRequired": true
       },
       "adventures": []
+    },
+    {
+      "id": "ancient_forest_region",
+      "name": "Ancient Forest",
+      "campEnabled": true,
+      "staminaCost": 10,
+      "adventures": [
+        "ancient_forest"
+      ]
+    },
+    {
+      "id": "spider_nest_region",
+      "name": "Spider Nest",
+      "campEnabled": false,
+      "staminaCost": 10,
+      "adventures": [
+        "spider_nest"
+      ]
     }
   ],
   "adventures": [
@@ -431,93 +460,73 @@
       "name": "Ancient Forest",
       "description": "A mapped path through the eastern woods. Follow the trail from the forest edge to the ancient heart.",
       "mapImage": "/assets/adventure-maps/Ancient_forest_floor_1.png",
-      "choiceRun": false,
       "routes": [
         {
           "id": "ancient_forest_path",
-          "name": "Ancient Forest Trail",
           "nodes": [
             {
               "id": "forest_entrance",
               "type": "event",
-              "x": 12,
-              "y": 50,
-              "repeatable": true,
               "next": [
-                "af_boar_1"
+                "ancient_forest_path_node_1"
               ],
-              "paths": {},
               "event": {
                 "id": "forest_entrance_event",
                 "title": "Forest Entrance",
-                "description": "The trail back to the Eastern Wilds remains behind you.",
-                "effects": [
-                  {
-                    "type": "leave_adventure",
-                    "title": "Leave Ancient Forest",
-                    "text": "You return to the Eastern Wilds.",
-                    "action": "Leave",
-                    "actionLabel": "Leave"
-                  }
-                ]
+                "description": "You enter the ancient forest.",
+                "effects": []
               }
             },
             {
-              "id": "af_boar_1",
+              "id": "ancient_forest_path_node_1",
               "type": "combat",
-              "x": 30,
-              "y": 30,
+              "enemyId": "blood_rat",
+              "next": []
+            },
+            {
+              "id": "ancient_forest_path_node_2",
+              "type": "combat",
+              "enemyId": "wolf",
+              "next": []
+            },
+            {
+              "id": "ancient_forest_path_node_3",
+              "type": "combat",
+              "enemyId": "crow_swarm",
+              "next": []
+            },
+            {
+              "id": "ancient_forest_path_node_4",
+              "type": "combat",
+              "enemyId": "forest_spirit",
+              "next": []
+            },
+            {
+              "id": "ancient_forest_path_node_5",
+              "type": "combat",
               "enemyId": "boar",
-              "next": [
-                "af_wolf_1"
-              ],
-              "paths": {}
+              "next": []
             },
             {
-              "id": "af_wolf_1",
+              "id": "ancient_forest_path_node_6",
               "type": "combat",
-              "x": 50,
-              "y": 55,
-              "enemyId": "white_wolf",
-              "next": [
-                "af_boar_2"
-              ],
-              "paths": {}
-            },
-            {
-              "id": "af_boar_2",
-              "type": "combat",
-              "x": 67,
-              "y": 30,
-              "enemyId": "boar",
-              "next": [
-                "af_armored_bear"
-              ],
-              "paths": {}
-            },
-            {
-              "id": "af_armored_bear",
-              "type": "combat",
-              "x": 80,
-              "y": 60,
-              "enemyId": "armored_bear",
-              "next": [
-                "af_boss"
-              ],
-              "paths": {}
-            },
-            {
-              "id": "af_boss",
-              "type": "boss",
-              "x": 90,
-              "y": 40,
-              "bossId": "elder_stag",
-              "next": [],
-              "paths": {}
+              "enemyId": "forest_bandit",
+              "next": []
             }
           ]
         }
-      ]
+      ],
+      "encounterCount": 10,
+      "choiceRunConfig": {
+        "enemyIds": [
+          "forest_wisp",
+          "white_wolf"
+        ],
+        "specialEnemyIds": [
+          "armored_bear"
+        ],
+        "requiredSpecialBeforeBoss": true
+      }
     },
     {
       "id": "ancient_forest_floor_2",
@@ -847,7 +856,7 @@
       "lootPoolId": "crypts",
       "regionId": "crypts_region",
       "name": "Crypts",
-      "description": "A cold stone passage beneath Rootspire. The air is stale, and the deeper doors are still waiting to be mapped.",
+      "description": "Undead horrors lurk in the dark halls and chambers beneath the earth.",
       "mapImage": "/assets/adventure-maps/crypts-map.svg",
       "choiceRunConfig": {
         "multiEncounterTableId": "crypts_floor_1_multi"
@@ -855,145 +864,131 @@
       "routes": [
         {
           "id": "crypts_path",
-          "name": "Crypt Passage",
+          "name": "The Crypts",
           "nodes": [
             {
-              "id": "crypt_entrance",
-              "type": "event",
-              "x": 11,
-              "y": 82,
-              "next": [
-                "sealed_hall_skeleton"
-              ],
-              "event": {
-                "id": "crypt_entrance_event",
-                "title": "Crypt Entrance",
-                "description": "The stairway back to the surface remains behind you.",
-                "effects": []
-              }
-            },
-            {
-              "id": "sealed_hall_skeleton",
+              "id": "crypts_skeleton",
               "type": "combat",
-              "encounterTableId": "crypts_common",
-              "x": 29.2,
-              "y": 62.2,
-              "next": [
-                "bone_guard"
-              ]
-            },
-            {
-              "id": "bone_guard",
-              "type": "combat",
-              "encounterTableId": "crypts_common",
-              "x": 49.6,
-              "y": 51.7,
-              "next": [
-                "ghoul_nest"
-              ]
-            },
-            {
-              "id": "ghoul_nest",
-              "type": "combat",
-              "encounterTableId": "crypts_common",
-              "x": 63.5,
-              "y": 56.4,
-              "next": [
-                "wraith_crossing",
-                "crypts_path_node_2"
-              ],
-              "paths": {}
-            },
-            {
-              "id": "wraith_crossing",
-              "type": "combat",
-              "encounterTableId": "crypts_common",
-              "x": 73,
-              "y": 36,
-              "next": [
-                "zombie_chamber"
-              ]
-            },
-            {
-              "id": "zombie_chamber",
-              "type": "combat",
-              "encounterTableId": "crypts_common",
-              "x": 78,
-              "y": 31,
-              "next": [
-                "hellhound_depths"
-              ]
-            },
-            {
-              "id": "hellhound_depths",
-              "type": "combat",
-              "encounterTableId": "crypts_common",
-              "floor": 1,
-              "depth": 1,
-              "x": 84.3,
-              "y": 22.3,
-              "next": [
-                "crypts_floor_2_stairs"
-              ],
-              "paths": {
-                "crypts_floor_2_stairs": [
-                  {
-                    "x": 87,
-                    "y": 16
-                  },
-                  {
-                    "x": 85,
-                    "y": 10
-                  }
-                ]
-              }
-            },
-            {
-              "id": "crypts_floor_2_stairs",
-              "type": "event",
-              "x": 72.8,
-              "y": 9.2,
+              "enemyId": "skeleton",
+              "encounterCap": 1,
               "repeatable": true,
-              "next": [],
-              "event": {
-                "id": "crypts_floor_2_stairs_event",
-                "title": "Crypts Floor 2",
-                "description": "A narrow stairway descends into the second floor of the crypts.",
-                "effects": [
-                  {
-                    "type": "enter_adventure",
-                    "adventureId": "crypts_floor_2",
-                    "label": "Crypts Floor 2",
-                    "title": "Crypts Floor 2",
-                    "text": "You descend deeper into the crypts.",
-                    "action": "Enter Floor 2"
-                  }
-                ]
-              }
-            },
-            {
-              "id": "crypts_path_node_2",
-              "type": "combat",
-              "x": 46.9,
-              "y": 26,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
               "next": [
-                "crypts_path_node_3"
+                "crypts_zombie"
               ],
-              "encounterTableId": "crypts_common",
-              "paths": {}
+              "stepIndex": 0
             },
             {
-              "id": "crypts_path_node_3",
+              "id": "crypts_zombie",
               "type": "combat",
-              "x": 36.3,
-              "y": 11.6,
+              "enemyId": "zombie",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "crypts_ghoul"
+              ],
+              "stepIndex": 1
+            },
+            {
+              "id": "crypts_ghoul",
+              "type": "combat",
+              "enemyId": "ghoul",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "crypts_warrior"
+              ],
+              "stepIndex": 2
+            },
+            {
+              "id": "crypts_warrior",
+              "type": "combat",
+              "enemyId": "skeleton_warrior",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "crypts_wraith"
+              ],
+              "stepIndex": 3
+            },
+            {
+              "id": "crypts_wraith",
+              "type": "combat",
+              "enemyId": "wraith",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "crypts_hellhound"
+              ],
+              "stepIndex": 4
+            },
+            {
+              "id": "crypts_hellhound",
+              "type": "combat",
+              "enemyId": "hellhound",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "crypts_arcane_wraith"
+              ],
+              "stepIndex": 5
+            },
+            {
+              "id": "crypts_arcane_wraith",
+              "type": "combat",
+              "enemyId": "arcane_wraith",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "crypts_boss"
+              ],
+              "stepIndex": 6
+            },
+            {
+              "id": "crypts_boss",
+              "type": "boss",
+              "bossId": "lich",
+              "encounterCap": 1,
+              "charges": {
+                "max": 1,
+                "rechargeSeconds": 3600
+              },
               "next": [],
-              "paths": {},
-              "encounterTableId": "crypts_common"
+              "stepIndex": 7
             }
           ]
         }
-      ]
+      ],
+      "linearAdventure": true,
+      "disableChoiceRun": true,
+      "requiresAdventureCompletion": "ancient_forest"
     },
     {
       "id": "crypts_floor_2",
@@ -1079,139 +1074,132 @@
       "choiceRun": false,
       "routes": [
         {
-          "id": "orc_assault_path",
-          "name": "War Path",
+          "id": "orc_war_camp_path",
+          "name": "The War Camp",
           "nodes": [
             {
               "id": "orc_gate",
               "type": "combat",
               "enemyId": "orc_patrol",
-              "enemyIds": [
-                "orc_patrol",
-                "orc_patrol"
-              ],
-              "x": 14,
-              "y": 58,
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
               "next": [
                 "orc_berserker_1"
               ],
-              "secretIndex": 0
+              "stepIndex": 0
             },
             {
               "id": "orc_berserker_1",
               "type": "combat",
               "enemyId": "orc_berserker",
-              "enemyIds": [
-                "orc_patrol",
-                "orc_berserker"
-              ],
-              "x": 28,
-              "y": 52,
-              "next": [
-                "orc_cache"
-              ]
-            },
-            {
-              "id": "orc_cache",
-              "type": "event",
-              "x": 42,
-              "y": 46,
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
               "next": [
                 "warg_pack_1"
               ],
-              "event": {
-                "id": "orc_supply_raid",
-                "title": "Supply Raid",
-                "description": "You search an abandoned orc caravan and find something of value.",
-                "effects": [
-                  {
-                    "type": "grant_loot",
-                    "lootPoolId": "orc_war_camp",
-                    "rolls": 1
-                  }
-                ]
-              }
+              "stepIndex": 1
             },
             {
               "id": "warg_pack_1",
               "type": "combat",
-              "encounterRole": "multi",
-              "difficulty": "medium",
               "enemyId": "warg",
-              "enemyIds": [
-                "warg",
-                "warg"
-              ],
-              "x": 50,
-              "y": 43,
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
               "next": [
                 "small_troll"
-              ]
+              ],
+              "stepIndex": 2
             },
             {
               "id": "small_troll",
               "type": "combat",
               "enemyId": "troll_small",
-              "x": 60,
-              "y": 39,
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
               "next": [
                 "warg_pack_2"
               ],
-              "secretIndex": 2
+              "stepIndex": 3
             },
             {
               "id": "warg_pack_2",
               "type": "combat",
-              "encounterRole": "multi",
-              "difficulty": "hard",
               "enemyId": "warg",
-              "enemyIds": [
-                "orc_patrol",
-                "warg"
-              ],
-              "x": 66,
-              "y": 36,
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
               "next": [
                 "orc_berserker_2"
-              ]
+              ],
+              "stepIndex": 4
             },
             {
               "id": "orc_berserker_2",
               "type": "combat",
               "enemyId": "orc_berserker",
-              "x": 70,
-              "y": 34,
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
               "next": [
                 "cave_troll"
-              ]
+              ],
+              "stepIndex": 5
             },
             {
               "id": "cave_troll",
               "type": "combat",
-              "encounterRole": "special",
-              "difficulty": "special",
               "enemyId": "cave_troll",
-              "x": 78,
-              "y": 30,
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
               "next": [
                 "orc_shaman_boss"
-              ]
+              ],
+              "stepIndex": 6
             },
             {
               "id": "orc_shaman_boss",
               "type": "boss",
               "bossId": "orc_general",
-              "bossIds": [
-                "orc_general",
-                "orc_shaman"
-              ],
-              "x": 86,
-              "y": 26,
-              "next": []
+              "encounterCap": 1,
+              "charges": {
+                "max": 1,
+                "rechargeSeconds": 3600
+              },
+              "next": [],
+              "stepIndex": 7
             }
           ]
         }
-      ]
+      ],
+      "linearAdventure": true,
+      "disableChoiceRun": true,
+      "requiresAdventureCompletion": "crypts"
     },
     {
       "id": "rootspire_floor_1",
@@ -2969,6 +2957,540 @@
           ]
         }
       ]
+    },
+    {
+      "id": "broodmother_mechanics_lab",
+      "devOnly": true,
+      "zoneId": "training_yard",
+      "bossId": "broodmother_of_the_deep",
+      "regionId": "broodmother_mechanics_lab_region",
+      "name": "Broodmother Phase Lab",
+      "description": "Developer test for the Broodmother cocoon transform and Phase 2 transition. No rewards.",
+      "choiceRun": false,
+      "noRewards": true,
+      "lootPool": {
+        "dropChance": 0,
+        "rolls": 0,
+        "items": []
+      },
+      "routes": [
+        {
+          "id": "broodmother_mechanics_lab_path",
+          "name": "Phase Lab",
+          "nodes": [
+            {
+              "id": "broodmother_lab_entrance",
+              "type": "event",
+              "x": 20,
+              "y": 72,
+              "repeatable": true,
+              "next": [
+                "broodmother_lab_campfire"
+              ],
+              "event": {
+                "id": "broodmother_lab_entrance_event",
+                "title": "Broodmother Phase Lab",
+                "description": "Full-strength Broodmother inside. Tests cocoon transform and Phase 2 activation.",
+                "effects": [
+                  {
+                    "type": "leave_adventure",
+                    "title": "Leave Lab",
+                    "text": "You return to the world map.",
+                    "action": "Leave",
+                    "actionLabel": "Leave"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "broodmother_lab_campfire",
+              "type": "event",
+              "x": 45,
+              "y": 52,
+              "next": [
+                "broodmother_lab_boss"
+              ],
+              "event": {
+                "id": "broodmother_lab_campfire_event",
+                "title": "Testing Campfire",
+                "description": "Restores you fully before the phase mechanics test.",
+                "effects": [
+                  {
+                    "type": "restore_hp_pct",
+                    "value": 100
+                  },
+                  {
+                    "type": "restore_energy",
+                    "value": 100
+                  }
+                ]
+              }
+            },
+            {
+              "id": "broodmother_lab_boss",
+              "type": "boss",
+              "bossId": "broodmother_of_the_deep_lab",
+              "x": 76,
+              "y": 28,
+              "noRewards": true,
+              "noRarity": true,
+              "next": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ancient_forest",
+      "name": "Ancient Forest",
+      "zoneId": "dungeon",
+      "lootPoolId": "ancient_forest",
+      "regionId": "ancient_forest_region",
+      "description": "A vast forest teeming with wildlife and danger. Face its creatures to prove your worth.",
+      "disableChoiceRun": true,
+      "linearAdventure": true,
+      "routes": [
+        {
+          "id": "ancient_forest_path",
+          "name": "Forest Trail",
+          "nodes": [
+            {
+              "id": "af_blood_rat",
+              "type": "combat",
+              "enemyId": "blood_rat",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "af_crow"
+              ],
+              "stepIndex": 0
+            },
+            {
+              "id": "af_crow",
+              "type": "combat",
+              "enemyId": "crow_swarm",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "af_wisp"
+              ],
+              "stepIndex": 1
+            },
+            {
+              "id": "af_wisp",
+              "type": "combat",
+              "enemyId": "forest_wisp",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "af_wolf"
+              ],
+              "stepIndex": 2
+            },
+            {
+              "id": "af_wolf",
+              "type": "combat",
+              "enemyId": "wolf",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "af_white_wolf"
+              ],
+              "stepIndex": 3
+            },
+            {
+              "id": "af_white_wolf",
+              "type": "combat",
+              "enemyId": "white_wolf",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "af_boar"
+              ],
+              "stepIndex": 4
+            },
+            {
+              "id": "af_boar",
+              "type": "combat",
+              "enemyId": "boar",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "af_bandit"
+              ],
+              "stepIndex": 5
+            },
+            {
+              "id": "af_bandit",
+              "type": "combat",
+              "enemyId": "forest_bandit",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "af_bear"
+              ],
+              "stepIndex": 6
+            },
+            {
+              "id": "af_bear",
+              "type": "combat",
+              "enemyId": "armored_bear",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "af_boss"
+              ],
+              "stepIndex": 7
+            },
+            {
+              "id": "af_boss",
+              "type": "boss",
+              "bossId": "elder_stag",
+              "encounterCap": 1,
+              "charges": {
+                "max": 1,
+                "rechargeSeconds": 3600
+              },
+              "next": [],
+              "stepIndex": 8
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "spider_nest",
+      "name": "Spider Nest",
+      "zoneId": "dungeon",
+      "lootPoolId": "ancient_forest",
+      "regionId": "spider_nest_region",
+      "description": "A dark cave choked with webs. Spiders grow deadlier the deeper you venture.",
+      "disableChoiceRun": true,
+      "linearAdventure": true,
+      "routes": [
+        {
+          "id": "spider_nest_path",
+          "name": "The Web",
+          "nodes": [
+            {
+              "id": "sn_giant_spider",
+              "type": "combat",
+              "enemyId": "giant_spider",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "sn_venom_spider"
+              ],
+              "stepIndex": 0
+            },
+            {
+              "id": "sn_venom_spider",
+              "type": "combat",
+              "enemyId": "venom_giant_spider",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "sn_silkfang"
+              ],
+              "stepIndex": 1
+            },
+            {
+              "id": "sn_silkfang",
+              "type": "combat",
+              "enemyId": "silkfang_matriarch",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "sn_boss"
+              ],
+              "stepIndex": 2
+            },
+            {
+              "id": "sn_boss",
+              "type": "boss",
+              "bossId": "broodmother_of_the_deep",
+              "encounterCap": 1,
+              "charges": {
+                "max": 1,
+                "rechargeSeconds": 3600
+              },
+              "next": [],
+              "stepIndex": 3
+            }
+          ]
+        }
+      ],
+      "requiredLevel": 5
+    },
+    {
+      "id": "rootspire_tower",
+      "name": "Rootspire Tower",
+      "description": "Ascend the cursed tower floor by floor, from gargoyle-haunted halls to the wyvern-crowned summit.",
+      "zoneId": "rootspire_tower",
+      "lootPoolId": "rootspire_tower",
+      "regionId": "rootspire_tower_region",
+      "linearAdventure": true,
+      "disableChoiceRun": true,
+      "routes": [
+        {
+          "id": "rootspire_tower_path",
+          "name": "The Tower",
+          "nodes": [
+            {
+              "id": "rst_gargoyle",
+              "type": "combat",
+              "enemyId": "gargoyle",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "rst_skeleton"
+              ],
+              "stepIndex": 0
+            },
+            {
+              "id": "rst_skeleton",
+              "type": "combat",
+              "enemyId": "rootspire_restless_skeleton",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "rst_squire"
+              ],
+              "stepIndex": 1
+            },
+            {
+              "id": "rst_squire",
+              "type": "combat",
+              "enemyId": "oathbound_squire",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "rst_knight"
+              ],
+              "stepIndex": 2
+            },
+            {
+              "id": "rst_knight",
+              "type": "combat",
+              "enemyId": "black_knight",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "rst_armor"
+              ],
+              "stepIndex": 3
+            },
+            {
+              "id": "rst_armor",
+              "type": "combat",
+              "enemyId": "animated_armor",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "rst_sentinel"
+              ],
+              "stepIndex": 4
+            },
+            {
+              "id": "rst_sentinel",
+              "type": "combat",
+              "enemyId": "spellbound_sentinel",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "rst_cultist"
+              ],
+              "stepIndex": 5
+            },
+            {
+              "id": "rst_cultist",
+              "type": "combat",
+              "enemyId": "ashbound_cultist",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "rst_golem"
+              ],
+              "stepIndex": 6
+            },
+            {
+              "id": "rst_golem",
+              "type": "combat",
+              "enemyId": "stone_golem",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "rst_ash_imp"
+              ],
+              "stepIndex": 7
+            },
+            {
+              "id": "rst_ash_imp",
+              "type": "combat",
+              "enemyId": "ash_imp",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "rst_salamander"
+              ],
+              "stepIndex": 8
+            },
+            {
+              "id": "rst_salamander",
+              "type": "combat",
+              "enemyId": "cinder_salamander",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "rst_whelps_1"
+              ],
+              "stepIndex": 9
+            },
+            {
+              "id": "rst_whelps_1",
+              "type": "combat",
+              "enemyId": "wyvern_whelp",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "rst_whelps_2"
+              ],
+              "stepIndex": 10
+            },
+            {
+              "id": "rst_whelps_2",
+              "type": "combat",
+              "enemyId": "wyvern_whelp",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "rst_fiend"
+              ],
+              "stepIndex": 11
+            },
+            {
+              "id": "rst_fiend",
+              "type": "combat",
+              "enemyId": "abyssal_fiend",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": {
+                "max": 5,
+                "rechargeSeconds": 300
+              },
+              "next": [
+                "rst_boss"
+              ],
+              "stepIndex": 12
+            },
+            {
+              "id": "rst_boss",
+              "type": "boss",
+              "bossId": "wyvern",
+              "encounterCap": 1,
+              "charges": {
+                "max": 1,
+                "rechargeSeconds": 3600
+              },
+              "next": [],
+              "stepIndex": 13
+            }
+          ]
+        }
+      ],
+      "requiresAdventureCompletion": "orc_war_camp"
     }
   ]
 }

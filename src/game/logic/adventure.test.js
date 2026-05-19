@@ -1546,8 +1546,8 @@ describe("adventure routes", () => {
     expect(adventureById.dodge_test).toMatchObject({ zoneId: "training_yard", regionId: "dodge_test_region", devOnly: true });
     expect(regionById.fallen_knight_mechanics_lab_region).toMatchObject({
       name: "Fallen Knight Lab",
-      x: 29,
-      y: 18,
+      x: 81,
+      y: 32,
       devOnly: true,
       adventures: ["fallen_knight_mechanics_lab"],
     });

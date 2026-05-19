@@ -313,14 +313,14 @@ describe("modular combat", () => {
     const archerClass = heroClasses.find(entry => entry.id === "archer");
     expect(fighterClass).toMatchObject({
       name: "Fighter",
-      sprite: "/assets/sprites/Hero_real.png",
+      sprite: "/assets/characters/fighter/Fighter.png",
     });
     expect(archerClass).toMatchObject({
       name: "Archer",
       playable: true,
       pet: "wolf_companion",
       startingWeapon: "bow",
-      sprite: "/assets/sprites/Hero_archer.png",
+      sprite: "/assets/characters/archer/Archer.png",
     });
 
     const hero = initHero("Tester", { heroClass: "archer", weapon: "bow" });
@@ -532,7 +532,7 @@ describe("modular combat", () => {
     expect(snap.weaponFamily).toBe("bow");
     expect(snap.weaponTags).toContain("ranged");
     expect(snap.heroClass).toBe("archer");
-    expect(snap.heroSprite).toBe("/assets/sprites/Hero_archer.png");
+    expect(snap.heroSprite).toBe("/assets/characters/archer/Archer.png");
     expect(snap.critResist).toBe(stats.critResist);
     expect(snap.equippedSkillIds).toContain("quick_shot");
     expect(snap.allies[0]).toMatchObject({ id: "wolf_companion", isAlly: true });
@@ -546,7 +546,7 @@ describe("modular combat", () => {
 
     const initArgs = buildDuelHeroInitArgs("Archer", snap, duelEnemy);
     expect(initArgs.heroClass).toBe("archer");
-    expect(initArgs.heroVisual.sprite).toBe("/assets/sprites/Hero_archer.png");
+    expect(initArgs.heroVisual.sprite).toBe("/assets/characters/archer/Archer.png");
     expect(initArgs.heroInitialRage).toBe(0);
     expect(initArgs.heroCritResist).toBe(snap.critResist);
     expect(initArgs.heroAbilities.map(ability => ability.id)).toContain("quick_shot");
@@ -597,7 +597,7 @@ describe("modular combat", () => {
     const rangedLegacyEnemy = buildDuelEnemy("Saved Archer", { combatSnap: rangedLegacySnap });
     const rangedLegacyArgs = buildDuelHeroInitArgs("Saved Archer", rangedLegacySnap, rangedLegacyEnemy);
     expect(rangedLegacyArgs.heroClass).toBe("archer");
-    expect(rangedLegacyArgs.heroVisual.sprite).toBe("/assets/sprites/Hero_archer.png");
+    expect(rangedLegacyArgs.heroVisual.sprite).toBe("/assets/characters/archer/Archer.png");
     expect(rangedLegacyArgs.heroAbilities.map(ability => ability.id)).toEqual(expect.arrayContaining(["quick_shot", "focused_shot"]));
     expect(rangedLegacyEnemy.heroClass).toBe("archer");
     expect(rangedLegacyEnemy.abilities.map(ability => ability.id)).toEqual(expect.arrayContaining(["quick_shot", "focused_shot"]));
@@ -765,14 +765,14 @@ describe("modular combat", () => {
     expect(hero.equip.weapon).toMatchObject({
       generated: true,
       starter: true,
-      name: "Crude Sword",
+      name: "Worn Sword",
       family: "sword",
       damageDice: { count: 1, sides: 8 },
     });
     expect(hero.equip.chest).toMatchObject({
       generated: true,
       starter: true,
-      name: "Threadbare Tunic",
+      name: "Worn Tunic",
       armorType: "cloth",
       armorDice: { count: 1, sides: 2 },
     });
@@ -3962,7 +3962,8 @@ describe("modular combat", () => {
   it("keeps fighter attack speed talents wired to combat effects", () => {
     const tree = talentTrees.find(entry => entry.id === "fighter");
     const berserkerBranch = tree.branches.find(branch => branch.id === "berserker");
-    const duelistBranch = tree.branches.find(branch => branch.id === "duelist");
+    const rogueTree = talentTrees.find(entry => entry.id === "rogue");
+    const duelistBranch = rogueTree.branches.find(branch => branch.id === "duelist");
     const frenzyState = berserkerBranch.tiers
       .flatMap(tier => tier.choices || [])
       .find(choice => choice.id === "berserker_frenzy_state");
@@ -5427,9 +5428,9 @@ describe("modular combat", () => {
     expect(manualChanceWithGenerated(LOOT_TABLES.armored_bear, "campfire")).toBeCloseTo(2 / 28);
   });
 
-  it("keeps campfire recovery at 40% max HP", () => {
+  it("keeps campfire recovery at 20% max HP", () => {
     const campfire = items.find(item => item.id === "campfire");
-    expect(campfire?.effects?.find(effect => effect.type === "restore_hp_pct")?.value).toBe(40);
+    expect(campfire?.effects?.find(effect => effect.type === "restore_hp_pct")?.value).toBe(20);
   });
 
   it("keeps Fur Cloak as a White Wolf armor drop", () => {
@@ -10051,7 +10052,7 @@ describe("Spider content", () => {
   it("broodmother_of_the_deep has cocoon transform fields and phase2 data", () => {
     const b = bossById.broodmother_of_the_deep;
     expect(b.hasCocoonTransform).toBe(true);
-    expect(b.cocoonDurationTicks).toBe(4);
+    expect(b.cocoonDurationTicks).toBe(6);
     expect(b.phase2MaxHp).toBeGreaterThan(0);
     expect(Array.isArray(b.phase2Abilities)).toBe(true);
     expect(b.phase2Abilities.length).toBeGreaterThan(0);
@@ -10308,8 +10309,8 @@ describe("Spider content", () => {
     state = processTick(state, ACTION.NONE, () => 0.5);
     expect(state.combatants.enemy.inCocoon).toBe(true);
     const cocoonStartTick = state.combatants.enemy.cocoonStartTick;
-    // Advance ticks until cocoon exits (4 ticks)
-    for (let i = 0; i < 5; i++) {
+    // Advance ticks until cocoon exits (6 ticks)
+    for (let i = 0; i < 8; i++) {
       if (state.phase !== "fighting") break;
       state = processTick(state, ACTION.NONE, () => 0.5);
     }

@@ -1345,13 +1345,13 @@
       ],
       "tier": 4,
       "threat": "boss",
-      "sprite": "/assets/sprites/encounters/Giant spider.png",
+      "sprite": "/assets/sprites/encounters/Bosses/Broodmother.png",
       "baseStats": {
-        "maxHp": 720,
-        "attack": 20,
+        "maxHp": 860,
+        "attack": 25,
         "armor": 6,
         "attackSpeed": 1.1,
-        "spellDamage": 20
+        "spellDamage": 22
       },
       "rewards": {
         "xp": 300,
@@ -1359,11 +1359,13 @@
       },
       "lootTable": "broodmother_loot",
       "hasCocoonTransform": true,
-      "cocoonDurationTicks": 4,
-      "phase2MaxHp": 580,
-      "phase2Attack": 24,
-      "phase2Armor": 7,
+      "cocoonDurationTicks": 6,
+      "cocoonMaxHp": 500,
+      "phase2MaxHp": 1100,
+      "phase2Attack": 32,
+      "phase2Armor": 8,
       "phase2AttackSpeed": 1.3,
+      "phase2SpellDamage": 30,
       "effects": [
         {
           "type": "poison_on_hit",
@@ -1460,7 +1462,65 @@
           "aiUseChance": 50,
           "aiWeight": 2
         }
-      ]
+      ],
+      "cocoonSprite": "/assets/sprites/encounters/Bosses/Coccon.png"
+    },
+    {
+      "id": "broodmother_of_the_deep_lab",
+      "name": "Broodmother of the Deep (Lab)",
+      "family": "spider",
+      "tags": ["beast", "boss"],
+      "tier": 4,
+      "threat": "boss",
+      "sprite": "/assets/sprites/encounters/Bosses/Broodmother.png",
+      "baseStats": {
+        "maxHp": 860,
+        "attack": 0,
+        "armor": 6,
+        "attackSpeed": 1.1,
+        "spellDamage": 0
+      },
+      "disableAutoAttack": true,
+      "rewards": { "xp": 0, "gold": 0 },
+      "lootTable": null,
+      "hasCocoonTransform": true,
+      "cocoonDurationTicks": 6,
+      "cocoonMaxHp": 500,
+      "phase2MaxHp": 1100,
+      "phase2Attack": 0,
+      "phase2Armor": 8,
+      "phase2AttackSpeed": 1.3,
+      "phase2SpellDamage": 0,
+      "effects": [],
+      "abilities": [
+        {
+          "id": "web_snare_brood_lab_p1",
+          "name": "Web Snare",
+          "description": "Freezes the player's auto-attack for 2 seconds.",
+          "type": "web_snare",
+          "castTicks": 1,
+          "cooldownSeconds": 20,
+          "durationTicks": 2,
+          "aiPool": true,
+          "aiUseChance": 35,
+          "aiWeight": 2
+        }
+      ],
+      "phase2Abilities": [
+        {
+          "id": "web_snare_brood_lab_p2",
+          "name": "Web Snare",
+          "description": "Freezes the player's auto-attack for 2 seconds.",
+          "type": "web_snare",
+          "castTicks": 1,
+          "cooldownSeconds": 18,
+          "durationTicks": 2,
+          "aiPool": true,
+          "aiUseChance": 35,
+          "aiWeight": 2
+        }
+      ],
+      "cocoonSprite": "/assets/sprites/encounters/Bosses/Coccon.png"
     }
   ]
 }

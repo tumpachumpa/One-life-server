@@ -7,7 +7,7 @@ import {
 } from "./characterVisuals.js";
 
 describe("character visuals", () => {
-  it("uses the Hero_real sprite for every fighter visual state", () => {
+  it("uses the Fighter sprite for every fighter visual state", () => {
     const visuals = [
       getHeroIdleVisual("fighter"),
       getHeroPortraitVisual("fighter"),
@@ -17,8 +17,8 @@ describe("character visuals", () => {
 
     for (const visual of visuals) {
       expect(visual).toMatchObject({
-        sprite: "/assets/sprites/Hero_real.png",
-        scale: 0.96,
+        sprite: "/assets/characters/fighter/Fighter.png",
+        scale: 1.0,
       });
       expect(visual.animation).toBeUndefined();
     }

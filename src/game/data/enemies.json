@@ -249,7 +249,7 @@
           "damagePct": 0.35
         }
       ],
-      "lootTable": "forest_basic"
+      "lootTable": "blood_rat"
     },
     {
       "id": "crow_swarm",
@@ -443,7 +443,7 @@
       ],
       "tier": 1,
       "threat": "dangerous",
-      "sprite": "/assets/sprites/encounters/Giant spider.png",
+      "sprite": "/assets/sprites/encounters/Spiders/Giant webspinner.png",
       "baseStats": {
         "maxHp": 145,
         "attack": 9,
@@ -500,7 +500,7 @@
       ],
       "tier": 2,
       "threat": "dangerous",
-      "sprite": "/assets/sprites/encounters/Giant spider.png",
+      "sprite": "/assets/sprites/encounters/Spiders/Venom stalker.png",
       "baseStats": {
         "maxHp": 190,
         "attack": 12,
@@ -603,7 +603,7 @@
         "gold": 24
       },
       "effects": [],
-      "lootTable": "orc_basic"
+      "lootTable": "orc_patrol"
     },
     {
       "id": "orc_berserker",
@@ -628,7 +628,7 @@
           "attackMult": 1.25
         }
       ],
-      "lootTable": "orc_basic"
+      "lootTable": "orc_berserker"
     },
     {
       "id": "troll_small",
@@ -790,7 +790,7 @@
           "damageMult": 0.8
         }
       ],
-      "lootTable": "orc_basic"
+      "lootTable": "cave_troll"
     },
     {
       "id": "skeleton",
@@ -997,7 +997,7 @@
           "damagePct": 2
         }
       ],
-      "lootTable": "forest_magic"
+      "lootTable": "hellhound"
     },
     {
       "id": "gargoyle",
@@ -1119,7 +1119,7 @@
           "addSprite": "/assets/sprites/encounters/Banner_blackknight.png"
         }
       ],
-      "lootTable": "rootspire_elite"
+      "lootTable": "black_knight"
     },
     {
       "id": "black_banner",
@@ -1905,7 +1905,7 @@
       ],
       "tier": 1,
       "threat": "weak",
-      "sprite": "/assets/sprites/encounters/Giant spider.png",
+      "sprite": "/assets/sprites/encounters/Spiders/Spiderling.png",
       "baseStats": {
         "maxHp": 55,
         "attack": 5,
@@ -1937,7 +1937,7 @@
       ],
       "tier": 3,
       "threat": "elite",
-      "sprite": "/assets/sprites/encounters/Giant spider.png",
+      "sprite": "/assets/sprites/encounters/Spiders/Matriarch.png",
       "baseStats": {
         "maxHp": 400,
         "attack": 16,

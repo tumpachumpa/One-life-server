@@ -18,7 +18,7 @@ describe("generated equipment", () => {
   it("creates a one-handed weapon with dice metadata and usable average damage", () => {
     const item = rollGeneratedEquipment({
       baseId: "sword_1h",
-      materialId: "iron",
+      grade: "normal",
       rarity: "normal",
       itemLevel: 1,
     }, () => 0);
@@ -39,7 +39,6 @@ describe("generated equipment", () => {
   it("creates armor from armor dice and preserves slot semantics", () => {
     const item = rollGeneratedEquipment({
       baseId: "plate_boots",
-      materialId: "steel",
       rarity: "rare",
       itemLevel: 4,
     }, () => 0.25);
@@ -219,7 +218,7 @@ describe("generated equipment", () => {
   it("rolls rapier base parry from 3-5 and scales it with rarity", () => {
     const normal = rollGeneratedEquipment({
       baseId: "rapier",
-      materialId: "iron",
+      grade: "worn",
       rarity: "normal",
       itemLevel: 1,
     }, (() => {
@@ -228,7 +227,7 @@ describe("generated equipment", () => {
     })());
     const legendary = rollGeneratedEquipment({
       baseId: "rapier",
-      materialId: "steel",
+      grade: "normal",
       rarity: "legendary",
       itemLevel: 5,
     }, (() => {
@@ -245,11 +244,11 @@ describe("generated equipment", () => {
   it("lets Duskrunner boots roll dueling parry affixes", () => {
     const boots = rollGeneratedEquipment({
       baseId: "duskrunner_boots",
-      materialId: "ash",
+      grade: "worn",
       rarity: "uncommon",
       itemLevel: 5,
     }, (() => {
-      const rolls = [0, 0.5, 0];
+      const rolls = [0, 0.6, 0];
       return () => rolls.shift() ?? 0;
     })());
 
@@ -274,7 +273,6 @@ describe("generated equipment", () => {
   it("gives uncommon generated items one green affix", () => {
     const item = rollGeneratedEquipment({
       baseId: "sword_1h",
-      materialId: "iron",
       rarity: "uncommon",
       itemLevel: 2,
     }, () => 0);
@@ -282,7 +280,7 @@ describe("generated equipment", () => {
     expect(item).toMatchObject({
       rarity: "uncommon",
       rarityColor: "#2ecc71",
-      name: "Uncommon Iron Sword",
+      name: "Uncommon Worn Sword",
     });
     expect(item.effects).toHaveLength(1);
   });
@@ -290,25 +288,21 @@ describe("generated equipment", () => {
   it("keeps regular generated armor bonuses limited to rolled affixes", () => {
     const leather = rollGeneratedEquipment({
       baseId: "leather_boots",
-      materialId: "cured",
       rarity: "normal",
       itemLevel: 2,
     }, () => 0);
     const mail = rollGeneratedEquipment({
       baseId: "mail_chest",
-      materialId: "iron",
       rarity: "normal",
       itemLevel: 2,
     }, () => 0);
     const plate = rollGeneratedEquipment({
       baseId: "plate_chest",
-      materialId: "iron",
       rarity: "normal",
       itemLevel: 2,
     }, () => 0);
     const rareMail = rollGeneratedEquipment({
       baseId: "mail_chest",
-      materialId: "bone",
       rarity: "rare",
       itemLevel: 4,
     }, () => 0);
@@ -332,7 +326,6 @@ describe("generated equipment", () => {
     const regularArmorRolls = Array.from({ length: 20 }, (_, index) =>
       rollGeneratedEquipment({
         baseId: "tower_shield",
-        materialId: "iron",
         rarity: "legendary",
         itemLevel: 6,
       }, () => index / 19),
@@ -340,20 +333,17 @@ describe("generated equipment", () => {
     const regularDamageRolls = Array.from({ length: 20 }, (_, index) =>
       rollGeneratedEquipment({
         baseId: "greataxe_2h",
-        materialId: "iron",
         rarity: "legendary",
         itemLevel: 6,
       }, () => index / 19),
     );
     const artifactArmor = rollGeneratedEquipment({
       baseId: "tower_shield",
-      materialId: "iron",
       rarity: "artifact",
       itemLevel: 6,
     }, () => 0.25);
     const artifactWeapon = rollGeneratedEquipment({
       baseId: "greataxe_2h",
-      materialId: "iron",
       rarity: "artifact",
       itemLevel: 6,
     }, () => 0);
@@ -367,13 +357,11 @@ describe("generated equipment", () => {
   it("prevents arcane materials from adding INT or spell damage to leather and heavy armor", () => {
     const duskrunner = rollGeneratedEquipment({
       baseId: "duskrunner_hood",
-      materialId: "ash",
       rarity: "artifact",
       itemLevel: 9,
     }, () => 0);
     const oathbound = rollGeneratedEquipment({
       baseId: "oathbound_plate_helm",
-      materialId: "ancient",
       rarity: "artifact",
       itemLevel: 9,
     }, () => 0);
@@ -443,19 +431,16 @@ describe("generated equipment", () => {
   it("does not apply hidden light armor passives to hero stats", () => {
     const weapon = rollGeneratedEquipment({
       baseId: "sword_1h",
-      materialId: "iron",
       rarity: "normal",
       itemLevel: 1,
     }, () => 0);
     const chest = rollGeneratedEquipment({
       baseId: "leather_chest",
-      materialId: "cured",
       rarity: "normal",
       itemLevel: 2,
     }, () => 0);
     const boots = rollGeneratedEquipment({
       baseId: "leather_boots",
-      materialId: "cured",
       rarity: "normal",
       itemLevel: 2,
     }, () => 0);
@@ -473,13 +458,11 @@ describe("generated equipment", () => {
   it("can generate bone shields from shield bases", () => {
     const buckler = rollGeneratedEquipment({
       baseId: "buckler",
-      materialId: "bone",
       rarity: "normal",
       itemLevel: 2,
     }, () => 0);
     const tower = rollGeneratedEquipment({
       baseId: "tower_shield",
-      materialId: "bone",
       rarity: "normal",
       itemLevel: 2,
     }, () => 0);
@@ -490,7 +473,6 @@ describe("generated equipment", () => {
     }, () => 0);
     const heater = rollGeneratedEquipment({
       baseId: "heater_shield",
-      materialId: "iron",
       rarity: "normal",
       itemLevel: 2,
     }, () => 0);
@@ -499,27 +481,27 @@ describe("generated equipment", () => {
       generated: true,
       family: "shield",
       armorType: "shield",
-      generation: { materialId: "bone" },
+      generation: { gradeId: expect.any(String) },
     });
     expect(tower).toMatchObject({
       generated: true,
       family: "shield",
       armorType: "shield",
-      generation: { materialId: "bone" },
+      generation: { gradeId: expect.any(String) },
     });
     expect(boneShield).toMatchObject({
       generated: true,
-      name: "Carved Bone Shield",
+      name: "Worn Bone Shield",
       family: "shield",
       armorType: "shield",
-      generation: { baseId: "bone_shield", materialId: "bone" },
+      generation: { baseId: "bone_shield", gradeId: "worn" },
       icon: "/assets/items/generated/buckler.png",
     });
     expect(heater).toMatchObject({
       generated: true,
       family: "shield",
       armorType: "shield",
-      generation: { baseId: "heater_shield", materialId: "iron" },
+      generation: { baseId: "heater_shield", gradeId: "worn" },
       icon: "/assets/items/generated/heater_shield.png",
     });
     expect(buckler.effects).toEqual(expect.arrayContaining([
@@ -536,47 +518,53 @@ describe("generated equipment", () => {
     ]));
   });
 
-  it("generates Bloodforged heavy war gear for late martial loot pools", () => {
-    const item = rollGeneratedEquipment({
+  it("generates masterpiece greataxes with higher damage than worn ones", () => {
+    const masterpiece = rollGeneratedEquipment({
       baseId: "greataxe_2h",
-      materialId: "bloodiron",
+      grade: "masterpiece",
       rarity: "rare",
       itemLevel: 5,
-    }, () => 0.2);
+    }, () => 0.5);
+    const worn = rollGeneratedEquipment({
+      baseId: "greataxe_2h",
+      grade: "worn",
+      rarity: "rare",
+      itemLevel: 5,
+    }, () => 0.5);
 
-    expect(item).toMatchObject({
+    expect(masterpiece).toMatchObject({
       generated: true,
-      name: expect.stringContaining("Bloodforged"),
       family: "axe",
-      generation: { materialId: "bloodiron" },
+      grade: "masterpiece",
+      generation: { gradeId: "masterpiece" },
     });
-    expect(item.tags).toContain("bloodiron");
-    expect(item.damageDice.average).toBeGreaterThan(rollGeneratedEquipment({
-      baseId: "greataxe_2h",
-      materialId: "steel",
-      rarity: "rare",
-      itemLevel: 5,
-    }, () => 0.2).damageDice.average);
+    expect(masterpiece.name).toMatch(/Masterpiece/);
+    expect(masterpiece.damageDice.average).toBeGreaterThan(worn.damageDice.average);
   });
 
-  it("does not duplicate the Ashen label on Ashenwood bows", () => {
-    const shortbow = rollGeneratedEquipment({
+  it("builds correct names from grade and rarity labels for named bases", () => {
+    const worn = rollGeneratedEquipment({
       baseId: "ashenwood_shortbow",
-      materialId: "ash",
+      grade: "worn",
       rarity: "normal",
       itemLevel: 5,
     }, () => 0);
-    const longbow = rollGeneratedEquipment({
-      baseId: "ashenwood_longbow",
-      materialId: "ash",
+    const normal = rollGeneratedEquipment({
+      baseId: "ashenwood_shortbow",
+      grade: "normal",
       rarity: "normal",
+      itemLevel: 5,
+    }, () => 0);
+    const excellent = rollGeneratedEquipment({
+      baseId: "ashenwood_shortbow",
+      grade: "excellent",
+      rarity: "uncommon",
       itemLevel: 5,
     }, () => 0);
 
-    expect(shortbow.name).toBe("Runed Ashenwood Shortbow");
-    expect(longbow.name).toBe("Runed Ashenwood Longbow");
-    expect(shortbow.name).not.toMatch(/^Ashen Ashenwood/);
-    expect(longbow.name).not.toMatch(/^Ashen Ashenwood/);
+    expect(worn.name).toBe("Worn Ashenwood Shortbow");
+    expect(normal.name).toBe("Ashenwood Shortbow");
+    expect(excellent.name).toBe("Uncommon Excellent Ashenwood Shortbow");
   });
 
   it("can roll and format dice independently", () => {
@@ -587,7 +575,6 @@ describe("generated equipment", () => {
   it("is compatible with hero equipment stats", () => {
     const weapon = rollGeneratedEquipment({
       baseId: "dagger",
-      materialId: "iron",
       rarity: "normal",
       itemLevel: 1,
     }, () => 0);
@@ -604,7 +591,6 @@ describe("generated equipment", () => {
   it("gives generated spears a beast-hunting passive", () => {
     const spear = rollGeneratedEquipment({
       baseId: "spear_2h",
-      materialId: "iron",
       rarity: "normal",
       itemLevel: 1,
     }, () => 0);
@@ -615,7 +601,6 @@ describe("generated equipment", () => {
   it("generates Rootspire accessories without forcing armor dice and applies magic-find resist stats", () => {
     const ring = rollGeneratedEquipment({
       baseId: "emberglass_ring",
-      materialId: "ancient",
       rarity: "normal",
       itemLevel: 9,
     }, () => 0);
@@ -635,7 +620,7 @@ describe("generated equipment", () => {
       generated: true,
       slot: "ring",
       family: "ring",
-      generation: { baseId: "emberglass_ring", materialId: "ancient" },
+      generation: { baseId: "emberglass_ring", gradeId: expect.any(String) },
     });
     expect(ring.armorDice).toBeUndefined();
     expect(ring.baseStats.armor).toBeUndefined();
@@ -663,10 +648,10 @@ describe("generated equipment", () => {
 
   it("creates starter loadouts for sword, mace, spear, and bow", () => {
     const expected = {
-      sword: ["Crude Sword", "sword", "1d8-1"],
-      mace: ["Crude Mace", "mace", "1d8-1"],
-      spear: ["Crude Spear", "spear", "1d12-2"],
-      bow: ["Worn Bow", "bow", "1d4"],
+      sword: ["Worn Sword", "sword", "1d8-1"],
+      mace: ["Worn Mace", "mace", "1d8-1"],
+      spear: ["Worn Spear", "spear", "1d12-2"],
+      bow: ["Worn Bow", "bow", "1d4-1"],
     };
 
     for (const [loadoutId, [name, family, diceText]] of Object.entries(expected)) {
@@ -682,7 +667,7 @@ describe("generated equipment", () => {
       expect(starter.chest).toMatchObject({
         generated: true,
         starter: true,
-        name: "Threadbare Tunic",
+        name: "Worn Tunic",
         armorType: "cloth",
         armorDice: { text: "1d2" },
       });
@@ -695,7 +680,7 @@ describe("generated equipment", () => {
     expect(hero.equip.weapon).toMatchObject({
       generated: true,
       starter: true,
-      name: "Crude Sword",
+      name: "Worn Sword",
       family: "sword",
       damageDice: { text: "1d8-1" },
     });

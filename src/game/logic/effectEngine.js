@@ -1,4 +1,4 @@
-import { getItem, getTalentNode, talentTrees } from "./content.js";
+import { equipmentSets, getItem, getTalentNode, talentTrees } from "./content.js";
 
 const SPECIALIZATION_REQUIREMENTS = {
   two_handed_weapons: {
@@ -117,8 +117,46 @@ export function collectActiveFoodBuffEffects(hero) {
   return effects;
 }
 
+export function collectSetBonuses(hero) {
+  const effects = [];
+  const equippedBaseIds = new Set();
+  for (const itemRef of Object.values(hero.equip || {})) {
+    if (!itemRef) continue;
+    const item = getItem(itemRef);
+    const baseId = item?.generation?.baseId || item?.baseId || item?.id;
+    if (baseId) equippedBaseIds.add(baseId);
+  }
+  for (const [setId, setDef] of Object.entries(equipmentSets)) {
+    const count = setDef.pieces.filter(p => equippedBaseIds.has(p)).length;
+    if (count === 0) continue;
+    for (const [threshold, bonusEffects] of Object.entries(setDef.bonuses)) {
+      if (count >= Number(threshold)) {
+        effects.push(...bonusEffects.map(e => ({ ...e, source: `set_${setId}_${threshold}` })));
+      }
+    }
+  }
+  return effects;
+}
+
+export function getEquippedSetInfo(hero) {
+  const result = [];
+  const equippedBaseIds = new Set();
+  for (const itemRef of Object.values(hero.equip || {})) {
+    if (!itemRef) continue;
+    const item = getItem(itemRef);
+    const baseId = item?.generation?.baseId || item?.baseId || item?.id;
+    if (baseId) equippedBaseIds.add(baseId);
+  }
+  for (const [setId, setDef] of Object.entries(equipmentSets)) {
+    const count = setDef.pieces.filter(p => equippedBaseIds.has(p)).length;
+    if (count === 0) continue;
+    result.push({ setId, name: setDef.name, count, total: setDef.pieces.length, bonuses: setDef.bonuses });
+  }
+  return result;
+}
+
 export function collectEffects(hero) {
-  return [...collectItemEffects(hero), ...collectTalentEffects(hero), ...collectActiveFoodBuffEffects(hero)];
+  return [...collectItemEffects(hero), ...collectTalentEffects(hero), ...collectActiveFoodBuffEffects(hero), ...collectSetBonuses(hero)];
 }
 
 export function collectProcNodes(hero) {

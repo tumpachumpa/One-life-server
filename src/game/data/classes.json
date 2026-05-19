@@ -758,7 +758,22 @@
         "maxHp": 110,
         "critChance": 2
       },
-      "abilities": []
+      "abilities": [
+        {
+          "id": "pummel_strike",
+          "name": "Pummel Strike",
+          "description": "A heavy sword strike for 75% weapon damage with a 50% chance to stun the enemy for 2 seconds.",
+          "type": "pummel_strike",
+          "castTicks": 2,
+          "energyCost": 15,
+          "cooldownSeconds": 8,
+          "requiresWeaponFamily": "sword",
+          "damageMult": 0.75,
+          "stunChance": 50,
+          "stunTicks": 2,
+          "dormant": true
+        }
+      ]
     },
     {
       "id": "archer",

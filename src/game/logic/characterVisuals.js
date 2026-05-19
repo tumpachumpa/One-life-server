@@ -59,13 +59,8 @@ const CHARACTER_VISUALS = {
   },
   archer: {
     idle: {
+      sprite: "/assets/characters/archer/Archer.png",
       scale: 0.96,
-      animation: {
-        src: "/assets/characters/archer/Archer_Idle.png",
-        fps: 6,
-        loop: true,
-        inference: CHARACTER_FRAME_INFERENCE,
-      },
     },
     portrait: {
       sprite: "/assets/characters/archer/Archer.png",
@@ -73,23 +68,13 @@ const CHARACTER_VISUALS = {
     },
     attacks: [
       {
+        sprite: "/assets/characters/archer/Archer.png",
         scale: 0.96,
-        animation: {
-          src: "/assets/characters/archer/Archer_Shoot.png",
-          fps: 10,
-          loop: false,
-          inference: CHARACTER_FRAME_INFERENCE,
-        },
       },
     ],
     run: {
+      sprite: "/assets/characters/archer/Archer.png",
       scale: 0.96,
-      animation: {
-        src: "/assets/characters/archer/Archer_Run.png",
-        fps: 8,
-        loop: true,
-        inference: CHARACTER_FRAME_INFERENCE,
-      },
     },
   },
   rogue: {

@@ -640,7 +640,10 @@ export function unlockNextAdventureDifficulty(progress = {}, completedStars = nu
   return {
     ...normalized,
     unlockedDifficultyStars,
-    selectedDifficultyStars: normalized.selectedDifficultyStars,
+    selectedDifficultyStars: Math.min(
+      unlockedDifficultyStars,
+      Math.max(normalized.selectedDifficultyStars, nextUnlocked),
+    ),
   };
 }
 
@@ -715,7 +718,11 @@ function syncAdventureDifficultyGroupProgress(adventureProgress = {}, adventureI
   const selectedDifficultyStars = Math.min(
     unlockedDifficultyStars,
     entries.reduce(
-      (highest, entry) => Math.max(highest, getSelectedAdventureDifficulty(entry.progress)),
+      (highest, entry) => Math.max(
+        highest,
+        getSelectedAdventureDifficulty(entry.progress),
+        entry.progress?.bossCompleted ? unlockedDifficultyStars : 0,
+      ),
       0,
     ),
   );

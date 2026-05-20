@@ -676,7 +676,7 @@
       },
       "generatedEquipment": {
         "enabled": true,
-        "dropChance": 0.10,
+        "dropChance": 0.08,
         "itemLevel": 2,
         "baseIds": ["mace_1h", "axe_1h"]
       }
@@ -691,7 +691,7 @@
       },
       "generatedEquipment": {
         "enabled": true,
-        "dropChance": 0.08,
+        "dropChance": 0.10,
         "itemLevel": 2,
         "baseIds": ["greatsword_2h", "greataxe_2h"]
       }

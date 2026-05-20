@@ -5571,7 +5571,9 @@ function fireProcTrigger(trigger, ctx, procState, heroProcNodes, hero, enemy, ti
 
 function loseMomentumOnHeroAutoMiss(procState, hero, enemy, tick, log) {
   if (!procState || (procState.momentumStacks || 0) <= 0) return;
-  const lost = Math.min(2, procState.momentumStacks || 0);
+  const missLoss = (hero?.passiveEffects || []).reduce((acc, e) =>
+    e.type === 'momentum_miss_stacks_lost' ? Math.min(acc, e.value ?? 2) : acc, 2);
+  const lost = Math.min(missLoss, procState.momentumStacks || 0);
   procState.momentumStacks = Math.max(0, (procState.momentumStacks || 0) - lost);
   procState.momentumMaxHeldTicks = 0;
   log.push(makeEntry(tick, 'hero', 'proc', `Momentum: missed auto attack and lost ${lost} stack${lost !== 1 ? 's' : ''}.`, 0, hero.hp, enemy?.hp, {

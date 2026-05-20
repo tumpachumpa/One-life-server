@@ -374,19 +374,11 @@
                   "id": "speed_overdrive",
                   "name": "Overdrive",
                   "summary": [
-                    "At 4+ Momentum stacks: each hit generates +6 Rage"
+                    "Missing an autoattack only reduces momentum stack count by 1"
                   ],
-                  "proc": {
-                    "trigger": "on_hit",
-                    "chance": 100,
-                    "condition": {
-                      "momentum_stacks_gte": 4
-                    },
-                    "effect": {
-                      "type": "gain_rage",
-                      "value": 6
-                    }
-                  }
+                  "effects": [
+                    { "type": "momentum_miss_stacks_lost", "value": 1 }
+                  ]
                 },
                 {
                   "id": "speed_burnout",

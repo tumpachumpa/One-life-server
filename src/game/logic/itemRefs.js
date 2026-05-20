@@ -2,6 +2,7 @@ import {
   GENERATED_EQUIPMENT_DATA,
   isGeneratedEquipmentAffixAllowedForBase,
   rollReplacementEquipmentAffix,
+  rollEquipmentAffixes,
 } from "./equipmentGenerator.js";
 
 export function removeDormantCombatEffects(effects = []) {
@@ -385,9 +386,48 @@ function migrateDeprecatedGeneratedAffixes(ref) {
   return changed ? { ...ref, effects } : ref;
 }
 
+const WARG_FANG_OLD_EFFECT_TYPES = new Set(["attack_speed", "bleed_on_hit"]);
+const WARG_FANG_OLD_STAT_BONUSES = new Set(["str"]);
+
+function migrateWargFangNecklace(ref) {
+  if (ref?.id !== "warg_fang_necklace") return ref;
+  const hasOldStr = ref.baseStats?.str != null;
+  const hasOldAttackSpeed = (ref.effects || []).some(e => e?.type === "attack_speed");
+  if (!hasOldStr && !hasOldAttackSpeed) return ref;
+
+  const baseStats = { ...(ref.baseStats || {}) };
+  delete baseStats.str;
+
+  const cleanEffects = (ref.effects || []).filter(e => {
+    if (!e?.type) return true;
+    if (WARG_FANG_OLD_EFFECT_TYPES.has(e.type)) return false;
+    if (e.type === "stat_bonus" && WARG_FANG_OLD_STAT_BONUSES.has(e.stat)) return false;
+    return true;
+  });
+
+  const rng = stableRerollRng(ref, { type: "warg_fang_v1", value: 0 }, 0);
+  const affixes = rollEquipmentAffixes(
+    { affixPools: ["warg_fang"], guaranteedAffixes: 1, maxAffixes: 1, effects: cleanEffects },
+    ref.rarity || "normal",
+    rng
+  );
+
+  const result = {
+    ...ref,
+    effects: [...cleanEffects, ...affixes],
+    rarityAffixPools: ["warg_fang"],
+    guaranteedAffixes: 1,
+    maxAffixes: 1,
+  };
+  if (Object.keys(baseStats).length) result.baseStats = baseStats;
+  else delete result.baseStats;
+  return result;
+}
+
 export function migrateItemRef(ref) {
   if (!ref || typeof ref !== "object") return ref;
   let migrated = migrateSavedItemIcon(ref);
+  migrated = migrateWargFangNecklace(migrated);
   migrated = migrateGeneratedArmorCategory(migrated);
   migrated = migrateLegacyRingMetadata(migrated);
   migrated = migrateSavedRapierBaseEffects(migrated);

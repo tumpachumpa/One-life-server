@@ -3988,12 +3988,9 @@
       "type": "gear",
       "slot": "amulet",
       "family": "amulet",
-      "baseStats": { "str": 2 },
-      "effects": [
-        { "type": "attack_speed", "value": 8 }
-      ],
       "tags": ["amulet", "strength", "speed", "warg", "orc"],
-      "rarityAffixPools": ["brutal", "hunt"],
+      "rarityAffixPools": ["warg_fang"],
+      "guaranteedAffixes": 1,
       "maxAffixes": 1,
       "price": 240,
       "dropWeight": 4,

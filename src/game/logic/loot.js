@@ -487,7 +487,7 @@ export function applyItemRarity(item, rarity, rng = Math.random) {
   if (isCampfireItem(item)) return applyCampfireRarityToItem(item, rarity);
   if (!item?.rarityAffixPools?.length || item.type !== "gear") return item;
   const itemRarity = ITEM_RARITIES[rarity?.id || rarity] || ITEM_RARITIES.normal;
-  if (itemRarity.id === "normal") return item;
+  if (itemRarity.id === "normal" && !item.guaranteedAffixes) return item;
   const scaledEffects = (item.effects || []).map(effect => {
     if (!ELEMENTAL_RESIST_EFFECTS.has(effect?.type) || !Number.isFinite(Number(effect.value))) return { ...effect };
     return {

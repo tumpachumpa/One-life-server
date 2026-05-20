@@ -1506,8 +1506,7 @@ export function resolveAdventureNode(adventure, node, totalCombats = 0, rng = Ma
     if (node.special) {
       if (roll < 0.05) groupSize = 2;
     } else {
-      if (roll < 0.03) groupSize = 3;
-      else if (roll < 0.13) groupSize = 2;
+      if (roll < 0.13) groupSize = 2;
     }
     if (groupSize > 1) {
       finalEnemies = Array.from({ length: groupSize }, () => ({ ...rolledEnemies[0] }));

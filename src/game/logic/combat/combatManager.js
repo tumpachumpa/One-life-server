@@ -5270,7 +5270,7 @@ function applyProcEffect(effect, ctx, procState, heroProcNodes, hero, enemy, tic
     }
     case 'gain_attack_speed_pct':
       hero.activeEffects = hero.activeEffects || [];
-      hero.activeEffects.push({ type: 'attack_speed_buff', value: effect.value || 0, remainingTicks: effect.durationTicks || 3 });
+      hero.activeEffects.push({ type: 'attack_speed_buff', value: effect.value || 0, remainingTicks: effect.durationTicks || 3, source: ctx.nodeId || null });
       break;
     case 'gain_attack_speed_pct_per_bleed_stack': {
       const bleedEff = (enemy?.activeEffects || []).find(e => e.type === 'bleed');

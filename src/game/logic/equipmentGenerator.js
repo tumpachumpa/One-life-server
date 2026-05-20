@@ -309,7 +309,8 @@ export function isGeneratedEquipmentAffixAllowedForBase(definition, base = {}, r
 }
 
 function rollAffixes(base, rarity, rng = Math.random) {
-  const slots = Math.max(0, Number(rarity?.affixSlots) || 0);
+  const rawSlots = Math.max(0, Number(rarity?.affixSlots ?? rarity?.effectSlots) || 0);
+  const slots = base.maxAffixes != null ? Math.min(rawSlots, base.maxAffixes) : rawSlots;
   if (!slots) return [];
   const poolIds = unique([...(base.affixPools || [])]);
   const definitions = poolIds.flatMap(id => equipmentGenerationData.affixPools?.[id] || []);

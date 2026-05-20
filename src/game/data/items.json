@@ -3993,7 +3993,8 @@
         { "type": "attack_speed", "value": 8 }
       ],
       "tags": ["amulet", "strength", "speed", "warg", "orc"],
-      "rarityAffixPools": ["might", "swift"],
+      "rarityAffixPools": ["brutal", "hunt"],
+      "maxAffixes": 1,
       "price": 240,
       "dropWeight": 4,
       "icon": "/assets/items/generated/thorn_amulet.png"

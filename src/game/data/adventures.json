@@ -2549,7 +2549,7 @@
       "description": "Beyond the Wyvern's nest, the Fallen Knight keeps his final vigil over Act 1. This is the current capstone fight of the first region.",
       "linearAdventure": true,
       "disableChoiceRun": true,
-      "requiresAdventureCompletion": "rootspire_rooftop",
+      "requiredItemId": "umbral_key",
       "routes": [
         {
           "id": "fallen_summit_path",

@@ -4,6 +4,14 @@ import adventureLootPoolsData from "../data/adventureLootPools.json" with { type
 import { applyCampfireRarityToItem, isCampfireItem } from "./campfires.js";
 import { rollEquipmentAffixes, rollGeneratedEquipment } from "./equipmentGenerator.js";
 
+const ENEMY_RARITY_LOOT_BONUS = {
+  normal:    0,
+  uncommon:  10,
+  rare:      25,
+  epic:      50,
+  legendary: 80,
+};
+
 export const ITEM_RARITIES = {
   normal: { id: "normal", label: "", color: "#aaa", statMult: 1, priceMult: 1, effectSlots: 0 },
   uncommon: { id: "uncommon", label: "Uncommon", color: "#2ecc71", statMult: 1.12, priceMult: 1.18, effectSlots: 1 },
@@ -445,7 +453,8 @@ function rollManualCombatLoot(enemy, rng = Math.random, contextLootBonus = 0) {
 
 export function rollCombatLoot(enemy, rng = Math.random, context = {}) {
   if (!enemy) return [];
-  const contextLootBonus = getContextLootBonus(context);
+  const rarityLootBonus = ENEMY_RARITY_LOOT_BONUS[enemy?.rarity?.id] ?? 0;
+  const contextLootBonus = getContextLootBonus(context) + rarityLootBonus;
   // Boss-type enemies always use their own manual tables regardless of adventure pool
   const isBossEnemy = enemy?.phases || enemy?.boss || enemy?.isMiniBoss
     || enemy?.threat === "boss" || enemy?.threat === "special";
@@ -478,7 +487,7 @@ export function applyItemRarity(item, rarity, rng = Math.random) {
   if (isCampfireItem(item)) return applyCampfireRarityToItem(item, rarity);
   if (!item?.rarityAffixPools?.length || item.type !== "gear") return item;
   const itemRarity = ITEM_RARITIES[rarity?.id || rarity] || ITEM_RARITIES.normal;
-  if (itemRarity.id === "normal") return item;
+  if (itemRarity.id === "normal" && !item.guaranteedAffixes) return item;
   const scaledEffects = (item.effects || []).map(effect => {
     if (!ELEMENTAL_RESIST_EFFECTS.has(effect?.type) || !Number.isFinite(Number(effect.value))) return { ...effect };
     return {

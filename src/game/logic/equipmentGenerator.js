@@ -309,7 +309,9 @@ export function isGeneratedEquipmentAffixAllowedForBase(definition, base = {}, r
 }
 
 function rollAffixes(base, rarity, rng = Math.random) {
-  const rawSlots = Math.max(0, Number(rarity?.affixSlots ?? rarity?.effectSlots) || 0);
+  const raritySlots = Math.max(0, Number(rarity?.affixSlots ?? rarity?.effectSlots) || 0);
+  const guaranteed = Math.max(0, Number(base.guaranteedAffixes) || 0);
+  const rawSlots = Math.max(raritySlots, guaranteed);
   const slots = base.maxAffixes != null ? Math.min(rawSlots, base.maxAffixes) : rawSlots;
   if (!slots) return [];
   const poolIds = unique([...(base.affixPools || [])]);

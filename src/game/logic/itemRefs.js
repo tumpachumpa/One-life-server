@@ -2,6 +2,7 @@ import {
   GENERATED_EQUIPMENT_DATA,
   isGeneratedEquipmentAffixAllowedForBase,
   rollReplacementEquipmentAffix,
+  rollEquipmentAffixes,
 } from "./equipmentGenerator.js";
 
 export function removeDormantCombatEffects(effects = []) {
@@ -385,9 +386,33 @@ function migrateDeprecatedGeneratedAffixes(ref) {
   return changed ? { ...ref, effects } : ref;
 }
 
+function migrateWargFangNecklace(ref) {
+  if (ref?.id !== "warg_fang_necklace") return ref;
+  // Already migrated — new pool in place, nothing to do.
+  if (Array.isArray(ref.rarityAffixPools) && ref.rarityAffixPools.includes("warg_fang")) return ref;
+
+  // Wipe all old hardcoded stats/effects and roll exactly 1 from the new pool.
+  const rng = stableRerollRng(ref, { type: "warg_fang_v1", value: 0 }, 0);
+  const affixes = rollEquipmentAffixes(
+    { affixPools: ["warg_fang"], guaranteedAffixes: 1, maxAffixes: 1, effects: [] },
+    ref.rarity || "normal",
+    rng
+  );
+
+  return {
+    ...ref,
+    baseStats: {},
+    effects: affixes,
+    rarityAffixPools: ["warg_fang"],
+    guaranteedAffixes: 1,
+    maxAffixes: 1,
+  };
+}
+
 export function migrateItemRef(ref) {
   if (!ref || typeof ref !== "object") return ref;
   let migrated = migrateSavedItemIcon(ref);
+  migrated = migrateWargFangNecklace(migrated);
   migrated = migrateGeneratedArmorCategory(migrated);
   migrated = migrateLegacyRingMetadata(migrated);
   migrated = migrateSavedRapierBaseEffects(migrated);

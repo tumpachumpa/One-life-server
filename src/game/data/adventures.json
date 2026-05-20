@@ -3417,6 +3417,9 @@
               "id": "rst_ash_imp",
               "type": "combat",
               "enemyId": "ash_imp",
+              "enemyIds": ["ash_imp", "ash_imp"],
+              "bossDeathEndsFight": false,
+              "addsDespawnOnBossDeath": false,
               "encounterCap": 1,
               "repeatable": true,
               "charges": {
@@ -3447,21 +3450,9 @@
               "id": "rst_whelps_1",
               "type": "combat",
               "enemyId": "wyvern_whelp",
-              "encounterCap": 1,
-              "repeatable": true,
-              "charges": {
-                "max": 5,
-                "rechargeSeconds": 300
-              },
-              "next": [
-                "rst_whelps_2"
-              ],
-              "stepIndex": 10
-            },
-            {
-              "id": "rst_whelps_2",
-              "type": "combat",
-              "enemyId": "wyvern_whelp",
+              "enemyIds": ["wyvern_whelp", "wyvern_whelp"],
+              "bossDeathEndsFight": false,
+              "addsDespawnOnBossDeath": false,
               "encounterCap": 1,
               "repeatable": true,
               "charges": {
@@ -3471,7 +3462,7 @@
               "next": [
                 "rst_fiend"
               ],
-              "stepIndex": 11
+              "stepIndex": 10
             },
             {
               "id": "rst_fiend",
@@ -3486,7 +3477,7 @@
               "next": [
                 "rst_boss"
               ],
-              "stepIndex": 12,
+              "stepIndex": 11,
               "special": true
             },
             {
@@ -3499,7 +3490,7 @@
                 "rechargeSeconds": 3600
               },
               "next": [],
-              "stepIndex": 13
+              "stepIndex": 12
             }
           ]
         }

@@ -447,7 +447,7 @@
           "name": "Warmonger Survivor",
           "pointType": "talent",
           "theme": "endurance",
-          "description": "Every hit you take builds Scar armor and stores Grudge damage to release. Long fights favor you. At 15 Scar Stacks, enter Juggernaut.",
+          "description": "Every hit you take builds Scar armor and stores Grudge damage to release. Long fights favor you. At 10 Scar Stacks, enter Juggernaut.",
           "tiers": [
             {
               "tier": 1,
@@ -633,10 +633,11 @@
                   "id": "warmonger_juggernaut",
                   "name": "Juggernaut",
                   "summary": [
-                    "At 15 Scar Stacks: enter Juggernaut - armor cannot be reduced, take 50% less damage, and deal 20% less damage. Lasts until combat ends."
+                    "At 10 Scar Stacks: enter Juggernaut - armor cannot be reduced, take 50% less damage, and deal 20% less damage. Lasts until combat ends."
                   ],
                   "proc": {
-                    "trigger": "on_scar_stacks_max",
+                    "trigger": "on_scar_stacks_reach",
+                    "threshold": 10,
                     "chance": 100,
                     "condition": {
                       "once_per_combat": true

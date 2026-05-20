@@ -386,41 +386,27 @@ function migrateDeprecatedGeneratedAffixes(ref) {
   return changed ? { ...ref, effects } : ref;
 }
 
-const WARG_FANG_OLD_EFFECT_TYPES = new Set(["attack_speed", "bleed_on_hit"]);
-const WARG_FANG_OLD_STAT_BONUSES = new Set(["str"]);
-
 function migrateWargFangNecklace(ref) {
   if (ref?.id !== "warg_fang_necklace") return ref;
-  const hasOldStr = ref.baseStats?.str != null;
-  const hasOldAttackSpeed = (ref.effects || []).some(e => e?.type === "attack_speed");
-  if (!hasOldStr && !hasOldAttackSpeed) return ref;
+  // Already migrated — new pool in place, nothing to do.
+  if (Array.isArray(ref.rarityAffixPools) && ref.rarityAffixPools.includes("warg_fang")) return ref;
 
-  const baseStats = { ...(ref.baseStats || {}) };
-  delete baseStats.str;
-
-  const cleanEffects = (ref.effects || []).filter(e => {
-    if (!e?.type) return true;
-    if (WARG_FANG_OLD_EFFECT_TYPES.has(e.type)) return false;
-    if (e.type === "stat_bonus" && WARG_FANG_OLD_STAT_BONUSES.has(e.stat)) return false;
-    return true;
-  });
-
+  // Wipe all old hardcoded stats/effects and roll exactly 1 from the new pool.
   const rng = stableRerollRng(ref, { type: "warg_fang_v1", value: 0 }, 0);
   const affixes = rollEquipmentAffixes(
-    { affixPools: ["warg_fang"], guaranteedAffixes: 1, maxAffixes: 1, effects: cleanEffects },
+    { affixPools: ["warg_fang"], guaranteedAffixes: 1, maxAffixes: 1, effects: [] },
     ref.rarity || "normal",
     rng
   );
 
   const result = {
     ...ref,
-    effects: [...cleanEffects, ...affixes],
+    effects: affixes,
     rarityAffixPools: ["warg_fang"],
     guaranteedAffixes: 1,
     maxAffixes: 1,
   };
-  if (Object.keys(baseStats).length) result.baseStats = baseStats;
-  else delete result.baseStats;
+  delete result.baseStats;
   return result;
 }
 

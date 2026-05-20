@@ -122,10 +122,24 @@ function rollGradeMult(grade, rng = Math.random) {
   return Math.round((min + rng() * (max - min)) * 1000) / 1000;
 }
 
+const RARITY_GRADE_BIAS = {
+  normal:    { worn: 1.0, normal: 1.0, excellent: 1.0, masterpiece: 1.0 },
+  uncommon:  { worn: 0.7, normal: 1.0, excellent: 1.4, masterpiece: 2.0 },
+  rare:      { worn: 0.5, normal: 1.0, excellent: 1.8, masterpiece: 2.5 },
+  epic:      { worn: 0.3, normal: 0.8, excellent: 2.2, masterpiece: 3.5 },
+  legendary: { worn: 0.1, normal: 0.6, excellent: 2.8, masterpiece: 5.0 },
+  artifact:  { worn: 0.0, normal: 0.4, excellent: 3.0, masterpiece: 6.0 },
+  unique:    { worn: 0.1, normal: 0.6, excellent: 2.8, masterpiece: 5.0 },
+};
+
 function rollGrade(options = {}, rng = Math.random) {
   const grades = equipmentGenerationData.grades || [];
   const forced = options.grade ? gradeById(options.grade) : null;
-  const picked = forced || weightedPickByWeight(grades, rng) || { id: "normal", label: "", multMin: 1, multMax: 1.12, priceMult: 1 };
+  if (forced) return { ...forced, powerMult: rollGradeMult(forced, rng) };
+  const rarityId = typeof options.rarity === "string" ? options.rarity : (options.rarity?.id || "normal");
+  const bias = RARITY_GRADE_BIAS[rarityId] || RARITY_GRADE_BIAS.normal;
+  const biasedGrades = grades.map(g => ({ ...g, weight: (g.weight || 1) * (bias[g.id] ?? 1) }));
+  const picked = weightedPickByWeight(biasedGrades, rng) || { id: "normal", label: "", multMin: 1, multMax: 1.12, priceMult: 1 };
   return { ...picked, powerMult: rollGradeMult(picked, rng) };
 }
 

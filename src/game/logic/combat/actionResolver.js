@@ -75,7 +75,11 @@ function getPhysicalReductionPct(defender) {
     effect.type === 'physical_reduction_pct'
       ? Math.max(best, effect.value || effect.reductionPct || 0)
       : best, 0);
-  return Math.min(75, passive + getDamageTakenReductionPct(defender));
+  const active = (defender.activeEffects || []).reduce((best, effect) => {
+    if (effect.type !== 'physical_reduction_pct' || !effectHasTime(effect)) return best;
+    return Math.max(best, effect.value || effect.reductionPct || 0);
+  }, 0);
+  return Math.min(75, passive + active + getDamageTakenReductionPct(defender));
 }
 
 function applyPhysicalReduction(damage, defender) {

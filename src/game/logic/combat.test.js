@@ -7070,85 +7070,63 @@ describe("modular combat", () => {
     expect(active.procState.rage - notReady.procState.rage).toBe(6);
   });
 
-  it("starts the next fight with Killing Speed Momentum already applied to auto attacks", () => {
+  it("Killing Speed fires an extra half-damage auto attack when Momentum reaches 5", () => {
+    const momentumNode = {
+      id: "speed_momentum_gen",
+      proc: {
+        trigger: "on_hit",
+        chance: 100,
+        effect: { type: "gain_momentum", value: 1 },
+      },
+    };
     const killingSpeedNode = {
       id: "speed_killing_speed",
       proc: {
-        trigger: "on_kill",
+        trigger: "on_momentum_reach",
+        threshold: 5,
         chance: 100,
-        effect: { type: "gain_momentum_carry", value: 5 },
+        effect: { type: "extra_auto_attack", damageMult: 0.5 },
       },
     };
-    const defeatedEnemy = {
-      id: "fragile_dummy",
-      name: "Fragile Dummy",
-      hp: 1,
-      stats: { maxHp: 1, attack: 0, armor: 0, attackSpeed: 0 },
-      effects: [],
-    };
-    let finisher = initCombat({
+    const state = initCombat({
       heroName: "Sprinter",
       heroHp: 100,
       heroMaxHp: 100,
-      heroDamage: 50,
-      heroArmor: 0,
-      enemyObj: defeatedEnemy,
-      heroAbilities: [],
-      heroEffects: [],
-      heroAttackRate: 1.2,
-      heroProcNodes: [killingSpeedNode],
-    });
-
-    finisher = processTick(finisher, ACTION.BASIC_ATTACK, () => 0.01);
-    expect(finisher.phase).toBe(PHASE.WON);
-
-    const result = buildCombatResult(finisher);
-    expect(result.procState.momentumCarry).toBe(5);
-
-    const nextFight = initCombat({
-      heroName: "Sprinter",
-      heroHp: 100,
-      heroMaxHp: 100,
-      heroDamage: 10,
+      heroDamage: 20,
       heroArmor: 0,
       enemyObj: {
         id: "target_dummy",
         name: "Target Dummy",
-        hp: 100000,
-        stats: { maxHp: 100000, attack: 0, armor: 0, attackSpeed: 0 },
+        hp: 100,
+        stats: { maxHp: 100, attack: 0, armor: 0, attackSpeed: 0 },
         effects: [],
       },
       heroAbilities: [],
       heroEffects: [],
-      heroAttackRate: 1.2,
-      heroProcNodes: [killingSpeedNode],
-      heroProcOpts: result.procState,
+      heroAttackRate: 1,
+      heroProcNodes: [momentumNode, killingSpeedNode],
     });
+    const atFourMomentum = { ...state, procState: { ...state.procState, momentumStacks: 4 } };
 
-    expect(nextFight.procState.momentumStacks).toBe(5);
-    expect(nextFight.procState.momentumCarry).toBe(0);
-    expect(nextFight.combatants.hero.passiveEffects).toContainEqual({
-      type: "attack_speed_bonus_pct",
-      value: 5 * MOMENTUM_ATTACK_SPEED_PCT_PER_STACK,
-      source: "momentum",
-    });
+    const reachedFive = processTick(atFourMomentum, ACTION.BASIC_ATTACK, () => 0.01);
 
-    const primedNextFight = {
-      ...nextFight,
-      combatants: {
-        ...nextFight.combatants,
-        hero: {
-          ...nextFight.combatants.hero,
-          autoAttackStarted: true,
-          autoAttackProgressTicks: 0,
-          lastAutoAttackTick: 0,
-          nextAutoAttackTick: 2,
-        },
-      },
-    };
-    const firstTick = processTick(primedNextFight, ACTION.BASIC_ATTACK, () => 0.01);
+    expect(reachedFive.procState.momentumStacks).toBe(5);
+    expect(reachedFive.combatants.enemy.hp).toBe(70);
+    expect(reachedFive.log).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        actorId: "hero",
+        type: "hit",
+        damage: 10,
+        extraHit: true,
+        extraHitSource: "speed_killing_speed",
+      }),
+    ]));
 
-    expect(firstTick.combatants.hero.nextAutoAttackTick).toBeLessThanOrEqual(firstTick.tick + 1);
+    const alreadyAtFive = { ...state, procState: { ...state.procState, momentumStacks: 5 } };
+    const reachedSix = processTick(alreadyAtFive, ACTION.BASIC_ATTACK, () => 0.01);
+
+    expect(reachedSix.procState.momentumStacks).toBe(6);
+    expect(reachedSix.log.some(entry => entry.extraHitSource === "speed_killing_speed")).toBe(false);
   });
 
   it("does not let carried Momentum become duplicated base attack speed", () => {
@@ -7374,6 +7352,61 @@ describe("modular combat", () => {
 
     expect(afterHit.procState.scarStacks).toBe(1);
     expect(afterHit.combatants.hero.armor).toBe(6);
+  });
+
+  it("The Debt grants temporary physical reduction when Scar reaches 10 stacks", () => {
+    const base = initCombat({
+      heroName: "Tester",
+      heroHp: 200,
+      heroMaxHp: 200,
+      heroDamage: 10,
+      heroArmor: 0,
+      enemyObj: {
+        id: "scar_dummy",
+        name: "Scar Dummy",
+        hp: 100,
+        stats: { maxHp: 100, attack: 0, armor: 0 },
+        effects: [],
+      },
+      heroAbilities: [],
+      heroEffects: [],
+      heroProcNodes: [
+        {
+          id: "warmonger_scar_tissue",
+          proc: {
+            trigger: "on_take_damage",
+            chance: 100,
+            effect: { type: "gain_scar_stack" },
+          },
+        },
+        {
+          id: "warmonger_the_debt",
+          proc: {
+            trigger: "on_scar_stacks_reach",
+            threshold: 10,
+            chance: 100,
+            effect: { type: "gain_physical_reduction_pct", value: 30, durationTicks: 6 },
+          },
+        },
+      ],
+    });
+    const atNineScars = { ...base, procState: { ...base.procState, scarStacks: 9 } };
+    const stackingStrike = enqueueAction(createActionQueue(), "enemy", ACTION.BASIC_ATTACK, 0, 1, null, 1);
+    const debtActive = processTick({ ...atNineScars, actionQueue: stackingStrike }, ACTION.NONE, () => 0.01);
+
+    expect(debtActive.procState.scarStacks).toBe(10);
+    expect(debtActive.combatants.hero.activeEffects).toContainEqual(expect.objectContaining({
+      type: "physical_reduction_pct",
+      value: 30,
+      source: "warmonger_the_debt",
+      remainingTicks: 6,
+    }));
+
+    const hpBeforeHeavyHit = debtActive.combatants.hero.hp;
+    const heavyStrike = enqueueAction(createActionQueue(), "enemy", ACTION.BASIC_ATTACK, debtActive.tick, 100, null, 1);
+    const reduced = processTick({ ...debtActive, actionQueue: heavyStrike }, ACTION.NONE, () => 0.01);
+
+    expect(hpBeforeHeavyHit - reduced.combatants.hero.hp).toBe(63);
   });
 
   it("15 Scar stacks trigger Juggernaut and let Unbreakable cap incoming damage", () => {

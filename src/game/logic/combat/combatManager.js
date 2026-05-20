@@ -5185,7 +5185,11 @@ function applyProcEffect(effect, ctx, procState, heroProcNodes, hero, enemy, tic
       break;
     }
     case 'set_momentum_min': {
-      procState.momentumStacks = Math.min(getMomentumMax(heroProcNodes, hero), Math.max(procState.momentumStacks || 0, effect.value || 0));
+      const prevMomentum = procState.momentumStacks || 0;
+      procState.momentumStacks = Math.min(getMomentumMax(heroProcNodes, hero), Math.max(prevMomentum, effect.value || 0));
+      if (prevMomentum !== procState.momentumStacks) {
+        fireProcTrigger('on_momentum_reach', { prevStacks: prevMomentum, newStacks: procState.momentumStacks }, procState, heroProcNodes, hero, enemy, tick, log, rng);
+      }
       break;
     }
     case 'gain_momentum_carry':
@@ -5228,16 +5232,23 @@ function applyProcEffect(effect, ctx, procState, heroProcNodes, hero, enemy, tic
     }
     case 'extra_auto_attack': {
       if (!enemy || enemy.hp <= 0) break;
-      const rawDmg = Math.max(1, Math.floor((hero.damage || 0) * (effect.damageMult ?? 0.5)));
+      const damageMult = effect.damageMult ?? 0.5;
+      const rawDmg = Math.max(1, Math.floor((hero.damage || 0) * damageMult));
       const dmg = applyArmor(rawDmg, getEffectiveArmor(enemy), getPassiveArmorPenPct(hero));
       const applied = applyCombatantDamage(enemy, dmg);
-      log.push(makeEntry(tick, 'hero', 'hit', `Killing Speed: extra attack for ${applied.damage}.`, applied.damage, hero.hp, enemy.hp, {
+      const source = ctx.nodeId || effect.source || 'extra_auto_attack';
+      log.push(makeEntry(tick, 'hero', 'hit', `Killing Speed: extra auto attack for ${applied.damage}.`, applied.damage, hero.hp, enemy.hp, {
         targetId: enemy.id,
         extraHit: true,
-        extraHitSource: 'killing_speed',
+        extraHitSource: source,
         shieldAbsorbed: applied.absorbed || 0,
       }));
       logDamageShieldAbsorb(enemy, applied, tick, log, hero, enemy, { targetId: enemy.id });
+      applyHeroLifesteal(hero, applied.damage, tick, log, enemy, {
+        targetId: enemy.id,
+        extraHit: true,
+        extraHitSource: source,
+      });
       break;
     }
     case 'heal_pct_max_hp': {
@@ -5336,6 +5347,23 @@ function applyProcEffect(effect, ctx, procState, heroProcNodes, hero, enemy, tic
       hero.activeEffects.push({ type: 'damage_bonus_pct_buff', value: effect.value || 15, remainingTicks: 99999 });
       log.push(makeEntry(tick, 'hero', 'proc', `The Debt: +${effect.value || 15}% damage this fight.`, 0, hero.hp, enemy?.hp, {}));
       break;
+    case 'gain_physical_reduction_pct': {
+      const value = effect.value || effect.reductionPct || 30;
+      const durationTicks = effect.durationTicks || effect.ticks || 6;
+      const source = ctx.nodeId || effect.source || 'physical_reduction_pct';
+      hero.activeEffects = (hero.activeEffects || []).filter(active => active.source !== source);
+      hero.activeEffects.push({
+        type: 'physical_reduction_pct',
+        value,
+        remainingTicks: durationTicks,
+        source,
+      });
+      log.push(makeEntry(tick, 'hero', 'proc', `The Debt: +${value}% physical damage reduction for ${durationTicks} seconds.`, 0, hero.hp, enemy?.hp, {
+        source,
+        reductionPct: value,
+      }));
+      break;
+    }
     case 'crash_landing':
       procState.momentumStacks = Math.max(0, procState.momentumStacks - 3);
       procState.guaranteedNextHit = true;

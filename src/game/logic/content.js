@@ -199,6 +199,17 @@ function getGeneratedEquipmentBaseId(item) {
   return null;
 }
 
+function buildRetroactiveDice(baseDice, storedStatValue) {
+  const count = Math.max(1, Math.floor(Number(baseDice?.count) || 1));
+  const sides = Math.max(1, Math.floor(Number(baseDice?.sides) || 1));
+  const average = count * ((sides + 1) / 2);
+  const stored = Number(storedStatValue) || average;
+  const bonus = Math.round(stored - average);
+  const b = bonus;
+  const text = b > 0 ? `${count}d${sides}+${b}` : b < 0 ? `${count}d${sides}${b}` : `${count}d${sides}`;
+  return { count, sides, bonus, text, average: stored, min: Math.max(1, count + bonus), max: Math.max(1, count * sides + bonus) };
+}
+
 function normalizeGeneratedBaseEffects(item) {
   if (!item || typeof item !== "object") return item;
   const baseId = getGeneratedEquipmentBaseId(item);
@@ -209,6 +220,16 @@ function normalizeGeneratedBaseEffects(item) {
       ...normalized,
       attackSpeed: generatedBase.attackSpeed,
     };
+  }
+  // Retroactively add armorDice/damageDice if the base defines them but the item predates the dice system
+  if (generatedBase) {
+    const isWeapon = item.slot === "weapon";
+    const diceKey = isWeapon ? "damageDice" : "armorDice";
+    const statKey = isWeapon ? "damage" : "armor";
+    if (generatedBase[diceKey] && !normalized[diceKey]) {
+      const storedStat = normalized.baseStats?.[statKey];
+      normalized = { ...normalized, [diceKey]: buildRetroactiveDice(generatedBase[diceKey], storedStat) };
+    }
   }
   let currentEffects = item.effects || [];
   let removedDeprecatedEffects = false;

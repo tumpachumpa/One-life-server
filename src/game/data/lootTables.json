@@ -1607,7 +1607,7 @@
     "orc_patrol": {
       "rolls": 1,
       "dropChance": 0.55,
-      "tags": ["food"],
+      "tags": ["warg_meat"],
       "rarityTable": "normal",
       "generatedEquipment": {
         "enabled": true,
@@ -1627,7 +1627,7 @@
     "orc_berserker": {
       "rolls": 1,
       "dropChance": 0.55,
-      "tags": ["food"],
+      "tags": ["warg_meat"],
       "rarityTable": "normal",
       "generatedEquipment": {
         "enabled": true,

@@ -979,7 +979,7 @@
               "encounterCap": 1,
               "charges": {
                 "max": 1,
-                "rechargeSeconds": 3600
+                "rechargeSeconds": 600
               },
               "next": [],
               "stepIndex": 7
@@ -1191,7 +1191,7 @@
               "encounterCap": 1,
               "charges": {
                 "max": 1,
-                "rechargeSeconds": 3600
+                "rechargeSeconds": 600
               },
               "next": [],
               "stepIndex": 7
@@ -2610,7 +2610,7 @@
               "encounterCap": 1,
               "charges": {
                 "max": 1,
-                "rechargeSeconds": 3600
+                "rechargeSeconds": 600
               },
               "x": 76,
               "y": 28,
@@ -3186,7 +3186,7 @@
               "encounterCap": 1,
               "charges": {
                 "max": 1,
-                "rechargeSeconds": 3600
+                "rechargeSeconds": 600
               },
               "next": [],
               "stepIndex": 8
@@ -3263,7 +3263,7 @@
               "encounterCap": 1,
               "charges": {
                 "max": 1,
-                "rechargeSeconds": 3600
+                "rechargeSeconds": 600
               },
               "next": [],
               "stepIndex": 3
@@ -3487,7 +3487,7 @@
               "encounterCap": 1,
               "charges": {
                 "max": 1,
-                "rechargeSeconds": 3600
+                "rechargeSeconds": 600
               },
               "next": [],
               "stepIndex": 12

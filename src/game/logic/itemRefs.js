@@ -388,24 +388,48 @@ function migrateDeprecatedGeneratedAffixes(ref) {
 
 function migrateWargFangNecklace(ref) {
   if (ref?.id !== "warg_fang_necklace") return ref;
-  // Already migrated — new pool in place, nothing to do.
-  if (Array.isArray(ref.rarityAffixPools) && ref.rarityAffixPools.includes("warg_fang")) return ref;
+  // On new system: has warg_fang pool AND no maxAffixes constraint.
+  if (Array.isArray(ref.rarityAffixPools) && ref.rarityAffixPools.includes("warg_fang") && !ref.maxAffixes) return ref;
 
-  // Wipe all old hardcoded stats/effects and roll exactly 1 from the new pool.
-  const rng = stableRerollRng(ref, { type: "warg_fang_v1", value: 0 }, 0);
+  // Roll a deterministic base stat option for this specific saved item.
+  const baseRng = stableRerollRng(ref, { type: "warg_fang_base_v1", value: 0 }, 0);
+  const BASE_STAT_OPTIONS = [
+    [
+      { type: "stat_bonus", stat: "str", min: 2, max: 4 },
+      { type: "stat_bonus", stat: "dex", min: 2, max: 4 },
+    ],
+    [{ type: "attack_speed", min: 4, max: 8 }],
+    [
+      { type: "bleed_on_hit", chance: 8, duration: 2, damagePct: 0.55 },
+      { type: "poison_on_hit", chance: 8, duration: 2, damagePct: 0.4 },
+    ],
+  ];
+  const group = BASE_STAT_OPTIONS[Math.floor(baseRng() * BASE_STAT_OPTIONS.length)];
+  const variant = group[Math.floor(baseRng() * group.length)];
+  const { min, max, ...rest } = variant;
+  const baseEffect = min != null && max != null
+    ? { ...rest, value: Math.floor(baseRng() * (max - min + 1)) + min }
+    : { ...rest };
+
+  if (Array.isArray(ref.rarityAffixPools) && ref.rarityAffixPools.includes("warg_fang")) {
+    // Old migration: already has pool + 1 rarity affix. Prepend the base stat and strip old constraints.
+    const { guaranteedAffixes: _g, maxAffixes: _m, ...rest2 } = ref;
+    return { ...rest2, effects: [baseEffect, ...(ref.effects || [])] };
+  }
+
+  // Pre-migration: wipe old hardcoded stats and build fresh.
+  const affixRng = stableRerollRng(ref, { type: "warg_fang_v1", value: 0 }, 0);
   const affixes = rollEquipmentAffixes(
-    { affixPools: ["warg_fang"], guaranteedAffixes: 1, maxAffixes: 1, effects: [] },
+    { affixPools: ["warg_fang"], effects: [baseEffect] },
     ref.rarity || "normal",
-    rng
+    affixRng
   );
 
   return {
     ...ref,
     baseStats: {},
-    effects: affixes,
+    effects: [baseEffect, ...affixes],
     rarityAffixPools: ["warg_fang"],
-    guaranteedAffixes: 1,
-    maxAffixes: 1,
   };
 }
 

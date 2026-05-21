@@ -483,18 +483,34 @@ function capRandomLootRarity(rarity) {
   return ITEM_RARITIES[RANDOM_LOOT_RARITY_CAPS[id] || id] || ITEM_RARITIES.normal;
 }
 
+function resolveBaseStatOption(baseStatOptions, rng) {
+  if (!baseStatOptions?.length) return null;
+  const group = baseStatOptions[Math.floor(rng() * baseStatOptions.length)];
+  if (!group?.length) return null;
+  const variant = group[Math.floor(rng() * group.length)];
+  const { min, max, ...rest } = variant;
+  if (min != null && max != null) {
+    return { ...rest, value: Math.floor(rng() * (max - min + 1)) + min };
+  }
+  return { ...rest };
+}
+
 export function applyItemRarity(item, rarity, rng = Math.random) {
   if (isCampfireItem(item)) return applyCampfireRarityToItem(item, rarity);
   if (!item?.rarityAffixPools?.length || item.type !== "gear") return item;
   const itemRarity = ITEM_RARITIES[rarity?.id || rarity] || ITEM_RARITIES.normal;
-  if (itemRarity.id === "normal" && !item.guaranteedAffixes) return item;
-  const scaledEffects = (item.effects || []).map(effect => {
-    if (!ELEMENTAL_RESIST_EFFECTS.has(effect?.type) || !Number.isFinite(Number(effect.value))) return { ...effect };
-    return {
-      ...effect,
-      value: Math.max(1, Math.round(Number(effect.value) * itemRarity.statMult)),
-    };
-  });
+  const baseStatEffect = resolveBaseStatOption(item.baseStatOptions, rng);
+  if (itemRarity.id === "normal" && !item.guaranteedAffixes && !baseStatEffect) return item;
+  const scaledEffects = [
+    ...(item.effects || []).map(effect => {
+      if (!ELEMENTAL_RESIST_EFFECTS.has(effect?.type) || !Number.isFinite(Number(effect.value))) return { ...effect };
+      return {
+        ...effect,
+        value: Math.max(1, Math.round(Number(effect.value) * itemRarity.statMult)),
+      };
+    }),
+    ...(baseStatEffect ? [baseStatEffect] : []),
+  ];
   const affixes = rollEquipmentAffixes({
     ...item,
     affixPools: item.rarityAffixPools,

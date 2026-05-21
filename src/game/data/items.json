@@ -4019,8 +4019,19 @@
       "family": "amulet",
       "tags": ["amulet", "strength", "speed", "warg", "orc"],
       "rarityAffixPools": ["warg_fang"],
-      "guaranteedAffixes": 1,
-      "maxAffixes": 1,
+      "baseStatOptions": [
+        [
+          { "type": "stat_bonus", "stat": "str", "min": 2, "max": 4 },
+          { "type": "stat_bonus", "stat": "dex", "min": 2, "max": 4 }
+        ],
+        [
+          { "type": "attack_speed", "min": 4, "max": 8 }
+        ],
+        [
+          { "type": "bleed_on_hit", "chance": 8, "duration": 2, "damagePct": 0.55 },
+          { "type": "poison_on_hit", "chance": 8, "duration": 2, "damagePct": 0.4 }
+        ]
+      ],
       "price": 240,
       "dropWeight": 4,
       "icon": "/assets/items/generated/thorn_amulet.png"

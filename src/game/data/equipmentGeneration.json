@@ -3092,7 +3092,7 @@
       "slot": "legs",
       "family": "armor",
       "armorType": "heavy",
-      "armorDice": { "count": 1, "sides": 10 },
+      "armorDice": { "count": 1, "sides": 12 },
       "size": [2, 3],
       "materialPool": ["worn", "bloodiron"],
       "affixPools": ["endurance"],

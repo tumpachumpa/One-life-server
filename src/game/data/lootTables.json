@@ -426,10 +426,6 @@
           "heater_shield"
         ]
       },
-      "equipmentDrops": {
-        "dropChance": 0.03,
-        "items": { "troll_hide_vest": 1, "troll_hide_legs": 1 }
-      }
     },
     "warg_rider": {
       "rolls": 1,
@@ -516,14 +512,10 @@
       "tags": [],
       "includeItemIds": [
         "warg_fang_necklace",
-        "troll_hide_vest",
-        "troll_hide_legs",
         "protection_amulet"
       ],
       "itemWeights": {
         "warg_fang_necklace": 3,
-        "troll_hide_vest": 2,
-        "troll_hide_legs": 2,
         "protection_amulet": 2
       },
       "dropChance": 1,
@@ -554,7 +546,9 @@
           "plate_boots",
           "plate_gloves",
           "heater_shield",
-          "tower_shield"
+          "tower_shield",
+          "troll_hide_vest",
+          "troll_hide_legs"
         ]
       },
       "guaranteedDrops": [
@@ -1354,12 +1348,10 @@
           "plate_chest",
           "plate_legs",
           "heater_shield",
-          "tower_shield"
+          "tower_shield",
+          "troll_hide_vest",
+          "troll_hide_legs"
         ]
-      },
-      "equipmentDrops": {
-        "dropChance": 0.07,
-        "items": { "troll_hide_vest": 1, "troll_hide_legs": 1 }
       }
     },
     "stone_golem": {

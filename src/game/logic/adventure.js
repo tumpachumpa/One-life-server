@@ -794,7 +794,7 @@ export function createInitialAdventureProgress(adventure) {
 export function isRootspireTowerAdventure(adventure) {
   return !!adventure && (
     ROOTSPIRE_TOWER_ADVENTURE_IDS.includes(adventure.id)
-    || adventure.zoneId === "rootspire_tower"
+    || adventure.regionId === "rootspire_tower_region"
   );
 }
 

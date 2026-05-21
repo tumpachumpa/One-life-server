@@ -1435,6 +1435,7 @@ export function initCombat({
   enemyFrontId = null,
   bossEnemyId = null, bossDeathEndsFight = true, addsDespawnOnBossDeath = true,
   heroProcNodes = [], heroProcOpts = {},
+  enemyProcNodes = [],
   debugPreventHeroDeath = false,
 }) {
   const enemyDefinitions = (Array.isArray(enemyObjs) && enemyObjs.length ? enemyObjs : [enemyObj]).filter(Boolean);
@@ -1444,6 +1445,7 @@ export function initCombat({
   const resolvedEnemyFrontId = getEnemyFrontId(enemies, enemyFrontId) || enemy?.id || null;
   const normalizedHeroWeaponTags = [...(heroWeaponTags || [])];
   const procState = createInitialProcState(heroHp, { ...heroProcOpts, initialRage: heroInitialRage, heroEffects });
+  const enemyProcState = (enemyProcNodes && enemyProcNodes.length) ? createInitialProcState(enemy?.hp || 100) : null;
   const state = {
     tick: 0,
     phase: PHASE.FIGHTING,
@@ -1505,12 +1507,15 @@ export function initCombat({
     ultimateChargePct: Math.max(0, Math.min(100, ultimateChargePct || 0)),
     heroProcNodes,
     procState,
+    enemyProcNodes,
+    enemyProcState,
     heroClass: heroClass || null,
     fleeAttempted: false,
     debugPreventHeroDeath: !!debugPreventHeroDeath,
   };
   applyScarStackArmor(state.combatants.hero, procState);
   applyThresholdEffects(heroProcNodes, procState, state.combatants.hero, enemy, allyCombatants);
+  if (enemyProcState) applyThresholdEffects(enemyProcNodes, enemyProcState, state.combatants.enemy, state.combatants.hero, []);
   return state;
 }
 
@@ -1552,6 +1557,8 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
   );
   const heroProcNodes = state.heroProcNodes || [];
   const procState = state.procState ? { ...state.procState, onceFiredIds: [...(state.procState.onceFiredIds || [])] } : createInitialProcState(hero.hp);
+  const enemyProcNodes = state.enemyProcNodes || [];
+  const enemyProcState = state.enemyProcState ? { ...state.enemyProcState, onceFiredIds: [...(state.enemyProcState.onceFiredIds || [])] } : null;
   // In duel mode a separate proc RNG is provided so proc chance-rolls don't
   // consume from the shared combat RNG (which must stay in sync on both screens).
   const procRngBySide = options.procRngBySide || {};
@@ -1663,9 +1670,16 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
   updateMomentumMaxHeld(heroProcNodes, procState, hero, enemy, tick, log, playerRng);
   // Apply threshold-based passive effects to hero
   applyThresholdEffects(heroProcNodes, procState, hero, enemy, allies);
+  // Apply threshold-based passive effects to duel enemy
+  if (enemyProcState && enemy?.isDuelPlayer) {
+    applyThresholdEffects(enemyProcNodes, enemyProcState, enemy, hero, []);
+  }
   // Fire on_combat_start on tick 1
   if (tick === 1) {
     fireProcTrigger('on_combat_start', {}, procState, heroProcNodes, hero, enemy, tick, log, playerRng);
+    if (enemyProcState && enemy?.isDuelPlayer) {
+      fireProcTrigger('on_combat_start', {}, enemyProcState, enemyProcNodes, enemy, hero, tick, log, enemyRng);
+    }
     // Apply bleed carry from last fight
     if ((procState.bleedCarry || 0) > 0 && enemy && enemy.hp > 0) {
       for (let i = 0; i < procState.bleedCarry; i++) applyEnemyBleed(enemy, tick, log, hero, procState);
@@ -1723,7 +1737,7 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
   selectedTargetId = enemy?.id || selectedTargetId;
 
   const heroAction = effectivePlayerAction === ACTION.SWAP_FRONT ? ACTION.NONE : resolveCombatAction(hero, effectivePlayerAction, tick);
-  queue = applyAction(hero, heroAction, tick, queue, log, playerRng, heroResources, enemy, procState, { frontId, enemyFrontId, allies, hero, disableAutoAttacks });
+  queue = applyAction(hero, heroAction, tick, queue, log, playerRng, heroResources, enemy, procState, { frontId, enemyFrontId, allies, hero, disableAutoAttacks, enemyProcNodes, enemyProcState });
 
   for (const foe of enemies) {
     if (foe.hp <= 0) continue;
@@ -1745,7 +1759,8 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
       : null;
     const defenderForAction = manualTarget?.hp > 0 ? manualTarget : frontTarget;
     const enemyAllies = enemies.filter(entry => entry.id !== foe.id && entry.isDuelCompanion);
-    queue = applyAction(foe, enemyAction, tick, queue, log, enemyRng, heroResources, defenderForAction, null, { frontId, enemyFrontId, allies, hero, enemyAllies, disableAutoAttacks });
+    const foeProcState = foe.isDuelPlayer ? enemyProcState : null;
+    queue = applyAction(foe, enemyAction, tick, queue, log, enemyRng, heroResources, defenderForAction, foeProcState, { frontId, enemyFrontId, allies, hero, enemyAllies, disableAutoAttacks, enemyProcNodes: foe.isDuelPlayer ? enemyProcNodes : [], enemyProcState: foeProcState });
   }
 
   for (const ally of allies) {
@@ -1962,7 +1977,7 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
       if (action.ability?.type === 'serrated_strikes' && attacker.hp > 0 && defender.hp > 0) {
         attacker.autoAttackStarted = true;
         const immediateAttack = createBasicAttackImpact(attacker, defender, tick, actionRng, ACTION.BASIC_ATTACK, { frontId, enemyFrontId, procState });
-        if (resolveBasicAttackImpact(immediateAttack, attacker, defender, tick, log, actionRng, hero, logEnemy, heroResources, heroConditions, heroWounds, procState, heroProcNodes, { frontId, enemyFrontId, allies })) {
+        if (resolveBasicAttackImpact(immediateAttack, attacker, defender, tick, log, actionRng, hero, logEnemy, heroResources, heroConditions, heroWounds, procState, heroProcNodes, { frontId, enemyFrontId, allies, enemyProcNodes, enemyProcState })) {
           queue = removePendingBasicAttacksForActor(queue, defender.id);
         }
         attacker.autoAttackProgressTicks = Math.min(
@@ -1977,20 +1992,21 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
         const attackCount = getReadyAutoAttackCount(attacker, tick);
         for (let attackIndex = 0; attackIndex < attackCount; attackIndex += 1) {
           const immediateAttack = createBasicAttackImpact(attacker, defender, tick, actionRng, ACTION.BASIC_ATTACK, { frontId, enemyFrontId, procState });
-          if (resolveBasicAttackImpact(immediateAttack, attacker, defender, tick, log, actionRng, hero, logEnemy, heroResources, heroConditions, heroWounds, procState, heroProcNodes, { frontId, enemyFrontId, allies })) {
+          if (resolveBasicAttackImpact(immediateAttack, attacker, defender, tick, log, actionRng, hero, logEnemy, heroResources, heroConditions, heroWounds, procState, heroProcNodes, { frontId, enemyFrontId, allies, enemyProcNodes, enemyProcState })) {
             queue = removePendingBasicAttacksForActor(queue, defender.id);
           }
           if (defender.hp <= 0) break;
         }
       }
     } else {
-      if (resolveBasicAttackImpact(action, attacker, defender, tick, log, actionRng, hero, logEnemy, heroResources, heroConditions, heroWounds, procState, heroProcNodes, { frontId, enemyFrontId, allies })) {
+      if (resolveBasicAttackImpact(action, attacker, defender, tick, log, actionRng, hero, logEnemy, heroResources, heroConditions, heroWounds, procState, heroProcNodes, { frontId, enemyFrontId, allies, enemyProcNodes, enemyProcState })) {
         queue = removePendingBasicAttacksForActor(queue, defender.id);
       }
     }
     applyPetDeathSaves(hero, allies, procState, tick, log);
     applyPetLowHpGuards(hero, allies, procState, tick, log);
     applyThresholdEffects(heroProcNodes, procState, hero, enemy, allies);
+    if (enemyProcState && enemy?.isDuelPlayer) applyThresholdEffects(enemyProcNodes, enemyProcState, enemy, hero, []);
     frontId = getFrontId(hero, allies, frontId);
     frontTarget = getFrontCombatant(hero, allies, frontId);
     punishDeadSummons();
@@ -2133,7 +2149,7 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
   for (const ally of allies) syncCombatantAutoAttackSchedule(ally, tick);
   for (const foe of enemies) syncCombatantAutoAttackSchedule(foe, tick);
 
-  return { ...state, tick, phase, combatants: buildCombatants(hero, enemies, allies), frontId, enemyFrontId, selectedTargetId, actionQueue: queue, log, heroConditions, heroWounds, heroResources: syncHeroCombatResources(heroResources, procState), ultimateChargePct, procState, heroProcNodes, fleeAttempted };
+  return { ...state, tick, phase, combatants: buildCombatants(hero, enemies, allies), frontId, enemyFrontId, selectedTargetId, actionQueue: queue, log, heroConditions, heroWounds, heroResources: syncHeroCombatResources(heroResources, procState), ultimateChargePct, procState, heroProcNodes, enemyProcNodes, enemyProcState, fleeAttempted };
 }
 
 export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, options = {}) {
@@ -2164,11 +2180,14 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
   );
   const heroProcNodes = state.heroProcNodes || [];
   const procState = state.procState ? { ...state.procState, onceFiredIds: [...(state.procState.onceFiredIds || [])] } : createInitialProcState(hero.hp);
+  const enemyProcNodes = state.enemyProcNodes || [];
+  const enemyProcState = state.enemyProcState ? { ...state.enemyProcState, onceFiredIds: [...(state.enemyProcState.onceFiredIds || [])] } : null;
   let queue = [...(state.actionQueue || [])];
   const log = [...state.log];
 
   applyScarStackArmor(hero, procState);
   applyThresholdEffects(heroProcNodes, procState, hero, enemy, allies);
+  if (enemyProcState && enemy?.isDuelPlayer) applyThresholdEffects(enemyProcNodes, enemyProcState, enemy, hero, []);
   applyPetRageAttackSpeed(hero, allies, procState, tick, log);
 
   const processCombatantAuto = (combatant, defender, procForActor = null, actorOpts = {}) => {
@@ -2191,11 +2210,14 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
       const procForImpact = procForActor || (defender?.isPlayer ? procState : null);
       const attack = createBasicAttackImpact(combatant, defender, tick, actorRng, ACTION.BASIC_ATTACK, { frontId, enemyFrontId, procState: procForImpact });
       if (combatant.isPlayer) attack.isMainHand = true;
-      if (resolveBasicAttackImpact(attack, combatant, defender, tick, log, actorRng, hero, logEnemy, heroResources, heroConditions, heroWounds, procForImpact, heroProcNodes, { frontId, enemyFrontId, allies })) {
+      if (resolveBasicAttackImpact(attack, combatant, defender, tick, log, actorRng, hero, logEnemy, heroResources, heroConditions, heroWounds, procForImpact, heroProcNodes, { frontId, enemyFrontId, allies, enemyProcNodes, enemyProcState })) {
         queue = removePendingBasicAttacksForActor(queue, defender.id);
       }
       if (combatant.id === 'hero') {
         applyThresholdEffects(heroProcNodes, procState, hero, enemy, allies);
+      }
+      if (combatant.isDuelPlayer && enemyProcState) {
+        applyThresholdEffects(enemyProcNodes, enemyProcState, combatant, hero, []);
       }
     }
   };
@@ -2228,7 +2250,7 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
       attack.isOffhand = true;
       attack.preReductionDamage = preReductionDamage;
       attack.offhandDamageMult = hero.offhandDamageMult;
-      resolveBasicAttackImpact(attack, hero, enemy, tick, log, playerRng, hero, enemy, heroResources, heroConditions, heroWounds, procState, heroProcNodes, { frontId, enemyFrontId, allies });
+      resolveBasicAttackImpact(attack, hero, enemy, tick, log, playerRng, hero, enemy, heroResources, heroConditions, heroWounds, procState, heroProcNodes, { frontId, enemyFrontId, allies, enemyProcNodes, enemyProcState });
     }
   }
 
@@ -2246,12 +2268,13 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
     if (foe.hp <= 0) continue;
     frontTarget = getFrontCombatant(hero, allies, frontId);
     if (!frontTarget || frontTarget.hp <= 0) break;
-    processCombatantAuto(foe, frontTarget, null, { skipAuto: !!options.skipEnemyAutos });
+    processCombatantAuto(foe, frontTarget, foe.isDuelPlayer ? enemyProcState : null, { skipAuto: !!options.skipEnemyAutos });
   }
 
   applyPetDeathSaves(hero, allies, procState, tick, log);
   applyPetLowHpGuards(hero, allies, procState, tick, log);
   applyThresholdEffects(heroProcNodes, procState, hero, enemy, allies);
+  if (enemyProcState && enemy?.isDuelPlayer) applyThresholdEffects(enemyProcNodes, enemyProcState, enemy, hero, []);
   frontId = getFrontId(hero, allies, frontId);
   frontTarget = getFrontCombatant(hero, allies, frontId);
   enemyFrontId = getEnemyFrontId(enemies, enemyFrontId);
@@ -2321,6 +2344,8 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
     heroResources: syncHeroCombatResources(heroResources, procState),
     procState,
     heroProcNodes,
+    enemyProcNodes,
+    enemyProcState,
   };
 }
 
@@ -4274,6 +4299,15 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
           }
         }
       }
+      // Fire duel-enemy defensive procs (on_take_damage, on_take_crit) when the defender is a duel player.
+      if (defender.isDuelPlayer && opts.enemyProcState) {
+        const eProcState = opts.enemyProcState;
+        const eProcNodes = opts.enemyProcNodes || [];
+        eProcState.hasTakenDamageThisFight = true;
+        fireProcTrigger('on_take_damage', { damage: applied.damage, isCrit: !!action.isCrit, attacker }, eProcState, eProcNodes, defender, hero, tick, log, rng);
+        if (action.isCrit) fireProcTrigger('on_take_crit', { damage: applied.damage }, eProcState, eProcNodes, defender, hero, tick, log, rng);
+        syncDuelEnemyProcEffects(eProcNodes, eProcState, defender, hero, tick);
+      }
     } else if (attackerIsAlly) {
       const applied = applyCombatantDamage(defender, result.damage);
       log.push(makeEntry(tick, attacker.id, 'hit', `${attacker.name} hits ${defender.name} for ${applied.damage}${action.isCrit ? ' (CRIT)' : ''}.`, applied.damage, hero.hp, defender.hp, {
@@ -4377,6 +4411,17 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
         maybeFireHpCrossBelowProcs(heroHpBeforeHit, hero, procState, heroProcNodes, enemy, tick, log, rng);
         preventDeathWithLastBreath(hero, tick, log, enemy, procState);
         syncHeroProcEffects(heroProcNodes, procState, hero, enemy, tick, opts.allies || []);
+        // Fire duel-enemy offensive procs (on_hit, on_crit) when the attacker is a duel player.
+        if (attacker.isDuelPlayer && opts.enemyProcState) {
+          const eProcState = opts.enemyProcState;
+          const eProcNodes = opts.enemyProcNodes || [];
+          eProcState.consecutiveHits = (eProcState.consecutiveHits || 0) + 1;
+          if (action.isCrit) eProcState.consecutiveCrits = (eProcState.consecutiveCrits || 0) + 1;
+          else eProcState.consecutiveCrits = 0;
+          fireProcTrigger('on_hit', { damage: incomingDamage, isCrit: !!action.isCrit }, eProcState, eProcNodes, attacker, hero, tick, log, rng);
+          if (action.isCrit) fireProcTrigger('on_crit', { damage: incomingDamage }, eProcState, eProcNodes, attacker, hero, tick, log, rng);
+          syncDuelEnemyProcEffects(eProcNodes, eProcState, attacker, hero, tick);
+        }
       }
     }
   }
@@ -4421,6 +4466,12 @@ function syncHeroProcEffects(heroProcNodes, procState, hero, enemy, tick, allies
   applyScarStackArmor(hero, procState);
   applyThresholdEffects(heroProcNodes, procState, hero, enemy, allies);
   if (hero.autoAttackStarted) scheduleNextAutoAttackFromProgress(hero, tick);
+}
+
+function syncDuelEnemyProcEffects(enemyProcNodes, enemyProcState, duelEnemy, hero, tick) {
+  if (!duelEnemy?.isDuelPlayer || !enemyProcState) return;
+  applyThresholdEffects(enemyProcNodes, enemyProcState, duelEnemy, hero, []);
+  if (duelEnemy.autoAttackStarted) scheduleNextAutoAttackFromProgress(duelEnemy, tick);
 }
 
 function applyHeroLifesteal(hero, damage, tick, log, enemy, targetMeta) {

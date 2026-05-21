@@ -388,11 +388,10 @@ function migrateDeprecatedGeneratedAffixes(ref) {
 
 function migrateWargFangNecklace(ref) {
   if (ref?.id !== "warg_fang_necklace") return ref;
-  // On new system: has warg_fang pool AND no maxAffixes constraint.
-  if (Array.isArray(ref.rarityAffixPools) && ref.rarityAffixPools.includes("warg_fang") && !ref.maxAffixes) return ref;
+  // New system: applyItemRarity spreads baseStatOptions onto the saved item at drop time.
+  // Presence of baseStatOptions means the item was already built by the new code path.
+  if (ref.baseStatOptions?.length) return ref;
 
-  // Roll a deterministic base stat option for this specific saved item.
-  const baseRng = stableRerollRng(ref, { type: "warg_fang_base_v1", value: 0 }, 0);
   const BASE_STAT_OPTIONS = [
     [
       { type: "stat_bonus", stat: "str", min: 2, max: 4 },
@@ -404,6 +403,9 @@ function migrateWargFangNecklace(ref) {
       { type: "poison_on_hit", chance: 8, duration: 2, damagePct: 0.4 },
     ],
   ];
+
+  // Roll a deterministic base stat for this specific saved item.
+  const baseRng = stableRerollRng(ref, { type: "warg_fang_base_v1", value: 0 }, 0);
   const group = BASE_STAT_OPTIONS[Math.floor(baseRng() * BASE_STAT_OPTIONS.length)];
   const variant = group[Math.floor(baseRng() * group.length)];
   const { min, max, ...rest } = variant;
@@ -412,9 +414,9 @@ function migrateWargFangNecklace(ref) {
     : { ...rest };
 
   if (Array.isArray(ref.rarityAffixPools) && ref.rarityAffixPools.includes("warg_fang")) {
-    // Old migration: already has pool + 1 rarity affix. Prepend the base stat and strip old constraints.
+    // Old migration: already has pool + 1 rarity affix. Prepend base stat, strip old constraints.
     const { guaranteedAffixes: _g, maxAffixes: _m, ...rest2 } = ref;
-    return { ...rest2, effects: [baseEffect, ...(ref.effects || [])] };
+    return { ...rest2, effects: [baseEffect, ...(ref.effects || [])], baseStatOptions: BASE_STAT_OPTIONS };
   }
 
   // Pre-migration: wipe old hardcoded stats and build fresh.
@@ -430,6 +432,7 @@ function migrateWargFangNecklace(ref) {
     baseStats: {},
     effects: [baseEffect, ...affixes],
     rarityAffixPools: ["warg_fang"],
+    baseStatOptions: BASE_STAT_OPTIONS,
   };
 }
 

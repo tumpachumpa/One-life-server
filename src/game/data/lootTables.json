@@ -986,10 +986,10 @@
           "tower_shield"
         ]
       },
-      "equipmentDrops": {
-        "dropChance": 0.02,
-        "items": { "black_knight_boots": 1, "black_knight_gauntlets": 1 }
-      }
+      "independentDrops": [
+        { "itemId": "living_armblade", "dropChance": 0.02 },
+        { "itemId": "hollowguard_visor", "dropChance": 0.02 }
+      ]
     },
     "ashbound_cultist": {
       "rolls": 1,

@@ -747,5 +747,18 @@ export function rollLootTable(tableOrId, rng = Math.random, lootBonus = 0, force
       }
     }
   }
+  if (Array.isArray(table.independentDrops)) {
+    for (const entry of table.independentDrops) {
+      if (!entry?.itemId) continue;
+      const chance = Math.min(1, (entry.dropChance || 0) + lootBonus / 200);
+      if (rng() > chance) continue;
+      const drop = items.find(i => i.id === entry.itemId);
+      if (!drop) continue;
+      const dropId = getLootDropId(drop);
+      if (preventDuplicateItems && dropId && pickedItemIds.has(dropId)) continue;
+      drops.push(createLootItem(drop, rarityTable, rng, minimumApplied ? null : minimumRarity, lootBonus));
+      if (dropId) pickedItemIds.add(dropId);
+    }
+  }
   return drops;
 }

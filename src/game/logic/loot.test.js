@@ -670,4 +670,32 @@ describe("adventure loot pools", () => {
     });
     expect(rolled.effects).toHaveLength((amulet.effects || []).length + 1);
   });
+
+  it("rolls Animated Armor special drops independently at 2% each", () => {
+    // rng always 0.5: skips main roll (0.5 > 0), skips generated equipment (0.5 > 0.14), skips both independent drops (0.5 > 0.02)
+    const noDrops = rollLootTable("animated_armor", () => 0.5);
+    expect(noDrops.some(d => d.id === "living_armblade")).toBe(false);
+    expect(noDrops.some(d => d.id === "hollowguard_visor")).toBe(false);
+
+    // rng always 0.01: passes generated equipment (0.01 <= 0.14) and both independent drops (0.01 <= 0.02)
+    const allDrops = rollLootTable("animated_armor", () => 0.01);
+    expect(allDrops.some(d => d.id === "living_armblade")).toBe(true);
+    expect(allDrops.some(d => d.id === "hollowguard_visor")).toBe(true);
+
+    // Items are correctly defined
+    expect(itemById.living_armblade).toMatchObject({
+      slot: "weapon",
+      weaponType: "one_handed_sword",
+      hands: 1,
+      attackSpeed: 0.9,
+    });
+    expect(itemById.hollowguard_visor).toMatchObject({
+      slot: "helmet",
+      armorType: "heavy",
+    });
+
+    // Old black knight drops are gone from animated_armor
+    expect(LOOT_TABLES.animated_armor.equipmentDrops).toBeUndefined();
+    expect(LOOT_TABLES.animated_armor.independentDrops).toHaveLength(2);
+  });
 });

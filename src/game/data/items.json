@@ -4032,6 +4032,7 @@
           { "type": "poison_on_hit", "chance": 8, "duration": 2, "damagePct": 0.4 }
         ]
       ],
+      "maxAffixes": 1,
       "price": 240,
       "dropWeight": 4,
       "icon": "/assets/items/generated/thorn_amulet.png"
@@ -4103,6 +4104,50 @@
       "price": 300,
       "dropWeight": 3,
       "icon": "/assets/items/generated/iron_knuckles.png"
+    },
+    {
+      "id": "living_armblade",
+      "name": "Living Armblade",
+      "description": "A sword fused from the animated shell of a Rootspire armor guardian. Shimmers faintly, as if it remembers how to block.",
+      "size": [1, 3],
+      "type": "gear",
+      "slot": "weapon",
+      "family": "sword",
+      "weaponType": "one_handed_sword",
+      "hands": 1,
+      "attackSpeed": 0.9,
+      "damageDice": { "count": 1, "sides": 10 },
+      "baseStats": { "damage": 13 },
+      "effects": [
+        { "type": "block_chance", "value": 4 },
+        { "type": "counter_on_block", "value": 8 }
+      ],
+      "tags": ["weapon", "melee", "sword", "one_handed", "animated", "rootspire"],
+      "rarityAffixPools": ["weapon_guard", "dueling", "precision"],
+      "price": 380,
+      "dropWeight": 0,
+      "icon": "/assets/items/generated/longsword.png"
+    },
+    {
+      "id": "hollowguard_visor",
+      "name": "Hollowguard Visor",
+      "description": "The hollow faceplate of a Rootspire armor guardian. The eyeslits still track movement on their own.",
+      "size": [2, 2],
+      "type": "gear",
+      "slot": "helmet",
+      "family": "armor",
+      "armorType": "heavy",
+      "armorDice": { "count": 1, "sides": 8, "bonus": 4, "text": "1d8+4", "average": 8.5 },
+      "baseStats": { "armor": 12 },
+      "effects": [
+        { "type": "block_power", "value": 8 },
+        { "type": "crit_resist", "value": 4 }
+      ],
+      "tags": ["helmet", "heavy", "plate", "armor_heavy", "animated", "rootspire"],
+      "rarityAffixPools": ["guard", "survival"],
+      "price": 360,
+      "dropWeight": 0,
+      "icon": "/assets/items/generated/plate_helm.png"
     },
     {
       "id": "halberd_2h",

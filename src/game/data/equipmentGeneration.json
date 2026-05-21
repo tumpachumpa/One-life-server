@@ -627,7 +627,7 @@
         "count": 1,
         "sides": 4
       },
-      "attackSpeed": 1.35,
+      "attackSpeed": 1.30,
       "size": [
         1,
         2
@@ -1169,7 +1169,7 @@
         "count": 1,
         "sides": 6
       },
-      "attackSpeed": 1.25,
+      "attackSpeed": 1.20,
       "size": [
         1,
         2

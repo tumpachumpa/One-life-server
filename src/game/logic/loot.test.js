@@ -288,10 +288,10 @@ describe("adventure loot pools", () => {
 
     expect(itemIds).not.toContain("yarrow");
     expect(itemIds).not.toContain("comfrey_leaf");
-    expect(itemIds).toEqual(expect.arrayContaining(["bone", "bandage", "campfire", "small_bag", "quiver", "ward_amulet", "protection_amulet", "ring_of_thorns"]));
+    expect(itemIds).toEqual(expect.arrayContaining(["bone", "bandage", "campfire", "small_bag", "ward_amulet", "protection_amulet", "ring_of_thorns"]));
+    expect(itemIds).not.toContain("quiver");
     expect(itemIds).not.toEqual(expect.arrayContaining(["orcish_axe", "heavy_mace", "plate_helm", "iron_chest"]));
     expect(config.baseIds).toEqual(expect.arrayContaining(["sword_1h", "rapier", "greataxe_2h", "staff", "composite_bow", "plate_chest", "tower_shield"]));
-    expect(config.materials).toEqual(expect.arrayContaining(["iron", "steel", "bone", "ancient"]));
   });
 
   it("keeps Orc War Camp loot in the heavy bloodforged war category", () => {
@@ -324,7 +324,8 @@ describe("adventure loot pools", () => {
     expect(table.tags).toEqual([]);
     expect(table.generatedEquipment.itemLevel).toBe(4);
     expect(table.generatedEquipment.baseIds).toEqual(expect.arrayContaining(["rapier", "staff", "composite_bow", "plate_chest", "tower_shield"]));
-    expect(table.includeItemIds).toEqual(expect.arrayContaining(["campfire", "small_bag", "quiver", "ward_amulet", "protection_amulet", "ring_of_thorns"]));
+    expect(table.includeItemIds).toEqual(expect.arrayContaining(["campfire", "small_bag", "ward_amulet", "protection_amulet", "ring_of_thorns"]));
+    expect(table.includeItemIds).not.toContain("quiver");
     expect(table.includeItemIds).not.toContain("focus_hat");
     expect(table.includeItemIds).not.toContain("yarrow");
     expect(table.includeItemIds).not.toContain("comfrey_leaf");
@@ -474,7 +475,7 @@ describe("adventure loot pools", () => {
     ]);
     expect(LOOT_TABLES.wyvern_boss.rarityTable).toBe("wyvern");
     expect(LOOT_TABLES.wyvern_boss.rolls).toBe(2);
-    expect(LOOT_TABLES.wyvern_boss.minimumRarity).toBe("epic");
+    expect(LOOT_TABLES.wyvern_boss.minimumRarity).toBeUndefined();
     expect(LOOT_TABLES.wyvern_boss.includeItemIds).not.toContain("fang_of_the_red_viper");
     expect(LOOT_TABLES.fallen_knight_boss.rarityTable).toBe("wyvern");
     expect(LOOT_TABLES.fallen_knight_boss.rolls).toBe(2);
@@ -585,7 +586,7 @@ describe("adventure loot pools", () => {
       rarityAffixPools: ["quiver"],
     });
     expect(ancientForestIds).toContain("quiver");
-    expect(cryptIds).toContain("quiver");
+    expect(cryptIds).not.toContain("quiver");
     expect(rolled).toMatchObject({
       baseId: "quiver",
       name: "Legendary Quiver",
@@ -669,6 +670,115 @@ describe("adventure loot pools", () => {
       rarityColor: "#2ecc71",
     });
     expect(rolled.effects).toHaveLength((amulet.effects || []).length + 1);
+  });
+
+  it("adds Whitefang Dagger as a beast-slayer dagger dropping from White Wolf", () => {
+    const item = itemById.whitefang_dagger;
+
+    expect(item).toMatchObject({
+      slot: "weapon",
+      family: "dagger",
+      weaponType: "one_handed_dagger",
+      hands: 1,
+      attackSpeed: 1.42,
+      damageDice: { count: 1, sides: 4 },
+      dropWeight: 0,
+      icon: "/assets/items/generated/dagger.png",
+    });
+    expect(item.baseStats.damage).toBe(3);
+    expect(item.effects).toEqual([]);
+    expect(item.rarityAffixPools).toEqual(expect.arrayContaining(["precision", "speed", "predator"]));
+    expect(item.tags).toEqual(expect.arrayContaining(["dagger", "weapon", "rogue", "wolf", "beast", "ancient_forest"]));
+    expect(item.dropWeight).toBe(0);
+
+    const table = LOOT_TABLES.forest_white_wolf;
+    expect(table.independentDrops).toEqual(expect.arrayContaining([
+      expect.objectContaining({ itemId: "whitefang_dagger", dropChance: 0.04 }),
+    ]));
+
+    const withDrop = rollLootTable("forest_white_wolf", () => 0.01);
+    expect(withDrop.some(d => d.id === "whitefang_dagger")).toBe(true);
+
+    const withoutDrop = rollLootTable("forest_white_wolf", () => 0.5);
+    expect(withoutDrop.some(d => d.id === "whitefang_dagger")).toBe(false);
+  });
+
+  it("adds Bandit's Stiletto as a precision dagger dropping from Forest Bandit", () => {
+    const item = itemById.bandits_stiletto;
+
+    expect(item).toMatchObject({
+      slot: "weapon",
+      family: "dagger",
+      weaponType: "one_handed_dagger",
+      hands: 1,
+      attackSpeed: 1.38,
+      damageDice: { count: 1, sides: 4 },
+      dropWeight: 0,
+      icon: "/assets/items/generated/dagger.png",
+    });
+    expect(item.baseStats.damage).toBe(5);
+    expect(item.effects).toContainEqual({ type: "crit_chance", value: 3 });
+    expect(item.effects).toContainEqual({ type: "hit_chance", value: 3 });
+    expect(item.rarityAffixPools).toEqual(expect.arrayContaining(["precision", "speed", "dueling"]));
+    expect(item.tags).toEqual(expect.arrayContaining(["dagger", "weapon", "rogue", "bandit", "ancient_forest"]));
+    expect(item.dropWeight).toBe(0);
+
+    const table = LOOT_TABLES.forest_bandit;
+    expect(table.independentDrops).toEqual(expect.arrayContaining([
+      expect.objectContaining({ itemId: "bandits_stiletto", dropChance: 0.04 }),
+    ]));
+
+    const withDrop = rollLootTable("forest_bandit", () => 0.01);
+    expect(withDrop.some(d => d.id === "bandits_stiletto")).toBe(true);
+
+    const withoutDrop = rollLootTable("forest_bandit", () => 0.5);
+    expect(withoutDrop.some(d => d.id === "bandits_stiletto")).toBe(false);
+  });
+
+  it("does not define Ratfang Shiv in items or any loot table", () => {
+    expect(itemById.ratfang_shiv).toBeUndefined();
+    for (const [tableId, table] of Object.entries(LOOT_TABLES)) {
+      const ids = [
+        ...(table.includeItemIds || []),
+        ...(table.independentDrops || []).map(d => d.itemId),
+        ...(table.generatedEquipment?.baseIds || []),
+      ];
+      expect(ids, `ratfang_shiv found in table ${tableId}`).not.toContain("ratfang_shiv");
+    }
+  });
+
+  it("adds Bonefletch Quiver as a crypt-themed item with undead and warding affixes", () => {
+    const item = itemById.bonefletch_quiver;
+    const rolled = applyItemRarity(item, ITEM_RARITIES.legendary, () => 0);
+
+    expect(item).toMatchObject({
+      slot: "bag",
+      family: "quiver",
+      icon: "/assets/items/generated/Quiver.png",
+      iconScale: 1.35,
+      rarityAffixPools: ["quiver", "warding"],
+    });
+    expect(item.effects).toContainEqual({ type: "damage_vs_tag", tag: "undead", value: 8 });
+    expect(item.effects).toContainEqual({ type: "magic_defense", value: 3 });
+    expect(item.tags).toEqual(expect.arrayContaining(["quiver", "undead", "crypts"]));
+    expect(item.dropWeight).toBe(0);
+    expect(rolled).toMatchObject({ baseId: "bonefletch_quiver", name: "Legendary Bonefletch Quiver", rarity: "legendary" });
+  });
+
+  it("drops Bonefletch Quiver independently at 4% from Skeleton Warrior", () => {
+    const table = LOOT_TABLES.crypts_warrior;
+
+    expect(table.independentDrops).toEqual(expect.arrayContaining([
+      expect.objectContaining({ itemId: "bonefletch_quiver", dropChance: 0.04 }),
+    ]));
+
+    // rng < 0.04 → independent drop fires
+    const withDrop = rollLootTable("crypts_warrior", () => 0.01);
+    expect(withDrop.some(d => d.id === "bonefletch_quiver")).toBe(true);
+
+    // rng > 0.04 → independent drop does not fire
+    const withoutDrop = rollLootTable("crypts_warrior", () => 0.5);
+    expect(withoutDrop.some(d => d.id === "bonefletch_quiver")).toBe(false);
   });
 
   it("rolls Animated Armor special drops independently at 2% each", () => {

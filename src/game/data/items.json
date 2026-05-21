@@ -259,7 +259,7 @@
       "family": "dagger",
       "weaponType": "one_handed_dagger",
       "hands": 1,
-      "attackSpeed": 1.45,
+      "attackSpeed": 1.40,
       "damageDice": { "count": 1, "sides": 4 },
       "baseStats": {
         "damage": 7
@@ -287,6 +287,46 @@
         "venom",
         "precision"
       ],
+      "icon": "/assets/items/generated/dagger.png"
+    },
+    {
+      "id": "whitefang_dagger",
+      "name": "Whitefang Dagger",
+      "description": "A pale fang honed into a cruel little blade. Its edge carries the bite of winter and the hunger of the hunt.",
+      "size": [1, 2],
+      "type": "gear",
+      "slot": "weapon",
+      "family": "dagger",
+      "weaponType": "one_handed_dagger",
+      "hands": 1,
+      "attackSpeed": 1.37,
+      "damageDice": { "count": 1, "sides": 4 },
+      "baseStats": { "damage": 3 },
+      "effects": [],
+      "rarityAffixPools": ["precision", "speed", "predator"],
+      "tags": ["dagger", "weapon", "melee", "fast", "one_handed", "rogue", "wolf", "beast", "ancient_forest"],
+      "price": 120,
+      "dropWeight": 0,
+      "icon": "/assets/items/generated/dagger.png"
+    },
+    {
+      "id": "bandits_stiletto",
+      "name": "Bandit's Stiletto",
+      "description": "A narrow thrusting dagger favored by ambushers and cutpurses along the forest road.",
+      "size": [1, 2],
+      "type": "gear",
+      "slot": "weapon",
+      "family": "dagger",
+      "weaponType": "one_handed_dagger",
+      "hands": 1,
+      "attackSpeed": 1.33,
+      "damageDice": { "count": 1, "sides": 4 },
+      "baseStats": { "damage": 4 },
+      "effects": [],
+      "rarityAffixPools": ["precision", "speed", "dueling"],
+      "tags": ["dagger", "weapon", "melee", "fast", "one_handed", "rogue", "bandit", "ancient_forest"],
+      "price": 140,
+      "dropWeight": 0,
       "icon": "/assets/items/generated/dagger.png"
     },
     {
@@ -511,6 +551,25 @@
       ],
       "price": 65,
       "dropWeight": 5,
+      "icon": "/assets/items/generated/Quiver.png",
+      "iconScale": 1.35
+    },
+    {
+      "id": "bonefletch_quiver",
+      "name": "Bonefletch Quiver",
+      "description": "A narrow quiver reinforced with carved bone plates. Its arrows seem to remember old battlefield rites.",
+      "size": [1, 2],
+      "type": "gear",
+      "slot": "bag",
+      "family": "quiver",
+      "effects": [
+        { "type": "damage_vs_tag", "tag": "undead", "value": 8 },
+        { "type": "magic_defense", "value": 3 }
+      ],
+      "rarityAffixPools": ["quiver", "warding"],
+      "tags": ["quiver", "ranged", "archer", "undead", "crypts"],
+      "price": 160,
+      "dropWeight": 0,
       "icon": "/assets/items/generated/Quiver.png",
       "iconScale": 1.35
     },

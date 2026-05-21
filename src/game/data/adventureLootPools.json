@@ -220,10 +220,6 @@
           "weight": 2
         },
         {
-          "id": "quiver",
-          "weight": 2
-        },
-        {
           "id": "ward_amulet",
           "weight": 3
         },
@@ -239,7 +235,6 @@
       "itemTiers": {
         "campfire": 1,
         "small_bag": 1,
-        "quiver": 1,
         "ward_amulet": 1,
         "protection_amulet": 2,
         "ring_of_thorns": 2

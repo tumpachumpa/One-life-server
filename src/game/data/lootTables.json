@@ -68,7 +68,10 @@
           "leather_boots",
           "leather_gloves"
         ]
-      }
+      },
+      "independentDrops": [
+        { "itemId": "whitefang_dagger", "dropChance": 0.04 }
+      ]
     },
     "forest_boar": {
       "rolls": 1,
@@ -205,7 +208,6 @@
       "includeItemIds": [
         "campfire",
         "small_bag",
-        "quiver",
         "ward_amulet",
         "protection_amulet",
         "ring_of_thorns"
@@ -213,7 +215,6 @@
       "itemWeights": {
         "campfire": 4,
         "small_bag": 2,
-        "quiver": 2,
         "ward_amulet": 3,
         "protection_amulet": 3,
         "ring_of_thorns": 2
@@ -259,7 +260,10 @@
           "buckler",
           "bone_shield"
         ]
-      }
+      },
+      "independentDrops": [
+        { "itemId": "bandits_stiletto", "dropChance": 0.04 }
+      ]
     },
     "forest_hunter": {
       "rolls": 1,
@@ -716,7 +720,10 @@
         "dropChance": 0.12,
         "itemLevel": 3,
         "baseIds": ["sword_1h", "mace_1h", "heater_shield", "buckler"]
-      }
+      },
+      "independentDrops": [
+        { "itemId": "bonefletch_quiver", "dropChance": 0.04 }
+      ]
     },
     "crypts_wraith": {
       "rolls": 1,

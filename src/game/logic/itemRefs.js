@@ -414,9 +414,16 @@ function migrateWargFangNecklace(ref) {
     : { ...rest };
 
   if (Array.isArray(ref.rarityAffixPools) && ref.rarityAffixPools.includes("warg_fang")) {
-    // Old migration: already has pool + 1 rarity affix. Prepend base stat, strip old constraints.
+    // Old saved item already had affixes rolled from the pool. Rebuild to enforce maxAffixes:1 —
+    // keep at most one existing affix so old rare items (which had 2) don't end up with 3 effects.
+    const affixRng = stableRerollRng(ref, { type: "warg_fang_v1", value: 0 }, 0);
+    const affixes = rollEquipmentAffixes(
+      { affixPools: ["warg_fang"], effects: [baseEffect], maxAffixes: 1 },
+      ref.rarity || "normal",
+      affixRng
+    );
     const { guaranteedAffixes: _g, maxAffixes: _m, ...rest2 } = ref;
-    return { ...rest2, effects: [baseEffect, ...(ref.effects || [])], baseStatOptions: BASE_STAT_OPTIONS };
+    return { ...rest2, effects: [baseEffect, ...affixes], baseStatOptions: BASE_STAT_OPTIONS };
   }
 
   // Pre-migration: wipe old hardcoded stats and build fresh.

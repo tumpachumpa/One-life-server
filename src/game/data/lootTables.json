@@ -822,11 +822,6 @@
           "spireweave_legwraps",
           "spireweave_slippers",
           "spireweave_handwraps",
-          "duskrunner_hood",
-          "duskrunner_jacket",
-          "duskrunner_leggings",
-          "duskrunner_boots",
-          "duskrunner_gloves",
           "oathbound_plate_helm",
           "oathbound_plate_cuirass",
           "oathbound_plate_legguards",
@@ -1187,9 +1182,6 @@
           "spireweave_handwraps",
           "duskrunner_hood",
           "duskrunner_jacket",
-          "duskrunner_leggings",
-          "duskrunner_boots",
-          "duskrunner_gloves",
           "oathbound_plate_helm",
           "oathbound_plate_cuirass",
           "oathbound_plate_legguards",
@@ -1539,6 +1531,15 @@
         "spider_web": 42,
         "venom_ring": 8,
         "venom_fang_dagger": 4
+      },
+      "generatedEquipment": {
+        "enabled": true,
+        "dropChance": 0.08,
+        "itemLevelBonus": 3,
+        "baseIds": [
+          "duskrunner_hood",
+          "duskrunner_jacket"
+        ]
       }
     },
     "silkfang_matriarch_loot": {
@@ -1559,6 +1560,18 @@
         "venom_fang_dagger": 9,
         "venomveil_cape": 6,
         "royal_silk": 14
+      },
+      "generatedEquipment": {
+        "enabled": true,
+        "dropChance": 0.10,
+        "itemLevelBonus": 4,
+        "baseIds": [
+          "duskrunner_hood",
+          "duskrunner_jacket",
+          "duskrunner_leggings",
+          "duskrunner_boots",
+          "duskrunner_gloves"
+        ]
       }
     },
     "broodmother_loot": {
@@ -1585,6 +1598,18 @@
         "brood_chitin": 14,
         "venom_sac": 12,
         "chitin_shield": 6
+      },
+      "generatedEquipment": {
+        "enabled": true,
+        "dropChance": 0.12,
+        "itemLevelBonus": 5,
+        "baseIds": [
+          "duskrunner_hood",
+          "duskrunner_jacket",
+          "duskrunner_leggings",
+          "duskrunner_boots",
+          "duskrunner_gloves"
+        ]
       }
     },
     "blood_rat": {

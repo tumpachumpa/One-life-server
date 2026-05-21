@@ -2561,7 +2561,7 @@
               "y": 72,
               "repeatable": true,
               "next": [
-                "fallen_summit_gate_campfire"
+                "fallen_summit_boss"
               ],
               "event": {
                 "id": "fallen_summit_entrance_event",
@@ -2574,30 +2574,6 @@
                     "text": "You return to the world map.",
                     "action": "Exit",
                     "actionLabel": "Exit"
-                  }
-                ]
-              }
-            },
-            {
-              "id": "fallen_summit_gate_campfire",
-              "type": "event",
-              "x": 45,
-              "y": 52,
-              "next": [
-                "fallen_summit_boss"
-              ],
-              "event": {
-                "id": "fallen_summit_campfire_event",
-                "title": "Campfire - Fallen Summit",
-                "description": "The wind carries the smell of old iron and something colder. A fire still burns here, though no living hand lit it.",
-                "effects": [
-                  {
-                    "type": "restore_hp_pct",
-                    "value": 50
-                  },
-                  {
-                    "type": "restore_energy",
-                    "value": 35
                   }
                 ]
               }

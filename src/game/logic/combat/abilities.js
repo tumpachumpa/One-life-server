@@ -1816,7 +1816,11 @@ export function resolveAbilityImpact(action, attacker, defender, tick, rng, cont
         defender.hp = Math.max(0, defender.hp - result.damage);
         const reduction = Math.floor(ability.armorReduction || 8);
         const armorImmune = hasArmorReductionImmunity(defender);
-        if (!armorImmune) defender.armor = Math.max(0, (defender.armor || 0) - reduction);
+        if (!armorImmune) {
+          defender.armor = Math.max(0, (defender.armor || 0) - reduction);
+          defender.activeEffects = (defender.activeEffects || []).filter(e => e.type !== 'armor_shattered');
+          defender.activeEffects.push({ type: 'armor_shattered', armorLost: reduction });
+        }
         const suffix = result.blocked ? ' (blocked)' : '';
         if (armorImmune) {
           entries.push({

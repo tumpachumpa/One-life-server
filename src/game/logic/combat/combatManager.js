@@ -2021,7 +2021,7 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
   // Cocoon transformation: intercept first death for bosses with hasCocoonTransform
   for (const foe of enemies) {
     if (foe.hp <= 0 && foe.hasCocoonTransform && !foe.hasTransformed) {
-      const cocoonHp = foe.cocoonMaxHp || 400;
+      const cocoonHp = foe.phase2MaxHp || foe.cocoonMaxHp || 400;
       foe.hp = cocoonHp;
       foe.maxHp = cocoonHp;
       foe.inCocoon = true;
@@ -2030,18 +2030,17 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
       foe.cocoonDamageTaken = 0;
       foe.disableAutoAttack = true;
       log.push(makeEntry(tick, foe.id, 'phase_change',
-        `${foe.name} seals herself in a hardened cocoon! (${cocoonHp} HP — 95% damage resistance)`,
+        `${foe.name} seals herself in a hardened cocoon! (${cocoonHp} HP — 90% damage resistance)`,
         0, hero.hp, cocoonHp, { phase: 'cocoon', targetId: foe.id }));
     }
     // Guard HP during cocoon: prevent premature boss death (applyCombatantDamage handles 95% resistance)
     if (foe.inCocoon && foe.hp < 1) {
       foe.hp = 1;
     }
-    // Cocoon exit after duration — queen always emerges at full phase 2 HP
+    // Cocoon exit after duration — boss emerges with current cocoon HP (damage dealt carries over)
     if (foe.inCocoon && tick >= (foe.cocoonStartTick || 0) + (foe.cocoonDurationTicks || 4)) {
       const p2MaxHp = foe.phase2MaxHp || foe.maxHp;
       foe.maxHp = p2MaxHp;
-      foe.hp = p2MaxHp;
       if (foe.phase2Attack != null) {
         foe.damage = scaleMonsterAttack(foe.phase2Attack);
         foe.baseDamage = foe.damage;
@@ -2065,8 +2064,8 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
       foe.disableAutoAttack = !!foe._baseDisableAutoAttack;
       foe.activePhaseId = 'phase2';
       log.push(makeEntry(tick, foe.id, 'phase_change',
-        `The cocoon shatters! ${foe.name} emerges reborn — Phase 2! (${p2MaxHp} HP)`,
-        0, hero.hp, p2MaxHp, { phase: 'phase2', targetId: foe.id }));
+        `The cocoon shatters! ${foe.name} emerges reborn — Phase 2! (${foe.hp}/${p2MaxHp} HP)`,
+        0, hero.hp, foe.hp, { phase: 'phase2', targetId: foe.id }));
     }
   }
   // Brood Devour: surviving tagged summons heal their boss after devourAtTick
@@ -2262,7 +2261,7 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
   // Cocoon transformation: intercept first death and guard HP during cocoon phase
   for (const foe of enemies) {
     if (foe.hp <= 0 && foe.hasCocoonTransform && !foe.hasTransformed) {
-      const cocoonHp = foe.cocoonMaxHp || 400;
+      const cocoonHp = foe.phase2MaxHp || foe.cocoonMaxHp || 400;
       foe.hp = cocoonHp;
       foe.maxHp = cocoonHp;
       foe.inCocoon = true;
@@ -2271,7 +2270,7 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
       foe.cocoonDamageTaken = 0;
       foe.disableAutoAttack = true;
       log.push(makeEntry(tick, foe.id, 'phase_change',
-        `${foe.name} seals herself in a hardened cocoon! (${cocoonHp} HP — 95% damage resistance)`,
+        `${foe.name} seals herself in a hardened cocoon! (${cocoonHp} HP — 90% damage resistance)`,
         0, hero.hp, cocoonHp, { phase: 'cocoon', targetId: foe.id }));
     }
     if (foe.inCocoon && foe.hp < 1) {

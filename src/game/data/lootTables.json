@@ -1226,7 +1226,6 @@
       "tags": [],
       "dropChance": 1,
       "rarityTable": "wyvern",
-      "minimumRarity": "epic",
       "relicDrop": {
         "itemId": "relic_igneous_scale",
         "chance": 5,

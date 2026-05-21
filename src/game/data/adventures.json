@@ -2545,10 +2545,9 @@
       "bossId": "fallen_knight",
       "lootPoolId": "rootspire_tower",
       "regionId": "fallen_summit_region",
-      "name": "Fallen Summit - The Last Oath",
+      "name": "Fallen Summit",
       "description": "Beyond the Wyvern's nest, the Fallen Knight keeps his final vigil over Act 1. This is the current capstone fight of the first region.",
-      "linearAdventure": true,
-      "disableChoiceRun": true,
+      "choiceRun": false,
       "requiredItemId": "umbral_key",
       "routes": [
         {
@@ -2614,8 +2613,7 @@
               },
               "x": 76,
               "y": 28,
-              "next": [],
-              "stepIndex": 0
+              "next": []
             }
           ]
         }

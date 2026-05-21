@@ -668,7 +668,7 @@
     {
       "id": "headshot",
       "name": "Headshot",
-      "description": "Once per combat. Requires 4 critical hits landed this fight. Cast for 1.5 seconds to deal 280% weapon damage and ignore armor. If it crits, stun for 3 seconds.",
+      "description": "Once per combat. Requires 4 critical hits landed this fight. Cast for 1.5 seconds to deal 200% weapon damage and ignore armor. If it crits, stun for 1 second.",
       "energyCost": 60,
       "rageCost": 0,
       "castTicks": 1.5,
@@ -681,9 +681,9 @@
       "requirementLabel": "ranged weapon",
       "once": true,
       "requiredCritsLanded": 4,
-      "damageMult": 2.8,
+      "damageMult": 2.0,
       "armorPenPct": 100,
-      "stunOnCritTicks": 3
+      "stunOnCritTicks": 1
     },
     {
       "id": "wild_renewal",

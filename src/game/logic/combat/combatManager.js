@@ -2926,12 +2926,19 @@ function triggerBearTrapOnAutoAttack(combatant, tick, log) {
   if (!trap || !isAutoAttackStoppedByBearTrap(combatant)) return false;
 
   combatant.activeEffects = (combatant.activeEffects || []).filter(effect => effect !== trap);
+  combatant.activeEffects = (combatant.activeEffects || []).filter(e => e.type !== 'force_next_auto_miss');
+  combatant.activeEffects.push({
+    type: 'force_next_auto_miss',
+    attacksRemaining: 1,
+    sourceAbilityId: trap.sourceAbilityId || 'bear_trap',
+    sourceAbilityName: 'Bear Trap',
+  });
   const stunTicks = combatant.isBoss ? (trap.bossTriggerStunTicks || 1) : (trap.triggerStunTicks || 2);
   applyStunToCombatant(combatant, tick, stunTicks);
   const durationLabel = `${stunTicks} second${stunTicks !== 1 ? 's' : ''}`;
   const text = combatant.isPlayer
-    ? `Bear Trap snaps shut. Your auto attack is stopped and you are stunned for ${durationLabel}.`
-    : `Bear Trap snaps shut on ${combatant.name}. Its auto attack is stopped and it is stunned for ${durationLabel}.`;
+    ? `Bear Trap snaps shut. Your auto attack misses and you are stunned for ${durationLabel}.`
+    : `Bear Trap snaps shut on ${combatant.name}. Its auto attack misses and it is stunned for ${durationLabel}.`;
   log.push(makeEntry(tick, combatant.id, 'trap', text, 0, null, null, {
     targetId: combatant.id,
     abilityId: trap.sourceAbilityId || 'bear_trap',
@@ -2962,7 +2969,7 @@ function triggerBearTrapOnAutoAttack(combatant, tick, log) {
       staggerAttacks,
     }));
   }
-  return true;
+  return false;
 }
 
 function isEffectActive(effect) {
@@ -3253,15 +3260,14 @@ function applyPetLowHpGuards(hero, allies, procState, tick, log) {
       if (effect.oncePerFight !== false && procState.onceFiredIds.includes(onceKey)) continue;
       if (effect.oncePerFight !== false) procState.onceFiredIds.push(onceKey);
 
-      hero.activeEffects = (hero.activeEffects || []).filter(active => active.source !== source);
-      hero.activeEffects.push({
+      ally.activeEffects = (ally.activeEffects || []).filter(active => active.source !== source);
+      ally.activeEffects.push({
         type: 'damage_taken_reduction',
         reductionPct,
         remainingTicks: durationTicks + 1,
         source,
-        targetId: ally.id,
       });
-      log.push(makeEntry(tick, 'hero', 'proc', `Protective Instinct: ${ally.name} is wounded. You take ${reductionPct}% less damage for ${durationTicks} seconds.`, 0, hero.hp, null, {
+      log.push(makeEntry(tick, ally.id, 'proc', `Protective Instinct: ${ally.name} is wounded. It takes ${reductionPct}% less damage for ${durationTicks} seconds.`, 0, hero.hp, null, {
         source,
         targetId: ally.id,
         reductionPct,
@@ -3891,10 +3897,11 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
       .map(effect => effect !== forcedAutoMiss ? effect : { ...effect, attacksRemaining: effect.attacksRemaining - 1 })
       .filter(effect => effect.type !== 'force_next_auto_miss' || (effect.attacksRemaining || 0) > 0);
     consumeAttackBasedEffects(attacker);
+    const missSourceName = forcedAutoMiss.sourceAbilityName || 'Covering Fire';
     const text = attackerIsHero
-      ? `Covering Fire causes your auto attack to miss ${defender.name}.`
+      ? `${missSourceName} causes your auto attack to miss ${defender.name}.`
       : defenderIsHero
-        ? `${attacker.name}'s auto attack misses under Covering Fire.`
+        ? `${attacker.name}'s auto attack misses under ${missSourceName}.`
         : `${attacker.name}'s auto attack misses ${defender.name}.`;
     log.push(makeEntry(tick, action.actorId, 'miss', text, 0, hero.hp, enemy?.hp, {
       ...targetMeta,

@@ -404,6 +404,7 @@ export function buildPetCombatant(hero, petDef = null) {
       heroCritDurationTicks: Math.max(ability.heroCritDurationTicks || 0, wolfLungeUpgrade.heroCritDurationTicks || 0),
     };
   };
+  const petPassiveDamageReductionPct = sumEffect(heroEffects, "pet_passive_damage_reduction_pct");
   const unlockedPetAbilities = effectsOfType(heroEffects, "pet_unlock_ability")
     .map(effect => effect.ability)
     .filter(Boolean);
@@ -433,7 +434,11 @@ export function buildPetCombatant(hero, petDef = null) {
     visual: resolvedPet.visual || null,
     combatVisual: resolvedPet.combatVisual || null,
     tags: [...(resolvedPet.tags || []), "pet"],
-    effects: [...(resolvedPet.effects || []), ...unlockedPetEffects],
+    effects: [
+      ...(resolvedPet.effects || []),
+      ...unlockedPetEffects,
+      ...(petPassiveDamageReductionPct > 0 ? [{ type: "damage_taken_reduction_pct", value: petPassiveDamageReductionPct, source: "guardian_bond" }] : []),
+    ],
     abilities,
     isAlly: true,
     team: "player",

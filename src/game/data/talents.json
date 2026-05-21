@@ -1351,12 +1351,12 @@
                   "id": "beastmaster_guardian_bond",
                   "name": "Guardian Bond",
                   "summary": [
-                    "While your wolf is alive, you take 5% less damage"
+                    "Your wolf takes 8% less damage"
                   ],
                   "effects": [
                     {
-                      "type": "pet_alive_damage_taken_reduction_pct",
-                      "value": 5
+                      "type": "pet_passive_damage_reduction_pct",
+                      "value": 8
                     }
                   ]
                 }
@@ -1402,7 +1402,7 @@
                   "id": "beastmaster_protective_instinct",
                   "name": "Protective Instinct",
                   "summary": [
-                    "Once per fight, when your wolf drops below 50% HP, you take 30% less damage for 4 seconds"
+                    "Once per fight, when your wolf HP drops below 50%, it takes 30% less damage for 4 seconds"
                   ],
                   "effects": [
                     {
@@ -1424,20 +1424,20 @@
                   "id": "beastmaster_pack_leader",
                   "name": "Pack Leader",
                   "summary": [
-                    "Wolf gains +12% damage, +25% max HP, and +6 armor"
+                    "Wolf gains +10% damage, +20% max HP, and +5 armor"
                   ],
                   "effects": [
                     {
                       "type": "pet_damage_pct",
-                      "value": 12
+                      "value": 10
                     },
                     {
                       "type": "pet_max_hp_pct",
-                      "value": 25
+                      "value": 20
                     },
                     {
                       "type": "pet_armor",
-                      "value": 6
+                      "value": 5
                     }
                   ]
                 },
@@ -1519,12 +1519,12 @@
                   "id": "sharpshooter_eagle_eye",
                   "name": "Eagle Eye",
                   "summary": [
-                    "+8% critical strike chance with ranged weapons"
+                    "+5% critical strike chance with ranged weapons"
                   ],
                   "effects": [
                     {
                       "type": "crit_chance",
-                      "value": 8
+                      "value": 5
                     }
                   ]
                 },
@@ -1532,12 +1532,12 @@
                   "id": "sharpshooter_armor_pierce",
                   "name": "Armor Pierce",
                   "summary": [
-                    "Arrows ignore 20% of enemy armor"
+                    "Arrows ignore 15% of enemy armor"
                   ],
                   "effects": [
                     {
                       "type": "armor_penetration_pct",
-                      "value": 20
+                      "value": 15
                     }
                   ]
                 },
@@ -1545,13 +1545,13 @@
                   "id": "sharpshooter_snipers_patience",
                   "name": "Sniper's Patience",
                   "summary": [
-                    "Each consecutive second you do not attack increases your next shot's damage by +8%, up to +40%"
+                    "Each consecutive second you do not attack increases your next shot's damage by +8%, up to +32%"
                   ],
                   "effects": [
                     {
                       "type": "sniper_patience",
                       "valuePerSecond": 8,
-                      "maxPct": 40
+                      "maxPct": 32
                     }
                   ]
                 }
@@ -1746,9 +1746,9 @@
               "choices": [
                 {
                   "id": "ranger_field_dressing",
-                  "name": "Field Dressing",
+                  "name": "Mend Companion",
                   "summary": [
-                    "Unlocks Mend Companion: heal your wolf for 30% max HP over 3 seconds"
+                    "Heal your wolf for 30% max HP over 3 seconds"
                   ],
                   "effects": [
                     {
@@ -1759,9 +1759,9 @@
                 },
                 {
                   "id": "ranger_trapper",
-                  "name": "Trapper",
+                  "name": "Bear Trap",
                   "summary": [
-                    "Unlocks Bear Trap: stop the target's next auto-attack and stun it"
+                    "Unlocks Bear Trap: the target's next auto-attack misses and it is stunned"
                   ],
                   "effects": [
                     {
@@ -1771,21 +1771,16 @@
                   ]
                 },
                 {
-                  "id": "ranger_pack_bonds",
-                  "name": "Pack Bonds",
+                  "id": "ranger_relentless_pressure",
+                  "name": "Relentless Pressure",
                   "summary": [
-                    "Mend Companion also grants you +10% dodge for 4 seconds. When your wolf hits, your next shot gains +8% crit chance"
+                    "While the enemy has Poison or Bleeding, your attack speed is +12% and your wolf's attack speed is +15%"
                   ],
                   "effects": [
                     {
-                      "type": "mend_companion_self_dodge",
-                      "value": 10,
-                      "durationTicks": 4
-                    },
-                    {
-                      "type": "pet_hit_next_shot_crit",
-                      "value": 8,
-                      "durationTicks": 2
+                      "type": "relentless_pressure",
+                      "heroAttackSpeedPct": 12,
+                      "petAttackSpeedPct": 15
                     }
                   ]
                 }
@@ -1797,7 +1792,7 @@
               "choices": [
                 {
                   "id": "ranger_snare_specialist",
-                  "name": "Snare Specialist",
+                  "name": "Bear Trap Specialist",
                   "summary": [
                     "Bear Trap also Staggers the target for 2 attacks when it triggers"
                   ],
@@ -1827,16 +1822,21 @@
                   ]
                 },
                 {
-                  "id": "ranger_relentless_pressure",
-                  "name": "Relentless Pressure",
+                  "id": "ranger_pack_bonds",
+                  "name": "Pack Bonds",
                   "summary": [
-                    "While the enemy has Poison or Bleeding, your attack speed is +12% and your wolf's attack speed is +15%"
+                    "Mend Companion also grants you +10% dodge for 4 seconds. When your wolf hits, your next shot gains +8% crit chance"
                   ],
                   "effects": [
                     {
-                      "type": "relentless_pressure",
-                      "heroAttackSpeedPct": 12,
-                      "petAttackSpeedPct": 15
+                      "type": "mend_companion_self_dodge",
+                      "value": 10,
+                      "durationTicks": 4
+                    },
+                    {
+                      "type": "pet_hit_next_shot_crit",
+                      "value": 8,
+                      "durationTicks": 2
                     }
                   ]
                 }
@@ -1848,6 +1848,7 @@
               "choices": [
                 {
                   "id": "ranger_barbed_trap",
+                  "hidden": true,
                   "name": "Barbed Trap",
                   "summary": [
                     "Unlocks Barbed Trap: punish the target's next auto-attack with Bleeding and attack speed slow"

@@ -1806,8 +1806,13 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
       : actionTarget || (attackerIsPlayerSide ? enemy : frontTarget);
     const logEnemy = attackerIsPlayerSide ? defender : attacker;
 
-    if (!attacker || !defender || attacker.hp <= 0) continue;
-    if (!defender.isPlayer && defender.hp <= 0) continue;
+    if (!attacker || !defender) continue;
+    // Duel players commit their attack at tick start (lockstep); allow it to land
+    // even if they were killed by the opponent's earlier action this same tick.
+    if (attacker.hp <= 0 && !attacker.isDuelPlayer) continue;
+    // Same symmetry for the defender: a dead duel player can still receive a
+    // committed hit from this tick so both clients compute the same damage totals.
+    if (!defender.isPlayer && !defender.isDuelPlayer && defender.hp <= 0) continue;
     if (!defender.isPlayer && isEnemyUntargetable(defender)) continue;
 
     if (isStunned(attacker, tick)) continue;

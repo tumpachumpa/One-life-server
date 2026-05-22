@@ -4706,11 +4706,10 @@ function tryApplyOnHitEffects(attacker, defender, tick, log, rng, heroConditions
     // crit-only effects skip the RNG roll entirely on non-crit hits
     if (effect.type === 'debilitated_on_crit' && !action?.isCrit) continue;
     if (!(effect.chance > 0)) continue;
-    // Threshold-granted effects (_threshold: true) come from hero.passiveEffects rebuilt
-    // each tick by applyThresholdEffects — they don't exist in the enemy object on the
-    // other duel screen. Route them through procRng (isolated) so they don't shift the
-    // shared combat RNG. Static effects from combatSnap use shared rng() for determinism.
-    if ((effect._threshold ? procRng : rng)() * 100 >= effect.chance) continue;
+    // Always use procRng (side-specific in duel mode, falls back to rng in solo).
+    // Using the shared rng here would cause desync: each duel client processes its own
+    // hero first, so rng consumption order differs between screens.
+    if (procRng() * 100 >= effect.chance) continue;
     if (effect.type === 'daze_on_hit') {
       defender.activeEffects = (defender.activeEffects || []).filter(active => active.type !== 'daze');
       defender.activeEffects.push({

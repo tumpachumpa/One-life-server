@@ -269,6 +269,7 @@ function createEnemyCombatant(enemyObj, id = 'enemy') {
     hasTransformed: false,
     cocoonDurationTicks: enemyObj.cocoonDurationTicks ?? 4,
     cocoonMaxHp: enemyObj.cocoonMaxHp ?? null,
+    cocoonSprite: enemyObj.cocoonSprite || null,
     phase2MaxHp: enemyObj.phase2MaxHp ?? null,
     phase2Attack: enemyObj.phase2Attack ?? null,
     phase2Armor: enemyObj.phase2Armor ?? null,
@@ -2045,6 +2046,10 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
       foe.cocoonStartTick = tick;
       foe.cocoonDamageTaken = 0;
       foe.disableAutoAttack = true;
+      if (foe.cocoonSprite) {
+        foe._originalSprite = foe.sprite;
+        foe.sprite = foe.cocoonSprite;
+      }
       log.push(makeEntry(tick, foe.id, 'phase_change',
         `${foe.name} seals herself in a hardened cocoon! (${cocoonHp} HP — 90% damage resistance)`,
         0, hero.hp, cocoonHp, { phase: 'cocoon', targetId: foe.id }));
@@ -2079,6 +2084,10 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
       foe.inCocoon = false;
       foe.disableAutoAttack = !!foe._baseDisableAutoAttack;
       foe.activePhaseId = 'phase2';
+      if (foe._originalSprite) {
+        foe.sprite = foe._originalSprite;
+        foe._originalSprite = null;
+      }
       log.push(makeEntry(tick, foe.id, 'phase_change',
         `The cocoon shatters! ${foe.name} emerges reborn — Phase 2! (${foe.hp}/${p2MaxHp} HP)`,
         0, hero.hp, foe.hp, { phase: 'phase2', targetId: foe.id }));
@@ -2292,6 +2301,10 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
       foe.cocoonStartTick = tick;
       foe.cocoonDamageTaken = 0;
       foe.disableAutoAttack = true;
+      if (foe.cocoonSprite) {
+        foe._originalSprite = foe.sprite;
+        foe.sprite = foe.cocoonSprite;
+      }
       log.push(makeEntry(tick, foe.id, 'phase_change',
         `${foe.name} seals herself in a hardened cocoon! (${cocoonHp} HP — 90% damage resistance)`,
         0, hero.hp, cocoonHp, { phase: 'cocoon', targetId: foe.id }));

@@ -30,8 +30,9 @@ function passesOncePerCombatChance(combatant, ability, rng) {
 // Returns the action the enemy AI wants to take this tick.
 // Designed to be swappable without touching the core engine.
 export function aiDecide(combatant, tick, rng = Math.random) {
-  // Stunned enemies skip their turn
+  // Stunned or cocooned enemies skip their turn
   if (isStunned(combatant, tick)) return ACTION.NONE;
+  if (combatant.inCocoon) return ACTION.NONE;
 
   const availableAbilities = (combatant.abilities || [])
     .map((ability, index) => ({ ability, index }))

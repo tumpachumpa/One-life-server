@@ -2792,7 +2792,7 @@
         {
           "type": "debilitated_on_crit",
           "chance": 10,
-          "debuffDurationSecs": 2,
+          "debuffDurationSecs": 4,
           "damageReductionPct": 20
         }
       ]

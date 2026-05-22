@@ -2589,6 +2589,9 @@ function tickActiveEffects(combatant, tick, log, procParams = null) {
       remaining.push({ ...effect, remainingTicks: newRem });
     } else if (effect.type === 'blind' && (effect.attacksRemaining || 0) > 0) {
       remaining.push({ ...effect, remainingTicks: 0 });
+    } else if (effect.type === 'stagger' && (effect.attacksRemaining || 0) > 0) {
+      // Preserve stagger until its attacks-remaining charge is consumed (like blind)
+      remaining.push({ ...effect, remainingTicks: 0 });
     } else if (effect.type === 'pet_unleash' && (effect.recoveryTicks || 0) > 0) {
       followups.push({
         type: 'cannot_auto_attack',
@@ -2654,14 +2657,13 @@ function preventDeathWithLastBreath(combatant, tick, log, enemy = null, procStat
   }
   const lastBreath = getActiveLastBreathEffect(combatant);
   if (!lastBreath) return false;
+  // Consume the last_breath effect — it fires once and is gone
+  combatant.activeEffects = (combatant.activeEffects || []).filter(e => e !== lastBreath);
   combatant.hp = 1;
-  if (lastBreath.savedAtTick !== tick) {
-    lastBreath.savedAtTick = tick;
-    log.push(makeEntry(tick, combatant.id, 'proc', 'Last Breath keeps you standing at 1 HP.', 0, combatant.hp, enemy?.hp ?? null, {
-      statusType: 'last_breath',
-      preventedDeath: true,
-    }));
-  }
+  log.push(makeEntry(tick, combatant.id, 'proc', 'Last Breath keeps you standing at 1 HP.', 0, combatant.hp, enemy?.hp ?? null, {
+    statusType: 'last_breath',
+    preventedDeath: true,
+  }));
   return true;
 }
 
@@ -4701,6 +4703,8 @@ function tryApplyOnHitEffects(attacker, defender, tick, log, rng, heroConditions
   for (const effect of getOnHitEffects(attacker, action)) {
     if (effect.type === 'bleed_on_hit' && options.allowBleed === false) continue;
     if (effect.type === 'poison_on_hit' && options.allowPoison === false) continue;
+    // crit-only effects skip the RNG roll entirely on non-crit hits
+    if (effect.type === 'debilitated_on_crit' && !action?.isCrit) continue;
     if (!(effect.chance > 0)) continue;
     // Threshold-granted effects (_threshold: true) come from hero.passiveEffects rebuilt
     // each tick by applyThresholdEffects — they don't exist in the enemy object on the
@@ -4749,6 +4753,17 @@ function tryApplyOnHitEffects(attacker, defender, tick, log, rng, heroConditions
       });
       const text = attackerIsPlayerSide ? `Status: ${defender.name} gains Staggered.` : `Status: You are Staggered by ${attacker.name}.`;
       log.push(makeEntry(tick, attacker.id, 'stagger', text, 0, null, null, targetMeta));
+    }
+    if (effect.type === 'debilitated_on_crit') {
+      // action?.isCrit guaranteed by the guard above
+      defender.activeEffects = (defender.activeEffects || []).filter(active => active.type !== 'weaken');
+      defender.activeEffects.push({
+        type: 'weaken',
+        remainingTicks: effect.debuffDurationSecs || 4,
+        damageMult: 1 - (effect.damageReductionPct || 20) / 100,
+      });
+      const text = attackerIsPlayerSide ? `Debilitated: ${defender.name} deals -${effect.damageReductionPct || 20}% damage!` : `Debilitated: you deal -${effect.damageReductionPct || 20}% damage!`;
+      log.push(makeEntry(tick, attacker.id, 'weaken', text, 0, null, null, targetMeta));
     }
     if (effect.type === 'burn_on_hit') {
       defender.activeEffects = (defender.activeEffects || []).filter(active => active.type !== 'burning');
@@ -5544,13 +5559,10 @@ function applyProcEffect(effect, ctx, procState, heroProcNodes, hero, enemy, tic
       log.push(makeEntry(tick, 'hero', 'proc', `JUGGERNAUT: armor cannot be reduced, -50% damage taken, -20% damage dealt.`, 0, hero.hp, enemy?.hp, {}));
       break;
     case 'death_cheat':
-      procState.deathCheatTicks = Math.max(0.1, Number(effect.ticks ?? effect.durationTicks ?? 3.5) || 3.5);
       hero.activeEffects = (hero.activeEffects || []).filter(active => active.type !== 'last_breath');
-      hero.activeEffects.push({
-        type: 'last_breath',
-        remainingTicks: procState.deathCheatTicks,
-      });
-      log.push(makeEntry(tick, 'hero', 'proc', `Last Breath: ${procState.deathCheatTicks} seconds of immunity!`, 0, hero.hp, enemy?.hp, {}));
+      // remainingTicks: null = persistent until it actually saves the hero (consumed in preventDeathWithLastBreath)
+      hero.activeEffects.push({ type: 'last_breath', remainingTicks: null });
+      log.push(makeEntry(tick, 'hero', 'proc', `Last Breath: you will survive the next lethal blow!`, 0, hero.hp, enemy?.hp, {}));
       break;
     case 'opener_attack': {
       if (!enemy || enemy.hp <= 0) break;

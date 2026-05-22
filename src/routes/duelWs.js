@@ -7,8 +7,10 @@ const SLOT_TO_ACTION = [
 ];
 const ACTION_NONE = 'none';
 const SESSION_TTL_MS = 10 * 60 * 1000;
+const TICK_RESOLVE_TIMEOUT_MS = 1800; // wait up to 1.8s for both inputs before defaulting
 
-// sessionId → { p1: { ws, userId } | null, p2: { ws, userId } | null, createdAt }
+// sessionId → { p1: { ws, userId } | null, p2: { ws, userId } | null, createdAt, tickInputs }
+// tickInputs: Map of tick → { p1: string|null, p2: string|null, timer: TimeoutId }
 const sessions = new Map();
 
 let _verify = null;
@@ -99,6 +101,47 @@ function setupDuelWs(httpServer) {
           send(session.p2?.ws, { type: 'duel_tick', p1Action: action, p2Action: ACTION_NONE });
         } else {
           send(session.p1?.ws, { type: 'duel_tick', p1Action: ACTION_NONE, p2Action: action });
+        }
+      }
+
+      // Lockstep tick input: client submits their intended action for a given tick.
+      // When both players have submitted (or timeout), broadcast the resolved tick to both.
+      if (msg.type === 'duel_tick_input') {
+        if (!sessionId || !role) return;
+        const session = sessions.get(sessionId);
+        if (!session || !session.p1 || !session.p2) return;
+
+        const tick = typeof msg.tick === 'number' ? msg.tick : -1;
+        if (tick < 0 || tick > 10000) return; // sanity check
+        const rawAction = typeof msg.action === 'string' ? msg.action : ACTION_NONE;
+        // Normalise: only allow known action strings
+        const VALID_ACTIONS = new Set([ACTION_NONE, 'basic_attack',
+          'ability_0', 'ability_1', 'ability_2', 'ability_3', 'ability_4', 'ability_5']);
+        const action = VALID_ACTIONS.has(rawAction) ? rawAction : ACTION_NONE;
+
+        if (!session.tickInputs) session.tickInputs = new Map();
+
+        const resolveAndBroadcast = (td, resolvedTick) => {
+          clearTimeout(td.timer);
+          const p1 = td.p1 ?? ACTION_NONE;
+          const p2 = td.p2 ?? ACTION_NONE;
+          session.tickInputs.delete(resolvedTick);
+          const msg = { type: 'duel_tick_resolved', tick: resolvedTick, p1Action: p1, p2Action: p2 };
+          send(session.p1?.ws, msg);
+          send(session.p2?.ws, msg);
+        };
+
+        if (!session.tickInputs.has(tick)) {
+          const td = { p1: null, p2: null, timer: null };
+          td.timer = setTimeout(() => resolveAndBroadcast(td, tick), TICK_RESOLVE_TIMEOUT_MS);
+          session.tickInputs.set(tick, td);
+        }
+
+        const td = session.tickInputs.get(tick);
+        if (td[role] === null) td[role] = action; // first submission wins
+
+        if (td.p1 !== null && td.p2 !== null) {
+          resolveAndBroadcast(td, tick);
         }
       }
     });

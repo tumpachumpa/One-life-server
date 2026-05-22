@@ -3478,6 +3478,20 @@
         "duration": 2,
         "damagePct": 0.55,
         "weight": 5
+      },
+      {
+        "type": "crit_chance",
+        "min": 2,
+        "max": 4,
+        "scalingProfile": "crit_chance_minor",
+        "weight": 4
+      },
+      {
+        "type": "double_hit",
+        "min": 2,
+        "max": 6,
+        "scalingProfile": "double_hit",
+        "weight": 4
       }
     ],
     "blood": [

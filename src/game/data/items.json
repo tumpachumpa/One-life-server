@@ -453,6 +453,7 @@
           "value": 15
         }
       ],
+      "rarityAffixPools": ["warding", "arcane"],
       "tags": [
         "amulet",
         "magic",
@@ -475,6 +476,7 @@
       "baseStats": {
         "armor": 6
       },
+      "rarityAffixPools": ["survival", "endurance"],
       "tags": [
         "amulet",
         "defense",
@@ -497,6 +499,7 @@
       "baseStats": {
         "str": 2
       },
+      "rarityAffixPools": ["predator", "brutal"],
       "tags": [
         "amulet",
         "strength",
@@ -4093,7 +4096,6 @@
           { "type": "poison_on_hit", "chance": 8, "duration": 2, "damagePct": 0.4 }
         ]
       ],
-      "maxAffixes": 1,
       "price": 240,
       "dropWeight": 4,
       "icon": "/assets/items/generated/thorn_amulet.png"

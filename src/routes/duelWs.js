@@ -151,8 +151,13 @@ function setupDuelWs(httpServer) {
       if (!sessionId) return;
       const session = sessions.get(sessionId);
       if (!session) return;
-      if (role === 'p1') session.p1 = null;
-      else if (role === 'p2') session.p2 = null;
+      if (role === 'p1') {
+        session.p1 = null;
+        send(session.p2?.ws, { type: 'error', code: 'OPPONENT_DISCONNECTED', message: 'Opponent disconnected' });
+      } else if (role === 'p2') {
+        session.p2 = null;
+        send(session.p1?.ws, { type: 'error', code: 'OPPONENT_DISCONNECTED', message: 'Opponent disconnected' });
+      }
     });
   });
 }

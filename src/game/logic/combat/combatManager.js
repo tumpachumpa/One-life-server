@@ -3913,6 +3913,7 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
   // Secondary chance rolls (relics, enchantments, double-hit, bleed) use the
   // isolated proc RNG so they don't shift the shared combat RNG sequence.
   const procRng = procState?.procRng || rng;
+  // In duel mode the enemy has its own proc RNG (symmetric to the player's).
   const enemyAttackerProcRng = opts.enemyProcState?.procRng || procRng;
   const defenderStunBefore = defender?.stunUntilTick ?? -1;
   const attackerIsHero = attacker?.id === 'hero' && attacker?.isPlayer;

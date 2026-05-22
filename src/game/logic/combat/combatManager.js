@@ -5016,7 +5016,7 @@ function applyAction(combatant, action, tick, queue, log, rng, heroResources, de
     if (opts.disableAutoAttacks) return queue;
     const flashBurst = combatant.isPlayer ? getActiveFlashBurst(combatant) : null;
     const attackCount = Math.max(
-      getReadyAutoAttackCount(combatant, tick, { allowOpeningAttack: combatant.isPlayer }),
+      getReadyAutoAttackCount(combatant, tick, { allowOpeningAttack: combatant.isPlayer || (combatant.isDuelPlayer && !!opts.disableEnemyAi) }),
       flashBurst ? (flashBurst.attacksPerTick || 3) : 0,
     );
     if (attackCount <= 0) return queue;

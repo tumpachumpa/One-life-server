@@ -5628,7 +5628,7 @@ function fireProcTrigger(trigger, ctx, procState, heroProcNodes, hero, enemy, ti
       if (threshold != null) {
         const before = nodeCtx.hpPctBefore ?? 100;
         const after = nodeCtx.hpPctAfter ?? getHpPct(hero);
-        if (!(before > threshold && after <= threshold)) continue;
+        if (!(before >= threshold && after <= threshold)) continue;
       }
     }
     if (trigger === 'on_momentum_reach') {

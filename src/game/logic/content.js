@@ -290,12 +290,8 @@ export function getItem(id) {
       const merged = { ...template, ...itemRef };
       if (template.attackSpeed != null) merged.attackSpeed = template.attackSpeed;
       if (template.baseStats != null) merged.baseStats = { ...template.baseStats };
-      if (merged.damageDice && template.damageDice) {
-        merged.damageDice = { ...template.damageDice, ...merged.damageDice };
-      }
-      if (merged.armorDice && template.armorDice) {
-        merged.armorDice = { ...template.armorDice, ...merged.armorDice };
-      }
+      if (template.damageDice) merged.damageDice = { ...template.damageDice };
+      if (template.armorDice) merged.armorDice = { ...template.armorDice };
       return normalizeItemVisuals(merged);
     }
     return normalizeItemVisuals(normalizeGeneratedBaseEffects(itemRef));

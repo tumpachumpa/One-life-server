@@ -7,7 +7,7 @@ const SLOT_TO_ACTION = [
 ];
 const ACTION_NONE = 'none';
 const SESSION_TTL_MS = 10 * 60 * 1000;
-const TICK_RESOLVE_TIMEOUT_MS = 1800; // wait up to 1.8s for both inputs before defaulting
+const TICK_RESOLVE_TIMEOUT_MS = 600; // wait up to 600ms for both inputs before defaulting
 
 // sessionId → { p1: { ws, userId } | null, p2: { ws, userId } | null, createdAt, tickInputs }
 // tickInputs: Map of tick → { p1: string|null, p2: string|null, timer: TimeoutId }
@@ -123,8 +123,9 @@ function setupDuelWs(httpServer) {
 
         const resolveAndBroadcast = (td, resolvedTick) => {
           clearTimeout(td.timer);
-          const p1 = td.p1 ?? ACTION_NONE;
-          const p2 = td.p2 ?? ACTION_NONE;
+          // Default to basic_attack (not none) so timed-out players still auto-attack.
+          const p1 = td.p1 ?? 'basic_attack';
+          const p2 = td.p2 ?? 'basic_attack';
           session.tickInputs.delete(resolvedTick);
           const msg = { type: 'duel_tick_resolved', tick: resolvedTick, p1Action: p1, p2Action: p2 };
           send(session.p1?.ws, msg);

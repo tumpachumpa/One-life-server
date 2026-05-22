@@ -215,7 +215,7 @@
                   "id": "berserker_last_breath",
                   "name": "Last Breath",
                   "summary": [
-                    "Once per combat, when HP drops below 10%: you cannot die for 3.5 seconds. When the effect ends, you survive at your current HP and only die if you take lethal damage later."
+                    "Once per combat, when HP drops below 10%: the next lethal blow cannot kill you. You survive at 1 HP instead."
                   ],
                   "proc": {
                     "trigger": "on_hp_cross_below",

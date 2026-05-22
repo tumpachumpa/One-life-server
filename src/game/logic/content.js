@@ -288,6 +288,8 @@ export function getItem(id) {
     if (typeof itemRef.id === "string" && !itemRef.baseId && !itemRef.generation && itemById[itemRef.id]) {
       const template = itemById[itemRef.id];
       const merged = { ...template, ...itemRef };
+      if (template.attackSpeed != null) merged.attackSpeed = template.attackSpeed;
+      if (template.baseStats != null) merged.baseStats = { ...template.baseStats };
       if (merged.damageDice && template.damageDice) {
         merged.damageDice = { ...template.damageDice, ...merged.damageDice };
       }

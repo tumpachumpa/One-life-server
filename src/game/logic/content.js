@@ -286,7 +286,15 @@ export function getItem(id) {
     // Enchantment overlay { id, enchantment?, fractured? } for static (non-generated) items.
     // Merge the overlay onto the base definition so size, type, slot, etc. are preserved.
     if (typeof itemRef.id === "string" && !itemRef.baseId && !itemRef.generation && itemById[itemRef.id]) {
-      return normalizeItemVisuals({ ...itemById[itemRef.id], ...itemRef });
+      const template = itemById[itemRef.id];
+      const merged = { ...template, ...itemRef };
+      if (merged.damageDice && template.damageDice) {
+        merged.damageDice = { ...template.damageDice, ...merged.damageDice };
+      }
+      if (merged.armorDice && template.armorDice) {
+        merged.armorDice = { ...template.armorDice, ...merged.armorDice };
+      }
+      return normalizeItemVisuals(merged);
     }
     return normalizeItemVisuals(normalizeGeneratedBaseEffects(itemRef));
   }

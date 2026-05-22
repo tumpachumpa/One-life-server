@@ -2058,6 +2058,10 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
     if (foe.inCocoon && foe.hp < 1) {
       foe.hp = 1;
     }
+    // Stun during cocoon delays emergence by pushing the start tick forward
+    if (foe.inCocoon && isStunned(foe, tick)) {
+      foe.cocoonStartTick = (foe.cocoonStartTick || 0) + 1;
+    }
     // Cocoon exit after duration — boss emerges with current cocoon HP (damage dealt carries over)
     if (foe.inCocoon && tick >= (foe.cocoonStartTick || 0) + (foe.cocoonDurationTicks || 4)) {
       const p2MaxHp = foe.phase2MaxHp || foe.maxHp;

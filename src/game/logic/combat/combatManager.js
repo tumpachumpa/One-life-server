@@ -1566,6 +1566,9 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
   if (typeof procRngBySide.player === 'function' && !procState.procRng) {
     procState.procRng = procRngBySide.player;
   }
+  if (typeof procRngBySide.enemy === 'function' && enemyProcState && !enemyProcState.procRng) {
+    enemyProcState.procRng = procRngBySide.enemy;
+  }
   syncHeroCombatResources(heroResources, procState);
   procState.parryCountThisTick = 0;
   procState.heroAttackedThisTick = false;
@@ -3910,6 +3913,7 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
   // Secondary chance rolls (relics, enchantments, double-hit, bleed) use the
   // isolated proc RNG so they don't shift the shared combat RNG sequence.
   const procRng = procState?.procRng || rng;
+  const enemyAttackerProcRng = opts.enemyProcState?.procRng || procRng;
   const defenderStunBefore = defender?.stunUntilTick ?? -1;
   const attackerIsHero = attacker?.id === 'hero' && attacker?.isPlayer;
   const attackerIsAlly = !!attacker?.isAlly;
@@ -4184,9 +4188,9 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
       }
       tryShieldUpCounter(hero, enemy, result, tick, log, hero, enemy);
       applyLifeDrain(attacker, result.damage, tick, log, hero, enemy);
-      tryApplyOnHitEffects(enemy, hero, tick, log, rng, heroConditions, action, { allowBleed: result.damage > 0, allowPoison: result.damage > 0, procRng });
+      tryApplyOnHitEffects(enemy, hero, tick, log, rng, heroConditions, action, { allowBleed: result.damage > 0, allowPoison: result.damage > 0, procRng: enemyAttackerProcRng });
       tryCounter(hero, enemy, tick, log, rng, hero, enemy);
-      maybeInflictDeepCut(enemy, hero, result.damage, false, tick, log, heroWounds, procRng);
+      maybeInflictDeepCut(enemy, hero, result.damage, false, tick, log, heroWounds, enemyAttackerProcRng);
     }
   } else {
     if (attackerIsHero) {
@@ -4402,9 +4406,9 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
       applyLifeDrain(attacker, incomingDamage, tick, log, hero, enemy);
       tryAddBerserkerCritCharge(enemy, action);
       tryAddRapidFireCritCharge(enemy, action);
-      tryApplyOnHitEffects(enemy, hero, tick, log, rng, heroConditions, action, { procRng });
+      tryApplyOnHitEffects(enemy, hero, tick, log, rng, heroConditions, action, { procRng: enemyAttackerProcRng });
       tryCounter(hero, enemy, tick, log, rng, hero, enemy);
-      maybeInflictDeepCut(enemy, hero, incomingDamage, !!action.isCrit, tick, log, heroWounds, procRng);
+      maybeInflictDeepCut(enemy, hero, incomingDamage, !!action.isCrit, tick, log, heroWounds, enemyAttackerProcRng);
       if (!action.skipDoubleHit && hero.hp > 0) {
         const doubleHitChance = getDoubleHitChancePct(enemy);
         if (doubleHitChance > 0 && rng() * 100 < doubleHitChance) {

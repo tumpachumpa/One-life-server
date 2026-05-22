@@ -1,5 +1,6 @@
 require('dotenv').config();
 const fastify = require('fastify')({ logger: true });
+const { setupDuelWs } = require('./src/routes/duelWs');
 
 fastify.register(require('@fastify/cors'), {
   origin: process.env.CLIENT_ORIGIN ? process.env.CLIENT_ORIGIN.split(',') : false,
@@ -45,6 +46,7 @@ const start = async () => {
   try {
     // Listen first so Railway health checks pass during DB recovery.
     await fastify.listen({ port: process.env.PORT || 3001, host: '0.0.0.0' });
+    setupDuelWs(fastify.server);
     // Then wait for DB with exponential backoff to avoid log flooding.
     await waitForDb();
   } catch (err) {

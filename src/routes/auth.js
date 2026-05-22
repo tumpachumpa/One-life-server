@@ -1,5 +1,6 @@
 const pool = require('../db/pool');
 const bcrypt = require('bcryptjs');
+const { randomUUID } = require('crypto');
 
 const authAttempts = new Map();
 const MAX_AUTH_ATTEMPTS = 10;
@@ -34,7 +35,9 @@ async function authRoutes(fastify) {
         [username.trim().toLowerCase(), hash]
       );
       const user = result.rows[0];
-      const token = fastify.jwt.sign({ id: user.id, username: user.username });
+      const nonce = randomUUID();
+      await pool.query('UPDATE users SET session_nonce = $1 WHERE id = $2', [nonce, user.id]);
+      const token = fastify.jwt.sign({ id: user.id, username: user.username, nonce });
       return { token, user: { id: user.id, username: user.username } };
     } catch (err) {
       if (err.code === '23505') {
@@ -58,8 +61,24 @@ async function authRoutes(fastify) {
     if (!user) return reply.status(401).send({ error: 'Invalid credentials' });
     const valid = await bcrypt.compare(password, user.password_hash);
     if (!valid) return reply.status(401).send({ error: 'Invalid credentials' });
-    const token = fastify.jwt.sign({ id: user.id, username: user.username });
+    const nonce = randomUUID();
+    await pool.query('UPDATE users SET session_nonce = $1 WHERE id = $2', [nonce, user.id]);
+    const token = fastify.jwt.sign({ id: user.id, username: user.username, nonce });
     return { token, user: { id: user.id, username: user.username } };
+  });
+
+  // GET /auth/ping — verifies the session nonce is still valid.
+  // Returns 401 SESSION_KICKED when another device has logged in since this token was issued.
+  // Tokens without a nonce (issued before this feature) are treated as valid.
+  fastify.get('/auth/ping', { preHandler: fastify.authenticate }, async (request, reply) => {
+    const { id, nonce } = request.user;
+    if (!nonce) return { ok: true };
+    const result = await pool.query('SELECT session_nonce FROM users WHERE id = $1', [id]);
+    const user = result.rows[0];
+    if (!user || user.session_nonce !== nonce) {
+      return reply.status(401).send({ error: 'SESSION_KICKED' });
+    }
+    return { ok: true };
   });
 }
 

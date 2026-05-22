@@ -259,10 +259,10 @@
       "family": "dagger",
       "weaponType": "one_handed_dagger",
       "hands": 1,
-      "attackSpeed": 1.40,
-      "damageDice": { "count": 1, "sides": 4 },
+      "attackSpeed": 1.30,
+      "damageDice": { "count": 1, "sides": 4, "bonus": 3, "text": "1d4+3" },
       "baseStats": {
-        "damage": 7
+        "damage": 6
       },
       "effects": [
         {
@@ -299,9 +299,9 @@
       "family": "dagger",
       "weaponType": "one_handed_dagger",
       "hands": 1,
-      "attackSpeed": 1.37,
-      "damageDice": { "count": 1, "sides": 4 },
-      "baseStats": { "damage": 3 },
+      "attackSpeed": 1.25,
+      "damageDice": { "count": 1, "sides": 4, "bonus": 2, "text": "1d4+2" },
+      "baseStats": { "damage": 5 },
       "effects": [],
       "rarityAffixPools": ["precision", "speed", "predator"],
       "tags": ["dagger", "weapon", "melee", "fast", "one_handed", "rogue", "wolf", "beast", "ancient_forest"],
@@ -319,8 +319,8 @@
       "family": "dagger",
       "weaponType": "one_handed_dagger",
       "hands": 1,
-      "attackSpeed": 1.33,
-      "damageDice": { "count": 1, "sides": 4 },
+      "attackSpeed": 1.25,
+      "damageDice": { "count": 1, "sides": 4, "bonus": 1, "text": "1d4+1" },
       "baseStats": { "damage": 4 },
       "effects": [],
       "rarityAffixPools": ["precision", "speed", "dueling"],

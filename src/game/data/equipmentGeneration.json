@@ -3217,10 +3217,7 @@
       "size": [1, 1],
       "materialPool": ["ash", "ancient"],
       "affixPools": ["guard", "warding"],
-      "effects": [
-        { "type": "armor", "value": 3 },
-        { "type": "counter_chance", "value": 3 }
-      ],
+      "effects": [],
       "tags": ["ring", "accessory", "construct", "rootspire"],
       "price": 185,
       "icon": "/assets/items/generated/ring_of_thorns.png"

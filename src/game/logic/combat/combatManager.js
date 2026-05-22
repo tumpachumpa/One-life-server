@@ -5517,14 +5517,16 @@ function applyProcEffect(effect, ctx, procState, heroProcNodes, hero, enemy, tic
           .filter(e => !(e.type === DAMAGE_TAKEN_BONUS_EFFECT && e.source === 'exsanguinate'));
         enemy.activeEffects.push({
           type: DAMAGE_TAKEN_BONUS_EFFECT,
-          value: vuln.damageTakenPct || 15,
+          value: vuln.damageTakenPct || 10,
           remainingTicks: vuln.durationTicks || 5,
           source: 'exsanguinate',
         });
       }
-      // clearBleed: false — bleed stacks remain active and keep ticking
+      if (effect.clearBleed) {
+        enemy.activeEffects = (enemy.activeEffects || []).filter(e => e.type !== 'bleed');
+      }
       log.push(makeEntry(tick, 'hero', 'hit',
-        `Exsanguinate! ${dmg} burst damage (${remainingTicks} tick${remainingTicks !== 1 ? 's' : ''} × ${stacks} stack${stacks !== 1 ? 's' : ''}) — Vulnerable & stunned!`,
+        `Exsanguinate! ${dmg} burst damage (${remainingTicks} tick${remainingTicks !== 1 ? 's' : ''} × ${stacks} stack${stacks !== 1 ? 's' : ''}) — Vulnerable & stunned! Bleed consumed.`,
         dmg, hero.hp, enemy.hp, {}));
       break;
     }

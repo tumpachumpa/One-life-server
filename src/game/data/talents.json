@@ -1251,8 +1251,8 @@
                   "id": "crimson_exsanguinate",
                   "name": "Exsanguinate",
                   "summary": [
-                    "When Bleed ticks at 6+ stacks: instantly deal all remaining stack damage at once, apply Vulnerable (+15% damage taken for 5s), and stun for 1s.",
-                    "Bleed stacks remain active. Once per combat."
+                    "When Bleed ticks at 6+ stacks: instantly deal all remaining stack damage at once, apply Vulnerable (+10% damage taken for 5s), and stun for 1s.",
+                    "Consumes all Bleed stacks. Once per combat."
                   ],
                   "proc": {
                     "trigger": "on_bleed_tick",
@@ -1265,11 +1265,11 @@
                       "type": "exsanguinate_burst",
                       "instantBleedTicks": true,
                       "vulnerable": {
-                        "damageTakenPct": 15,
+                        "damageTakenPct": 10,
                         "durationTicks": 5
                       },
                       "stunTicks": 1,
-                      "clearBleed": false
+                      "clearBleed": true
                     }
                   }
                 }

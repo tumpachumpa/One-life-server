@@ -285,7 +285,8 @@ export function getItem(id) {
     const itemRef = migrated && typeof migrated === "object" ? migrated : id;
     // Enchantment overlay { id, enchantment?, fractured? } for static (non-generated) items.
     // Merge the overlay onto the base definition so size, type, slot, etc. are preserved.
-    if (typeof itemRef.id === "string" && !itemRef.baseId && !itemRef.generation && itemById[itemRef.id]) {
+    if (typeof itemRef.id === "string" && !itemRef.generation && itemById[itemRef.id]
+        && (!itemRef.baseId || itemRef.baseId === itemRef.id)) {
       const template = itemById[itemRef.id];
       const merged = { ...template, ...itemRef };
       if (template.attackSpeed != null) merged.attackSpeed = template.attackSpeed;

@@ -1436,7 +1436,7 @@ export function initCombat({
   enemyFrontId = null,
   bossEnemyId = null, bossDeathEndsFight = true, addsDespawnOnBossDeath = true,
   heroProcNodes = [], heroProcOpts = {},
-  enemyProcNodes = [],
+  enemyProcNodes = [], enemyProcOpts = {},
   debugPreventHeroDeath = false,
 }) {
   const enemyDefinitions = (Array.isArray(enemyObjs) && enemyObjs.length ? enemyObjs : [enemyObj]).filter(Boolean);
@@ -1446,7 +1446,7 @@ export function initCombat({
   const resolvedEnemyFrontId = getEnemyFrontId(enemies, enemyFrontId) || enemy?.id || null;
   const normalizedHeroWeaponTags = [...(heroWeaponTags || [])];
   const procState = createInitialProcState(heroHp, { ...heroProcOpts, initialRage: heroInitialRage, heroEffects });
-  const enemyProcState = (enemyProcNodes && enemyProcNodes.length) ? createInitialProcState(enemy?.hp || 100) : null;
+  const enemyProcState = (enemyProcNodes && enemyProcNodes.length) ? createInitialProcState(enemy?.hp || 100, enemyProcOpts) : null;
   const state = {
     tick: 0,
     phase: PHASE.FIGHTING,
@@ -4450,6 +4450,60 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
           fireProcTrigger('on_hit', { damage: incomingDamage, isCrit: !!action.isCrit }, eProcState, eProcNodes, attacker, hero, tick, log, rng);
           if (action.isCrit) fireProcTrigger('on_crit', { damage: incomingDamage }, eProcState, eProcNodes, attacker, hero, tick, log, rng);
           syncDuelEnemyProcEffects(eProcNodes, eProcState, attacker, hero, tick);
+          // Relic and enchantment on-hit procs for the duel enemy attacker.
+          // Must mirror the hero-attacker block (lines above) so both sides consume
+          // the same number of calls from their respective procRng streams.
+          if (incomingDamage > 0 && hero.hp > 0) {
+            for (const relic of eProcState.activeRelics || []) {
+              const p = relic?.relicPassive;
+              if (!p) continue;
+              if (p.type === 'armor_reduce_on_hit' && enemyAttackerProcRng() * 100 < (p.chance || 0)) {
+                const dur = Math.round((p.durationSecs || 4) * 1000 / TICK_MS);
+                hero.activeEffects = (hero.activeEffects || []).filter(e => e.type !== 'armor_debuff_relic');
+                hero.activeEffects.push({ type: 'armor_debuff_relic', value: p.reduction || 3, remainingTicks: dur, label: 'Infernal Fang' });
+                log.push(makeEntry(tick, attacker.id, 'proc', `Infernal Fang: -${p.reduction || 3} armor to ${hero.name}.`, 0, hero.hp, enemy.hp, {}));
+              }
+              if (p.type === 'burn_on_crit' && action.isCrit) {
+                const burnTicks = Math.round((p.burnDurationSecs || 2) * 1000 / TICK_MS);
+                hero.activeEffects = (hero.activeEffects || []).filter(e => !(e.type === 'burning' && e.source === 'relic_igneous_scale'));
+                hero.activeEffects.push({ type: 'burning', damagePctPerTick: p.burnDamagePct || 3, remainingTicks: burnTicks, source: 'relic_igneous_scale', element: 'fire', label: 'Igneous Scale' });
+                log.push(makeEntry(tick, attacker.id, 'proc', `Igneous Scale: burn applied to ${hero.name}!`, 0, hero.hp, enemy.hp, {}));
+              }
+              if (p.type === 'poison_on_hit' && !isPoisonImmune(hero) && enemyAttackerProcRng() * 100 < (p.chance || 0)) {
+                const baseDur = Math.max(1, p.duration || 3) + getRelicDotDurationBonus(eProcState);
+                const adjDmgPct = (p.damagePct || 0.4) * getRelicDotDamageMult(eProcState);
+                const currentPoison = (hero.activeEffects || []).find(e => e.type === 'poison');
+                const nextStacks = Math.min(6, (currentPoison?.stacks || 0) + 1);
+                const remainingTicks = Math.max(currentPoison?.remainingTicks || 0, baseDur);
+                hero.activeEffects = (hero.activeEffects || []).filter(e => e.type !== 'poison');
+                hero.activeEffects.push({ type: 'poison', stacks: nextStacks, remainingTicks, damagePctPerTick: Math.max(adjDmgPct, currentPoison?.damagePctPerTick || 0) });
+                log.push(makeEntry(tick, attacker.id, 'poison', `Queen's Venom: ${hero.name} gains Poisoned (${nextStacks} stack${nextStacks !== 1 ? 's' : ''}).`, 0, hero.hp, enemy.hp, {}));
+              }
+            }
+            for (const e of eProcState.enchantmentEffects || []) {
+              if (!e?.type || !e?.chance) continue;
+              if (enemyAttackerProcRng() * 100 >= e.chance) continue;
+              if (e.type === 'fire_proc_on_hit') {
+                const dmg = Math.max(1, e.damage || Math.floor(((e.minDamage || 0) + (e.maxDamage || 0)) / 2));
+                hero.hp = Math.max(0, hero.hp - dmg);
+                log.push(makeEntry(tick, attacker.id, 'hit', `Ember: ${dmg} fire damage!`, dmg, hero.hp, enemy.hp, { element: 'fire' }));
+                if (e.burnGuaranteed || (e.burnChanceBonus && enemyAttackerProcRng() * 100 < e.burnChanceBonus)) {
+                  const burnTicks = Math.round(((e.burnDurationSecs || 2) * 1000) / TICK_MS);
+                  hero.activeEffects = (hero.activeEffects || []).filter(eff => !(eff.type === 'burning' && eff.source === 'enchant_ember'));
+                  hero.activeEffects.push({ type: 'burning', damagePctPerTick: e.burnDamagePct || 3, remainingTicks: burnTicks, source: 'enchant_ember', element: 'fire' });
+                }
+              } else if (e.type === 'lightning_proc_on_hit') {
+                const dmg = Math.max(1, e.damage || Math.floor(((e.minDamage || 0) + (e.maxDamage || 0)) / 2));
+                hero.hp = Math.max(0, hero.hp - dmg);
+                log.push(makeEntry(tick, attacker.id, 'hit', `Storm: ${dmg} lightning damage!`, dmg, hero.hp, enemy.hp, { element: 'lightning' }));
+              } else if (e.type === 'armor_reduce_on_hit') {
+                const dur = Math.round(((e.durationSecs || 3) * 1000) / TICK_MS);
+                hero.activeEffects = (hero.activeEffects || []).filter(eff => eff.type !== 'armor_debuff_enchant');
+                hero.activeEffects.push({ type: 'armor_debuff_enchant', value: e.reduction || 2, remainingTicks: dur });
+                log.push(makeEntry(tick, attacker.id, 'proc', `Shadow: -${e.reduction || 2} armor to ${hero.name}.`, 0, hero.hp, enemy.hp, {}));
+              }
+            }
+          }
         }
       }
     }

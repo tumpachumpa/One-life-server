@@ -22,7 +22,7 @@ async function adventureRoutes(fastify) {
   // POST /adventure/start — begin a new run for the given adventureId
   fastify.post('/adventure/start', { preHandler: fastify.authenticate }, async (request, reply) => {
     const { id: userId } = request.user;
-    const { adventureId, difficultyStars } = request.body;
+    const { adventureId, difficultyStars, slot_id: slotId = 'slot_1' } = request.body;
     if (!adventureId) return reply.status(400).send({ error: 'Missing adventureId' });
 
     const {
@@ -45,7 +45,7 @@ async function adventureRoutes(fastify) {
     );
 
     // Load the hero's saved adventure progress
-    const heroResult = await pool.query('SELECT save_data FROM heroes WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 1', [userId]);
+    const heroResult = await pool.query('SELECT save_data FROM heroes WHERE user_id = $1 AND slot_id = $2', [userId, slotId]);
     const saveData = heroResult.rows[0]?.save_data || {};
     const adventureProgress = saveData.adventureProgress || {};
     const existing = adventureProgress[adventureId] || null;
@@ -65,10 +65,10 @@ async function adventureRoutes(fastify) {
 
     const sessionResult = await pool.query(
       `INSERT INTO adventure_sessions
-         (user_id, adventure_id, status, progress, hero_snap, run_loot, run_xp, run_gold)
-       VALUES ($1, $2, 'active', $3, $4, '[]', 0, 0)
+         (user_id, adventure_id, slot_id, status, progress, hero_snap, run_loot, run_xp, run_gold)
+       VALUES ($1, $2, $3, 'active', $4, $5, '[]', 0, 0)
        RETURNING id`,
-      [userId, adventureId, JSON.stringify(started), JSON.stringify(saveData.hero || null)]
+      [userId, adventureId, slotId, JSON.stringify(started), JSON.stringify(saveData.hero || null)]
     );
     const sessionId = sessionResult.rows[0].id;
 
@@ -182,8 +182,8 @@ async function adventureRoutes(fastify) {
       : null;
     const enemy = encounter?.enemy || null;
 
-    // Load hero for hunger / overlevel XP multipliers
-    const heroResult = await pool.query('SELECT save_data FROM heroes WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 1', [userId]);
+    // Load hero for hunger / overlevel XP multipliers (use session's slot_id)
+    const heroResult = await pool.query('SELECT save_data FROM heroes WHERE user_id = $1 AND slot_id = $2', [userId, session.slot_id || 'slot_1']);
     const hero = heroResult.rows[0]?.save_data?.hero || {};
 
     let xpGained   = 0;
@@ -279,7 +279,7 @@ async function adventureRoutes(fastify) {
     const adventure = getAdventure(session.adventure_id);
     if (!adventure) return reply.status(404).send({ error: 'Adventure not found' });
 
-    const heroResult = await pool.query('SELECT save_data FROM heroes WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 1', [userId]);
+    const heroResult = await pool.query('SELECT save_data FROM heroes WHERE user_id = $1 AND slot_id = $2', [userId, session.slot_id || 'slot_1']);
     const saveData   = heroResult.rows[0]?.save_data || {};
 
     const advProgress    = saveData.adventureProgress || {};
@@ -310,8 +310,8 @@ async function adventureRoutes(fastify) {
     saveData.adventureProgress = newAdvProgress;
 
     await pool.query(
-      `UPDATE heroes SET save_data = $1, updated_at = NOW() WHERE user_id = $2`,
-      [saveData, userId]
+      `UPDATE heroes SET save_data = $1, updated_at = NOW() WHERE user_id = $2 AND slot_id = $3`,
+      [saveData, userId, session.slot_id || 'slot_1']
     );
     await pool.query(
       `UPDATE adventure_sessions SET status = 'finalized', updated_at = NOW() WHERE id = $1`,

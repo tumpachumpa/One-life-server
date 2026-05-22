@@ -6,7 +6,6 @@ const DUNGEON_DURATION_MINUTES = 30;
 const PREP_DURATION_SECONDS    = 60;
 const CANCEL_COOLDOWN_MINUTES  = 10;
 const POST_FIGHT_PROTECTION_MINUTES = 5;
-const MAX_LEVEL_DIFF           = 2;
 const LOOT_POOL_SIZE           = 5;
 
 function xpToLevel(xp) {
@@ -319,18 +318,11 @@ async function campRoutes(fastify) {
     if (!defenderUserId)               return reply.status(400).send({ error: 'Missing defenderUserId' });
     if (defenderUserId === challengerId) return reply.status(400).send({ error: 'Cannot challenge yourself' });
 
-    // Load both saves for level check
-    const [atkResult, defResult] = await Promise.all([
-      pool.query('SELECT save_data FROM heroes WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 1', [challengerId]),
-      pool.query('SELECT save_data FROM heroes WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 1', [defenderUserId]),
-    ]);
+    const atkResult = await pool.query(
+      'SELECT save_data FROM heroes WHERE user_id = $1 ORDER BY updated_at DESC LIMIT 1',
+      [challengerId]
+    );
     if (!atkResult.rows[0]) return reply.status(400).send({ error: 'No hero found' });
-    if (!defResult.rows[0]) return reply.status(400).send({ error: 'Defender has no hero' });
-
-    const atkLevel = xpToLevel(atkResult.rows[0].save_data?.hero?.xp);
-    const defLevel = xpToLevel(defResult.rows[0].save_data?.hero?.xp);
-    if (Math.abs(atkLevel - defLevel) > MAX_LEVEL_DIFF)
-      return reply.status(403).send({ error: 'LEVEL_DIFF', message: `Target is outside your level range (±${MAX_LEVEL_DIFF})` });
 
     // Challenger must have an active camp
     const challengerCampResult = await pool.query(

@@ -4,6 +4,7 @@ const pool = require('../db/pool');
 const heroLogicP = import('../game/logic/hero.js');
 const inventoryLogicP = import('../game/logic/inventory.js');
 const contentP = import('../game/logic/content.js');
+const snapModP = import('../game/snap.js');
 
 const ESSENCE_PER_HOUR = 100;
 const INV_COLS = 5; // mirrors client constants.js
@@ -299,12 +300,27 @@ async function heroRoutes(fastify) {
     const removalsApplied = await applyPendingRemovals(hero, id);
     const lootApplied = await applyPendingLoot(hero, id);
 
-    await pool.query(
+    const heroSaveP = pool.query(
       `INSERT INTO heroes (user_id, slot_id, save_data, updated_at)
        VALUES ($1, $2, $3, NOW())
        ON CONFLICT (user_id, slot_id) DO UPDATE SET save_data = $3, updated_at = NOW()`,
       [id, slotId, hero]
     );
+
+    // Refresh camp combat_snap so PvP defense reflects current survival state (hunger, fatigue)
+    const snapRefreshP = hero.hero
+      ? snapModP.then(({ buildCombatSnapFromHero }) => {
+          const snap = buildCombatSnapFromHero(hero.hero);
+          if (!snap) return;
+          return pool.query(
+            `UPDATE camps SET combat_snap = $1 WHERE user_id = $2 AND status = 'active'`,
+            [JSON.stringify(snap), id]
+          );
+        })
+      : Promise.resolve();
+
+    await Promise.all([heroSaveP, snapRefreshP]);
+
     return {
       ok: true,
       // Return appliedHero whenever hero values were changed server-side so client stays in sync

@@ -17,6 +17,7 @@ fastify.register(require('./src/routes/adventure'));
 fastify.register(require('./src/routes/encounter'));
 fastify.register(require('./src/routes/pvp'));
 fastify.register(require('./src/routes/world'));
+fastify.register(require('./src/routes/leaderboard'));
 
 let dbReady = false;
 

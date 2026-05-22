@@ -3114,10 +3114,8 @@
       "size": [1, 2],
       "materialPool": ["bone", "worn"],
       "affixPools": ["predator"],
-      "effects": [
-        { "type": "attack_speed", "value": 3 },
-        { "type": "bleed_on_hit", "chance": 10, "duration": 2, "damagePct": 0.5 }
-      ],
+      "guaranteedAffixes": 2,
+      "effects": [],
       "tags": ["amulet", "accessory", "beast", "bleed", "orcamp"],
       "price": 165,
       "icon": "/assets/items/generated/thorn_amulet.png"

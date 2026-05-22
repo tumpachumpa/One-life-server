@@ -540,7 +540,9 @@
       "type": "gear",
       "slot": "bag",
       "family": "quiver",
-      "effects": [],
+      "effects": [
+        { "type": "attack_speed", "value": 4 }
+      ],
       "rarityAffixPools": [
         "quiver"
       ],

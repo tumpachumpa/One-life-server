@@ -1569,6 +1569,10 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
   if (typeof procRngBySide.enemy === 'function' && enemyProcState && !enemyProcState.procRng) {
     enemyProcState.procRng = procRngBySide.enemy;
   }
+  // Capture the enemy proc RNG even when enemyProcState is null (opponent has no proc nodes).
+  // Without this, resolveBasicAttackImpact falls back to hero's procRng for enemy on-hit rolls,
+  // causing divergence between the two clients because each client's "hero" uses a different seed.
+  const rawEnemyProcRng = typeof procRngBySide.enemy === 'function' ? procRngBySide.enemy : null;
   syncHeroCombatResources(heroResources, procState);
   procState.parryCountThisTick = 0;
   procState.heroAttackedThisTick = false;
@@ -1986,7 +1990,7 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
       if (action.ability?.type === 'serrated_strikes' && attacker.hp > 0 && defender.hp > 0) {
         attacker.autoAttackStarted = true;
         const immediateAttack = createBasicAttackImpact(attacker, defender, tick, actionRng, ACTION.BASIC_ATTACK, { frontId, enemyFrontId, procState });
-        if (resolveBasicAttackImpact(immediateAttack, attacker, defender, tick, log, actionRng, hero, logEnemy, heroResources, heroConditions, heroWounds, procState, heroProcNodes, { frontId, enemyFrontId, allies, enemyProcNodes, enemyProcState })) {
+        if (resolveBasicAttackImpact(immediateAttack, attacker, defender, tick, log, actionRng, hero, logEnemy, heroResources, heroConditions, heroWounds, procState, heroProcNodes, { frontId, enemyFrontId, allies, enemyProcNodes, enemyProcState, enemyProcRng: rawEnemyProcRng })) {
           queue = removePendingBasicAttacksForActor(queue, defender.id);
         }
         attacker.autoAttackProgressTicks = Math.min(
@@ -2001,14 +2005,14 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
         const attackCount = getReadyAutoAttackCount(attacker, tick);
         for (let attackIndex = 0; attackIndex < attackCount; attackIndex += 1) {
           const immediateAttack = createBasicAttackImpact(attacker, defender, tick, actionRng, ACTION.BASIC_ATTACK, { frontId, enemyFrontId, procState });
-          if (resolveBasicAttackImpact(immediateAttack, attacker, defender, tick, log, actionRng, hero, logEnemy, heroResources, heroConditions, heroWounds, procState, heroProcNodes, { frontId, enemyFrontId, allies, enemyProcNodes, enemyProcState })) {
+          if (resolveBasicAttackImpact(immediateAttack, attacker, defender, tick, log, actionRng, hero, logEnemy, heroResources, heroConditions, heroWounds, procState, heroProcNodes, { frontId, enemyFrontId, allies, enemyProcNodes, enemyProcState, enemyProcRng: rawEnemyProcRng })) {
             queue = removePendingBasicAttacksForActor(queue, defender.id);
           }
           if (defender.hp <= 0) break;
         }
       }
     } else {
-      if (resolveBasicAttackImpact(action, attacker, defender, tick, log, actionRng, hero, logEnemy, heroResources, heroConditions, heroWounds, procState, heroProcNodes, { frontId, enemyFrontId, allies, enemyProcNodes, enemyProcState })) {
+      if (resolveBasicAttackImpact(action, attacker, defender, tick, log, actionRng, hero, logEnemy, heroResources, heroConditions, heroWounds, procState, heroProcNodes, { frontId, enemyFrontId, allies, enemyProcNodes, enemyProcState, enemyProcRng: rawEnemyProcRng })) {
         queue = removePendingBasicAttacksForActor(queue, defender.id);
       }
     }
@@ -2231,7 +2235,7 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
       const procForImpact = procForActor || (defender?.isPlayer ? procState : null);
       const attack = createBasicAttackImpact(combatant, defender, tick, actorRng, ACTION.BASIC_ATTACK, { frontId, enemyFrontId, procState: procForImpact });
       if (combatant.isPlayer) attack.isMainHand = true;
-      if (resolveBasicAttackImpact(attack, combatant, defender, tick, log, actorRng, hero, logEnemy, heroResources, heroConditions, heroWounds, procForImpact, heroProcNodes, { frontId, enemyFrontId, allies, enemyProcNodes, enemyProcState })) {
+      if (resolveBasicAttackImpact(attack, combatant, defender, tick, log, actorRng, hero, logEnemy, heroResources, heroConditions, heroWounds, procForImpact, heroProcNodes, { frontId, enemyFrontId, allies, enemyProcNodes, enemyProcState, enemyProcRng: rawEnemyProcRng })) {
         queue = removePendingBasicAttacksForActor(queue, defender.id);
       }
       if (combatant.id === 'hero') {
@@ -2271,7 +2275,7 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
       attack.isOffhand = true;
       attack.preReductionDamage = preReductionDamage;
       attack.offhandDamageMult = hero.offhandDamageMult;
-      resolveBasicAttackImpact(attack, hero, enemy, tick, log, playerRng, hero, enemy, heroResources, heroConditions, heroWounds, procState, heroProcNodes, { frontId, enemyFrontId, allies, enemyProcNodes, enemyProcState });
+      resolveBasicAttackImpact(attack, hero, enemy, tick, log, playerRng, hero, enemy, heroResources, heroConditions, heroWounds, procState, heroProcNodes, { frontId, enemyFrontId, allies, enemyProcNodes, enemyProcState, enemyProcRng: rawEnemyProcRng });
     }
   }
 
@@ -3921,7 +3925,10 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
   // isolated proc RNG so they don't shift the shared combat RNG sequence.
   const procRng = procState?.procRng || rng;
   // In duel mode the enemy has its own proc RNG (symmetric to the player's).
-  const enemyAttackerProcRng = opts.enemyProcState?.procRng || procRng;
+  // Fall back to opts.enemyProcRng (the raw enemy-side proc RNG from procRngBySide.enemy) when
+  // enemyProcState is null (opponent has no proc nodes) — prevents using hero's procRng instead,
+  // which would diverge because each client's "hero" uses a different seed.
+  const enemyAttackerProcRng = opts.enemyProcState?.procRng || opts.enemyProcRng || procRng;
   const defenderStunBefore = defender?.stunUntilTick ?? -1;
   const attackerIsHero = attacker?.id === 'hero' && attacker?.isPlayer;
   const attackerIsAlly = !!attacker?.isAlly;

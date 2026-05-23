@@ -1446,7 +1446,15 @@ export function initCombat({
   const resolvedEnemyFrontId = getEnemyFrontId(enemies, enemyFrontId) || enemy?.id || null;
   const normalizedHeroWeaponTags = [...(heroWeaponTags || [])];
   const procState = createInitialProcState(heroHp, { ...heroProcOpts, initialRage: heroInitialRage, heroEffects });
-  const enemyProcState = (enemyProcNodes && enemyProcNodes.length) ? createInitialProcState(enemy?.hp || 100, enemyProcOpts) : null;
+  const duelEnemyEffects = enemy?.isDuelPlayer ? (enemy?.passiveEffects || []) : [];
+  const opponentHasStonewall = duelEnemyEffects.some(e => e.type === 'first_incoming_guaranteed_block');
+  const duelOpponentNeedsProcState = enemy?.isDuelPlayer && (
+    (enemyProcOpts?.enchantmentEffects?.length > 0) ||
+    (enemyProcOpts?.activeRelics?.length > 0)
+  );
+  const enemyProcState = ((enemyProcNodes && enemyProcNodes.length) || opponentHasStonewall || duelOpponentNeedsProcState)
+    ? createInitialProcState(enemy?.hp || 100, enemy?.isDuelPlayer ? { ...enemyProcOpts, heroEffects: duelEnemyEffects } : enemyProcOpts)
+    : null;
   const state = {
     tick: 0,
     phase: PHASE.FIGHTING,
@@ -4083,6 +4091,10 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
   }
   if (defenderIsHero && procState?.stonewallFirstBlockReady) {
     procState.stonewallFirstBlockReady = false;
+    defender.activeEffects = defender.activeEffects || [];
+    defender.activeEffects.push({ type: 'shield_up', attacksRemaining: 1, counterDamageMult: 1.0 });
+  } else if (defender?.isDuelPlayer && opts.enemyProcState?.stonewallFirstBlockReady) {
+    opts.enemyProcState.stonewallFirstBlockReady = false;
     defender.activeEffects = defender.activeEffects || [];
     defender.activeEffects.push({ type: 'shield_up', attacksRemaining: 1, counterDamageMult: 1.0 });
   }

@@ -2207,6 +2207,7 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
   const procState = state.procState ? { ...state.procState, onceFiredIds: [...(state.procState.onceFiredIds || [])] } : createInitialProcState(hero.hp);
   const enemyProcNodes = state.enemyProcNodes || [];
   const enemyProcState = state.enemyProcState ? { ...state.enemyProcState, onceFiredIds: [...(state.enemyProcState.onceFiredIds || [])] } : null;
+  const rawEnemyProcRng = typeof options.procRngBySide?.enemy === 'function' ? options.procRngBySide.enemy : null;
   let queue = [...(state.actionQueue || [])];
   const log = [...state.log];
 

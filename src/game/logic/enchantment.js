@@ -225,6 +225,53 @@ export function getEnchantmentDisplay(enchantment) {
   }
 }
 
+function rng(min, max) {
+  return min === max ? `${min}` : `${min}–${max}`;
+}
+
+function describePoolEntry(entry) {
+  if (!entry) return null;
+  switch (entry.type) {
+    case 'fire_proc_on_hit':
+      return `${entry.chance}% chance: ${rng(entry.minDamage, entry.maxDamage)} fire damage on hit${entry.burnGuaranteed ? ' + guaranteed burn' : entry.burnChanceBonus ? ` (+${entry.burnChanceBonus}% burn chance)` : ''}`;
+    case 'armor_reduce_on_hit':
+      return `${entry.chance}% chance: -${rng(entry.minReduction, entry.maxReduction)} armor for ${entry.durationSecs}s${entry.blindChance ? ` +${entry.blindChance}% blind` : ''}`;
+    case 'debilitated_on_crit':
+      return `${entry.chance}% chance on crit: -${entry.damageReductionPct}% enemy damage for ${entry.debuffDurationSecs}s`;
+    case 'consecutive_hit_scale':
+      return `${entry.chance}% chance: consecutive hits +${entry.scalePerHit}% damage (max x${entry.maxStacks})`;
+    case 'lightning_proc_on_hit':
+      return `${entry.chance}% chance: ${rng(entry.minDamage, entry.maxDamage)} lightning on hit${entry.critStunSecs ? ` + ${entry.critStunSecs}s stun on crit` : ''}${entry.chainChance ? ` +${entry.chainChance}% chain` : ''}`;
+    case 'passive_armor_bonus':
+      return `+${rng(entry.minArmor, entry.maxArmor)} armor`;
+    case 'passive_damage_reduction':
+      return `-${entry.reductionPct}% damage taken`;
+    case 'frost_reflect':
+      return `Reflects ${entry.reflectDamage} frost damage to attacker`;
+    case 'passive_lifesteal':
+      return `+${entry.lifestealPct}% lifesteal${entry.killRestoreHpPct ? ` + kills restore ${entry.killRestoreHpPct}% HP` : ''}${entry.lowHpDamageBonus ? ` + +${entry.lowHpDamageBonus}% damage below 50% HP` : ''}`;
+    case 'passive_max_hp_bonus':
+      return `+${rng(entry.minHp, entry.maxHp)} max HP${entry.scalesWithArmor ? ' (scales with armor)' : ''}`;
+    case 'kill_restore_hp_pct':
+      return `Kills restore ${entry.value}% max HP`;
+    default:
+      return String(entry.type).replace(/_/g, ' ');
+  }
+}
+
+/**
+ * Describe what an enchantment stone will do when applied (shows ranges, not resolved values).
+ * @param {object} stone - stone item from items.json
+ * @returns {string[]} - array of human-readable effect lines
+ */
+export function getStonePoolDescriptions(stone) {
+  const pool = stone?.enchantmentPool;
+  if (!pool) return [];
+  if (pool === 'random_combined') return ['Random enchantment from any type (may grant 2 effects)'];
+  if (!Array.isArray(pool)) return [];
+  return pool.map(describePoolEntry).filter(Boolean);
+}
+
 /**
  * Get the failure chance for a stone rarity.
  */

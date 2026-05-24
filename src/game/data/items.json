@@ -134,8 +134,7 @@
       "price": 2500,
       "dropWeight": 0,
       "icon": "/assets/items/generated/hunter_spear.png",
-      "rarityAffixPools": ["artifact_venom_blood"],
-      "maxAffixes": 3
+      "rarityAffixPools": ["artifact_venom_blood"]
     },
     {
       "id": "test_armor_500",
@@ -2619,10 +2618,7 @@
           "type": "fire_proc_on_hit",
           "chance": 7,
           "minDamage": 8,
-          "maxDamage": 12,
-          "burnChanceBonus": 20,
-          "burnDurationSecs": 2,
-          "burnDamagePct": 3
+          "maxDamage": 12
         }
       ]
     },
@@ -2649,10 +2645,7 @@
           "type": "fire_proc_on_hit",
           "chance": 10,
           "minDamage": 12,
-          "maxDamage": 17,
-          "burnGuaranteed": true,
-          "burnDurationSecs": 2,
-          "burnDamagePct": 3
+          "maxDamage": 17
         }
       ]
     },
@@ -2680,16 +2673,15 @@
           "chance": 14,
           "minDamage": 17,
           "maxDamage": 23,
-          "burnGuaranteed": true,
+          "burnChanceBonus": 10,
           "burnDurationSecs": 2,
-          "burnDamagePct": 3,
-          "burnVictimDamageTakenBonus": 15
+          "burnDamagePct": 2.5
         }
       ]
     },
     {
       "id": "stone_shadow_common",
-      "name": "Shadow Stone (Rough)",
+      "name": "Sunder Stone (Rough)",
       "size": [
         1,
         1
@@ -2716,7 +2708,7 @@
     },
     {
       "id": "stone_shadow_uncommon",
-      "name": "Shadow Stone (Polished)",
+      "name": "Sunder Stone (Polished)",
       "size": [
         1,
         1
@@ -2736,15 +2728,14 @@
         {
           "type": "armor_reduce_on_hit",
           "chance": 5,
-          "minReduction": 3,
-          "maxReduction": 4,
+          "reduction": 3,
           "durationSecs": 3
         }
       ]
     },
     {
       "id": "stone_shadow_rare",
-      "name": "Shadow Stone (Carved)",
+      "name": "Sunder Stone (Carved)",
       "size": [
         1,
         1
@@ -2765,14 +2756,13 @@
           "type": "armor_reduce_on_hit",
           "chance": 7,
           "reduction": 4,
-          "durationSecs": 3,
-          "blindChance": 10
+          "durationSecs": 3
         }
       ]
     },
     {
       "id": "stone_shadow_epic",
-      "name": "Shadow Stone (Perfect)",
+      "name": "Sunder Stone (Perfect)",
       "size": [
         1,
         1
@@ -2790,16 +2780,16 @@
       "icon": "/assets/items/stones/Shadow Stone.png",
       "enchantmentPool": [
         {
-          "type": "debilitated_on_crit",
+          "type": "armor_reduce_on_hit",
           "chance": 10,
-          "debuffDurationSecs": 4,
-          "damageReductionPct": 20
+          "reduction": 5,
+          "durationSecs": 3
         }
       ]
     },
     {
       "id": "stone_shadow_legendary",
-      "name": "Shadow Stone (Ancestral)",
+      "name": "Sunder Stone (Ancestral)",
       "size": [
         1,
         1
@@ -2817,10 +2807,11 @@
       "icon": "/assets/items/stones/Shadow Stone.png",
       "enchantmentPool": [
         {
-          "type": "consecutive_hit_scale",
+          "type": "armor_reduce_on_hit",
           "chance": 14,
-          "scalePerHit": 5,
-          "maxStacks": 5
+          "reduction": 6,
+          "durationSecs": 3,
+          "trueDamage": 5
         }
       ]
     },
@@ -2929,8 +2920,7 @@
           "type": "lightning_proc_on_hit",
           "chance": 10,
           "minDamage": 8,
-          "maxDamage": 13,
-          "critStunSecs": 0.5
+          "maxDamage": 13
         }
       ]
     },
@@ -2958,7 +2948,7 @@
           "chance": 14,
           "minDamage": 10,
           "maxDamage": 10,
-          "chainChance": 10
+          "critStunSecs": 1
         }
       ]
     },
@@ -3036,8 +3026,7 @@
         {
           "type": "passive_armor_bonus",
           "minArmor": 6,
-          "maxArmor": 9,
-          "enemyAttackSpeedSlow": 10
+          "maxArmor": 9
         }
       ]
     },
@@ -3061,8 +3050,9 @@
       "icon": "/assets/items/stones/Frost stone.png",
       "enchantmentPool": [
         {
-          "type": "passive_damage_reduction",
-          "reductionPct": 6
+          "type": "passive_armor_bonus",
+          "minArmor": 8,
+          "maxArmor": 12
         }
       ]
     },
@@ -3086,8 +3076,10 @@
       "icon": "/assets/items/stones/Frost stone.png",
       "enchantmentPool": [
         {
-          "type": "frost_reflect",
-          "reflectDamage": 8
+          "type": "passive_armor_bonus",
+          "minArmor": 10,
+          "maxArmor": 15,
+          "enemyAttackSpeedSlow": 10
         }
       ]
     },
@@ -3162,8 +3154,7 @@
       "enchantmentPool": [
         {
           "type": "passive_lifesteal",
-          "lifestealPct": 3,
-          "lowHpDamageBonus": 5
+          "lifestealPct": 3
         }
       ]
     },
@@ -3188,8 +3179,7 @@
       "enchantmentPool": [
         {
           "type": "passive_lifesteal",
-          "lifestealPct": 4,
-          "outOfCombatRegenPerSec": 2
+          "lifestealPct": 4
         }
       ]
     },
@@ -3214,8 +3204,8 @@
       "enchantmentPool": [
         {
           "type": "passive_lifesteal",
-          "lifestealPct": 4,
-          "killRestoreHpPct": 5
+          "lifestealPct": 5,
+          "outOfCombatRegenPerSec": 2
         }
       ]
     },
@@ -3293,8 +3283,7 @@
         {
           "type": "passive_max_hp_bonus",
           "minHp": 15,
-          "maxHp": 20,
-          "physicalDamageReductionPct": 3
+          "maxHp": 20
         }
       ]
     },
@@ -3320,8 +3309,7 @@
         {
           "type": "passive_max_hp_bonus",
           "minHp": 22,
-          "maxHp": 28,
-          "absorbHitCooldownSecs": 30
+          "maxHp": 28
         }
       ]
     },
@@ -3348,7 +3336,7 @@
           "type": "passive_max_hp_bonus",
           "minHp": 22,
           "maxHp": 28,
-          "scalesWithArmor": true
+          "physicalDamageReductionPct": 3
         }
       ]
     },
@@ -3996,7 +3984,7 @@
         { "type": "attack_speed", "value": 5 }
       ],
       "tags": ["ring", "fire", "speed", "imp", "rootspire"],
-      "rarityAffixPools": ["swift", "fire"],
+      "rarityAffixPools": ["speed", "ember"],
       "price": 200,
       "dropWeight": 4,
       "icon": "/assets/items/generated/vampire_ring.png"
@@ -4014,7 +4002,7 @@
         { "type": "attack_speed", "value": 6 }
       ],
       "tags": ["ring", "offense", "sentinel", "rootspire"],
-      "rarityAffixPools": ["swift", "might"],
+      "rarityAffixPools": ["speed", "balanced"],
       "price": 240,
       "dropWeight": 3,
       "icon": "/assets/items/generated/ring_of_thorns.png"
@@ -4032,7 +4020,7 @@
         { "type": "dodge_chance", "value": 5 }
       ],
       "tags": ["ring", "fire", "evasion", "rootspire"],
-      "rarityAffixPools": ["evasion", "fire"],
+      "rarityAffixPools": ["evasion", "ember"],
       "price": 230,
       "dropWeight": 3,
       "icon": "/assets/items/generated/vampire_ring.png"
@@ -4050,7 +4038,7 @@
         { "type": "dodge_chance", "value": 6 }
       ],
       "tags": ["ring", "shadow", "evasion", "rootspire"],
-      "rarityAffixPools": ["evasion", "shadow"],
+      "rarityAffixPools": ["evasion", "warding"],
       "price": 230,
       "dropWeight": 3,
       "icon": "/assets/items/generated/vampire_ring.png"
@@ -4068,7 +4056,7 @@
         { "type": "fire_resist", "value": 10 }
       ],
       "tags": ["amulet", "strength", "fire", "hellhound"],
-      "rarityAffixPools": ["might", "fire"],
+      "rarityAffixPools": ["brutal", "ember"],
       "price": 260,
       "dropWeight": 4,
       "icon": "/assets/items/generated/thorn_amulet.png"
@@ -4113,7 +4101,7 @@
         { "type": "fire_resist", "value": 15 }
       ],
       "tags": ["amulet", "defense", "fire", "rootspire"],
-      "rarityAffixPools": ["guard", "fire"],
+      "rarityAffixPools": ["guard", "ember"],
       "price": 250,
       "dropWeight": 3,
       "icon": "/assets/items/generated/ward_amulet.png"
@@ -4131,7 +4119,7 @@
         { "type": "dodge_chance", "value": 5 }
       ],
       "tags": ["amulet", "defense", "shadow", "evasion", "rootspire"],
-      "rarityAffixPools": ["evasion", "shadow"],
+      "rarityAffixPools": ["evasion", "warding"],
       "price": 250,
       "dropWeight": 3,
       "icon": "/assets/items/generated/ward_amulet.png"
@@ -4147,7 +4135,7 @@
       "armorType": "heavy",
       "baseStats": { "armor": 9 },
       "tags": ["boots", "heavy", "plate", "knight", "rootspire", "armor_heavy"],
-      "rarityAffixPools": ["guard", "might"],
+      "rarityAffixPools": ["guard", "brutal"],
       "price": 320,
       "dropWeight": 3,
       "icon": "/assets/items/generated/Leather boots.png"
@@ -4163,7 +4151,7 @@
       "armorType": "heavy",
       "baseStats": { "armor": 8 },
       "tags": ["gloves", "heavy", "plate", "knight", "rootspire", "armor_heavy"],
-      "rarityAffixPools": ["guard", "might"],
+      "rarityAffixPools": ["guard", "brutal"],
       "price": 300,
       "dropWeight": 3,
       "icon": "/assets/items/generated/iron_knuckles.png"
@@ -4226,7 +4214,7 @@
       "damageDice": { "count": 1, "sides": 10 },
       "baseStats": { "damage": 16 },
       "tags": ["weapon", "melee", "two_handed", "polearm", "warrior"],
-      "rarityAffixPools": ["might", "guard"],
+      "rarityAffixPools": ["brutal", "guard"],
       "price": 420,
       "dropWeight": 3,
       "icon": "/assets/items/generated/hunter_spear.png"
@@ -4245,7 +4233,7 @@
         { "type": "fire_resist", "value": 10 }
       ],
       "tags": ["cloak", "cape", "medium", "fire", "rootspire", "armor_medium"],
-      "rarityAffixPools": ["guard", "fire"],
+      "rarityAffixPools": ["guard", "ember"],
       "price": 290,
       "dropWeight": 3,
       "icon": "/assets/items/generated/cape.png"
@@ -4265,7 +4253,7 @@
         { "type": "dodge_chance", "value": 8 }
       ],
       "tags": ["cloak", "cape", "light", "shadow", "evasion", "rogue", "armor_light"],
-      "rarityAffixPools": ["evasion", "shadow"],
+      "rarityAffixPools": ["evasion", "warding"],
       "price": 270,
       "dropWeight": 3,
       "icon": "/assets/items/generated/cape.png"

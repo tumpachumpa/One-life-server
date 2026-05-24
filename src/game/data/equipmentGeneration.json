@@ -2696,6 +2696,10 @@
         {
           "type": "fire_resist",
           "value": 8
+        },
+        {
+          "type": "dodge_chance",
+          "value": 5
         }
       ],
       "tags": [
@@ -3460,21 +3464,21 @@
         "min": 6,
         "max": 14,
         "scalingProfile": "attack_speed",
-        "weight": 6
+        "weight": 7
       },
       {
         "type": "lifesteal",
         "min": 3,
         "max": 7,
         "scalingProfile": "lifesteal",
-        "weight": 5
+        "weight": 6
       },
       {
         "type": "crit_chance",
         "min": 3,
         "max": 6,
         "scalingProfile": "crit_chance_minor",
-        "weight": 5
+        "weight": 6
       },
       {
         "type": "stat_bonus",
@@ -3482,13 +3486,35 @@
         "min": 3,
         "max": 6,
         "scalingProfile": "stat_bonus",
-        "weight": 4
+        "weight": 5
+      },
+      {
+        "type": "stat_bonus",
+        "stat": "dex",
+        "min": 3,
+        "max": 6,
+        "scalingProfile": "stat_bonus",
+        "weight": 5
       },
       {
         "type": "max_hp",
         "min": 20,
         "max": 40,
         "scalingProfile": "max_hp_high",
+        "weight": 4
+      },
+      {
+        "type": "double_hit",
+        "min": 3,
+        "max": 8,
+        "scalingProfile": "double_hit",
+        "weight": 4
+      },
+      {
+        "type": "crit_damage",
+        "min": 5,
+        "max": 10,
+        "scalingProfile": "crit_damage",
         "weight": 3
       }
     ],

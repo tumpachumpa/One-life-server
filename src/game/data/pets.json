@@ -27,9 +27,7 @@
           "heroArmorPct": 0
         }
       },
-      "effects": [
-        { "type": "regen_each_round", "value": 2 }
-      ],
+      "effects": [],
       "abilities": []
     }
   ]

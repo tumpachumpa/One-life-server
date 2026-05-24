@@ -584,12 +584,13 @@ export function calcStats(hero) {
     if (!item) continue;
     if (slot === "offhand" && item.slot === "weapon" && !canDualWield) continue;
     if (isQuiverInactiveForHero(hero, slot, item)) continue;
+    const fractureMult = item.fractured ? 0.9 : 1;
     for (const [key, value] of Object.entries(item.baseStats || {})) {
       const statKey = key === "agi" ? "dex" : key;
       const statValue = slot === "offhand" && item.slot === "weapon" && canDualWield && statKey === "damage"
         ? Math.floor(value * 0.5)
         : value;
-      stats[statKey] = (stats[statKey] || 0) + statValue;
+      stats[statKey] = (stats[statKey] || 0) + Math.floor(statValue * fractureMult);
     }
   }
   stats.maxHp = (stats.maxHp || 0) + sumEffect(effects, "max_hp");
@@ -714,11 +715,6 @@ function applyEnchantmentPassives(hero, stats, equipment) {
       stats.enchantDamageTakenReductionPct = (stats.enchantDamageTakenReductionPct || 0) + Number(e.reductionPct || 0);
     }
 
-    // Apply fractured penalty: -10% base stats
-    if (item.fractured) {
-      // We track this so combat/UI can display it; actual penalty applied to the item's baseStats is handled separately
-      stats._hasFracturedItem = true;
-    }
   }
 
   if (totalArmorBonus > 0) {

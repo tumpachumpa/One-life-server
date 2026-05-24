@@ -3715,10 +3715,10 @@
       "armorDice": { "count": 2, "sides": 6, "bonus": 4, "text": "2d6+4", "average": 11 },
       "baseStats": { "armor": 16 },
       "effects": [
-        { "type": "block_chance", "value": 20 },
+        { "type": "block_chance", "value": 15 },
         { "type": "block_power", "value": 40 },
         { "type": "block_power_regen", "value": 4 },
-        { "type": "counter_chance", "value": 15 },
+        { "type": "counter_chance", "value": 10 },
         {
           "name": "First Wall",
           "type": "first_incoming_guaranteed_block",

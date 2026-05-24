@@ -1373,7 +1373,7 @@
         ]
       },
       "equipmentDrops": {
-        "dropChance": 0.01,
+        "dropChance": 0.008,
         "items": { "stonewall": 1 }
       }
     },

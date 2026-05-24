@@ -1571,6 +1571,7 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
   };
 
   const hero = cloneCombatant(state.combatants.hero);
+  const heroHpAtTickStart = hero.hp;
   let enemies = getStateEnemies(state.combatants).map(cloneCombatant);
   let allies = getStateAllies(state.combatants).map(cloneCombatant);
   let frontId = getFrontId(hero, allies, state.frontId);
@@ -2179,6 +2180,13 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
   }
   enemy = getLivingEnemy(enemies, selectedTargetId) || getLivingEnemy(enemies, enemyFrontId) || enemies[0];
   selectedTargetId = enemy?.id || selectedTargetId;
+
+  // Catch damage paths (boss timed spells, hazard explosions, etc.) that bypass the
+  // per-hit maybeFireHpCrossBelowProcs / preventDeathWithLastBreath calls.
+  if (hero.hp <= 0 && !bossDead && !allEnemiesDead && procState) {
+    maybeFireHpCrossBelowProcs(heroHpAtTickStart, hero, procState, heroProcNodes, enemy, tick, log, playerRng);
+    preventDeathWithLastBreath(hero, tick, log, enemy, procState);
+  }
 
   if (hero.hp <= 0 || bossDead || allEnemiesDead) {
     if (bossDead || allEnemiesDead) {

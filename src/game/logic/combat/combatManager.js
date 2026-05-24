@@ -162,6 +162,16 @@ function getMomentumMax(heroProcNodes = [], hero = null) {
   return Math.max(MOMENTUM_BASE_MAX, passiveCap, nodeCap);
 }
 
+function extractEnchantPassiveValues(enchEffects) {
+  let enemyAttackSpeedSlowPct = 0;
+  let physicalDmgReductionPct = 0;
+  for (const e of enchEffects || []) {
+    if (e?.enemyAttackSpeedSlow) enemyAttackSpeedSlowPct += Number(e.enemyAttackSpeedSlow) || 0;
+    if (e?.physicalDamageReductionPct) physicalDmgReductionPct += Number(e.physicalDamageReductionPct) || 0;
+  }
+  return { enemyAttackSpeedSlowPct, physicalDmgReductionPct };
+}
+
 function applyScarStackArmor(hero, procState) {
   if (!hero?.isPlayer || !procState) return;
   const scarArmor = Math.max(0, Math.floor(procState.scarStacks || 0));
@@ -1525,6 +1535,23 @@ export function initCombat({
   applyScarStackArmor(state.combatants.hero, procState);
   applyThresholdEffects(heroProcNodes, procState, state.combatants.hero, enemy, allyCombatants);
   if (enemyProcState) applyThresholdEffects(enemyProcNodes, enemyProcState, state.combatants.enemy, state.combatants.hero, []);
+  // Apply enchantment passives that modify combatant stats at fight start (Frost/Earth Ancestral)
+  const heroEnch = extractEnchantPassiveValues(procState.enchantmentEffects);
+  if (heroEnch.enemyAttackSpeedSlowPct > 0 && enemy) {
+    enemy.autoAttackRate = Math.max(0.01, enemy.autoAttackRate * (1 - heroEnch.enemyAttackSpeedSlowPct / 100));
+  }
+  if (heroEnch.physicalDmgReductionPct > 0) {
+    state.combatants.hero.physicalDmgReductionPct = heroEnch.physicalDmgReductionPct;
+  }
+  if (enemyProcState) {
+    const enemyEnch = extractEnchantPassiveValues(enemyProcState.enchantmentEffects);
+    if (enemyEnch.enemyAttackSpeedSlowPct > 0) {
+      state.combatants.hero.autoAttackRate = Math.max(0.01, state.combatants.hero.autoAttackRate * (1 - enemyEnch.enemyAttackSpeedSlowPct / 100));
+    }
+    if (enemyEnch.physicalDmgReductionPct > 0) {
+      enemy.physicalDmgReductionPct = enemyEnch.physicalDmgReductionPct;
+    }
+  }
   return state;
 }
 
@@ -2598,7 +2625,8 @@ function tickActiveEffects(combatant, tick, log, procParams = null) {
       }
     }
     const newRem = effect.remainingTicks - 1;
-    if (newRem > 0) {
+    const clearedMidTick = combatant.activeEffects !== activeEffectsAtStart && !combatant.activeEffects.includes(effect);
+    if (newRem > 0 && !clearedMidTick) {
       remaining.push({ ...effect, remainingTicks: newRem });
     } else if (effect.type === 'blind' && (effect.attacksRemaining || 0) > 0) {
       remaining.push({ ...effect, remainingTicks: 0 });
@@ -4116,7 +4144,8 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
     log.push(makeEntry(tick, action.actorId, 'dodged', text, 0, hero.hp, enemy.hp, { ...targetMeta, isMainHand: !!action.isMainHand, isOffhand: !!action.isOffhand }));
   } else if (result.blocked) {
     if (attackerIsHero) {
-      const applied = applyCombatantDamage(enemy, result.damage);
+      const _blockedDmg = enemy.physicalDmgReductionPct > 0 ? Math.max(0, Math.floor(result.damage * (1 - enemy.physicalDmgReductionPct / 100))) : result.damage;
+      const applied = applyCombatantDamage(enemy, _blockedDmg);
       const critText = action.isCrit ? ' Critical hit!' : '';
       const blockSource = result.shieldUp ? 'Shield Up' : 'Block Power';
       const blockHandTag = action.isOffhand ? '[OH] ' : action.isMainHand ? '[MH] ' : '';
@@ -4233,7 +4262,8 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
         logDamageShieldAbsorb(enemy, grudgeApplied, tick, log, hero, enemy, targetMeta);
         procState.grudge = 0;
       }
-      const applied = applyCombatantDamage(enemy, result.damage);
+      const _hitDmg = enemy.physicalDmgReductionPct > 0 ? Math.max(0, Math.floor(result.damage * (1 - enemy.physicalDmgReductionPct / 100))) : result.damage;
+      const applied = applyCombatantDamage(enemy, _hitDmg);
       const hitHandTag = action.isOffhand ? '[OH] ' : action.isMainHand ? '[MH] ' : '';
       const offhandReductionNote = action.isOffhand && action.preReductionDamage != null
         ? ` (${action.preReductionDamage}→${Math.round((action.offhandDamageMult ?? 0.5) * 100)}%)`
@@ -4342,9 +4372,15 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
             log.push(makeEntry(tick, 'hero', 'hit', `Storm: ${dmg} lightning damage!`, dmg, hero.hp, enemy.hp, { element: 'lightning' }));
           } else if (e.type === 'armor_reduce_on_hit') {
             const dur = Math.round(((e.durationSecs || 3) * 1000) / TICK_MS);
+            const reduction = e.reduction || 2;
             enemy.activeEffects = (enemy.activeEffects || []).filter(eff => eff.type !== 'armor_debuff_enchant');
-            enemy.activeEffects.push({ type: 'armor_debuff_enchant', value: e.reduction || 2, remainingTicks: dur });
-            log.push(makeEntry(tick, 'hero', 'proc', `Shadow: -${e.reduction || 2} armor to ${enemy.name}.`, 0, hero.hp, enemy.hp, {}));
+            enemy.activeEffects.push({ type: 'armor_debuff_enchant', value: reduction, remainingTicks: dur });
+            let sunderMsg = `Sunder: -${reduction} armor to ${enemy.name}.`;
+            if (e.trueDamage) {
+              enemy.hp = Math.max(0, enemy.hp - e.trueDamage);
+              sunderMsg += ` ${e.trueDamage} true damage!`;
+            }
+            log.push(makeEntry(tick, 'hero', 'proc', sunderMsg, e.trueDamage || 0, hero.hp, enemy.hp, {}));
           }
         }
       }
@@ -4407,6 +4443,10 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
       if (capPct != null) {
         const cappedDamage = Math.max(1, Math.floor((hero.maxHp || 0) * capPct / 100));
         incomingDamage = Math.min(incomingDamage, cappedDamage);
+      }
+      // Earth Ancestral: physical damage reduction
+      if (hero.physicalDmgReductionPct > 0 && incomingDamage > 0) {
+        incomingDamage = Math.max(0, Math.floor(incomingDamage * (1 - hero.physicalDmgReductionPct / 100)));
       }
       // Relic barrier absorption (Black Armor)
       if (procState?.relicBarrier > 0 && incomingDamage > 0) {
@@ -4518,9 +4558,15 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
                 log.push(makeEntry(tick, attacker.id, 'hit', `Storm: ${dmg} lightning damage!`, dmg, hero.hp, enemy.hp, { element: 'lightning' }));
               } else if (e.type === 'armor_reduce_on_hit') {
                 const dur = Math.round(((e.durationSecs || 3) * 1000) / TICK_MS);
+                const reduction = e.reduction || 2;
                 hero.activeEffects = (hero.activeEffects || []).filter(eff => eff.type !== 'armor_debuff_enchant');
-                hero.activeEffects.push({ type: 'armor_debuff_enchant', value: e.reduction || 2, remainingTicks: dur });
-                log.push(makeEntry(tick, attacker.id, 'proc', `Shadow: -${e.reduction || 2} armor to ${hero.name}.`, 0, hero.hp, enemy.hp, {}));
+                hero.activeEffects.push({ type: 'armor_debuff_enchant', value: reduction, remainingTicks: dur });
+                let sunderMsg = `Sunder: -${reduction} armor to ${hero.name}.`;
+                if (e.trueDamage) {
+                  hero.hp = Math.max(0, hero.hp - e.trueDamage);
+                  sunderMsg += ` ${e.trueDamage} true damage!`;
+                }
+                log.push(makeEntry(tick, attacker.id, 'proc', sunderMsg, e.trueDamage || 0, hero.hp, enemy.hp, {}));
               }
             }
           }

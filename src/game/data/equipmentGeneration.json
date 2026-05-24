@@ -2696,6 +2696,10 @@
         {
           "type": "fire_resist",
           "value": 8
+        },
+        {
+          "type": "dodge_chance",
+          "value": 5
         }
       ],
       "tags": [
@@ -3454,6 +3458,66 @@
         "weight": 5
       }
     ],
+    "artifact_venom_blood": [
+      {
+        "type": "attack_speed",
+        "min": 6,
+        "max": 14,
+        "scalingProfile": "attack_speed",
+        "weight": 7
+      },
+      {
+        "type": "lifesteal",
+        "min": 3,
+        "max": 7,
+        "scalingProfile": "lifesteal",
+        "weight": 6
+      },
+      {
+        "type": "crit_chance",
+        "min": 3,
+        "max": 6,
+        "scalingProfile": "crit_chance_minor",
+        "weight": 6
+      },
+      {
+        "type": "stat_bonus",
+        "stat": "str",
+        "min": 3,
+        "max": 6,
+        "scalingProfile": "stat_bonus",
+        "weight": 5
+      },
+      {
+        "type": "stat_bonus",
+        "stat": "dex",
+        "min": 3,
+        "max": 6,
+        "scalingProfile": "stat_bonus",
+        "weight": 5
+      },
+      {
+        "type": "max_hp",
+        "min": 20,
+        "max": 40,
+        "scalingProfile": "max_hp_high",
+        "weight": 4
+      },
+      {
+        "type": "double_hit",
+        "min": 3,
+        "max": 8,
+        "scalingProfile": "double_hit",
+        "weight": 4
+      },
+      {
+        "type": "crit_damage",
+        "min": 5,
+        "max": 10,
+        "scalingProfile": "crit_damage",
+        "weight": 3
+      }
+    ],
     "warg_fang": [
       {
         "type": "stat_bonus",
@@ -4023,10 +4087,10 @@
       },
       {
         "type": "damage_bonus_pct",
-        "min": 4,
-        "max": 9,
+        "min": 2,
+        "max": 5,
         "scalingProfile": "damage_pct_limited",
-        "weight": 4
+        "weight": 2
       }
     ],
     "warding": [

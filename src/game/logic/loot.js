@@ -531,7 +531,8 @@ export function applyItemRarity(item, rarity, rng = Math.random) {
 
 export function createLootItem(item, tableName = "normal", rng = Math.random, minimumRarity = null, lootBonus = 0) {
   if (!item || (!isCampfireItem(item) && !(item.type === "gear" && item.rarityAffixPools?.length))) return item;
-  return applyItemRarity(item, getRarityWithMinimum(rollItemRarityWithLootBonus(tableName, rng, lootBonus), minimumRarity), rng);
+  const effectiveMinimum = minimumRarity || item.rarity || null;
+  return applyItemRarity(item, getRarityWithMinimum(rollItemRarityWithLootBonus(tableName, rng, lootBonus), effectiveMinimum), rng);
 }
 
 // ─── Stone Drop System ────────────────────────────────────────────────────────

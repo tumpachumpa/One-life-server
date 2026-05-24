@@ -3454,6 +3454,44 @@
         "weight": 5
       }
     ],
+    "artifact_venom_blood": [
+      {
+        "type": "attack_speed",
+        "min": 6,
+        "max": 14,
+        "scalingProfile": "attack_speed",
+        "weight": 6
+      },
+      {
+        "type": "lifesteal",
+        "min": 3,
+        "max": 7,
+        "scalingProfile": "lifesteal",
+        "weight": 5
+      },
+      {
+        "type": "crit_chance",
+        "min": 3,
+        "max": 6,
+        "scalingProfile": "crit_chance_minor",
+        "weight": 5
+      },
+      {
+        "type": "stat_bonus",
+        "stat": "str",
+        "min": 3,
+        "max": 6,
+        "scalingProfile": "stat_bonus",
+        "weight": 4
+      },
+      {
+        "type": "max_hp",
+        "min": 20,
+        "max": 40,
+        "scalingProfile": "max_hp_high",
+        "weight": 3
+      }
+    ],
     "warg_fang": [
       {
         "type": "stat_bonus",

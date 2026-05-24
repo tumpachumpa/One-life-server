@@ -143,7 +143,10 @@ export function applyEnchantmentStone(item, stone, rng = Math.random) {
 
   if (failed) {
     if (failOutcome === 'minimum') {
-      // Effect applied at minimum range
+      // Effect applied at minimum range, but never overwrites an existing enchantment
+      if (item.enchantment) {
+        return { success: false, result: 'minimum', newItem: { ...item } };
+      }
       const effect = resolveEnchantmentEffect(pool, rng, true);
       if (!effect) return { success: false, result: 'none', newItem: null };
       const newItem = {

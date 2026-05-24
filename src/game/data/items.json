@@ -134,7 +134,8 @@
       "price": 2500,
       "dropWeight": 0,
       "icon": "/assets/items/generated/hunter_spear.png",
-      "affixTable": "artifact_venom_blood"
+      "rarityAffixPools": ["artifact_venom_blood"],
+      "maxAffixes": 3
     },
     {
       "id": "test_armor_500",

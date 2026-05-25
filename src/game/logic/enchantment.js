@@ -295,3 +295,29 @@ export function getStoneFailOutcomeDescription(stoneRarity) {
     default: return '';
   }
 }
+
+const STONE_RARITY_CHAIN = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
+export const STONE_FUSION_COST = 10;
+
+export function getNextStoneRarity(rarity) {
+  const idx = STONE_RARITY_CHAIN.indexOf(rarity);
+  if (idx < 0 || idx >= STONE_RARITY_CHAIN.length - 1) return null;
+  return STONE_RARITY_CHAIN[idx + 1];
+}
+
+export function canFuseStone(stoneItem, stackQty) {
+  if (!stoneItem || stoneItem.type !== 'enchantment_stone') return false;
+  if (!getNextStoneRarity(stoneItem.stoneRarity)) return false;
+  return (stackQty || 0) >= STONE_FUSION_COST;
+}
+
+export function getFusedStoneId(stoneItem) {
+  const nextRarity = getNextStoneRarity(stoneItem?.stoneRarity);
+  if (!nextRarity) return null;
+  return `stone_${stoneItem.stoneType}_${nextRarity}`;
+}
+
+export function getStoneRarityDisplayName(rarity) {
+  const names = { common: 'Rough', uncommon: 'Polished', rare: 'Carved', epic: 'Perfect', legendary: 'Ancestral' };
+  return names[rarity] || rarity;
+}

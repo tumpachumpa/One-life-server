@@ -3757,6 +3757,11 @@
         {
           "type": "campfire_carry_limit",
           "value": 2
+        },
+        {
+          "type": "magic_find",
+          "value": 3,
+          "_base": true
         }
       ],
       "tags": [
@@ -3765,7 +3770,7 @@
       ],
       "price": 120,
       "dropWeight": 0,
-      "icon": "/assets/items/generated/small_bag.png"
+      "icon": "/assets/items/Spider silk satchel.png"
     },
     {
       "id": "royal_silk",
@@ -4634,6 +4639,7 @@
         "troll"
       ],
       "price": 180,
+      "icon": "/assets/items/Troll hide bag.png",
       "dropWeight": 0,
       "icon": "/assets/items/generated/small_bag.png"
     },

@@ -1,4 +1,4 @@
-import { CAMPFIRE_CARRY_BASE, DMG_CAP, EQUIP_SLOTS, INV_BASE } from "../constants.js";
+import { CAMPFIRE_CARRY_BASE, DMG_CAP, EQUIP_SLOTS, INV_BASE, INV_COLS } from "../constants.js";
 import { getItem, getPet, heroClasses } from "./content.js";
 import { createStarterEquipment, isStarterLoadoutId } from "./equipmentGenerator.js";
 import { collectEffects, effectsOfType, isQuiverInactiveForHero, sumEffect } from "./effectEngine.js";
@@ -654,6 +654,14 @@ export function calcStats(hero) {
   stats.inventorySlots = INV_BASE + sumEffect(effects, "inventory_slots") - bagInventorySlotBonus;
   stats.inventorySlots += Math.max(0, Math.floor(Number(hero?.devInventorySlotBonus || 0)));
   stats.campfireCarryLimit = Math.max(0, CAMPFIRE_CARRY_BASE + sumEffect(effects, "campfire_carry_limit") + legacyBagCampfireCarryBonus);
+  stats.gatherBonusRolls = sumEffect(equipment.bag?.effects || [], "gather_bonus_rolls");
+  const colsBonus = sumEffect(equipment.bag?.effects || [], "inventory_cols_bonus");
+  stats.inventoryColsBonus = colsBonus;
+  if (colsBonus > 0) {
+    const effectiveCols = INV_COLS + colsBonus;
+    const baseRows = Math.max(6, Math.ceil(stats.inventorySlots / effectiveCols));
+    stats.inventorySlots = baseRows * effectiveCols;
+  }
   stats.magicDefense = Math.floor(stats.int / 2) + sumEffect(effects, "magic_defense");
   stats.critResist = Math.min(50, Math.floor(stats.int / 5) + sumEffect(effects, "crit_resist"));
   const allElementalResist = sumEffect(effects, "all_elemental_resist");

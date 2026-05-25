@@ -104,9 +104,9 @@ function buildOccupied(items, excludeIdx = -1) {
   return cells;
 }
 
-export function canPlace(items, itemRef, x, y, rows, excludeIdx = -1) {
+export function canPlace(items, itemRef, x, y, rows, excludeIdx = -1, cols = INV_COLS) {
   const [w, h] = itemGridSize(itemRef);
-  if (x < 0 || y < 0 || x + w > INV_COLS || y + h > rows) return false;
+  if (x < 0 || y < 0 || x + w > cols || y + h > rows) return false;
   const occ = buildOccupied(items, excludeIdx);
   for (let dx = 0; dx < w; dx++)
     for (let dy = 0; dy < h; dy++)
@@ -114,14 +114,14 @@ export function canPlace(items, itemRef, x, y, rows, excludeIdx = -1) {
   return true;
 }
 
-export function autoPlace(items, itemRef, rows) {
+export function autoPlace(items, itemRef, rows, cols = INV_COLS) {
   for (let y = 0; y < rows; y++)
-    for (let x = 0; x < INV_COLS; x++)
-      if (canPlace(items, itemRef, x, y, rows)) return { x, y };
+    for (let x = 0; x < cols; x++)
+      if (canPlace(items, itemRef, x, y, rows, -1, cols)) return { x, y };
   return null;
 }
 
-export function addToGrid(items, itemRef, rows, qty = 1) {
+export function addToGrid(items, itemRef, rows, qty = 1, cols = INV_COLS) {
   const item = getItem(itemRef);
   if (!item) return null;
   if (item.stackable) {
@@ -130,7 +130,7 @@ export function addToGrid(items, itemRef, rows, qty = 1) {
       return items.map((p, i) => i === idx ? { ...p, qty: (p.qty || 1) + qty } : p);
     }
   }
-  const pos = autoPlace(items, itemRef, rows);
+  const pos = autoPlace(items, itemRef, rows, cols);
   if (!pos) return null;
   return [...items, { itemId: itemRef, x: pos.x, y: pos.y, qty }];
 }
@@ -191,16 +191,16 @@ export function transferGridQuantity(sourceItems = [], targetItems = [], sourceI
   };
 }
 
-export function hasSpaceFor(items, itemRef, rows) {
+export function hasSpaceFor(items, itemRef, rows, cols = INV_COLS) {
   const item = getItem(itemRef);
   if (!item) return false;
   if (item.stackable && items.some(p => sameItemRef(p.itemId, itemRef))) return true;
-  return autoPlace(items, itemRef, rows) !== null;
+  return autoPlace(items, itemRef, rows, cols) !== null;
 }
 
-export function moveItem(items, idx, newX, newY, rows) {
+export function moveItem(items, idx, newX, newY, rows, cols = INV_COLS) {
   if (!items[idx]) return items;
-  if (!canPlace(items, items[idx].itemId, newX, newY, rows, idx)) return items;
+  if (!canPlace(items, items[idx].itemId, newX, newY, rows, idx, cols)) return items;
   return items.map((p, i) => i === idx ? { ...p, x: newX, y: newY } : p);
 }
 

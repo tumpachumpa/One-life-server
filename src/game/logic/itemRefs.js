@@ -393,7 +393,26 @@ function migrateWargFangNecklace(ref) {
   if (ref?.id !== "warg_fang_necklace") return ref;
   // New system: applyItemRarity spreads baseStatOptions onto the saved item at drop time.
   // Presence of baseStatOptions means the item was already built by the new code path.
-  if (ref.baseStatOptions?.length) return ref;
+  if (ref.baseStatOptions?.length) {
+    const effects = ref.effects || [];
+    if (!effects.length) {
+      // No effects rolled yet (spawned from template without applyItemRarity).
+      // Pick base stat option deterministically from the uid.
+      const baseRng = stableRerollRng(ref, { type: "warg_fang_base_v1", value: 0 }, 0);
+      const options = ref.baseStatOptions;
+      const group = options[Math.floor(baseRng() * options.length)];
+      const variant = group[Math.floor(baseRng() * group.length)];
+      const { min, max, ...rest } = variant;
+      const baseEffect = (min != null && max != null)
+        ? { ...rest, _base: true, value: Math.floor(baseRng() * (max - min + 1)) + min }
+        : { ...rest, _base: true };
+      return { ...ref, effects: [baseEffect] };
+    }
+    if (!effects[0]._base) {
+      return { ...ref, effects: [{ ...effects[0], _base: true }, ...effects.slice(1)] };
+    }
+    return ref;
+  }
 
   const BASE_STAT_OPTIONS = [
     [
@@ -426,7 +445,7 @@ function migrateWargFangNecklace(ref) {
       affixRng
     );
     const { guaranteedAffixes: _g, maxAffixes: _m, ...rest2 } = ref;
-    return { ...rest2, effects: [baseEffect, ...affixes], baseStatOptions: BASE_STAT_OPTIONS };
+    return { ...rest2, effects: [{ ...baseEffect, _base: true }, ...affixes], baseStatOptions: BASE_STAT_OPTIONS };
   }
 
   // Pre-migration: wipe old hardcoded stats and build fresh.
@@ -440,7 +459,7 @@ function migrateWargFangNecklace(ref) {
   return {
     ...ref,
     baseStats: {},
-    effects: [baseEffect, ...affixes],
+    effects: [{ ...baseEffect, _base: true }, ...affixes],
     rarityAffixPools: ["warg_fang"],
     baseStatOptions: BASE_STAT_OPTIONS,
   };

@@ -4639,9 +4639,8 @@
         "troll"
       ],
       "price": 180,
-      "icon": "/assets/items/Troll hide bag.png",
       "dropWeight": 0,
-      "icon": "/assets/items/generated/small_bag.png"
+      "icon": "/assets/items/Troll hide bag.png"
     },
     {
       "id": "bone_hook_rack",

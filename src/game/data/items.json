@@ -4597,8 +4597,8 @@
       "id": "tanned_troll_hide",
       "name": "Tanned Troll Hide",
       "size": [
-        1,
-        1
+        2,
+        2
       ],
       "type": "resource",
       "family": "raw_material",
@@ -4611,7 +4611,7 @@
       "price": 28,
       "dropWeight": 0,
       "stackable": true,
-      "icon": "/assets/items/generated/plant_fiber.png"
+      "icon": "/assets/items/Troll tanned hide.png"
     },
     {
       "id": "troll_hide_bag",

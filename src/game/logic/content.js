@@ -115,6 +115,9 @@ const ITEM_ICON_OVERRIDES = {
   fur_cloak: "/assets/items/generated/cape.png?v=2",
   leather_boots: "/assets/items/generated/Leather%20boots.png?v=2",
   plate_boots: "/assets/items/generated/Leather%20boots.png?v=2",
+  troll_hide: "/assets/items/troll hide.png",
+  tanned_troll_hide: "/assets/items/Troll tanned hide.png",
+  foragers_satchel: "/assets/items/Forager satchel.png",
 };
 
 const generatedEquipmentBaseById = byId([

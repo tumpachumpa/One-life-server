@@ -56,8 +56,11 @@ const CRIT_DAMAGE_CAP_BY_RARITY = {
 const SAVED_ITEM_ICON_OVERRIDES = {
   fur_cloak: "/assets/items/generated/cape.png?v=2",
   leather_boots: "/assets/items/generated/Leather%20boots.png?v=2",
-  oathbound_plate_sabatons: "/assets/items/generated/Leather%20boots.png?v=2",
   plate_boots: "/assets/items/generated/Leather%20boots.png?v=2",
+  imp_ember_ring: "/assets/items/rings/imp_ember_ring.png",
+  emberglass_ring: "/assets/items/rings/emberglass_ring.png",
+  sentinel_focus_ring: "/assets/items/rings/sentinel_focus_ring.png",
+  hellhound_collar: "/assets/items/hellhound collar.png",
 };
 
 const LEGACY_RING_METADATA = {

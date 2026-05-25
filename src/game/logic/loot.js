@@ -509,7 +509,7 @@ export function applyItemRarity(item, rarity, rng = Math.random) {
         value: Math.max(1, Math.round(Number(effect.value) * itemRarity.statMult)),
       };
     }),
-    ...(baseStatEffect ? [baseStatEffect] : []),
+    ...(baseStatEffect ? [{ ...baseStatEffect, _base: true }] : []),
   ];
   const affixes = rollEquipmentAffixes({
     ...item,

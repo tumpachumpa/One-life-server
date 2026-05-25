@@ -413,10 +413,11 @@
     "troll_small": {
       "rolls": 1,
       "dropChance": 0.65,
-      "includeItemIds": ["bone", "campfire"],
+      "includeItemIds": ["bone", "campfire", "troll_hide"],
       "itemWeights": {
         "bone": 5,
-        "campfire": 2
+        "campfire": 2,
+        "troll_hide": 30
       },
       "rarityTable": "normal",
       "generatedEquipment": {
@@ -667,10 +668,9 @@
     "crypts_skeleton": {
       "rolls": 1,
       "dropChance": 0.45,
-      "includeItemIds": ["bone", "bandage"],
+      "includeItemIds": ["bone"],
       "itemWeights": {
-        "bone": 8,
-        "bandage": 4
+        "bone": 8
       },
       "generatedEquipment": {
         "enabled": true,
@@ -682,10 +682,9 @@
     "crypts_zombie": {
       "rolls": 1,
       "dropChance": 0.45,
-      "includeItemIds": ["bone", "bandage"],
+      "includeItemIds": ["bone"],
       "itemWeights": {
-        "bone": 6,
-        "bandage": 6
+        "bone": 6
       },
       "generatedEquipment": {
         "enabled": true,
@@ -1072,10 +1071,9 @@
     "rootspire_restless_skeleton": {
       "rolls": 1,
       "dropChance": 0.45,
-      "includeItemIds": ["bone", "bandage"],
+      "includeItemIds": ["bone"],
       "itemWeights": {
-        "bone": 8,
-        "bandage": 3
+        "bone": 8
       },
       "rarityTable": "rootspire",
       "generatedEquipment": {

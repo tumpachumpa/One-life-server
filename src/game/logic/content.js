@@ -114,7 +114,6 @@ export const ultimateSkillById = byId(ultimateSkills);
 const ITEM_ICON_OVERRIDES = {
   fur_cloak: "/assets/items/generated/cape.png?v=2",
   leather_boots: "/assets/items/generated/Leather%20boots.png?v=2",
-  oathbound_plate_sabatons: "/assets/items/generated/Leather%20boots.png?v=2",
   plate_boots: "/assets/items/generated/Leather%20boots.png?v=2",
 };
 
@@ -243,14 +242,18 @@ function normalizeGeneratedBaseEffects(item) {
   }
   const baseEffects = generatedEquipmentBaseById[baseId]?.effects || [];
   if (!baseEffects.length && !removedDeprecatedEffects) return normalized;
+  const baseEffectIdentities = new Set(baseEffects.map(itemEffectIdentity));
   const currentEffectIds = new Set(currentEffects.map(itemEffectIdentity));
   const missingBaseEffects = baseEffects.filter(effect => !currentEffectIds.has(itemEffectIdentity(effect)));
-  if (!missingBaseEffects.length && !removedDeprecatedEffects) return normalized;
+  const needsBaseTag = currentEffects.some(e => baseEffectIdentities.has(itemEffectIdentity(e)) && !e._base);
+  if (!missingBaseEffects.length && !removedDeprecatedEffects && !needsBaseTag) return normalized;
   return {
     ...normalized,
     effects: [
-      ...missingBaseEffects.map(effect => ({ ...effect })),
-      ...currentEffects,
+      ...missingBaseEffects.map(effect => ({ ...effect, _base: true })),
+      ...currentEffects.map(effect =>
+        baseEffectIdentities.has(itemEffectIdentity(effect)) ? { ...effect, _base: true } : effect
+      ),
     ],
   };
 }

@@ -291,6 +291,7 @@ function scaleBaseEffectValueByRarity(effect, definition, rarity) {
 
 function materializeBaseEffect(definition, rarity, rng = Math.random) {
   const effect = materializeAffix(definition, { affixMult: 1 }, rng);
+  effect._base = true;
   if (scaleBaseEffectValueByRarity(effect, definition, rarity)) return effect;
   if (!definition?.scalesWithRarity) return effect;
   const mult = Number(rarity?.statMult) || 1;

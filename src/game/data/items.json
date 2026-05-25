@@ -95,7 +95,7 @@
       "description": "A crimson spear whose twin wounds never quite close.",
       "rarity": "artifact",
       "size": [
-        1,
+        3,
         4
       ],
       "type": "gear",
@@ -104,9 +104,13 @@
       "weaponType": "spear",
       "hands": 2,
       "attackSpeed": 0.9,
-      "damageDice": { "count": 1, "sides": 12 },
+      "damageDice": {
+        "count": 1,
+        "sides": 15,
+        "text": "1d15"
+      },
       "baseStats": {
-        "damage": 11
+        "damage": 14
       },
       "effects": [
         {
@@ -114,14 +118,16 @@
           "type": "poison_on_hit",
           "chance": 100,
           "duration": 4,
-          "damagePct": 0.85
+          "damagePct": 0.85,
+          "_base": true
         },
         {
           "name": "Crimson Covenant",
           "type": "bleed_on_hit",
           "chance": 100,
           "duration": 4,
-          "damagePct": 0.95
+          "damagePct": 0.95,
+          "_base": true
         }
       ],
       "tags": [
@@ -133,8 +139,10 @@
       ],
       "price": 2500,
       "dropWeight": 0,
-      "icon": "/assets/items/generated/hunter_spear.png",
-      "rarityAffixPools": ["artifact_venom_blood"]
+      "icon": "/assets/items/fang of the red viper.png",
+      "rarityAffixPools": [
+        "artifact_venom_blood"
+      ]
     },
     {
       "id": "test_armor_500",
@@ -226,12 +234,10 @@
       "type": "gear",
       "slot": "ring",
       "family": "ring",
-      "effects": [
-        {
-          "type": "lifesteal",
-          "value": 5
-        }
-      ],
+      "baseStats": {
+        "lifesteal": 5
+      },
+      "effects": [],
       "tags": [
         "ring",
         "lifesteal",
@@ -243,7 +249,7 @@
       ],
       "price": 180,
       "dropWeight": 3,
-      "icon": "/assets/items/generated/vampire_ring.png"
+      "icon": "/assets/items/rings/vampire_ring.png"
     },
     {
       "id": "venom_fang_dagger",
@@ -258,8 +264,13 @@
       "family": "dagger",
       "weaponType": "one_handed_dagger",
       "hands": 1,
-      "attackSpeed": 1.30,
-      "damageDice": { "count": 1, "sides": 4, "bonus": 3, "text": "1d4+3" },
+      "attackSpeed": 1.3,
+      "damageDice": {
+        "count": 1,
+        "sides": 4,
+        "bonus": 3,
+        "text": "1d4+3"
+      },
       "baseStats": {
         "damage": 6
       },
@@ -286,47 +297,94 @@
         "venom",
         "precision"
       ],
-      "icon": "/assets/items/generated/dagger.png"
+      "icon": "/assets/items/Venom dagger.png"
     },
     {
       "id": "whitefang_dagger",
       "name": "Whitefang Dagger",
       "description": "A pale fang honed into a cruel little blade. Its edge carries the bite of winter and the hunger of the hunt.",
-      "size": [1, 2],
+      "size": [
+        1,
+        2
+      ],
       "type": "gear",
       "slot": "weapon",
       "family": "dagger",
       "weaponType": "one_handed_dagger",
       "hands": 1,
       "attackSpeed": 1.25,
-      "damageDice": { "count": 1, "sides": 4, "bonus": 2, "text": "1d4+2" },
-      "baseStats": { "damage": 5 },
+      "damageDice": {
+        "count": 1,
+        "sides": 4,
+        "bonus": 2,
+        "text": "1d4+2"
+      },
+      "baseStats": {
+        "damage": 5
+      },
       "effects": [],
-      "rarityAffixPools": ["precision", "speed", "predator"],
-      "tags": ["dagger", "weapon", "melee", "fast", "one_handed", "rogue", "wolf", "beast", "ancient_forest"],
+      "rarityAffixPools": [
+        "precision",
+        "speed",
+        "predator"
+      ],
+      "tags": [
+        "dagger",
+        "weapon",
+        "melee",
+        "fast",
+        "one_handed",
+        "rogue",
+        "wolf",
+        "beast",
+        "ancient_forest"
+      ],
       "price": 120,
       "dropWeight": 0,
-      "icon": "/assets/items/generated/dagger.png"
+      "icon": "/assets/items/Whitefang dagger.png"
     },
     {
       "id": "bandits_stiletto",
       "name": "Bandit's Stiletto",
       "description": "A narrow thrusting dagger favored by ambushers and cutpurses along the forest road.",
-      "size": [1, 2],
+      "size": [
+        1,
+        2
+      ],
       "type": "gear",
       "slot": "weapon",
       "family": "dagger",
       "weaponType": "one_handed_dagger",
       "hands": 1,
       "attackSpeed": 1.25,
-      "damageDice": { "count": 1, "sides": 4, "bonus": 1, "text": "1d4+1" },
-      "baseStats": { "damage": 4 },
+      "damageDice": {
+        "count": 1,
+        "sides": 4,
+        "bonus": 1,
+        "text": "1d4+1"
+      },
+      "baseStats": {
+        "damage": 4
+      },
       "effects": [],
-      "rarityAffixPools": ["precision", "speed", "dueling"],
-      "tags": ["dagger", "weapon", "melee", "fast", "one_handed", "rogue", "bandit", "ancient_forest"],
+      "rarityAffixPools": [
+        "precision",
+        "speed",
+        "dueling"
+      ],
+      "tags": [
+        "dagger",
+        "weapon",
+        "melee",
+        "fast",
+        "one_handed",
+        "rogue",
+        "bandit",
+        "ancient_forest"
+      ],
       "price": 140,
       "dropWeight": 0,
-      "icon": "/assets/items/generated/dagger.png"
+      "icon": "/assets/items/Stilleto dagger.png"
     },
     {
       "id": "venom_ring",
@@ -355,7 +413,7 @@
       ],
       "price": 180,
       "dropWeight": 0,
-      "icon": "/assets/items/generated/ring_of_thorns.png"
+      "icon": "/assets/items/rings/venom_ring.png"
     },
     {
       "id": "gust_ring",
@@ -384,7 +442,7 @@
       ],
       "price": 155,
       "dropWeight": 4,
-      "icon": "/assets/items/generated/ring_of_thorns.png"
+      "icon": "/assets/items/rings/gust_ring.png"
     },
     {
       "id": "thorn_amulet",
@@ -399,24 +457,9 @@
       "baseStats": {},
       "effects": [
         {
-          "type": "fire_resist",
-          "value": 5
-        },
-        {
-          "type": "cold_resist",
-          "value": 5
-        },
-        {
-          "type": "lightning_resist",
-          "value": 5
-        },
-        {
-          "type": "shadow_resist",
-          "value": 5
-        },
-        {
-          "type": "poison_resist",
-          "value": 5
+          "type": "all_elemental_resist",
+          "value": 5,
+          "_base": true
         }
       ],
       "rarityAffixPools": [
@@ -452,7 +495,10 @@
           "value": 15
         }
       ],
-      "rarityAffixPools": ["warding", "arcane"],
+      "rarityAffixPools": [
+        "warding",
+        "arcane"
+      ],
       "tags": [
         "amulet",
         "magic",
@@ -460,7 +506,7 @@
       ],
       "price": 140,
       "dropWeight": 4,
-      "icon": "/assets/items/generated/ward_amulet.png"
+      "icon": "/assets/items/Veil amulet.png"
     },
     {
       "id": "protection_amulet",
@@ -475,7 +521,10 @@
       "baseStats": {
         "armor": 6
       },
-      "rarityAffixPools": ["survival", "endurance"],
+      "rarityAffixPools": [
+        "survival",
+        "endurance"
+      ],
       "tags": [
         "amulet",
         "defense",
@@ -498,7 +547,10 @@
       "baseStats": {
         "str": 2
       },
-      "rarityAffixPools": ["predator", "brutal"],
+      "rarityAffixPools": [
+        "predator",
+        "brutal"
+      ],
       "tags": [
         "amulet",
         "strength",
@@ -506,7 +558,7 @@
       ],
       "price": 145,
       "dropWeight": 4,
-      "icon": "/assets/items/generated/thorn_amulet.png"
+      "icon": "/assets/items/Boar tusk amulet.png"
     },
     {
       "id": "small_bag",
@@ -543,7 +595,10 @@
       "slot": "bag",
       "family": "quiver",
       "effects": [
-        { "type": "attack_speed", "value": 4 }
+        {
+          "type": "attack_speed",
+          "value": 4
+        }
       ],
       "rarityAffixPools": [
         "quiver"
@@ -562,16 +617,35 @@
       "id": "bonefletch_quiver",
       "name": "Bonefletch Quiver",
       "description": "A narrow quiver reinforced with carved bone plates. Its arrows seem to remember old battlefield rites.",
-      "size": [1, 2],
+      "size": [
+        1,
+        2
+      ],
       "type": "gear",
       "slot": "bag",
       "family": "quiver",
       "effects": [
-        { "type": "damage_vs_tag", "tag": "undead", "value": 8 },
-        { "type": "magic_defense", "value": 3 }
+        {
+          "type": "damage_vs_tag",
+          "tag": "undead",
+          "value": 8
+        },
+        {
+          "type": "magic_defense",
+          "value": 3
+        }
       ],
-      "rarityAffixPools": ["quiver", "warding"],
-      "tags": ["quiver", "ranged", "archer", "undead", "crypts"],
+      "rarityAffixPools": [
+        "quiver",
+        "warding"
+      ],
+      "tags": [
+        "quiver",
+        "ranged",
+        "archer",
+        "undead",
+        "crypts"
+      ],
       "price": 160,
       "dropWeight": 0,
       "icon": "/assets/items/generated/Quiver.png",
@@ -919,7 +993,7 @@
         },
         {
           "type": "food_buff",
-          "combats": 3,
+          "minutes": 4,
           "stats": {
             "str": 2,
             "dex": 1
@@ -954,7 +1028,7 @@
         },
         {
           "type": "food_buff",
-          "combats": 4,
+          "minutes": 4,
           "stats": {
             "maxHp": 15,
             "armor": 1
@@ -989,7 +1063,7 @@
         },
         {
           "type": "food_buff",
-          "combats": 3,
+          "minutes": 4,
           "stats": {
             "maxHp": 10
           }
@@ -1009,114 +1083,6 @@
       "icon": "/assets/items/generated/hearty_stew.png"
     },
     {
-      "id": "herbal_berry_tea",
-      "name": "Herbal Berry Tea",
-      "size": [
-        1,
-        1
-      ],
-      "type": "consumable",
-      "family": "cooked_meal",
-      "effects": [
-        {
-          "type": "restore_hunger",
-          "value": 30
-        },
-        {
-          "type": "food_buff",
-          "combats": 3,
-          "stats": {
-            "int": 1,
-            "dex": 1
-          }
-        }
-      ],
-      "tags": [
-        "food",
-        "prepared_food",
-        "cooked_meal",
-        "berry",
-        "herb",
-        "recipe_food",
-        "consumable_cooked"
-      ],
-      "price": 38,
-      "stackable": true,
-      "icon": "/assets/items/generated/raw_honey.png"
-    },
-    {
-      "id": "root_hash",
-      "name": "Root Hash",
-      "size": [
-        1,
-        1
-      ],
-      "type": "consumable",
-      "family": "cooked_meal",
-      "effects": [
-        {
-          "type": "restore_hunger",
-          "value": 35
-        },
-        {
-          "type": "food_buff",
-          "combats": 3,
-          "stats": {
-            "str": 1,
-            "maxHp": 10
-          }
-        }
-      ],
-      "tags": [
-        "food",
-        "prepared_food",
-        "cooked_meal",
-        "root",
-        "herb",
-        "recipe_food",
-        "consumable_cooked"
-      ],
-      "price": 42,
-      "stackable": true,
-      "icon": "/assets/items/generated/ration.png"
-    },
-    {
-      "id": "honeyed_roots",
-      "name": "Honeyed Roots",
-      "size": [
-        1,
-        1
-      ],
-      "type": "consumable",
-      "family": "cooked_meal",
-      "effects": [
-        {
-          "type": "restore_hunger",
-          "value": 45
-        },
-        {
-          "type": "food_buff",
-          "combats": 4,
-          "stats": {
-            "maxHp": 15,
-            "int": 1
-          }
-        }
-      ],
-      "tags": [
-        "food",
-        "prepared_food",
-        "cooked_meal",
-        "root",
-        "honey",
-        "recipe_food",
-        "consumable_cooked"
-      ],
-      "price": 58,
-      "stackable": true,
-      "icon": "/assets/items/generated/raw_honey.png"
-    },
-    {
       "id": "hunters_feast",
       "name": "Hunter's Feast",
       "size": [
@@ -1132,7 +1098,7 @@
         },
         {
           "type": "food_buff",
-          "combats": 5,
+          "minutes": 6,
           "stats": {
             "str": 3,
             "dex": 3,
@@ -1171,7 +1137,7 @@
         },
         {
           "type": "food_buff",
-          "combats": 5,
+          "minutes": 6,
           "stats": {
             "maxHp": 30,
             "armor": 3
@@ -1698,7 +1664,7 @@
       "price": 40,
       "dropWeight": 0,
       "stackable": true,
-      "icon": "/assets/items/generated/smoke_bomb.svg"
+      "icon": "/assets/items/Smoke bomb.png"
     },
     {
       "id": "flash_powder",
@@ -2171,7 +2137,7 @@
         },
         {
           "type": "food_buff",
-          "combats": 5,
+          "minutes": 6,
           "stats": {
             "str": 3,
             "maxHp": 25
@@ -2206,7 +2172,7 @@
         },
         {
           "type": "food_buff",
-          "combats": 4,
+          "minutes": 6,
           "stats": {
             "armor": 5,
             "dex": 2
@@ -2241,7 +2207,7 @@
         },
         {
           "type": "food_buff",
-          "combats": 4,
+          "minutes": 6,
           "stats": {
             "attackSpeedPct": 8,
             "maxHp": 15
@@ -2261,41 +2227,6 @@
       "icon": "/assets/items/generated/cooked_boar_meat.png"
     },
     {
-      "id": "ironhide_roast",
-      "name": "Ironhide Roast",
-      "size": [
-        1,
-        1
-      ],
-      "type": "consumable",
-      "family": "cooked_meal",
-      "effects": [
-        {
-          "type": "restore_hunger",
-          "value": 60
-        },
-        {
-          "type": "food_buff",
-          "combats": 4,
-          "stats": {
-            "armor": 4,
-            "maxHp": 20
-          }
-        }
-      ],
-      "tags": [
-        "food",
-        "prepared_food",
-        "cooked_meal",
-        "boar_meat",
-        "recipe_food",
-        "consumable_cooked"
-      ],
-      "price": 88,
-      "stackable": true,
-      "icon": "/assets/items/generated/cooked_boar_meat.png"
-    },
-    {
       "id": "boar_blood_ragout",
       "name": "Boar-Blood Ragout",
       "size": [
@@ -2311,7 +2242,7 @@
         },
         {
           "type": "food_buff",
-          "combats": 4,
+          "minutes": 6,
           "stats": {
             "lifesteal": 7,
             "str": 1
@@ -2331,75 +2262,6 @@
       "icon": "/assets/items/generated/hearty_stew.png"
     },
     {
-      "id": "spiced_boar_jerky",
-      "name": "Spiced Boar Jerky",
-      "size": [
-        1,
-        1
-      ],
-      "type": "consumable",
-      "family": "cooked_meal",
-      "effects": [
-        {
-          "type": "restore_hunger",
-          "value": 40
-        },
-        {
-          "type": "food_buff",
-          "combats": 3,
-          "stats": {
-            "attackSpeedPct": 6
-          }
-        }
-      ],
-      "tags": [
-        "food",
-        "prepared_food",
-        "cooked_meal",
-        "boar_meat",
-        "recipe_food",
-        "consumable_cooked"
-      ],
-      "price": 65,
-      "stackable": true,
-      "icon": "/assets/items/generated/cooked_boar_meat.png"
-    },
-    {
-      "id": "wardens_pottage",
-      "name": "Warden's Pottage",
-      "size": [
-        1,
-        1
-      ],
-      "type": "consumable",
-      "family": "cooked_meal",
-      "effects": [
-        {
-          "type": "restore_hunger",
-          "value": 50
-        },
-        {
-          "type": "food_buff",
-          "combats": 3,
-          "stats": {
-            "armor": 3,
-            "maxHp": 15
-          }
-        }
-      ],
-      "tags": [
-        "food",
-        "prepared_food",
-        "cooked_meal",
-        "boar_meat",
-        "recipe_food",
-        "consumable_cooked"
-      ],
-      "price": 72,
-      "stackable": true,
-      "icon": "/assets/items/generated/hearty_stew.png"
-    },
-    {
       "id": "frenzy_boar_stew",
       "name": "Frenzy Boar Stew",
       "size": [
@@ -2415,7 +2277,7 @@
         },
         {
           "type": "food_buff",
-          "combats": 4,
+          "minutes": 6,
           "stats": {
             "attackSpeedPct": 10,
             "lifesteal": 4
@@ -2450,7 +2312,7 @@
         },
         {
           "type": "food_buff",
-          "combats": 5,
+          "minutes": 8,
           "stats": {
             "armor": 6,
             "maxHp": 30
@@ -2505,7 +2367,7 @@
         },
         {
           "type": "food_buff",
-          "combats": 4,
+          "minutes": 8,
           "stats": {
             "attackSpeedPct": 12,
             "str": 2
@@ -3673,22 +3535,26 @@
       "slot": "offhand",
       "family": "shield",
       "armorType": "shield",
+      "armorDice": {
+        "count": 1,
+        "sides": 4,
+        "bonus": 2,
+        "text": "1d4+2",
+        "average": 4
+      },
       "baseStats": {
-        "armor": 2
+        "armor": 4
       },
       "effects": [
         {
-          "type": "block_chance",
-          "value": 4
-        },
-        {
-          "type": "dodge_chance",
-          "value": 4
-        },
-        {
           "type": "counter_chance",
-          "value": 5
+          "value": 5,
+          "_base": true
         }
+      ],
+      "rarityAffixPools": [
+        "guard",
+        "evasion"
       ],
       "tags": [
         "shield",
@@ -3700,25 +3566,48 @@
       ],
       "price": 220,
       "dropWeight": 0,
-      "icon": "/assets/items/generated/shield.png"
+      "icon": "/assets/items/Silkgard buckler.png"
     },
     {
       "id": "stonewall",
       "name": "Stonewall",
       "description": "A slab of living granite torn from the chest of a Stone Golem. The first blow it receives is always returned.",
       "rarity": "artifact",
-      "size": [2, 3],
+      "size": [
+        2,
+        3
+      ],
       "type": "gear",
       "slot": "offhand",
       "family": "shield",
       "armorType": "shield",
-      "armorDice": { "count": 2, "sides": 6, "bonus": 4, "text": "2d6+4", "average": 11 },
-      "baseStats": { "armor": 16 },
+      "armorDice": {
+        "count": 2,
+        "sides": 6,
+        "bonus": 4,
+        "text": "2d6+4",
+        "average": 11
+      },
+      "baseStats": {
+        "armor": 16
+      },
       "effects": [
-        { "type": "block_chance", "value": 15 },
-        { "type": "block_power", "value": 40 },
-        { "type": "block_power_regen", "value": 4 },
-        { "type": "counter_chance", "value": 10 },
+        {
+          "type": "block_chance",
+          "value": 15
+        },
+        {
+          "type": "block_power",
+          "value": 40
+        },
+        {
+          "type": "block_power_regen",
+          "value": 4
+        },
+        {
+          "type": "counter_chance",
+          "value": 10
+        },
         {
           "name": "First Wall",
           "type": "first_incoming_guaranteed_block",
@@ -3726,7 +3615,15 @@
           "description": "The first incoming hit each combat is completely blocked at no Block Power cost. The blow is immediately answered with a full-damage counter."
         }
       ],
-      "tags": ["shield", "offhand", "defense", "heavy", "artifact", "stone", "golem"],
+      "tags": [
+        "shield",
+        "offhand",
+        "defense",
+        "heavy",
+        "artifact",
+        "stone",
+        "golem"
+      ],
       "price": 5000,
       "dropWeight": 0,
       "icon": "/assets/items/Stonewall.png"
@@ -3957,131 +3854,266 @@
       "id": "gargoyle_stone_ring",
       "name": "Gargoyle Stone Ring",
       "description": "Carved from a gargoyle's petrified knuckle. Dense and unyielding.",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "gear",
       "slot": "ring",
       "family": "ring",
-      "baseStats": { "armor": 4 },
+      "baseStats": {
+        "armor": 4
+      },
       "effects": [
-        { "type": "block_chance", "value": 4 }
+        {
+          "type": "block_chance",
+          "value": 4
+        }
       ],
-      "tags": ["ring", "defense", "gargoyle", "rootspire"],
-      "rarityAffixPools": ["guard", "survival"],
+      "tags": [
+        "ring",
+        "defense",
+        "gargoyle",
+        "rootspire"
+      ],
+      "rarityAffixPools": [
+        "guard",
+        "survival"
+      ],
       "price": 220,
       "dropWeight": 4,
-      "icon": "/assets/items/generated/ring_of_thorns.png"
+      "icon": "/assets/items/rings/gargoyle_stone_ring.png"
     },
     {
       "id": "imp_ember_ring",
       "name": "Imp Ember Ring",
       "description": "A scorched band still warm to the touch. Speeds the wearer's strikes.",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "gear",
       "slot": "ring",
       "family": "ring",
       "effects": [
-        { "type": "fire_resist", "value": 8 },
-        { "type": "attack_speed", "value": 5 }
+        {
+          "type": "fire_resist",
+          "value": 8
+        },
+        {
+          "type": "attack_speed",
+          "value": 5
+        }
       ],
-      "tags": ["ring", "fire", "speed", "imp", "rootspire"],
-      "rarityAffixPools": ["speed", "ember"],
+      "tags": [
+        "ring",
+        "fire",
+        "speed",
+        "imp",
+        "rootspire"
+      ],
+      "rarityAffixPools": [
+        "speed",
+        "ember"
+      ],
       "price": 200,
       "dropWeight": 4,
-      "icon": "/assets/items/generated/vampire_ring.png"
+      "icon": "/assets/items/rings/imp_ember_ring.png"
     },
     {
       "id": "sentinel_focus_ring",
       "name": "Sentinel's Focus Ring",
       "description": "Worn by the animated guardians of Rootspire. Sharpens every blow.",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "gear",
       "slot": "ring",
       "family": "ring",
-      "baseStats": { "damage": 3 },
+      "baseStats": {
+        "damage": 3
+      },
       "effects": [
-        { "type": "attack_speed", "value": 6 }
+        {
+          "type": "attack_speed",
+          "value": 6
+        }
       ],
-      "tags": ["ring", "offense", "sentinel", "rootspire"],
-      "rarityAffixPools": ["speed", "balanced"],
+      "tags": [
+        "ring",
+        "offense",
+        "sentinel",
+        "rootspire"
+      ],
+      "rarityAffixPools": [
+        "speed",
+        "balanced"
+      ],
       "price": 240,
       "dropWeight": 3,
-      "icon": "/assets/items/generated/ring_of_thorns.png"
+      "icon": "/assets/items/rings/sentinel_focus_ring.png"
     },
     {
       "id": "emberglass_ring",
       "name": "Emberglass Ring",
       "description": "Fused from volcanic glass and ember shard. Deflects heat and arrows alike.",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "gear",
       "slot": "ring",
       "family": "ring",
       "effects": [
-        { "type": "fire_resist", "value": 10 },
-        { "type": "dodge_chance", "value": 5 }
+        {
+          "type": "fire_resist",
+          "value": 10
+        },
+        {
+          "type": "dodge_chance",
+          "value": 5
+        }
       ],
-      "tags": ["ring", "fire", "evasion", "rootspire"],
-      "rarityAffixPools": ["evasion", "ember"],
+      "tags": [
+        "ring",
+        "fire",
+        "evasion",
+        "rootspire"
+      ],
+      "rarityAffixPools": [
+        "evasion",
+        "ember"
+      ],
       "price": 230,
       "dropWeight": 3,
-      "icon": "/assets/items/generated/vampire_ring.png"
+      "icon": "/assets/items/rings/emberglass_ring.png"
     },
     {
       "id": "veilstone_ring",
       "name": "Veilstone Ring",
       "description": "A ring of dark obsidian that drinks in shadow. Rogues favor it for its uncanny lightness.",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "gear",
       "slot": "ring",
       "family": "ring",
       "effects": [
-        { "type": "shadow_resist", "value": 10 },
-        { "type": "dodge_chance", "value": 6 }
+        {
+          "type": "shadow_resist",
+          "value": 10
+        },
+        {
+          "type": "dodge_chance",
+          "value": 6
+        }
       ],
-      "tags": ["ring", "shadow", "evasion", "rootspire"],
-      "rarityAffixPools": ["evasion", "warding"],
+      "tags": [
+        "ring",
+        "shadow",
+        "evasion",
+        "rootspire"
+      ],
+      "rarityAffixPools": [
+        "evasion",
+        "warding"
+      ],
       "price": 230,
       "dropWeight": 3,
-      "icon": "/assets/items/generated/vampire_ring.png"
+      "icon": "/assets/items/rings/veilstone_ring.png"
     },
     {
       "id": "hellhound_collar",
       "name": "Hellhound Collar",
       "description": "Scorched iron links torn from a hellhound's neck. Still radiates hatred.",
-      "size": [1, 2],
+      "size": [
+        2,
+        1
+      ],
       "type": "gear",
       "slot": "amulet",
       "family": "amulet",
-      "baseStats": { "str": 3 },
+      "baseStats": {
+        "str": 3
+      },
       "effects": [
-        { "type": "fire_resist", "value": 10 }
+        {
+          "type": "fire_resist",
+          "value": 10
+        }
       ],
-      "tags": ["amulet", "strength", "fire", "hellhound"],
-      "rarityAffixPools": ["brutal", "ember"],
+      "tags": [
+        "amulet",
+        "strength",
+        "fire",
+        "hellhound"
+      ],
+      "rarityAffixPools": [
+        "brutal",
+        "ember"
+      ],
       "price": 260,
       "dropWeight": 4,
-      "icon": "/assets/items/generated/thorn_amulet.png"
+      "icon": "/assets/items/hellhound collar.png"
     },
     {
       "id": "warg_fang_necklace",
       "name": "Warg Fang Necklace",
       "description": "A string of massive fangs from a warg alpha. Warriors wear it as a battle trophy.",
-      "size": [1, 2],
+      "size": [
+        1,
+        2
+      ],
       "type": "gear",
       "slot": "amulet",
       "family": "amulet",
-      "tags": ["amulet", "strength", "speed", "warg", "orc"],
-      "rarityAffixPools": ["warg_fang"],
+      "tags": [
+        "amulet",
+        "strength",
+        "speed",
+        "warg",
+        "orc"
+      ],
+      "rarityAffixPools": [
+        "warg_fang"
+      ],
       "baseStatOptions": [
         [
-          { "type": "stat_bonus", "stat": "str", "min": 2, "max": 4 },
-          { "type": "stat_bonus", "stat": "dex", "min": 2, "max": 4 }
+          {
+            "type": "stat_bonus",
+            "stat": "str",
+            "min": 2,
+            "max": 4
+          },
+          {
+            "type": "stat_bonus",
+            "stat": "dex",
+            "min": 2,
+            "max": 4
+          }
         ],
         [
-          { "type": "attack_speed", "min": 4, "max": 8 }
+          {
+            "type": "attack_speed",
+            "min": 4,
+            "max": 8
+          }
         ],
         [
-          { "type": "bleed_on_hit", "chance": 8, "duration": 2, "damagePct": 0.55 },
-          { "type": "poison_on_hit", "chance": 8, "duration": 2, "damagePct": 0.4 }
+          {
+            "type": "bleed_on_hit",
+            "chance": 8,
+            "duration": 2,
+            "damagePct": 0.55
+          },
+          {
+            "type": "poison_on_hit",
+            "chance": 8,
+            "duration": 2,
+            "damagePct": 0.4
+          }
         ]
       ],
       "price": 240,
@@ -4092,16 +4124,32 @@
       "id": "cinderward_amulet",
       "name": "Cinderward Amulet",
       "description": "Forged in a furnace and quenched in saltwater. Turns flame aside.",
-      "size": [1, 2],
+      "size": [
+        1,
+        2
+      ],
       "type": "gear",
       "slot": "amulet",
       "family": "amulet",
-      "baseStats": { "armor": 4 },
+      "baseStats": {
+        "armor": 4
+      },
       "effects": [
-        { "type": "fire_resist", "value": 15 }
+        {
+          "type": "fire_resist",
+          "value": 15
+        }
       ],
-      "tags": ["amulet", "defense", "fire", "rootspire"],
-      "rarityAffixPools": ["guard", "ember"],
+      "tags": [
+        "amulet",
+        "defense",
+        "fire",
+        "rootspire"
+      ],
+      "rarityAffixPools": [
+        "guard",
+        "ember"
+      ],
       "price": 250,
       "dropWeight": 3,
       "icon": "/assets/items/generated/ward_amulet.png"
@@ -4110,92 +4158,192 @@
       "id": "umbralward_amulet",
       "name": "Umbralward Amulet",
       "description": "A pendant carved from shadow-infused stone. Muffles dark energies.",
-      "size": [1, 2],
+      "size": [
+        1,
+        2
+      ],
       "type": "gear",
       "slot": "amulet",
       "family": "amulet",
       "effects": [
-        { "type": "shadow_resist", "value": 15 },
-        { "type": "dodge_chance", "value": 5 }
+        {
+          "type": "shadow_resist",
+          "value": 15
+        },
+        {
+          "type": "dodge_chance",
+          "value": 5
+        }
       ],
-      "tags": ["amulet", "defense", "shadow", "evasion", "rootspire"],
-      "rarityAffixPools": ["evasion", "warding"],
+      "tags": [
+        "amulet",
+        "defense",
+        "shadow",
+        "evasion",
+        "rootspire"
+      ],
+      "rarityAffixPools": [
+        "evasion",
+        "warding"
+      ],
       "price": 250,
       "dropWeight": 3,
-      "icon": "/assets/items/generated/ward_amulet.png"
+      "icon": "/assets/items/Umbrawald amulet.png"
     },
     {
       "id": "black_knight_boots",
       "name": "Black Knight Greaves",
       "description": "Heavy iron greaves stripped from a fallen knight of Rootspire.",
-      "size": [2, 2],
+      "size": [
+        2,
+        2
+      ],
       "type": "gear",
       "slot": "boots",
       "family": "armor",
       "armorType": "heavy",
-      "baseStats": { "armor": 9 },
-      "tags": ["boots", "heavy", "plate", "knight", "rootspire", "armor_heavy"],
-      "rarityAffixPools": ["guard", "brutal"],
+      "baseStats": {
+        "armor": 9
+      },
+      "tags": [
+        "boots",
+        "heavy",
+        "plate",
+        "knight",
+        "rootspire",
+        "armor_heavy"
+      ],
+      "rarityAffixPools": [
+        "guard",
+        "brutal"
+      ],
       "price": 320,
       "dropWeight": 3,
-      "icon": "/assets/items/generated/Leather boots.png"
+      "icon": "/assets/items/black_knight_sabatons.png"
     },
     {
       "id": "black_knight_gauntlets",
       "name": "Black Knight Gauntlets",
       "description": "Plated gauntlets engraved with Rootspire's sigil. Iron-hard, battle-worn.",
-      "size": [2, 2],
+      "size": [
+        2,
+        2
+      ],
       "type": "gear",
       "slot": "gloves",
       "family": "armor",
       "armorType": "heavy",
-      "baseStats": { "armor": 8 },
-      "tags": ["gloves", "heavy", "plate", "knight", "rootspire", "armor_heavy"],
-      "rarityAffixPools": ["guard", "brutal"],
+      "baseStats": {
+        "armor": 8
+      },
+      "tags": [
+        "gloves",
+        "heavy",
+        "plate",
+        "knight",
+        "rootspire",
+        "armor_heavy"
+      ],
+      "rarityAffixPools": [
+        "guard",
+        "brutal"
+      ],
       "price": 300,
       "dropWeight": 3,
-      "icon": "/assets/items/generated/iron_knuckles.png"
+      "icon": "/assets/items/black_knight_gauntlets.png"
     },
     {
       "id": "living_armblade",
       "name": "Living Armblade",
       "description": "A sword fused from the animated shell of a Rootspire armor guardian. Shimmers faintly, as if it remembers how to block.",
-      "size": [1, 3],
+      "size": [
+        3,
+        3
+      ],
       "type": "gear",
       "slot": "weapon",
       "family": "sword",
       "weaponType": "one_handed_sword",
       "hands": 1,
       "attackSpeed": 0.9,
-      "damageDice": { "count": 1, "sides": 10 },
-      "baseStats": { "damage": 13 },
+      "damageDice": {
+        "count": 1,
+        "sides": 10
+      },
+      "baseStats": {
+        "damage": 13
+      },
       "effects": [
-        { "type": "block_chance", "value": 4 },
-        { "type": "counter_on_block", "value": 8 }
+        {
+          "type": "block_chance",
+          "value": 4
+        },
+        {
+          "type": "counter_on_block",
+          "value": 8
+        }
       ],
-      "tags": ["weapon", "melee", "sword", "one_handed", "animated", "rootspire"],
-      "rarityAffixPools": ["weapon_guard", "dueling", "precision"],
+      "tags": [
+        "weapon",
+        "melee",
+        "sword",
+        "one_handed",
+        "animated",
+        "rootspire"
+      ],
+      "rarityAffixPools": [
+        "weapon_guard",
+        "dueling",
+        "precision"
+      ],
       "price": 380,
       "dropWeight": 0,
-      "icon": "/assets/items/generated/longsword.png"
+      "icon": "/assets/items/Living weapon.png"
     },
     {
       "id": "hollowguard_visor",
       "name": "Hollowguard Visor",
       "description": "The hollow faceplate of a Rootspire armor guardian. The eyeslits still track movement on their own.",
-      "size": [2, 2],
+      "size": [
+        2,
+        2
+      ],
       "type": "gear",
       "slot": "helmet",
       "family": "armor",
       "armorType": "heavy",
-      "armorDice": { "count": 1, "sides": 8, "bonus": 4, "text": "1d8+4", "average": 8.5 },
-      "baseStats": { "armor": 12 },
+      "armorDice": {
+        "count": 1,
+        "sides": 8,
+        "bonus": 4,
+        "text": "1d8+4",
+        "average": 8.5
+      },
+      "baseStats": {
+        "armor": 12
+      },
       "effects": [
-        { "type": "block_power", "value": 8 },
-        { "type": "crit_resist", "value": 4 }
+        {
+          "type": "block_power",
+          "value": 8
+        },
+        {
+          "type": "crit_resist",
+          "value": 4
+        }
       ],
-      "tags": ["helmet", "heavy", "plate", "armor_heavy", "animated", "rootspire"],
-      "rarityAffixPools": ["guard", "survival"],
+      "tags": [
+        "helmet",
+        "heavy",
+        "plate",
+        "armor_heavy",
+        "animated",
+        "rootspire"
+      ],
+      "rarityAffixPools": [
+        "guard",
+        "survival"
+      ],
       "price": 360,
       "dropWeight": 0,
       "icon": "/assets/items/generated/plate_helm.png"
@@ -4204,36 +4352,72 @@
       "id": "halberd_2h",
       "name": "Halberd",
       "description": "A long-hafted blade favored by knights and mercenaries. Slow but devastating.",
-      "size": [1, 4],
+      "size": [
+        1,
+        4
+      ],
       "type": "gear",
       "slot": "weapon",
       "family": "polearm",
       "weaponType": "two_handed_polearm",
       "hands": 2,
       "attackSpeed": 0.75,
-      "damageDice": { "count": 1, "sides": 10 },
-      "baseStats": { "damage": 16 },
-      "tags": ["weapon", "melee", "two_handed", "polearm", "warrior"],
-      "rarityAffixPools": ["brutal", "guard"],
+      "damageDice": {
+        "count": 2,
+        "sides": 10,
+        "text": "2d10"
+      },
+      "baseStats": {
+        "damage": 11
+      },
+      "tags": [
+        "weapon",
+        "melee",
+        "two_handed",
+        "polearm",
+        "warrior"
+      ],
+      "rarityAffixPools": [
+        "brutal",
+        "guard"
+      ],
       "price": 420,
       "dropWeight": 3,
-      "icon": "/assets/items/generated/hunter_spear.png"
+      "icon": "/assets/items/Halberd.png"
     },
     {
       "id": "emberward_cape",
       "name": "Emberward Cape",
       "description": "A treated wool cape with fire-resistant lining. Standard issue for Rootspire's elite.",
-      "size": [2, 2],
+      "size": [
+        2,
+        2
+      ],
       "type": "gear",
       "slot": "cloak",
       "family": "cloak",
       "armorType": "medium",
-      "baseStats": { "armor": 4 },
+      "baseStats": {
+        "armor": 4
+      },
       "effects": [
-        { "type": "fire_resist", "value": 10 }
+        {
+          "type": "fire_resist",
+          "value": 10
+        }
       ],
-      "tags": ["cloak", "cape", "medium", "fire", "rootspire", "armor_medium"],
-      "rarityAffixPools": ["guard", "ember"],
+      "tags": [
+        "cloak",
+        "cape",
+        "medium",
+        "fire",
+        "rootspire",
+        "armor_medium"
+      ],
+      "rarityAffixPools": [
+        "guard",
+        "ember"
+      ],
       "price": 290,
       "dropWeight": 3,
       "icon": "/assets/items/generated/cape.png"
@@ -4242,18 +4426,40 @@
       "id": "nightfall_cape",
       "name": "Nightfall Cape",
       "description": "A black silk cape that swallows light. Rogues love how it blurs their silhouette.",
-      "size": [2, 2],
+      "size": [
+        2,
+        2
+      ],
       "type": "gear",
       "slot": "cloak",
       "family": "cloak",
       "armorType": "light",
-      "baseStats": { "armor": 2 },
+      "baseStats": {
+        "armor": 2
+      },
       "effects": [
-        { "type": "shadow_resist", "value": 8 },
-        { "type": "dodge_chance", "value": 8 }
+        {
+          "type": "shadow_resist",
+          "value": 8
+        },
+        {
+          "type": "dodge_chance",
+          "value": 8
+        }
       ],
-      "tags": ["cloak", "cape", "light", "shadow", "evasion", "rogue", "armor_light"],
-      "rarityAffixPools": ["evasion", "warding"],
+      "tags": [
+        "cloak",
+        "cape",
+        "light",
+        "shadow",
+        "evasion",
+        "rogue",
+        "armor_light"
+      ],
+      "rarityAffixPools": [
+        "evasion",
+        "warding"
+      ],
       "price": 270,
       "dropWeight": 3,
       "icon": "/assets/items/generated/cape.png"
@@ -4261,14 +4467,210 @@
     {
       "id": "ash",
       "name": "Ash",
-      "size": [1, 1],
+      "size": [
+        1,
+        1
+      ],
       "type": "resource",
       "family": "raw_material",
-      "tags": ["resource", "ash", "crafting_material"],
+      "tags": [
+        "resource",
+        "ash",
+        "crafting_material"
+      ],
       "price": 3,
       "dropWeight": 2,
       "stackable": true,
       "icon": "/assets/items/generated/bone.png"
+    },
+    {
+      "id": "mushroom_skillet",
+      "name": "Mushroom Skillet",
+      "size": [
+        1,
+        1
+      ],
+      "type": "consumable",
+      "family": "cooked_meal",
+      "effects": [
+        {
+          "type": "restore_hunger",
+          "value": 40
+        },
+        {
+          "type": "food_buff",
+          "minutes": 5,
+          "stats": {
+            "maxHp": 12,
+            "int": 1
+          }
+        }
+      ],
+      "tags": [
+        "food",
+        "prepared_food",
+        "cooked_meal",
+        "mushroom",
+        "recipe_food",
+        "consumable_cooked"
+      ],
+      "price": 48,
+      "stackable": true,
+      "icon": "/assets/items/generated/hearty_stew.png"
+    },
+    {
+      "id": "bone_broth",
+      "name": "Bone Broth",
+      "size": [
+        1,
+        1
+      ],
+      "type": "consumable",
+      "family": "cooked_meal",
+      "effects": [
+        {
+          "type": "restore_hunger",
+          "value": 35
+        },
+        {
+          "type": "food_buff",
+          "minutes": 5,
+          "stats": {
+            "armor": 2,
+            "maxHp": 8
+          }
+        }
+      ],
+      "tags": [
+        "food",
+        "prepared_food",
+        "cooked_meal",
+        "bone",
+        "recipe_food",
+        "consumable_cooked"
+      ],
+      "price": 40,
+      "stackable": true,
+      "icon": "/assets/items/generated/hearty_stew.png"
+    },
+    {
+      "id": "troll_hide",
+      "name": "Troll Hide",
+      "size": [
+        1,
+        1
+      ],
+      "type": "resource",
+      "family": "raw_material",
+      "tags": [
+        "resource",
+        "raw_material",
+        "troll",
+        "crafting_material"
+      ],
+      "price": 14,
+      "dropWeight": 0,
+      "stackable": true,
+      "icon": "/assets/items/generated/plant_fiber.png"
+    },
+    {
+      "id": "tanned_troll_hide",
+      "name": "Tanned Troll Hide",
+      "size": [
+        1,
+        1
+      ],
+      "type": "resource",
+      "family": "raw_material",
+      "tags": [
+        "resource",
+        "raw_material",
+        "troll",
+        "crafting_material"
+      ],
+      "price": 28,
+      "dropWeight": 0,
+      "stackable": true,
+      "icon": "/assets/items/generated/plant_fiber.png"
+    },
+    {
+      "id": "troll_hide_bag",
+      "name": "Troll Hide Bag",
+      "description": "A rugged bag cured from troll hide. Holds more campfires and opens an extra column of inventory.",
+      "size": [
+        2,
+        2
+      ],
+      "type": "gear",
+      "slot": "bag",
+      "family": "bag",
+      "effects": [
+        {
+          "type": "campfire_carry_limit",
+          "value": 3
+        },
+        {
+          "type": "inventory_cols_bonus",
+          "value": 1
+        }
+      ],
+      "tags": [
+        "bag",
+        "troll"
+      ],
+      "price": 180,
+      "dropWeight": 0,
+      "icon": "/assets/items/generated/small_bag.png"
+    },
+    {
+      "id": "bone_hook_rack",
+      "name": "Bone Hook Rack",
+      "description": "A lightweight rack made of animal bone. Carry one extra campfire.",
+      "size": [
+        2,
+        2
+      ],
+      "type": "gear",
+      "slot": "bag",
+      "family": "bag",
+      "effects": [
+        {
+          "type": "campfire_carry_limit",
+          "value": 1
+        }
+      ],
+      "tags": [
+        "bag",
+        "bone"
+      ],
+      "price": 50,
+      "dropWeight": 0,
+      "icon": "/assets/items/generated/small_bag.png"
+    },
+    {
+      "id": "foragers_satchel",
+      "name": "Forager's Satchel",
+      "description": "A woven satchel that lets you grab an extra handful each time you gather.",
+      "size": [
+        2,
+        2
+      ],
+      "type": "gear",
+      "slot": "bag",
+      "family": "bag",
+      "effects": [
+        {
+          "type": "gather_bonus_rolls",
+          "value": 1
+        }
+      ],
+      "tags": [
+        "bag",
+        "gathering"
+      ],
+      "price": 60,
+      "dropWeight": 0,
+      "icon": "/assets/items/generated/small_bag.png"
     }
   ]
 }

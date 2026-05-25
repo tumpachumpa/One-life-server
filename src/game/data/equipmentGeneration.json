@@ -164,28 +164,28 @@
     },
     "attack_speed": {
       "uncommon": [
-        3,
-        5
+        2,
+        4
       ],
       "rare": [
-        4,
-        7
+        3,
+        6
       ],
       "epic": [
-        6,
-        10
+        5,
+        8
       ],
       "legendary": [
-        8,
-        13
+        7,
+        10
       ],
       "artifact": [
-        10,
-        16
+        9,
+        13
       ],
       "unique": [
-        12,
-        20
+        11,
+        16
       ]
     },
     "minor_defense": {
@@ -434,28 +434,28 @@
     },
     "parry_chance": {
       "uncommon": [
+        2,
+        3
+      ],
+      "rare": [
         3,
         5
       ],
-      "rare": [
+      "epic": [
         4,
         7
       ],
-      "epic": [
+      "legendary": [
         6,
         10
       ],
-      "legendary": [
+      "artifact": [
         8,
         12
       ],
-      "artifact": [
+      "unique": [
         10,
         15
-      ],
-      "unique": [
-        12,
-        18
       ]
     },
     "major_percent": {
@@ -627,7 +627,7 @@
         "count": 1,
         "sides": 4
       },
-      "attackSpeed": 1.30,
+      "attackSpeed": 1.3,
       "size": [
         1,
         2
@@ -1169,7 +1169,7 @@
         "count": 1,
         "sides": 6
       },
-      "attackSpeed": 1.20,
+      "attackSpeed": 1.2,
       "size": [
         1,
         2
@@ -1217,8 +1217,8 @@
       },
       "attackSpeed": 0.92,
       "size": [
-        1,
-        3
+        2,
+        4
       ],
       "materialPool": [
         "steel",
@@ -1247,7 +1247,7 @@
         "oathbound"
       ],
       "price": 94,
-      "icon": "/assets/items/generated/sword.png"
+      "icon": "/assets/items/oathbound longsword.png"
     },
     {
       "id": "stoneguard_mace",
@@ -1260,7 +1260,7 @@
         "count": 1,
         "sides": 10
       },
-      "attackSpeed": 0.90,
+      "attackSpeed": 0.9,
       "size": [
         2,
         3
@@ -1912,12 +1912,23 @@
       ],
       "effects": [
         {
-          "type": "dodge_chance",
-          "value": 2
-        },
-        {
-          "type": "hit_chance",
-          "value": 1
+          "type": "crit_chance",
+          "min": 1,
+          "max": 1,
+          "rarityMin": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          },
+          "rarityMax": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          }
         }
       ],
       "tags": [
@@ -1928,7 +1939,7 @@
         "duskrunner"
       ],
       "price": 78,
-      "icon": "/assets/items/generated/leather_helm.png"
+      "icon": "/assets/items/Duskrunner hood.png"
     },
     {
       "id": "duskrunner_jacket",
@@ -1959,12 +1970,23 @@
       ],
       "effects": [
         {
-          "type": "dodge_chance",
-          "value": 3
-        },
-        {
-          "type": "attack_speed",
-          "value": 1
+          "type": "crit_chance",
+          "min": 1,
+          "max": 1,
+          "rarityMin": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          },
+          "rarityMax": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          }
         }
       ],
       "tags": [
@@ -1975,7 +1997,7 @@
         "duskrunner"
       ],
       "price": 112,
-      "icon": "/assets/items/generated/traveler_chest.png"
+      "icon": "/assets/items/Duskrunner jacket.png"
     },
     {
       "id": "duskrunner_leggings",
@@ -2005,12 +2027,23 @@
       ],
       "effects": [
         {
-          "type": "dodge_chance",
-          "value": 2
-        },
-        {
-          "type": "attack_speed",
-          "value": 1
+          "type": "crit_chance",
+          "min": 1,
+          "max": 1,
+          "rarityMin": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          },
+          "rarityMax": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          }
         }
       ],
       "tags": [
@@ -2021,7 +2054,7 @@
         "duskrunner"
       ],
       "price": 92,
-      "icon": "/assets/items/generated/leather_chausses.png"
+      "icon": "/assets/items/Duskrunner leggings.png"
     },
     {
       "id": "duskrunner_boots",
@@ -2052,12 +2085,23 @@
       ],
       "effects": [
         {
-          "type": "dodge_chance",
-          "value": 3
-        },
-        {
-          "type": "attack_speed",
-          "value": 2
+          "type": "crit_chance",
+          "min": 1,
+          "max": 1,
+          "rarityMin": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          },
+          "rarityMax": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          }
         }
       ],
       "tags": [
@@ -2068,7 +2112,7 @@
         "duskrunner"
       ],
       "price": 78,
-      "icon": "/assets/items/generated/Leather%20boots.png?v=2"
+      "icon": "/assets/items/Duskrunner boots.png"
     },
     {
       "id": "duskrunner_gloves",
@@ -2099,12 +2143,23 @@
       ],
       "effects": [
         {
-          "type": "attack_speed",
-          "value": 2
-        },
-        {
           "type": "crit_chance",
-          "value": 2
+          "min": 1,
+          "max": 1,
+          "rarityMin": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          },
+          "rarityMax": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          }
         }
       ],
       "tags": [
@@ -2115,7 +2170,7 @@
         "duskrunner"
       ],
       "price": 82,
-      "icon": "/assets/items/generated/duelist_gloves.png"
+      "icon": "/assets/items/Duskrunner gloves.png"
     },
     {
       "id": "oathbound_plate_helm",
@@ -2142,11 +2197,10 @@
         "guard",
         "survival"
       ],
+      "baseStats": {
+        "armor": 2
+      },
       "effects": [
-        {
-          "type": "armor",
-          "value": 2
-        },
         {
           "type": "crit_resist",
           "value": 2
@@ -2160,7 +2214,7 @@
         "oathbound"
       ],
       "price": 122,
-      "icon": "/assets/items/generated/plate_helm.png"
+      "icon": "/assets/items/Oathbound helmet.png"
     },
     {
       "id": "oathbound_plate_cuirass",
@@ -2187,11 +2241,10 @@
         "guard",
         "survival"
       ],
+      "baseStats": {
+        "armor": 4
+      },
       "effects": [
-        {
-          "type": "armor",
-          "value": 4
-        },
         {
           "type": "max_hp",
           "value": 12
@@ -2205,7 +2258,7 @@
         "oathbound"
       ],
       "price": 178,
-      "icon": "/assets/items/generated/iron_chest.png"
+      "icon": "/assets/items/Oathbound cuiras.png"
     },
     {
       "id": "oathbound_plate_legguards",
@@ -2232,11 +2285,10 @@
         "guard",
         "survival"
       ],
+      "baseStats": {
+        "armor": 3
+      },
       "effects": [
-        {
-          "type": "armor",
-          "value": 3
-        },
         {
           "type": "max_hp",
           "value": 8
@@ -2250,7 +2302,7 @@
         "oathbound"
       ],
       "price": 142,
-      "icon": "/assets/items/generated/plate_legguards.png"
+      "icon": "/assets/items/Oathbound leggings.png"
     },
     {
       "id": "oathbound_plate_sabatons",
@@ -2277,11 +2329,10 @@
         "guard",
         "survival"
       ],
+      "baseStats": {
+        "armor": 2
+      },
       "effects": [
-        {
-          "type": "armor",
-          "value": 2
-        },
         {
           "type": "crit_resist",
           "value": 2
@@ -2295,7 +2346,7 @@
         "oathbound"
       ],
       "price": 104,
-      "icon": "/assets/items/generated/Leather%20boots.png?v=2"
+      "icon": "/assets/items/Oathbound boots.png"
     },
     {
       "id": "oathbound_plate_gauntlets",
@@ -2322,11 +2373,10 @@
         "guard",
         "crusher"
       ],
+      "baseStats": {
+        "armor": 2
+      },
       "effects": [
-        {
-          "type": "armor",
-          "value": 2
-        },
         {
           "type": "max_hp",
           "value": 6
@@ -2340,7 +2390,7 @@
         "oathbound"
       ],
       "price": 108,
-      "icon": "/assets/items/generated/duelist_gloves.png"
+      "icon": "/assets/items/Oathbound gloves.png"
     },
     {
       "id": "plate_helm",
@@ -2922,14 +2972,51 @@
       "slot": "helmet",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 6 },
-      "size": [2, 2],
-      "materialPool": ["worn", "bone", "iron"],
-      "affixPools": ["warding", "survival"],
-      "effects": [
-        { "type": "magic_defense", "value": 2 }
+      "armorDice": {
+        "count": 1,
+        "sides": 6
+      },
+      "size": [
+        2,
+        2
       ],
-      "tags": ["helmet", "medium", "bone", "bonewarden", "crypts"],
+      "materialPool": [
+        "worn",
+        "bone",
+        "iron"
+      ],
+      "affixPools": [
+        "warding",
+        "survival"
+      ],
+      "effects": [
+        {
+          "type": "magic_defense",
+          "min": 2,
+          "max": 2,
+          "rarityMin": {
+            "normal": 2,
+            "uncommon": 3,
+            "rare": 4,
+            "epic": 5,
+            "legendary": 6
+          },
+          "rarityMax": {
+            "normal": 2,
+            "uncommon": 3,
+            "rare": 4,
+            "epic": 5,
+            "legendary": 6
+          }
+        }
+      ],
+      "tags": [
+        "helmet",
+        "medium",
+        "bone",
+        "bonewarden",
+        "crypts"
+      ],
       "price": 72,
       "icon": "/assets/items/generated/leather_helm.png"
     },
@@ -2939,15 +3026,51 @@
       "slot": "chest",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 8 },
-      "size": [2, 3],
-      "materialPool": ["worn", "bone", "iron"],
-      "affixPools": ["endurance", "warding"],
-      "effects": [
-        { "type": "armor", "value": 2 },
-        { "type": "magic_defense", "value": 2 }
+      "armorDice": {
+        "count": 1,
+        "sides": 8
+      },
+      "size": [
+        2,
+        3
       ],
-      "tags": ["chest", "medium", "bone", "bonewarden", "crypts"],
+      "materialPool": [
+        "worn",
+        "bone",
+        "iron"
+      ],
+      "affixPools": [
+        "endurance",
+        "warding"
+      ],
+      "effects": [
+        {
+          "type": "magic_defense",
+          "min": 2,
+          "max": 2,
+          "rarityMin": {
+            "normal": 2,
+            "uncommon": 3,
+            "rare": 4,
+            "epic": 5,
+            "legendary": 6
+          },
+          "rarityMax": {
+            "normal": 2,
+            "uncommon": 3,
+            "rare": 4,
+            "epic": 5,
+            "legendary": 6
+          }
+        }
+      ],
+      "tags": [
+        "chest",
+        "medium",
+        "bone",
+        "bonewarden",
+        "crypts"
+      ],
       "price": 95,
       "icon": "/assets/items/generated/iron_chest.png"
     },
@@ -2957,14 +3080,36 @@
       "slot": "helmet",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 4 },
-      "size": [2, 2],
-      "materialPool": ["worn", "cured", "ash"],
-      "affixPools": ["evasion", "speed"],
-      "effects": [
-        { "type": "dodge_chance", "value": 2 }
+      "armorDice": {
+        "count": 1,
+        "sides": 4
+      },
+      "size": [
+        2,
+        2
       ],
-      "tags": ["helmet", "medium", "leather", "shadowleather", "crypts"],
+      "materialPool": [
+        "worn",
+        "cured",
+        "ash"
+      ],
+      "affixPools": [
+        "evasion",
+        "speed"
+      ],
+      "effects": [
+        {
+          "type": "dodge_chance",
+          "value": 2
+        }
+      ],
+      "tags": [
+        "helmet",
+        "medium",
+        "leather",
+        "shadowleather",
+        "crypts"
+      ],
       "price": 65,
       "icon": "/assets/items/generated/leather_helm.png"
     },
@@ -2974,14 +3119,36 @@
       "slot": "chest",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 8 },
-      "size": [2, 3],
-      "materialPool": ["worn", "cured", "ash"],
-      "affixPools": ["evasion", "speed"],
-      "effects": [
-        { "type": "dodge_chance", "value": 3 }
+      "armorDice": {
+        "count": 1,
+        "sides": 8
+      },
+      "size": [
+        2,
+        3
       ],
-      "tags": ["chest", "medium", "leather", "shadowleather", "crypts"],
+      "materialPool": [
+        "worn",
+        "cured",
+        "ash"
+      ],
+      "affixPools": [
+        "evasion",
+        "speed"
+      ],
+      "effects": [
+        {
+          "type": "dodge_chance",
+          "value": 3
+        }
+      ],
+      "tags": [
+        "chest",
+        "medium",
+        "leather",
+        "shadowleather",
+        "crypts"
+      ],
       "price": 88,
       "icon": "/assets/items/generated/traveler_chest.png"
     },
@@ -2991,14 +3158,35 @@
       "slot": "cloak",
       "family": "cloak",
       "armorType": "light",
-      "armorDice": { "count": 1, "sides": 4 },
-      "size": [2, 2],
-      "materialPool": ["worn", "ash"],
-      "affixPools": ["warding", "evasion"],
-      "effects": [
-        { "type": "magic_defense", "value": 4 }
+      "armorDice": {
+        "count": 1,
+        "sides": 4
+      },
+      "size": [
+        2,
+        2
       ],
-      "tags": ["cloak", "cape", "light", "wraith", "crypts"],
+      "materialPool": [
+        "worn",
+        "ash"
+      ],
+      "affixPools": [
+        "warding",
+        "evasion"
+      ],
+      "effects": [
+        {
+          "type": "magic_defense",
+          "value": 4
+        }
+      ],
+      "tags": [
+        "cloak",
+        "cape",
+        "light",
+        "wraith",
+        "crypts"
+      ],
       "price": 135,
       "icon": "/assets/items/generated/cape.png?v=2"
     },
@@ -3008,14 +3196,34 @@
       "slot": "amulet",
       "family": "amulet",
       "armorType": "amulet",
-      "size": [1, 2],
-      "materialPool": ["ash", "bone"],
-      "affixPools": ["ember"],
-      "effects": [
-        { "type": "fire_resist", "value": 6 },
-        { "type": "attack_speed", "value": 3 }
+      "size": [
+        1,
+        2
       ],
-      "tags": ["amulet", "accessory", "fire", "beast", "crypts"],
+      "materialPool": [
+        "ash",
+        "bone"
+      ],
+      "affixPools": [
+        "ember"
+      ],
+      "effects": [
+        {
+          "type": "fire_resist",
+          "value": 6
+        },
+        {
+          "type": "attack_speed",
+          "value": 3
+        }
+      ],
+      "tags": [
+        "amulet",
+        "accessory",
+        "fire",
+        "beast",
+        "crypts"
+      ],
       "price": 130,
       "icon": "/assets/items/generated/thorn_amulet.png"
     },
@@ -3025,16 +3233,53 @@
       "slot": "helmet",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 6 },
-      "size": [2, 2],
-      "materialPool": ["worn", "cured", "studded"],
-      "affixPools": ["hunt", "precision"],
-      "effects": [
-        { "type": "attack_speed", "value": 2 }
+      "armorDice": {
+        "count": 1,
+        "sides": 6
+      },
+      "size": [
+        2,
+        2
       ],
-      "tags": ["helmet", "medium", "leather", "tracker", "orcamp"],
+      "materialPool": [
+        "worn",
+        "cured",
+        "studded"
+      ],
+      "affixPools": [
+        "hunt",
+        "precision"
+      ],
+      "effects": [
+        {
+          "type": "dodge_chance",
+          "min": 1,
+          "max": 1,
+          "rarityMin": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          },
+          "rarityMax": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          }
+        }
+      ],
+      "tags": [
+        "helmet",
+        "medium",
+        "leather",
+        "tracker",
+        "orcamp"
+      ],
       "price": 95,
-      "icon": "/assets/items/generated/leather_helm.png"
+      "icon": "/assets/items/tracker sets helmet.png"
     },
     {
       "id": "tracker_vest",
@@ -3042,17 +3287,53 @@
       "slot": "chest",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 10 },
-      "size": [2, 3],
-      "materialPool": ["worn", "cured", "studded"],
-      "affixPools": ["hunt", "survival"],
-      "effects": [
-        { "type": "attack_speed", "value": 2 },
-        { "type": "crit_chance", "value": 1 }
+      "armorDice": {
+        "count": 1,
+        "sides": 10
+      },
+      "size": [
+        2,
+        3
       ],
-      "tags": ["chest", "medium", "leather", "tracker", "orcamp"],
+      "materialPool": [
+        "worn",
+        "cured",
+        "studded"
+      ],
+      "affixPools": [
+        "hunt",
+        "survival"
+      ],
+      "effects": [
+        {
+          "type": "dodge_chance",
+          "min": 1,
+          "max": 1,
+          "rarityMin": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          },
+          "rarityMax": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          }
+        }
+      ],
+      "tags": [
+        "chest",
+        "medium",
+        "leather",
+        "tracker",
+        "orcamp"
+      ],
       "price": 118,
-      "icon": "/assets/items/generated/traveler_chest.png"
+      "icon": "/assets/items/Trackers set armor.png"
     },
     {
       "id": "tracker_legs",
@@ -3060,16 +3341,53 @@
       "slot": "legs",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 8 },
-      "size": [2, 3],
-      "materialPool": ["worn", "cured", "studded"],
-      "affixPools": ["hunt", "speed"],
-      "effects": [
-        { "type": "attack_speed", "value": 1 }
+      "armorDice": {
+        "count": 1,
+        "sides": 8
+      },
+      "size": [
+        2,
+        3
       ],
-      "tags": ["legs", "medium", "leather", "tracker", "orcamp"],
+      "materialPool": [
+        "worn",
+        "cured",
+        "studded"
+      ],
+      "affixPools": [
+        "hunt",
+        "speed"
+      ],
+      "effects": [
+        {
+          "type": "dodge_chance",
+          "min": 1,
+          "max": 1,
+          "rarityMin": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          },
+          "rarityMax": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          }
+        }
+      ],
+      "tags": [
+        "legs",
+        "medium",
+        "leather",
+        "tracker",
+        "orcamp"
+      ],
       "price": 102,
-      "icon": "/assets/items/generated/leather_chausses.png"
+      "icon": "/assets/items/tracker sets legs.png"
     },
     {
       "id": "troll_hide_vest",
@@ -3077,18 +3395,39 @@
       "slot": "chest",
       "family": "armor",
       "armorType": "heavy",
-      "armorDice": { "count": 1, "sides": 12 },
-      "size": [2, 3],
-      "materialPool": ["worn", "bloodiron"],
-      "affixPools": ["endurance"],
-      "effects": [
-        { "type": "armor", "value": 3 },
-        { "type": "max_hp", "value": 8 },
-        { "type": "regen_each_round", "value": 1 }
+      "armorDice": {
+        "count": 1,
+        "sides": 12
+      },
+      "size": [
+        2,
+        3
       ],
-      "tags": ["chest", "heavy", "troll", "troll_hide", "orcamp"],
+      "materialPool": [
+        "worn",
+        "bloodiron"
+      ],
+      "affixPools": [
+        "endurance"
+      ],
+      "baseStats": {
+        "maxHp": 8
+      },
+      "effects": [
+        {
+          "type": "regen_each_round",
+          "value": 1
+        }
+      ],
+      "tags": [
+        "chest",
+        "heavy",
+        "troll",
+        "troll_hide",
+        "orcamp"
+      ],
       "price": 125,
-      "icon": "/assets/items/generated/iron_chest.png"
+      "icon": "/assets/items/Trollhide armor.png"
     },
     {
       "id": "troll_hide_legs",
@@ -3096,33 +3435,39 @@
       "slot": "legs",
       "family": "armor",
       "armorType": "heavy",
-      "armorDice": { "count": 1, "sides": 12 },
-      "size": [2, 3],
-      "materialPool": ["worn", "bloodiron"],
-      "affixPools": ["endurance"],
-      "effects": [
-        { "type": "armor", "value": 2 },
-        { "type": "max_hp", "value": 6 },
-        { "type": "regen_each_round", "value": 1 }
+      "armorDice": {
+        "count": 1,
+        "sides": 12
+      },
+      "size": [
+        2,
+        3
       ],
-      "tags": ["legs", "heavy", "troll", "troll_hide", "orcamp"],
+      "materialPool": [
+        "worn",
+        "bloodiron"
+      ],
+      "affixPools": [
+        "endurance"
+      ],
+      "baseStats": {
+        "maxHp": 6
+      },
+      "effects": [
+        {
+          "type": "regen_each_round",
+          "value": 1
+        }
+      ],
+      "tags": [
+        "legs",
+        "heavy",
+        "troll",
+        "troll_hide",
+        "orcamp"
+      ],
       "price": 108,
-      "icon": "/assets/items/generated/plate_legguards.png"
-    },
-    {
-      "id": "warg_fang_necklace",
-      "name": "Warg Fang Necklace",
-      "slot": "amulet",
-      "family": "amulet",
-      "armorType": "amulet",
-      "size": [1, 2],
-      "materialPool": ["bone", "worn"],
-      "affixPools": ["predator"],
-      "guaranteedAffixes": 2,
-      "effects": [],
-      "tags": ["amulet", "accessory", "beast", "bleed", "orcamp"],
-      "price": 165,
-      "icon": "/assets/items/generated/thorn_amulet.png"
+      "icon": "/assets/items/Trollhide leggings.png"
     },
     {
       "id": "pathfinder_hood",
@@ -3130,14 +3475,51 @@
       "slot": "helmet",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 6 },
-      "size": [2, 2],
-      "materialPool": ["worn", "ash", "ancient"],
-      "affixPools": ["pathfinding", "precision"],
-      "effects": [
-        { "type": "crit_chance", "value": 2 }
+      "armorDice": {
+        "count": 1,
+        "sides": 6
+      },
+      "size": [
+        2,
+        2
       ],
-      "tags": ["helmet", "medium", "leather", "pathfinder", "rootspire"],
+      "materialPool": [
+        "worn",
+        "ash",
+        "ancient"
+      ],
+      "affixPools": [
+        "pathfinding",
+        "precision"
+      ],
+      "effects": [
+        {
+          "type": "attack_speed",
+          "min": 1,
+          "max": 1,
+          "rarityMin": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          },
+          "rarityMax": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          }
+        }
+      ],
+      "tags": [
+        "helmet",
+        "medium",
+        "leather",
+        "pathfinder",
+        "rootspire"
+      ],
       "price": 128,
       "icon": "/assets/items/generated/leather_helm.png"
     },
@@ -3147,15 +3529,51 @@
       "slot": "chest",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 10 },
-      "size": [2, 3],
-      "materialPool": ["worn", "ash", "ancient"],
-      "affixPools": ["pathfinding", "hunt"],
-      "effects": [
-        { "type": "attack_speed", "value": 2 },
-        { "type": "crit_chance", "value": 1 }
+      "armorDice": {
+        "count": 1,
+        "sides": 10
+      },
+      "size": [
+        2,
+        3
       ],
-      "tags": ["chest", "medium", "leather", "pathfinder", "rootspire"],
+      "materialPool": [
+        "worn",
+        "ash",
+        "ancient"
+      ],
+      "affixPools": [
+        "pathfinding",
+        "hunt"
+      ],
+      "effects": [
+        {
+          "type": "attack_speed",
+          "min": 1,
+          "max": 1,
+          "rarityMin": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          },
+          "rarityMax": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          }
+        }
+      ],
+      "tags": [
+        "chest",
+        "medium",
+        "leather",
+        "pathfinder",
+        "rootspire"
+      ],
       "price": 162,
       "icon": "/assets/items/generated/traveler_chest.png"
     },
@@ -3165,14 +3583,51 @@
       "slot": "legs",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 8 },
-      "size": [2, 3],
-      "materialPool": ["worn", "ash", "ancient"],
-      "affixPools": ["hunt", "speed"],
-      "effects": [
-        { "type": "attack_speed", "value": 2 }
+      "armorDice": {
+        "count": 1,
+        "sides": 8
+      },
+      "size": [
+        2,
+        3
       ],
-      "tags": ["legs", "medium", "leather", "pathfinder", "rootspire"],
+      "materialPool": [
+        "worn",
+        "ash",
+        "ancient"
+      ],
+      "affixPools": [
+        "hunt",
+        "speed"
+      ],
+      "effects": [
+        {
+          "type": "attack_speed",
+          "min": 1,
+          "max": 1,
+          "rarityMin": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          },
+          "rarityMax": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          }
+        }
+      ],
+      "tags": [
+        "legs",
+        "medium",
+        "leather",
+        "pathfinder",
+        "rootspire"
+      ],
       "price": 148,
       "icon": "/assets/items/generated/leather_chausses.png"
     },
@@ -3182,14 +3637,51 @@
       "slot": "boots",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 6 },
-      "size": [2, 2],
-      "materialPool": ["worn", "ash", "ancient"],
-      "affixPools": ["speed", "hunt"],
-      "effects": [
-        { "type": "attack_speed", "value": 2 }
+      "armorDice": {
+        "count": 1,
+        "sides": 6
+      },
+      "size": [
+        2,
+        2
       ],
-      "tags": ["boots", "medium", "leather", "pathfinder", "rootspire"],
+      "materialPool": [
+        "worn",
+        "ash",
+        "ancient"
+      ],
+      "affixPools": [
+        "speed",
+        "hunt"
+      ],
+      "effects": [
+        {
+          "type": "attack_speed",
+          "min": 1,
+          "max": 1,
+          "rarityMin": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          },
+          "rarityMax": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          }
+        }
+      ],
+      "tags": [
+        "boots",
+        "medium",
+        "leather",
+        "pathfinder",
+        "rootspire"
+      ],
       "price": 118,
       "icon": "/assets/items/generated/Leather%20boots.png?v=2"
     },
@@ -3199,14 +3691,51 @@
       "slot": "gloves",
       "family": "armor",
       "armorType": "medium",
-      "armorDice": { "count": 1, "sides": 6 },
-      "size": [2, 2],
-      "materialPool": ["worn", "ash", "ancient"],
-      "affixPools": ["pathfinding", "precision"],
-      "effects": [
-        { "type": "crit_chance", "value": 3 }
+      "armorDice": {
+        "count": 1,
+        "sides": 6
+      },
+      "size": [
+        2,
+        2
       ],
-      "tags": ["gloves", "medium", "leather", "pathfinder", "rootspire"],
+      "materialPool": [
+        "worn",
+        "ash",
+        "ancient"
+      ],
+      "affixPools": [
+        "pathfinding",
+        "precision"
+      ],
+      "effects": [
+        {
+          "type": "attack_speed",
+          "min": 1,
+          "max": 1,
+          "rarityMin": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          },
+          "rarityMax": {
+            "normal": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "epic": 4,
+            "legendary": 5
+          }
+        }
+      ],
+      "tags": [
+        "gloves",
+        "medium",
+        "leather",
+        "pathfinder",
+        "rootspire"
+      ],
       "price": 118,
       "icon": "/assets/items/generated/duelist_gloves.png"
     },
@@ -3216,11 +3745,45 @@
       "slot": "ring",
       "family": "ring",
       "armorType": "ring",
-      "size": [1, 1],
-      "materialPool": ["ash", "ancient"],
-      "affixPools": ["guard", "warding"],
-      "effects": [],
-      "tags": ["ring", "accessory", "construct", "rootspire"],
+      "size": [
+        1,
+        1
+      ],
+      "materialPool": [
+        "ash",
+        "ancient"
+      ],
+      "affixPools": [
+        "guard",
+        "warding"
+      ],
+      "effects": [
+        {
+          "type": "armor",
+          "min": 4,
+          "max": 4,
+          "rarityMin": {
+            "normal": 4,
+            "uncommon": 5,
+            "rare": 6,
+            "epic": 7,
+            "legendary": 8
+          },
+          "rarityMax": {
+            "normal": 4,
+            "uncommon": 5,
+            "rare": 6,
+            "epic": 7,
+            "legendary": 8
+          }
+        }
+      ],
+      "tags": [
+        "ring",
+        "accessory",
+        "construct",
+        "rootspire"
+      ],
       "price": 185,
       "icon": "/assets/items/generated/ring_of_thorns.png"
     },
@@ -3230,14 +3793,33 @@
       "slot": "ring",
       "family": "ring",
       "armorType": "ring",
-      "size": [1, 1],
-      "materialPool": ["ash", "bone", "ancient"],
-      "affixPools": ["ember"],
-      "effects": [
-        { "type": "burn_on_hit", "chance": 12, "duration": 2, "damagePct": 2 },
-        { "type": "fire_resist", "value": 4 }
+      "size": [
+        1,
+        1
       ],
-      "tags": ["ring", "accessory", "fire", "demon", "rootspire"],
+      "materialPool": [
+        "ash",
+        "bone",
+        "ancient"
+      ],
+      "affixPools": [
+        "ember"
+      ],
+      "effects": [
+        {
+          "type": "burn_on_hit",
+          "chance": 8,
+          "duration": 2,
+          "damagePct": 2
+        }
+      ],
+      "tags": [
+        "ring",
+        "accessory",
+        "fire",
+        "demon",
+        "rootspire"
+      ],
       "price": 180,
       "icon": "/assets/items/generated/ring_of_thorns.png"
     },
@@ -3247,13 +3829,30 @@
       "slot": "ring",
       "family": "ring",
       "armorType": "ring",
-      "size": [1, 1],
-      "materialPool": ["ash", "ancient"],
-      "affixPools": ["warding"],
-      "effects": [
-        { "type": "magic_defense", "value": 5 }
+      "size": [
+        1,
+        1
       ],
-      "tags": ["ring", "accessory", "arcane", "construct", "rootspire"],
+      "materialPool": [
+        "ash",
+        "ancient"
+      ],
+      "affixPools": [
+        "warding"
+      ],
+      "effects": [
+        {
+          "type": "magic_defense",
+          "value": 5
+        }
+      ],
+      "tags": [
+        "ring",
+        "accessory",
+        "arcane",
+        "construct",
+        "rootspire"
+      ],
       "price": 195,
       "icon": "/assets/items/generated/ring_of_thorns.png"
     },
@@ -3263,17 +3862,43 @@
       "slot": "boots",
       "family": "armor",
       "armorType": "heavy",
-      "armorDice": { "count": 1, "sides": 8 },
-      "size": [2, 2],
-      "materialPool": ["bloodiron", "ancient"],
-      "affixPools": ["guard", "survival"],
-      "effects": [
-        { "type": "armor", "value": 3 },
-        { "type": "crit_resist", "value": 3 }
+      "armorDice": {
+        "count": 1,
+        "sides": 8
+      },
+      "size": [
+        2,
+        2
       ],
-      "tags": ["boots", "heavy", "plate", "armor_heavy", "oathbound", "black_knight", "rootspire"],
+      "materialPool": [
+        "bloodiron",
+        "ancient"
+      ],
+      "affixPools": [
+        "guard",
+        "survival"
+      ],
+      "effects": [
+        {
+          "type": "armor",
+          "value": 3
+        },
+        {
+          "type": "crit_resist",
+          "value": 3
+        }
+      ],
+      "tags": [
+        "boots",
+        "heavy",
+        "plate",
+        "armor_heavy",
+        "oathbound",
+        "black_knight",
+        "rootspire"
+      ],
       "price": 185,
-      "icon": "/assets/items/generated/Leather%20boots.png?v=2"
+      "icon": "/assets/items/black_knight_sabatons.png"
     },
     {
       "id": "black_knight_gauntlets",
@@ -3281,17 +3906,43 @@
       "slot": "gloves",
       "family": "armor",
       "armorType": "heavy",
-      "armorDice": { "count": 1, "sides": 8 },
-      "size": [2, 2],
-      "materialPool": ["bloodiron", "ancient"],
-      "affixPools": ["guard", "crusher"],
-      "effects": [
-        { "type": "armor", "value": 2 },
-        { "type": "counter_chance", "value": 4 }
+      "armorDice": {
+        "count": 1,
+        "sides": 8
+      },
+      "size": [
+        2,
+        2
       ],
-      "tags": ["gloves", "heavy", "plate", "armor_heavy", "oathbound", "black_knight", "rootspire"],
+      "materialPool": [
+        "bloodiron",
+        "ancient"
+      ],
+      "affixPools": [
+        "guard",
+        "crusher"
+      ],
+      "effects": [
+        {
+          "type": "armor",
+          "value": 2
+        },
+        {
+          "type": "counter_chance",
+          "value": 4
+        }
+      ],
+      "tags": [
+        "gloves",
+        "heavy",
+        "plate",
+        "armor_heavy",
+        "oathbound",
+        "black_knight",
+        "rootspire"
+      ],
       "price": 185,
-      "icon": "/assets/items/generated/duelist_gloves.png"
+      "icon": "/assets/items/black_knight_gauntlets.png"
     },
     {
       "id": "halberd_2h",
@@ -3300,24 +3951,48 @@
       "family": "polearm",
       "weaponType": "two_handed_polearm",
       "hands": 2,
-      "damageDice": { "count": 2, "sides": 8 },
-      "attackSpeed": 0.70,
-      "size": [2, 4],
-      "materialPool": ["iron", "steel", "bloodiron", "ancient"],
-      "affixPools": ["brutal", "crusher"],
-      "effects": [
-        { "type": "armor_ignore", "value": 10 }
+      "damageDice": {
+        "count": 2,
+        "sides": 10
+      },
+      "attackSpeed": 0.7,
+      "size": [
+        2,
+        4
       ],
-      "tags": ["polearm", "weapon", "melee", "two_handed", "heavy", "black_knight"],
+      "materialPool": [
+        "iron",
+        "steel",
+        "bloodiron",
+        "ancient"
+      ],
+      "affixPools": [
+        "brutal",
+        "crusher"
+      ],
+      "effects": [
+        {
+          "type": "armor_ignore",
+          "value": 10
+        }
+      ],
+      "tags": [
+        "polearm",
+        "weapon",
+        "melee",
+        "two_handed",
+        "heavy",
+        "black_knight"
+      ],
       "price": 195,
-      "icon": "/assets/items/generated/hunter_spear.png"
+      "icon": "/assets/items/Halberd.png"
     }
   ],
   "grades": [
     {
       "id": "worn",
       "label": "Worn",
-      "multMin": 0.70,
+      "multMin": 0.7,
       "multMax": 0.99,
       "weight": 38,
       "priceMult": 0.5
@@ -3325,10 +4000,10 @@
     {
       "id": "normal",
       "label": "",
-      "multMin": 1.00,
+      "multMin": 1,
       "multMax": 1.12,
       "weight": 40,
-      "priceMult": 1.0
+      "priceMult": 1
     },
     {
       "id": "excellent",
@@ -3342,7 +4017,7 @@
       "id": "masterpiece",
       "label": "Masterpiece",
       "multMin": 1.25,
-      "multMax": 1.40,
+      "multMax": 1.4,
       "weight": 5,
       "priceMult": 2.8
     }
@@ -4120,49 +4795,123 @@
   "sets": {
     "pathfinder": {
       "name": "Pathfinder",
-      "pieces": ["pathfinder_hood", "pathfinder_jacket", "pathfinder_legs", "pathfinder_boots", "pathfinder_gloves"],
+      "pieces": [
+        "pathfinder_hood",
+        "pathfinder_jacket",
+        "pathfinder_legs",
+        "pathfinder_boots",
+        "pathfinder_gloves"
+      ],
       "bonuses": {
-        "3": [{ "type": "crit_chance", "value": 5 }],
-        "5": [{ "type": "crit_damage", "value": 15 }]
+        "3": [
+          {
+            "type": "crit_chance",
+            "value": 5
+          }
+        ],
+        "5": [
+          {
+            "type": "crit_damage",
+            "value": 15
+          }
+        ]
       }
     },
     "duskrunner": {
       "name": "Duskrunner",
-      "pieces": ["duskrunner_hood", "duskrunner_jacket", "duskrunner_leggings", "duskrunner_boots", "duskrunner_gloves"],
+      "pieces": [
+        "duskrunner_hood",
+        "duskrunner_jacket",
+        "duskrunner_leggings",
+        "duskrunner_boots",
+        "duskrunner_gloves"
+      ],
       "bonuses": {
-        "3": [{ "type": "attack_speed", "value": 8 }],
-        "5": [{ "type": "damage_bonus_pct", "value": 15 }]
+        "3": [
+          {
+            "type": "attack_speed",
+            "value": 8
+          }
+        ],
+        "5": [
+          {
+            "type": "damage_bonus_pct",
+            "value": 15
+          }
+        ]
       }
     },
     "oathbound_plate": {
       "name": "Oathbound",
-      "pieces": ["oathbound_plate_helm", "oathbound_plate_cuirass", "oathbound_plate_legguards", "oathbound_plate_sabatons", "oathbound_plate_gauntlets"],
+      "pieces": [
+        "oathbound_plate_helm",
+        "oathbound_plate_cuirass",
+        "oathbound_plate_legguards",
+        "oathbound_plate_sabatons",
+        "oathbound_plate_gauntlets"
+      ],
       "bonuses": {
-        "3": [{ "type": "armor", "value": 8 }],
-        "5": [{ "type": "block_chance", "value": 10 }]
+        "3": [
+          {
+            "type": "armor",
+            "value": 8
+          }
+        ],
+        "5": [
+          {
+            "type": "block_chance",
+            "value": 10
+          }
+        ]
       }
     },
     "tracker": {
       "name": "Tracker",
-      "pieces": ["tracker_hood", "tracker_vest", "tracker_legs"],
+      "pieces": [
+        "tracker_hood",
+        "tracker_vest",
+        "tracker_legs"
+      ],
       "bonuses": {
-        "3": [{ "type": "attack_speed", "value": 5 }]
+        "3": [
+          {
+            "type": "attack_speed",
+            "value": 5
+          }
+        ]
       }
     },
     "bonewarden": {
       "name": "Bonewarden",
-      "pieces": ["bonewarden_helm", "bonewarden_vest"],
+      "pieces": [
+        "bonewarden_helm",
+        "bonewarden_vest"
+      ],
       "bonuses": {
-        "2": [{ "type": "magic_defense", "value": 5 }]
+        "2": [
+          {
+            "type": "magic_defense",
+            "value": 5
+          }
+        ]
       }
     },
     "troll_hide": {
       "name": "Troll Hide",
-      "pieces": ["troll_hide_vest", "troll_hide_legs"],
+      "pieces": [
+        "troll_hide_vest",
+        "troll_hide_legs"
+      ],
       "bonuses": {
         "2": [
-          { "type": "regen_each_round", "value": 1 },
-          { "type": "max_hp", "value": 10 }
+          {
+            "type": "regen_each_round",
+            "value": 1
+          },
+          {
+            "type": "max_hp",
+            "value": 10
+          }
         ]
       }
     }

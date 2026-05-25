@@ -252,6 +252,29 @@ export function normalizeGridItems(items = [], rows = 6) {
   return result;
 }
 
+export function normalizeGridItemsWithOverflow(items = [], rows = 6) {
+  let result = [];
+  const overflow = [];
+  for (const rawEntry of items || []) {
+    const entry = normalizeGridEntry(rawEntry);
+    if (!entry || !getItem(entry.itemId)) continue;
+    const x = Math.floor(entry.x);
+    const y = Math.floor(entry.y);
+    if (Number.isFinite(x) && Number.isFinite(y) && canPlace(result, entry.itemId, x, y, rows)) {
+      result = [...result, { itemId: entry.itemId, x, y, qty: entry.qty }];
+      continue;
+    }
+    const added = addToGrid(result, entry.itemId, rows, entry.qty);
+    if (added) {
+      result = added;
+    } else {
+      const qty = entry.qty || 1;
+      for (let i = 0; i < qty; i++) overflow.push(entry.itemId);
+    }
+  }
+  return { items: result, overflow };
+}
+
 export function migrateToGrid(oldInventory, rows = 6) {
   return normalizeGridItems(oldInventory, rows);
 }

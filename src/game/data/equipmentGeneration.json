@@ -4762,10 +4762,10 @@
       },
       {
         "type": "damage_bonus_pct",
-        "min": 2,
-        "max": 5,
+        "min": 4,
+        "max": 9,
         "scalingProfile": "damage_pct_limited",
-        "weight": 2
+        "weight": 4
       }
     ],
     "warding": [

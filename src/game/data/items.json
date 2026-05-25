@@ -399,7 +399,8 @@
       "effects": [
         {
           "type": "poison_resist",
-          "value": 8
+          "value": 8,
+          "_base": true
         }
       ],
       "tags": [
@@ -428,7 +429,8 @@
       "effects": [
         {
           "type": "attack_speed",
-          "value": 8
+          "value": 8,
+          "_base": true
         }
       ],
       "tags": [
@@ -492,7 +494,8 @@
       "effects": [
         {
           "type": "shadow_resist",
-          "value": 15
+          "value": 15,
+          "_base": true
         }
       ],
       "rarityAffixPools": [
@@ -3867,7 +3870,8 @@
       "effects": [
         {
           "type": "block_chance",
-          "value": 4
+          "value": 4,
+          "_base": true
         }
       ],
       "tags": [
@@ -3898,11 +3902,13 @@
       "effects": [
         {
           "type": "fire_resist",
-          "value": 8
+          "value": 8,
+          "_base": true
         },
         {
           "type": "attack_speed",
-          "value": 5
+          "value": 5,
+          "_base": true
         }
       ],
       "tags": [
@@ -3937,7 +3943,8 @@
       "effects": [
         {
           "type": "attack_speed",
-          "value": 6
+          "value": 6,
+          "_base": true
         }
       ],
       "tags": [
@@ -3968,11 +3975,13 @@
       "effects": [
         {
           "type": "fire_resist",
-          "value": 10
+          "value": 10,
+          "_base": true
         },
         {
           "type": "dodge_chance",
-          "value": 5
+          "value": 5,
+          "_base": true
         }
       ],
       "tags": [
@@ -4003,11 +4012,13 @@
       "effects": [
         {
           "type": "shadow_resist",
-          "value": 10
+          "value": 10,
+          "_base": true
         },
         {
           "type": "dodge_chance",
-          "value": 6
+          "value": 6,
+          "_base": true
         }
       ],
       "tags": [
@@ -4041,7 +4052,8 @@
       "effects": [
         {
           "type": "fire_resist",
-          "value": 10
+          "value": 10,
+          "_base": true
         }
       ],
       "tags": [
@@ -4137,7 +4149,8 @@
       "effects": [
         {
           "type": "fire_resist",
-          "value": 15
+          "value": 15,
+          "_base": true
         }
       ],
       "tags": [
@@ -4168,11 +4181,13 @@
       "effects": [
         {
           "type": "shadow_resist",
-          "value": 15
+          "value": 15,
+          "_base": true
         },
         {
           "type": "dodge_chance",
-          "value": 5
+          "value": 5,
+          "_base": true
         }
       ],
       "tags": [

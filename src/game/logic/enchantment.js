@@ -297,7 +297,7 @@ export function getStoneFailOutcomeDescription(stoneRarity) {
 }
 
 const STONE_RARITY_CHAIN = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
-export const STONE_FUSION_COST = 10;
+export const STONE_FUSION_COST = 8;
 
 export function getNextStoneRarity(rarity) {
   const idx = STONE_RARITY_CHAIN.indexOf(rarity);

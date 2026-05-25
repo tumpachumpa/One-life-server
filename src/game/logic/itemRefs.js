@@ -58,6 +58,7 @@ const SAVED_ITEM_ICON_OVERRIDES = {
   leather_boots: "/assets/items/generated/Leather%20boots.png?v=2",
   plate_boots: "/assets/items/generated/Leather%20boots.png?v=2",
   // Rings
+  ring_of_thorns: "/assets/items/rings/Guard ring.png",
   vampire_ring: "/assets/items/rings/vampire_ring.png",
   venom_ring: "/assets/items/rings/venom_ring.png",
   gust_ring: "/assets/items/rings/gust_ring.png",
@@ -67,6 +68,8 @@ const SAVED_ITEM_ICON_OVERRIDES = {
   veilstone_ring: "/assets/items/rings/veilstone_ring.png",
   sentinel_focus_ring: "/assets/items/rings/sentinel_focus_ring.png",
   // Amulets & trinkets
+  protection_amulet: "/assets/items/protection_amulet.png",
+  warg_fang_necklace: "/assets/items/warg_fang_necklace.png",
   umbralward_amulet: "/assets/items/Umbrawald amulet.png",
   ward_amulet: "/assets/items/Veil amulet.png",
   boar_tusk_amulet: "/assets/items/Boar tusk amulet.png",

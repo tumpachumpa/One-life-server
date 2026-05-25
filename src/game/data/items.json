@@ -222,7 +222,7 @@
       ],
       "price": 120,
       "dropWeight": 4,
-      "icon": "/assets/items/generated/ring_of_thorns.png"
+      "icon": "/assets/items/rings/Guard ring.png"
     },
     {
       "id": "vampire_ring",
@@ -532,7 +532,7 @@
       ],
       "price": 160,
       "dropWeight": 4,
-      "icon": "/assets/items/generated/thorn_amulet.png"
+      "icon": "/assets/items/protection_amulet.png"
     },
     {
       "id": "boar_tusk_amulet",
@@ -4118,7 +4118,7 @@
       ],
       "price": 240,
       "dropWeight": 4,
-      "icon": "/assets/items/generated/thorn_amulet.png"
+      "icon": "/assets/items/warg_fang_necklace.png"
     },
     {
       "id": "cinderward_amulet",

@@ -415,9 +415,9 @@
       "dropChance": 0.65,
       "includeItemIds": ["bone", "campfire", "troll_hide"],
       "itemWeights": {
-        "bone": 5,
+        "bone": 10,
         "campfire": 2,
-        "troll_hide": 30
+        "troll_hide": 1
       },
       "rarityTable": "normal",
       "generatedEquipment": {
@@ -1348,6 +1348,10 @@
           "troll_hide_vest",
           "troll_hide_legs"
         ]
+      },
+      "equipmentDrops": {
+        "dropChance": 0.08,
+        "items": { "troll_hide": 1 }
       }
     },
     "stone_golem": {

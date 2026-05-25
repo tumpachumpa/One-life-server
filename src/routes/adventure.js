@@ -274,7 +274,7 @@ async function adventureRoutes(fastify) {
     const session = r.rows[0];
     if (!session) return reply.status(404).send({ error: 'No session to finalize' });
 
-    const { getAdventure, finishAdventureRunProgress } = await adventureModP;
+    const { getAdventure, finishAdventureRunProgress, getLinkedAdventureDifficultyIds } = await adventureModP;
 
     const adventure = getAdventure(session.adventure_id);
     if (!adventure) return reply.status(404).send({ error: 'Adventure not found' });
@@ -283,11 +283,35 @@ async function adventureRoutes(fastify) {
     const saveData   = heroResult.rows[0]?.save_data || {};
 
     const advProgress    = saveData.adventureProgress || {};
+    const prevUnlockedStars = advProgress[session.adventure_id]?.unlockedDifficultyStars ?? 1;
     const newAdvProgress = finishAdventureRunProgress(
       { ...advProgress, [session.adventure_id]: session.progress },
       adventure,
       { completedDifficultyStars: session.progress?.activeDifficultyStars ?? 0 }
     );
+    const newUnlockedStars = newAdvProgress[session.adventure_id]?.unlockedDifficultyStars ?? 1;
+
+    // When a new difficulty tier is unlocked, reset encounter charges for all charge-bearing
+    // nodes across the adventure and any linked adventures (e.g. all Rootspire floors).
+    if (newUnlockedStars > prevUnlockedStars) {
+      const linkedIds = getLinkedAdventureDifficultyIds(adventure);
+      const chargeNodeIds = [];
+      for (const advId of linkedIds) {
+        const adv = getAdventure(advId);
+        if (!adv) continue;
+        for (const route of adv.routes || []) {
+          for (const node of route.nodes || []) {
+            if (node.charges) chargeNodeIds.push(node.id);
+          }
+        }
+      }
+      if (chargeNodeIds.length > 0) {
+        await pool.query(
+          `DELETE FROM encounter_charges WHERE user_id = $1 AND region_id = ANY($2)`,
+          [userId, chargeNodeIds]
+        );
+      }
+    }
 
     // Apply XP and gold server-side. Subtract what was already applied via intermediate hero saves
     // (saves are no longer clamped downward, so XP/gold may already be partially reflected in the DB).

@@ -4577,8 +4577,8 @@
       "id": "troll_hide",
       "name": "Troll Hide",
       "size": [
-        1,
-        1
+        2,
+        2
       ],
       "type": "resource",
       "family": "raw_material",
@@ -4591,7 +4591,7 @@
       "price": 14,
       "dropWeight": 0,
       "stackable": true,
-      "icon": "/assets/items/generated/plant_fiber.png"
+      "icon": "/assets/items/troll hide.png"
     },
     {
       "id": "tanned_troll_hide",
@@ -4691,7 +4691,7 @@
       ],
       "price": 60,
       "dropWeight": 0,
-      "icon": "/assets/items/generated/small_bag.png"
+      "icon": "/assets/items/Forager satchel.png"
     }
   ]
 }

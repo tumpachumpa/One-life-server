@@ -656,7 +656,7 @@ function carryAdventureDifficulty(nextProgress, previousProgress) {
   };
 }
 
-function getLinkedAdventureDifficultyIds(adventure) {
+export function getLinkedAdventureDifficultyIds(adventure) {
   if (!adventure?.id) return [];
   const linkedIds = new Set([adventure.id]);
   if (adventure.regionId) {

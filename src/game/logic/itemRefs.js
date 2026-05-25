@@ -57,10 +57,50 @@ const SAVED_ITEM_ICON_OVERRIDES = {
   fur_cloak: "/assets/items/generated/cape.png?v=2",
   leather_boots: "/assets/items/generated/Leather%20boots.png?v=2",
   plate_boots: "/assets/items/generated/Leather%20boots.png?v=2",
+  // Rings
+  vampire_ring: "/assets/items/rings/vampire_ring.png",
+  venom_ring: "/assets/items/rings/venom_ring.png",
+  gust_ring: "/assets/items/rings/gust_ring.png",
+  gargoyle_stone_ring: "/assets/items/rings/gargoyle_stone_ring.png",
   imp_ember_ring: "/assets/items/rings/imp_ember_ring.png",
   emberglass_ring: "/assets/items/rings/emberglass_ring.png",
+  veilstone_ring: "/assets/items/rings/veilstone_ring.png",
   sentinel_focus_ring: "/assets/items/rings/sentinel_focus_ring.png",
+  // Amulets & trinkets
+  umbralward_amulet: "/assets/items/Umbrawald amulet.png",
+  ward_amulet: "/assets/items/Veil amulet.png",
+  boar_tusk_amulet: "/assets/items/Boar tusk amulet.png",
   hellhound_collar: "/assets/items/hellhound collar.png",
+  // Weapons
+  fang_of_the_red_viper: "/assets/items/fang of the red viper.png",
+  halberd_2h: "/assets/items/Halberd.png",
+  living_armblade: "/assets/items/Living weapon.png",
+  bandits_stiletto: "/assets/items/Stilleto dagger.png",
+  whitefang_dagger: "/assets/items/Whitefang dagger.png",
+  venom_fang_dagger: "/assets/items/Venom dagger.png",
+  // Shields
+  chitin_shield: "/assets/items/Silkgard buckler.png",
+  // Consumables
+  smoke_bomb: "/assets/items/Smoke bomb.png",
+  // Generated equipment bases
+  oathbound_longsword: "/assets/items/oathbound longsword.png",
+  oathbound_plate_helm: "/assets/items/Oathbound helmet.png",
+  oathbound_plate_cuirass: "/assets/items/Oathbound cuiras.png",
+  oathbound_plate_legguards: "/assets/items/Oathbound leggings.png",
+  oathbound_plate_gauntlets: "/assets/items/Oathbound gloves.png",
+  oathbound_plate_sabatons: "/assets/items/Oathbound boots.png",
+  duskrunner_hood: "/assets/items/Duskrunner hood.png",
+  duskrunner_jacket: "/assets/items/Duskrunner jacket.png",
+  duskrunner_leggings: "/assets/items/Duskrunner leggings.png",
+  duskrunner_gloves: "/assets/items/Duskrunner gloves.png",
+  duskrunner_boots: "/assets/items/Duskrunner boots.png",
+  tracker_hood: "/assets/items/tracker sets helmet.png",
+  tracker_vest: "/assets/items/Trackers set armor.png",
+  tracker_legs: "/assets/items/tracker sets legs.png",
+  troll_hide_vest: "/assets/items/Trollhide armor.png",
+  troll_hide_legs: "/assets/items/Trollhide leggings.png",
+  black_knight_gauntlets: "/assets/items/black_knight_gauntlets.png",
+  black_knight_boots: "/assets/items/black_knight_sabatons.png",
 };
 
 const LEGACY_RING_METADATA = {

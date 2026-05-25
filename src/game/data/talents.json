@@ -1020,7 +1020,7 @@
                   "id": "duelist_perfect_rhythm",
                   "name": "Perfect Rhythm",
                   "summary": [
-                    "After 2 consecutive parries: enter a flow state, gaining +10% dodge for 3 seconds"
+                    "After 2 consecutive parries: enter a flow state, gaining +10% dodge for 5 seconds"
                   ],
                   "proc": {
                     "trigger": "on_parry",
@@ -1031,7 +1031,7 @@
                     "effect": {
                       "type": "gain_evasion_chance_pct",
                       "value": 10,
-                      "durationTicks": 3
+                      "durationTicks": 5
                     }
                   }
                 }

@@ -5532,7 +5532,7 @@ function applyProcEffect(effect, ctx, procState, heroProcNodes, hero, enemy, tic
         remainingTicks: effect.durationTicks || 3,
         source: ctx.nodeId,
       });
-      log.push(makeEntry(tick, 'hero', 'proc', `Perfect Rhythm: +${effect.value || 10}% dodge for ${effect.durationTicks || 3} seconds.`, 0, hero.hp, enemy?.hp, {}));
+      log.push(makeEntry(tick, 'hero', 'proc', `Perfect Rhythm: +${effect.value || 10}% dodge for ${effect.durationTicks || 5} seconds.`, 0, hero.hp, enemy?.hp, {}));
       break;
     case 'set_bleed_carry':
       procState.bleedCarry = Math.max(procState.bleedCarry || 0, effect.value || 2);

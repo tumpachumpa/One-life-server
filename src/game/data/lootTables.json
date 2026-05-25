@@ -398,15 +398,15 @@
         "warg_meat",
         "bone"
       ],
-      "dropChance": 0.6,
+      "dropChance": 0.65,
       "includeItemIds": [
         "warg_fat",
         "warg_fang_necklace"
       ],
       "itemWeights": {
         "warg_meat": 6,
-        "bone": 4,
-        "warg_fat": 2,
+        "bone": 1,
+        "warg_fat": 5,
         "warg_fang_necklace": 1
       }
     },

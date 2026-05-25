@@ -1292,13 +1292,13 @@ export function resolveAbilityImpact(action, attacker, defender, tick, rng, cont
         type: 'en_garde',
         remainingTicks: durationTicks,
         parryChance: ability.parryChance || 100,
-        bladeStackMultiplier: ability.bladeStackMultiplier || 2,
+        bladeStackMultiplier: ability.bladeStackMultiplier || 1,
         sourceAbilityId: ability.id,
       });
       entries.push({
         type: 'ability',
         text: attacker.isPlayer
-          ? `${ability.name}: parry chance is 100% for ${durationTicks} seconds. Parries grant ${ability.bladeStackMultiplier || 2} Blade Stacks.`
+          ? `${ability.name}: parry chance is 100% for ${durationTicks} seconds.`
           : `${attacker.name} enters ${ability.name}.`,
         damage: 0,
       });

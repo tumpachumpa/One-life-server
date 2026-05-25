@@ -971,6 +971,7 @@
                     "condition": {
                       "consecutive_parries_gte": 2
                     },
+                    "cooldownTicks": 5,
                     "effect": {
                       "type": "gain_attack_speed_pct",
                       "value": 25,
@@ -988,12 +989,13 @@
                   "id": "duelist_relentless",
                   "name": "Relentless",
                   "summary": [
-                    "On crit: queue a bonus auto-attack at 50% damage"
+                    "On crit: instantly hit for 50% damage"
                   ],
                   "proc": {
                     "trigger": "on_crit",
                     "chance": 100,
                     "condition": null,
+                    "cooldownTicks": 2,
                     "effect": {
                       "type": "counter_hit",
                       "damageMult": 0.5
@@ -1004,7 +1006,7 @@
                   "id": "duelist_en_garde",
                   "name": "En Garde",
                   "summary": [
-                    "For 3 seconds: parry chance is 100% and each parry grants 2 Blade Stacks instead of 1.",
+                    "For 3 seconds: parry chance is 100%.",
                     "Cooldown: 16 seconds."
                   ],
                   "effects": [
@@ -1018,17 +1020,18 @@
                   "id": "duelist_perfect_rhythm",
                   "name": "Perfect Rhythm",
                   "summary": [
-                    "On a second parry in the same second: free counter hit at 100% damage"
+                    "After 2 consecutive parries: enter a flow state, gaining +10% dodge for 3 seconds"
                   ],
                   "proc": {
                     "trigger": "on_parry",
                     "chance": 100,
                     "condition": {
-                      "already_parried_this_tick": true
+                      "consecutive_parries_gte": 2
                     },
                     "effect": {
-                      "type": "counter_hit",
-                      "damageMult": 1
+                      "type": "gain_evasion_chance_pct",
+                      "value": 10,
+                      "durationTicks": 3
                     }
                   }
                 }
@@ -1042,14 +1045,15 @@
                   "id": "duelist_flow_state",
                   "name": "Flow State",
                   "summary": [
-                    "After 5 consecutive crits: enter Flow State — all hits crit for 4 seconds. On expire: splash hit for 150% damage."
+                    "After 4 consecutive crits: enter Flow State — all hits crit for 4 seconds. On expire: splash hit for 150% damage."
                   ],
                   "proc": {
                     "trigger": "on_crit",
                     "chance": 100,
                     "condition": {
-                      "consecutive_crits_gte": 5
+                      "consecutive_crits_gte": 4
                     },
+                    "cooldownTicks": 8,
                     "effect": {
                       "type": "enter_flow_state",
                       "ticks": 4

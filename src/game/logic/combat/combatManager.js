@@ -5349,6 +5349,7 @@ export function createInitialProcState(initialHp = 100, opts = {}) {
     relicBarrier: 0,
     relicRegenAccum: 0,
     relicDeathCheatFired: false,
+    nodeCooldowns: {},
   };
 }
 
@@ -5522,6 +5523,16 @@ function applyProcEffect(effect, ctx, procState, heroProcNodes, hero, enemy, tic
         remainingTicks: effect.durationTicks || 3,
         source: ctx.nodeId,
       });
+      break;
+    case 'gain_evasion_chance_pct':
+      hero.activeEffects = hero.activeEffects || [];
+      hero.activeEffects.push({
+        type: 'evasion_chance',
+        value: effect.value || 10,
+        remainingTicks: effect.durationTicks || 3,
+        source: ctx.nodeId,
+      });
+      log.push(makeEntry(tick, 'hero', 'proc', `Perfect Rhythm: +${effect.value || 10}% dodge for ${effect.durationTicks || 3} seconds.`, 0, hero.hp, enemy?.hp, {}));
       break;
     case 'set_bleed_carry':
       procState.bleedCarry = Math.max(procState.bleedCarry || 0, effect.value || 2);
@@ -5791,10 +5802,18 @@ function fireProcTrigger(trigger, ctx, procState, heroProcNodes, hero, enemy, ti
       if (threshold != null && !(ctx.prevStacks < threshold && ctx.newStacks >= threshold)) continue;
     }
     if (!checkProcCondition(node.proc.condition, nodeCtx, procState, hero, enemy)) continue;
+    if (node.proc.cooldownTicks != null) {
+      const readyAt = procState.nodeCooldowns?.[node.id] ?? 0;
+      if (tick < readyAt) continue;
+    }
     const chance = node.proc.chance ?? 100;
     if (chance < 100 && procRng() * 100 >= chance) continue;
     if (node.proc.condition?.once_per_combat) {
       procState.onceFiredIds = [...procState.onceFiredIds, node.id];
+    }
+    if (node.proc.cooldownTicks != null) {
+      procState.nodeCooldowns = procState.nodeCooldowns || {};
+      procState.nodeCooldowns[node.id] = tick + node.proc.cooldownTicks;
     }
     applyProcEffect(node.proc.effect, nodeCtx, procState, heroProcNodes, hero, enemy, tick, log, procRng);
   }

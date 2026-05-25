@@ -2421,7 +2421,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 40,
       "icon": "/assets/items/stones/Fire stone.png",
       "enchantmentPool": [
@@ -2448,7 +2448,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 90,
       "icon": "/assets/items/stones/Fire stone.png",
       "enchantmentPool": [
@@ -2475,7 +2475,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 200,
       "icon": "/assets/items/stones/Fire stone.png",
       "enchantmentPool": [
@@ -2502,7 +2502,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 450,
       "icon": "/assets/items/stones/Fire stone.png",
       "enchantmentPool": [
@@ -2529,7 +2529,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 900,
       "icon": "/assets/items/stones/Fire stone.png",
       "enchantmentPool": [
@@ -2559,7 +2559,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 40,
       "icon": "/assets/items/stones/Shadow Stone.png",
       "enchantmentPool": [
@@ -2586,7 +2586,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 90,
       "icon": "/assets/items/stones/Shadow Stone.png",
       "enchantmentPool": [
@@ -2613,7 +2613,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 200,
       "icon": "/assets/items/stones/Shadow Stone.png",
       "enchantmentPool": [
@@ -2640,7 +2640,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 450,
       "icon": "/assets/items/stones/Shadow Stone.png",
       "enchantmentPool": [
@@ -2667,7 +2667,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 900,
       "icon": "/assets/items/stones/Shadow Stone.png",
       "enchantmentPool": [
@@ -2695,7 +2695,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 40,
       "icon": "/assets/items/stones/Storm stone.png",
       "enchantmentPool": [
@@ -2722,7 +2722,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 90,
       "icon": "/assets/items/stones/Storm stone.png",
       "enchantmentPool": [
@@ -2749,7 +2749,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 200,
       "icon": "/assets/items/stones/Storm stone.png",
       "enchantmentPool": [
@@ -2777,7 +2777,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 450,
       "icon": "/assets/items/stones/Storm stone.png",
       "enchantmentPool": [
@@ -2804,7 +2804,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 900,
       "icon": "/assets/items/stones/Storm stone.png",
       "enchantmentPool": [
@@ -2832,7 +2832,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 40,
       "icon": "/assets/items/stones/Frost stone.png",
       "enchantmentPool": [
@@ -2858,7 +2858,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 90,
       "icon": "/assets/items/stones/Frost stone.png",
       "enchantmentPool": [
@@ -2884,7 +2884,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 200,
       "icon": "/assets/items/stones/Frost stone.png",
       "enchantmentPool": [
@@ -2910,7 +2910,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 450,
       "icon": "/assets/items/stones/Frost stone.png",
       "enchantmentPool": [
@@ -2936,7 +2936,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 900,
       "icon": "/assets/items/stones/Frost stone.png",
       "enchantmentPool": [
@@ -2963,7 +2963,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 40,
       "icon": "/assets/items/stones/Blood stone.png",
       "enchantmentPool": [
@@ -2988,7 +2988,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 90,
       "icon": "/assets/items/stones/Blood stone.png",
       "enchantmentPool": [
@@ -3013,7 +3013,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 200,
       "icon": "/assets/items/stones/Blood stone.png",
       "enchantmentPool": [
@@ -3038,7 +3038,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 450,
       "icon": "/assets/items/stones/Blood stone.png",
       "enchantmentPool": [
@@ -3063,7 +3063,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 900,
       "icon": "/assets/items/stones/Blood stone.png",
       "enchantmentPool": [
@@ -3089,7 +3089,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 40,
       "icon": "/assets/items/stones/Earth stone.png",
       "enchantmentPool": [
@@ -3115,7 +3115,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 90,
       "icon": "/assets/items/stones/Earth stone.png",
       "enchantmentPool": [
@@ -3141,7 +3141,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 200,
       "icon": "/assets/items/stones/Earth stone.png",
       "enchantmentPool": [
@@ -3167,7 +3167,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 450,
       "icon": "/assets/items/stones/Earth stone.png",
       "enchantmentPool": [
@@ -3193,7 +3193,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 900,
       "icon": "/assets/items/stones/Earth stone.png",
       "enchantmentPool": [
@@ -3220,7 +3220,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 600,
       "icon": "/assets/items/stones/Void stone.png",
       "enchantmentPool": "random_combined"
@@ -3240,7 +3240,7 @@
         "consumable"
       ],
       "dropWeight": 0,
-      "stackable": false,
+      "stackable": true,
       "price": 1200,
       "icon": "/assets/items/stones/Void stone.png",
       "enchantmentPool": "random_combined"
@@ -3614,7 +3614,7 @@
         {
           "name": "First Wall",
           "type": "first_incoming_guaranteed_block",
-          "counterDamageMult": 1.0,
+          "counterDamageMult": 1,
           "description": "The first incoming hit each combat is completely blocked at no Block Power cost. The blow is immediately answered with a full-damage counter."
         }
       ],

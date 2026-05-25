@@ -299,6 +299,7 @@ export function getItem(id) {
       if (template.baseStats != null) merged.baseStats = { ...template.baseStats };
       if (template.damageDice) merged.damageDice = { ...template.damageDice };
       if (template.armorDice) merged.armorDice = { ...template.armorDice };
+      if (template.size != null) merged.size = template.size;
       return normalizeItemVisuals(merged);
     }
     return normalizeItemVisuals(normalizeGeneratedBaseEffects(itemRef));

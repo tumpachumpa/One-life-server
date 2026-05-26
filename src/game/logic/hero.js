@@ -701,7 +701,6 @@ function applyEnchantmentPassives(hero, stats, equipment) {
 
   let totalArmorBonus = 0;
   let totalMaxHpBonus = 0;
-  let totalLifesteal = 0;
 
   for (const item of enchantedItems) {
     const ench = item.enchantment;
@@ -716,8 +715,6 @@ function applyEnchantmentPassives(hero, stats, equipment) {
         // Tierra legendary: additionally scales with hero armor ×0.5
         totalMaxHpBonus += Math.floor((stats.armor || 0) * 0.5);
       }
-    } else if (e.type === 'passive_lifesteal') {
-      totalLifesteal += Number(e.lifestealPct || 0);
     } else if (e.type === 'passive_damage_reduction') {
       // Record for use in combat; not a direct stat but store as damageTakenReductionPct
       stats.enchantDamageTakenReductionPct = (stats.enchantDamageTakenReductionPct || 0) + Number(e.reductionPct || 0);
@@ -730,9 +727,6 @@ function applyEnchantmentPassives(hero, stats, equipment) {
   }
   if (totalMaxHpBonus > 0) {
     stats.maxHp = Math.max(1, (stats.maxHp || 0) + totalMaxHpBonus);
-  }
-  if (totalLifesteal > 0) {
-    stats.lifesteal = (stats.lifesteal || 0) + totalLifesteal;
   }
 }
 

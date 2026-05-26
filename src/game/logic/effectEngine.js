@@ -79,6 +79,9 @@ export function collectItemEffects(hero) {
     if (slot === "offhand" && item?.slot === "weapon" && !canDualWield) continue;
     if (isQuiverInactiveForHero(hero, slot, item)) continue;
     if (item?.effects) effects.push(...normalizeEffects(item.effects).map(e => ({ ...e, source: item.uid || item.id })));
+    if (item?.enchantment?.effect?.type === 'passive_lifesteal') {
+      effects.push({ type: 'lifesteal', value: item.enchantment.effect.lifestealPct || 0, source: item.uid || item.id });
+    }
   }
   return effects;
 }

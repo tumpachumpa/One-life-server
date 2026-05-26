@@ -1730,6 +1730,11 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
       log.push(makeEntry(tick, 'hero', 'bleed', `Relentless Wounds: ${procState.bleedCarry} Bleed carried in.`, 0, hero.hp, enemy.hp, {}));
       procState.bleedCarry = 0;
     }
+    // Apply shadow mark carry (Mark Mastery talent)
+    const shadowMarkCarryVal = (hero.passiveEffects || []).reduce((sum, e) => e.type === 'carry_shadow_marks' ? sum + (e.value || 0) : sum, 0);
+    if (shadowMarkCarryVal > 0 && enemy && enemy.hp > 0) {
+      applyProcEffect({ type: 'apply_shadow_mark', stacks: shadowMarkCarryVal, maxStacks: 5 }, { trigger: 'combat_start' }, procState, heroProcNodes, hero, enemy, tick, log, playerRng);
+    }
   }
   tickActiveEffects(hero, tick, log, { procState, heroProcNodes, hero, allies, enemy, rng: playerRng });
   for (const ally of allies) tickActiveEffects(ally, tick, log);
@@ -1745,6 +1750,19 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
   for (const foe of enemies) applyPassiveTickEffects(foe, tick, log);
   // Apply relic per-tick effects (hp_regen_in_combat etc.)
   applyRelicTickEffectsForHeroTick(hero, allies, procState, tick, log);
+  // Shadow mark tick damage (Deep Marks talent)
+  const markTickPct = (hero.passiveEffects || []).reduce((sum, e) => e.type === 'shadow_mark_tick_damage_pct' ? sum + (e.valuePerMark || 0) : sum, 0);
+  if (markTickPct > 0) {
+    for (const foe of enemies) {
+      if (foe.hp <= 0) continue;
+      const markEff = (foe.activeEffects || []).find(e => e.type === 'shadow_mark');
+      const markStacks = markEff?.stacks || 0;
+      if (markStacks <= 0) continue;
+      const dmg = Math.max(1, Math.floor(hero.damage * markTickPct * markStacks / 100));
+      foe.hp = Math.max(0, foe.hp - dmg);
+      log.push(makeEntry(tick, 'hero', 'proc', `Deep Marks: ${dmg} shadow damage (${markStacks} mark${markStacks !== 1 ? 's' : ''}).`, dmg, hero.hp, foe.hp, { targetId: foe.id }));
+    }
+  }
   processGroupRevives(enemies, tick, log, hero);
   applyPetRageAttackSpeed(hero, allies, procState, tick, log);
   applySummonAuras(enemies);

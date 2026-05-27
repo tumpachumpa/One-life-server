@@ -2000,6 +2000,816 @@
         }
       ],
       "lootTable": "silkfang_matriarch_loot"
+    },
+    {
+      "id": "dwarf_sentinel",
+      "name": "Dwarf Sentinel",
+      "family": "dwarf",
+      "tags": ["dwarf"],
+      "tier": 5,
+      "threat": "standard",
+      "sprite": "/assets/items/Dwarf content/Dwarf sentinel.png",
+      "baseStats": {
+        "maxHp": 248,
+        "attack": 39,
+        "armor": 28,
+        "attackSpeed": 0.76,
+        "blockChance": 16,
+        "blockPower": 30,
+        "blockPowerRegen": 1
+      },
+      "rewards": {
+        "xp": 88,
+        "gold": 34
+      },
+      "effects": [
+        {
+          "type": "stagger_on_hit",
+          "chance": 15,
+          "duration": 2,
+          "missPenalty": 35
+        }
+      ],
+      "lootTable": "dwarf_sentinel"
+    },
+    {
+      "id": "dwarf_crossbowman",
+      "name": "Dwarf Crossbowman",
+      "family": "dwarf",
+      "tags": ["dwarf"],
+      "tier": 5,
+      "threat": "standard",
+      "sprite": "/assets/items/Dwarf content/Dwarf Crossbowman.png",
+      "baseStats": {
+        "maxHp": 206,
+        "attack": 45,
+        "armor": 12,
+        "attackSpeed": 0.65
+      },
+      "rewards": {
+        "xp": 90,
+        "gold": 36
+      },
+      "effects": [],
+      "abilities": [
+        {
+          "id": "dwarf_crossbowman_crossbow_shot",
+          "name": "Crossbow Shot",
+          "description": "A heavy bolt loosed at full draw — 165% weapon damage.",
+          "type": "empowered_attack",
+          "castTicks": 2,
+          "cooldownSeconds": 8,
+          "damageMult": 1.65,
+          "critChance": 0,
+          "aiPool": true,
+          "aiUseChance": 50,
+          "aiWeight": 2
+        }
+      ],
+      "lootTable": "dwarf_crossbowman"
+    },
+    {
+      "id": "dwarf_ironbreaker",
+      "name": "Dwarf Ironbreaker",
+      "family": "dwarf",
+      "tags": ["dwarf"],
+      "tier": 5,
+      "threat": "dangerous",
+      "sprite": "/assets/items/Dwarf content/Dwarf Ironbreaker.png",
+      "baseStats": {
+        "maxHp": 336,
+        "attack": 40,
+        "armor": 40,
+        "attackSpeed": 0.58,
+        "blockChance": 20,
+        "blockPower": 44,
+        "blockPowerRegen": 1
+      },
+      "rewards": {
+        "xp": 110,
+        "gold": 44
+      },
+      "effects": [],
+      "abilities": [
+        {
+          "id": "dwarf_ironbreaker_rune_strike",
+          "name": "Rune Strike",
+          "description": "Channels runic power into a heavy swing for 130% weapon damage.",
+          "type": "empowered_attack",
+          "castTicks": 2,
+          "cooldownSeconds": 9,
+          "damageMult": 1.3,
+          "critChance": 0,
+          "aiPool": true,
+          "aiUseChance": 40,
+          "aiWeight": 2
+        }
+      ],
+      "lootTable": "dwarf_ironbreaker"
+    },
+    {
+      "id": "dwarf_handler",
+      "name": "Dwarf Handler",
+      "family": "dwarf",
+      "tags": ["dwarf"],
+      "tier": 5,
+      "threat": "standard",
+      "sprite": "/assets/items/Dwarf content/dwarf handler.png",
+      "baseStats": {
+        "maxHp": 236,
+        "attack": 32,
+        "armor": 20,
+        "attackSpeed": 0.82
+      },
+      "rewards": {
+        "xp": 95,
+        "gold": 38
+      },
+      "effects": [],
+      "abilities": [
+        {
+          "id": "dwarf_handler_pack_command",
+          "name": "Pack Command",
+          "description": "Barks orders to all living allies, boosting their damage by 25% for 3 attacks.",
+          "type": "commanding_shout",
+          "castTicks": 1,
+          "cooldownSeconds": 14,
+          "target": "allies",
+          "damagePctBuff": 25,
+          "durationTicks": 3,
+          "aiPool": true,
+          "aiUseChance": 65,
+          "aiWeight": 2
+        }
+      ],
+      "lootTable": "dwarf_handler"
+    },
+    {
+      "id": "karag_warhound",
+      "name": "Karag Warhound",
+      "family": "beast",
+      "tags": ["beast"],
+      "tier": 5,
+      "threat": "standard",
+      "sprite": "/assets/items/Dwarf content/Warhound.png",
+      "baseStats": {
+        "maxHp": 271,
+        "attack": 42,
+        "armor": 14,
+        "attackSpeed": 1.25
+      },
+      "rewards": {
+        "xp": 85,
+        "gold": 30
+      },
+      "effects": [
+        {
+          "type": "bleed_on_hit",
+          "chance": 20,
+          "duration": 2,
+          "damagePct": 0.6
+        }
+      ],
+      "lootTable": "karag_warhound",
+      "manualLoot": true
+    },
+    {
+      "id": "dwarf_berserker",
+      "name": "Dwarf Berserker",
+      "family": "dwarf",
+      "tags": ["dwarf"],
+      "tier": 5,
+      "threat": "special",
+      "sprite": "/assets/items/Dwarf content/Dwarf berserker.png",
+      "baseStats": {
+        "maxHp": 294,
+        "attack": 58,
+        "armor": 18,
+        "attackSpeed": 0.68
+      },
+      "rewards": {
+        "xp": 128,
+        "gold": 52
+      },
+      "effects": [
+        {
+          "type": "rage_below_hp",
+          "thresholdPct": 40,
+          "attackMult": 1.3
+        },
+        {
+          "type": "last_breath_once"
+        }
+      ],
+      "lootTable": "dwarf_berserker"
+    },
+    {
+      "id": "pit_manticore",
+      "name": "Pit Manticore",
+      "family": "beast",
+      "tags": ["beast"],
+      "tier": 5,
+      "threat": "dangerous",
+      "sprite": "/assets/sprites/encounters/HellhounD.png",
+      "baseStats": {
+        "maxHp": 402,
+        "attack": 48,
+        "armor": 14,
+        "attackSpeed": 1.05
+      },
+      "rewards": {
+        "xp": 145,
+        "gold": 58
+      },
+      "effects": [
+        {
+          "type": "bleed_on_hit",
+          "chance": 25,
+          "duration": 2,
+          "damagePct": 0.7
+        },
+        {
+          "type": "poison_on_hit",
+          "chance": 20,
+          "duration": 3,
+          "damagePct": 0.5
+        }
+      ],
+      "abilities": [
+        {
+          "id": "pit_manticore_tail_spike",
+          "name": "Tail Spike",
+          "description": "A rapid tail strike for 120% damage that can cause Bleeding.",
+          "type": "empowered_attack",
+          "castTicks": 1,
+          "cooldownSeconds": 6,
+          "damageMult": 1.2,
+          "critChance": 0,
+          "bleedChance": 35,
+          "bleedDuration": 2,
+          "bleedDamagePct": 1.5,
+          "aiPool": "manticore_specials",
+          "aiUseChance": 45,
+          "aiWeight": 60
+        },
+        {
+          "id": "pit_manticore_pounce",
+          "name": "Pounce",
+          "description": "Leaps onto the target for 135% damage and stuns briefly.",
+          "type": "crushing_blow",
+          "castTicks": 2,
+          "cooldownSeconds": 12,
+          "damageMult": 1.35,
+          "critChanceBonus": 0,
+          "stunTicks": 1,
+          "aiPool": "manticore_specials",
+          "aiUseChance": 35,
+          "aiWeight": 45
+        }
+      ],
+      "lootTable": "pit_manticore",
+      "manualLoot": true
+    },
+    {
+      "id": "karag_runic_construct",
+      "name": "Runic Construct",
+      "family": "construct",
+      "tags": ["bleed_immune", "poison_immune"],
+      "tier": 5,
+      "threat": "dangerous",
+      "sprite": "/assets/sprites/encounters/Stone golem.png",
+      "disableAutoAttack": true,
+      "baseStats": {
+        "maxHp": 350,
+        "attack": 0,
+        "armor": 35,
+        "attackSpeed": 0
+      },
+      "rewards": {
+        "xp": 120,
+        "gold": 48
+      },
+      "effects": [],
+      "abilities": [
+        {
+          "id": "karag_construct_rune_pulse",
+          "name": "Rune Pulse",
+          "description": "Discharges stored runic energy in a concentrated pulse of arcane force.",
+          "type": "spell_attack",
+          "element": "magic",
+          "castTicks": 2,
+          "cooldownSeconds": 8,
+          "damage": 44,
+          "staggerAttacks": 1,
+          "staggerDurationTicks": 2,
+          "staggerMissPenalty": 30,
+          "aiPool": true,
+          "aiUseChance": 80,
+          "aiWeight": 3
+        }
+      ],
+      "lootTable": "karag_runic_construct"
+    },
+    {
+      "id": "dwarf_runecarver",
+      "name": "Dwarf Runecarver",
+      "family": "dwarf",
+      "tags": ["dwarf"],
+      "tier": 5,
+      "threat": "standard",
+      "sprite": "/assets/items/Dwarf content/Dwarf runecarver.png",
+      "baseStats": {
+        "maxHp": 231,
+        "attack": 42,
+        "armor": 16,
+        "attackSpeed": 0.95
+      },
+      "rewards": {
+        "xp": 100,
+        "gold": 40
+      },
+      "effects": [
+        {
+          "type": "bleed_on_hit",
+          "chance": 12,
+          "duration": 2,
+          "damagePct": 0.5
+        },
+        {
+          "type": "burn_on_hit",
+          "chance": 10,
+          "duration": 2,
+          "damagePct": 1.5
+        },
+        {
+          "type": "damage_taken_reduction_pct",
+          "value": 12
+        }
+      ],
+      "abilities": [
+        {
+          "id": "dwarf_runecarver_volatile_strike",
+          "name": "Volatile Strike",
+          "description": "A rune-charged swing for 120% damage that randomly triggers elemental burn.",
+          "type": "empowered_attack",
+          "castTicks": 1,
+          "cooldownSeconds": 7,
+          "damageMult": 1.2,
+          "critChance": 0,
+          "burnChance": 25,
+          "burnDurationTicks": 2,
+          "burnDamagePct": 2,
+          "aiPool": "runecarver_specials",
+          "aiUseChance": 45,
+          "aiWeight": 60
+        },
+        {
+          "id": "dwarf_runecarver_rune_burst",
+          "name": "Rune Burst",
+          "description": "Releases built-up runic energy in a short-range burst of arcane force.",
+          "type": "spell_attack",
+          "element": "magic",
+          "castTicks": 1.5,
+          "cooldownSeconds": 12,
+          "damage": 32,
+          "aiPool": "runecarver_specials",
+          "aiUseChance": 40,
+          "aiWeight": 45
+        }
+      ],
+      "lootTable": "dwarf_runecarver"
+    },
+    {
+      "id": "dwarf_honor_guard",
+      "name": "Dwarf Honor Guard",
+      "family": "dwarf",
+      "tags": ["dwarf"],
+      "tier": 5,
+      "threat": "dangerous",
+      "sprite": "/assets/items/Dwarf content/Dwarf honorguard.png",
+      "bond": "honor_guard_bond",
+      "baseStats": {
+        "maxHp": 560,
+        "attack": 52,
+        "armor": 36,
+        "attackSpeed": 0.62,
+        "blockChance": 20,
+        "blockPower": 38,
+        "blockPowerRegen": 1
+      },
+      "rewards": {
+        "xp": 148,
+        "gold": 60
+      },
+      "effects": [],
+      "abilities": [
+        {
+          "id": "dwarf_honor_guard_oath_cleave",
+          "name": "Oath Cleave",
+          "description": "A powerful two-handed cleave for 130% damage that briefly stuns.",
+          "type": "crushing_blow",
+          "castTicks": 2,
+          "cooldownSeconds": 10,
+          "damageMult": 1.3,
+          "critChanceBonus": 0,
+          "stunTicks": 1,
+          "aiPool": "honor_guard_specials",
+          "aiUseChance": 40,
+          "aiWeight": 55
+        },
+        {
+          "id": "dwarf_honor_guard_honor_oath",
+          "name": "Honor Oath",
+          "description": "At low health, channels an ancestral oath — gains counter chance for the rest of the fight.",
+          "type": "counter_buff",
+          "castTicks": 1,
+          "cooldownSeconds": 999,
+          "once": true,
+          "requiresSelfHpPctBelow": 30,
+          "counterChanceBonus": 15,
+          "aiPool": "honor_guard_specials",
+          "aiUseChance": 100,
+          "aiWeight": 1000
+        }
+      ],
+      "lootTable": "dwarf_honor_guard"
+    },
+    {
+      "id": "bolgrak_stonefist",
+      "name": "Warden Bolgrak Stonefist",
+      "family": "dwarf",
+      "tags": ["dwarf", "elite"],
+      "tier": 5,
+      "threat": "special",
+      "sprite": "/assets/items/Dwarf content/Bolgrak stonefist.png",
+      "baseStats": {
+        "maxHp": 735,
+        "attack": 62,
+        "armor": 48,
+        "attackSpeed": 0.55,
+        "blockChance": 25,
+        "blockPower": 52,
+        "blockPowerRegen": 2
+      },
+      "rewards": {
+        "xp": 260,
+        "gold": 105
+      },
+      "effects": [
+        {
+          "type": "stagger_on_hit",
+          "chance": 20,
+          "duration": 2,
+          "missPenalty": 40
+        },
+        {
+          "type": "counter_chance",
+          "value": 10
+        }
+      ],
+      "abilities": [
+        {
+          "id": "bolgrak_hammer_slam",
+          "name": "Hammer Slam",
+          "description": "A thunderous overhead slam for 140% weapon damage that stuns and staggers.",
+          "type": "crushing_blow",
+          "castTicks": 2.5,
+          "cooldownSeconds": 10,
+          "damageMult": 1.4,
+          "critChanceBonus": 0,
+          "stunTicks": 1,
+          "staggerAttacks": 2,
+          "staggerDurationTicks": 2,
+          "staggerMissPenalty": 40,
+          "aiPool": "bolgrak_specials",
+          "aiUseChance": 40,
+          "aiWeight": 65
+        },
+        {
+          "id": "bolgrak_iron_wall",
+          "name": "Iron Wall",
+          "description": "At 40% HP, Bolgrak plants his feet — block chance surges and he retaliates blocked hits.",
+          "type": "guard_instinct",
+          "castTicks": 1,
+          "cooldownSeconds": 999,
+          "once": true,
+          "requiresSelfHpPctBelow": 40,
+          "blockChanceBonus": 30,
+          "attacksReceived": 5,
+          "blockPowerRecoverPct": 60,
+          "counterChanceBonus": 20,
+          "aiPool": "bolgrak_specials",
+          "aiUseChance": 100,
+          "aiWeight": 1000
+        },
+        {
+          "id": "bolgrak_healing_rune",
+          "name": "Healing Rune",
+          "description": "When first bloodied below 70%, runic armor activates — heals 30% max HP over 3 attacks.",
+          "type": "heal_over_time",
+          "castTicks": 1,
+          "cooldownSeconds": 999,
+          "once": true,
+          "requiresSelfHpPctBelow": 70,
+          "healPct": 30,
+          "durationTicks": 3,
+          "aiPool": "bolgrak_specials",
+          "aiUseChance": 100,
+          "aiWeight": 900
+        }
+      ],
+      "lootTable": "bolgrak_stonefist"
+    },
+    {
+      "id": "kharzun_branded",
+      "name": "Kharzun the Branded",
+      "family": "dwarf",
+      "tags": ["dwarf", "elite"],
+      "tier": 5,
+      "threat": "special",
+      "sprite": "/assets/items/Dwarf content/Dwarf Ironbreaker.png",
+      "baseStats": {
+        "maxHp": 805,
+        "attack": 72,
+        "armor": 30,
+        "attackSpeed": 0.78
+      },
+      "rewards": {
+        "xp": 280,
+        "gold": 112
+      },
+      "effects": [
+        {
+          "type": "damage_taken_reduction_pct",
+          "value": 12
+        }
+      ],
+      "abilities": [
+        {
+          "id": "kharzun_runed_strike",
+          "name": "Runed Strike",
+          "description": "A heavy rune-charged melee strike for 135% weapon damage.",
+          "type": "empowered_attack",
+          "castTicks": 2,
+          "cooldownSeconds": 8,
+          "damageMult": 1.35,
+          "critChance": 0,
+          "aiPool": "kharzun_specials",
+          "aiUseChance": 45,
+          "aiWeight": 60
+        },
+        {
+          "id": "kharzun_runic_discharge",
+          "name": "Runic Discharge",
+          "description": "Discharges built-up runic energy — deals arcane damage and staggers.",
+          "type": "spell_attack",
+          "element": "magic",
+          "castTicks": 1.5,
+          "cooldownSeconds": 10,
+          "damage": 52,
+          "staggerAttacks": 1,
+          "staggerDurationTicks": 2,
+          "staggerMissPenalty": 35,
+          "aiPool": "kharzun_specials",
+          "aiUseChance": 40,
+          "aiWeight": 50
+        },
+        {
+          "id": "kharzun_runic_mending",
+          "name": "Runic Mending",
+          "description": "Channels a repair rune — restores 20% max HP over 4 ticks. Pressure him or he recovers.",
+          "type": "heal_over_time",
+          "castTicks": 1,
+          "cooldownSeconds": 15,
+          "healPct": 20,
+          "durationTicks": 4,
+          "aiPool": "kharzun_specials",
+          "aiUseChance": 35,
+          "aiWeight": 40
+        },
+        {
+          "id": "kharzun_rune_surge",
+          "name": "Rune Surge",
+          "description": "At 50% HP, the Branded One overloads his runes — attack speed and spell power surge.",
+          "type": "enrage_buff",
+          "castTicks": 1,
+          "cooldownSeconds": 999,
+          "once": true,
+          "requiresSelfHpPctBelow": 50,
+          "attackSpeedBonusPct": 20,
+          "spellDamageBonus": 15,
+          "aiPool": "kharzun_specials",
+          "aiUseChance": 100,
+          "aiWeight": 1000
+        }
+      ],
+      "lootTable": "kharzun_branded"
+    },
+    {
+      "id": "durnek_ironthane",
+      "name": "High Thane Durnek Ironthane",
+      "family": "dwarf",
+      "tags": ["dwarf", "boss"],
+      "tier": 5,
+      "threat": "boss",
+      "sprite": "/assets/items/Dwarf content/Dwarf Ironthane.png",
+      "phase2Stats": {
+        "attack": 96,
+        "attackSpeed": 0.75
+      },
+      "phase2TriggerPct": 50,
+      "baseStats": {
+        "maxHp": 962,
+        "attack": 80,
+        "armor": 38,
+        "attackSpeed": 0.58,
+        "blockChance": 20,
+        "blockPower": 65,
+        "blockPowerRegen": 2
+      },
+      "rewards": {
+        "xp": 550,
+        "gold": 220
+      },
+      "effects": [
+        {
+          "type": "counter_chance",
+          "value": 12
+        },
+        {
+          "type": "armor_ignore",
+          "value": 15
+        }
+      ],
+      "abilities": [
+        {
+          "id": "durnek_hammer_slam",
+          "name": "Hammer Slam",
+          "description": "A thunderous ancestral hammer blow for 130% damage that stuns briefly.",
+          "type": "crushing_blow",
+          "castTicks": 2.5,
+          "cooldownSeconds": 9,
+          "damageMult": 1.3,
+          "critChanceBonus": 0,
+          "stunTicks": 1,
+          "aiPool": "durnek_specials",
+          "aiUseChance": 35,
+          "aiWeight": 65
+        },
+        {
+          "id": "durnek_iron_bulwark",
+          "name": "Iron Bulwark",
+          "description": "Raises the ancestral shield — block chance surges for the next 4 incoming hits.",
+          "type": "guard_instinct",
+          "castTicks": 1,
+          "cooldownSeconds": 15,
+          "blockChanceBonus": 25,
+          "attacksReceived": 4,
+          "blockPowerRecoverPct": 50,
+          "aiPool": "durnek_specials",
+          "aiUseChance": 30,
+          "aiWeight": 45
+        },
+        {
+          "id": "durnek_ancestral_roar",
+          "name": "Ancestral Roar",
+          "description": "A soul-shaking roar from the ancient bloodline — weakens and staggers the hero.",
+          "type": "savage_roar",
+          "castTicks": 1,
+          "cooldownSeconds": 12,
+          "weakenDurationTicks": 4,
+          "damageMult": 0.75,
+          "staggerAttacks": 2,
+          "staggerDuration": 2,
+          "aiPool": "durnek_specials",
+          "aiUseChance": 30,
+          "aiWeight": 40
+        },
+        {
+          "id": "durnek_summon_kharvox",
+          "name": "Loose the Beast",
+          "description": "At half health, Durnek breaks the chains — Kharvox enters the fight.",
+          "type": "summon_add",
+          "castTicks": 1,
+          "cooldownSeconds": 999,
+          "once": true,
+          "requiresSelfHpPctBelow": 50,
+          "enemyId": "kharvox_chimera",
+          "maxAdds": 1,
+          "maxSummons": 1,
+          "pauseMs": 1500,
+          "aiPool": "durnek_specials",
+          "aiUseChance": 100,
+          "aiWeight": 1000
+        },
+        {
+          "id": "durnek_ancestral_wrath",
+          "name": "Ancestral Wrath",
+          "description": "Phase 2: A furious overhead smash for 180% damage with bonus critical chance.",
+          "type": "empowered_attack",
+          "castTicks": 2,
+          "cooldownSeconds": 7,
+          "requiresSelfHpPctBelow": 50,
+          "damageMult": 1.8,
+          "critChance": 10,
+          "aiPool": "durnek_specials",
+          "aiUseChance": 40,
+          "aiWeight": 70
+        }
+      ],
+      "lootTable": "karag_thorn_boss"
+    },
+    {
+      "id": "kharvox_chimera",
+      "name": "Kharvox, Rune-Chained Chimera",
+      "family": "beast",
+      "tags": ["beast", "boss"],
+      "tier": 5,
+      "threat": "boss",
+      "sprite": "/assets/items/Dwarf content/Kharvox_chimera.png",
+      "baseStats": {
+        "maxHp": 612,
+        "attack": 55,
+        "armor": 18,
+        "attackSpeed": 1.15
+      },
+      "rewards": {
+        "xp": 0,
+        "gold": 0
+      },
+      "effects": [
+        {
+          "type": "burn_on_hit",
+          "chance": 20,
+          "duration": 2,
+          "damagePct": 2
+        }
+      ],
+      "abilities": [
+        {
+          "id": "kharvox_healing_seal",
+          "name": "Healing Seal",
+          "description": "Channels a rune seal — regenerates 8% max HP per tick until interrupted by a direct hit.",
+          "type": "channeled_heal",
+          "castTicks": 1,
+          "cooldownSeconds": 20,
+          "healPctPerTick": 8,
+          "interruptOnHit": true,
+          "aiPool": "kharvox_specials",
+          "aiUseChance": 55,
+          "aiWeight": 80
+        },
+        {
+          "id": "kharvox_rune_shackle",
+          "name": "Rune Shackle",
+          "description": "Fires a runic projectile for 150% spell damage that staggers the hero for 2 attacks.",
+          "type": "spell_attack",
+          "element": "magic",
+          "castTicks": 2,
+          "cooldownSeconds": 10,
+          "damage": 60,
+          "staggerAttacks": 2,
+          "staggerDurationTicks": 2,
+          "staggerMissPenalty": 35,
+          "aiPool": "kharvox_specials",
+          "aiUseChance": 40,
+          "aiWeight": 55
+        },
+        {
+          "id": "kharvox_chimeric_surge",
+          "name": "Chimeric Surge",
+          "description": "At 60% HP, surges with feral energy — heals 15% max HP over 4 ticks.",
+          "type": "heal_over_time",
+          "castTicks": 1,
+          "cooldownSeconds": 999,
+          "once": true,
+          "requiresSelfHpPctBelow": 60,
+          "healPct": 15,
+          "durationTicks": 4,
+          "aiPool": "kharvox_specials",
+          "aiUseChance": 100,
+          "aiWeight": 900
+        },
+        {
+          "id": "kharvox_volatile_brand",
+          "name": "Volatile Brand",
+          "description": "At 30% HP, unleashes a desperate brand attack for 160% damage that burns the target.",
+          "type": "empowered_attack",
+          "castTicks": 2,
+          "cooldownSeconds": 999,
+          "once": true,
+          "requiresSelfHpPctBelow": 30,
+          "damageMult": 1.6,
+          "critChance": 0,
+          "burnChance": 100,
+          "burnDurationTicks": 3,
+          "burnDamagePct": 3,
+          "aiPool": "kharvox_specials",
+          "aiUseChance": 100,
+          "aiWeight": 950
+        }
+      ],
+      "lootTable": null
     }
   ]
 }

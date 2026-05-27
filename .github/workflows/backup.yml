@@ -17,6 +17,7 @@ jobs:
       - name: Run pg_dump
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          PGSSLMODE: require
         run: |
           TIMESTAMP=$(date -u +"%Y-%m-%dT%H-%M-%S")
           FILENAME="backup_${TIMESTAMP}.dump"

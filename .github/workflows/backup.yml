@@ -11,25 +11,50 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - name: Run pg_dump via Docker (postgres:18)
+      - name: Install pg
+        run: npm install pg
+
+      - name: Run backup
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
-          TIMESTAMP=$(date -u +"%Y-%m-%dT%H-%M-%S")
-          FILENAME="backup_${TIMESTAMP}.dump"
-          docker run --rm \
-            -e PGSSLMODE=require \
-            -v "$(pwd):/backup" \
-            postgres:18 \
-            pg_dump "$DATABASE_URL" -F c -f "/backup/$FILENAME"
-          echo "BACKUP_FILE=$FILENAME" >> $GITHUB_ENV
-          SIZE=$(du -sh "$FILENAME" | cut -f1)
-          echo "Backup guardado: $FILENAME ($SIZE)"
+          node - <<'EOF'
+          const { Client } = require('pg');
+          const fs = require('fs');
+
+          const TABLES = ['users', 'heroes', 'camps', 'tile_claims', 'adventure_sessions', 'pvp_pending_removals', 'pvp_pending_loot'];
+
+          async function main() {
+            const client = new Client({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
+            await client.connect();
+
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+            const filename = `backup_${timestamp}.json`;
+            const backup = { timestamp, tables: {} };
+
+            for (const table of TABLES) {
+              try {
+                const res = await client.query(`SELECT * FROM ${table}`);
+                backup.tables[table] = res.rows;
+                console.log(`  ${table}: ${res.rows.length} rows`);
+              } catch (e) {
+                console.log(`  ${table}: skipped (${e.message})`);
+              }
+            }
+
+            await client.end();
+            fs.writeFileSync(filename, JSON.stringify(backup));
+            const kb = Math.round(fs.statSync(filename).size / 1024);
+            console.log(`Backup guardado: ${filename} (${kb} KB)`);
+          }
+
+          main().catch(e => { console.error(e); process.exit(1); });
+          EOF
 
       - name: Upload backup as artifact
         uses: actions/upload-artifact@v4
         with:
           name: db-backup-${{ github.run_id }}
-          path: ${{ env.BACKUP_FILE }}
-          retention-days: 30   # GitHub guarda 30 días (plan free)
+          path: backup_*.json
+          retention-days: 30
           if-no-files-found: error

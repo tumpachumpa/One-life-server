@@ -1176,9 +1176,11 @@ function getExclusiveChoiceSiblingIds(route, node) {
 
 export function getNodeEncounterPool(progress, nodeId) {
   const pool = nodeId ? progress?.encounterPools?.[nodeId] : null;
+  const defeated = Math.max(0, Math.floor(pool?.defeated ?? pool?.kills ?? 0));
   const result = {
-    defeated: Math.max(0, Math.floor(pool?.defeated ?? pool?.kills ?? 0)),
+    defeated,
     cap: Math.max(0, Math.floor(pool?.cap ?? 0)),
+    total: Math.max(0, Math.floor(pool?.total ?? defeated)),
   };
   if (pool?.lastEnemy) result.lastEnemy = pool.lastEnemy;
   if (Array.isArray(pool?.lastEnemies) && pool.lastEnemies.length) result.lastEnemies = pool.lastEnemies;
@@ -1385,6 +1387,7 @@ export function completeNode(adventure, progress, nodeId, options = {}) {
       [node.id]: {
         cap: encounterCap,
         defeated: Math.min(encounterCap, existingPool.defeated + 1),
+        total: (existingPool.total || 0) + 1,
         ...(lastEnemy ? { lastEnemy } : {}),
         ...(Array.isArray(lastEnemies) && lastEnemies.length ? { lastEnemies } : {}),
       },

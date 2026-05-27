@@ -11,22 +11,17 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - name: Install PostgreSQL 18 client
-        run: |
-          sudo apt-get install -y curl ca-certificates
-          curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /usr/share/keyrings/postgresql.gpg
-          echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client-18
-
-      - name: Run pg_dump
+      - name: Run pg_dump via Docker (postgres:18)
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          PGSSLMODE: require
         run: |
           TIMESTAMP=$(date -u +"%Y-%m-%dT%H-%M-%S")
           FILENAME="backup_${TIMESTAMP}.dump"
-          pg_dump "$DATABASE_URL" -F c -f "$FILENAME"
+          docker run --rm \
+            -e PGSSLMODE=require \
+            -v "$(pwd):/backup" \
+            postgres:18 \
+            pg_dump "$DATABASE_URL" -F c -f "/backup/$FILENAME"
           echo "BACKUP_FILE=$FILENAME" >> $GITHUB_ENV
           SIZE=$(du -sh "$FILENAME" | cut -f1)
           echo "Backup guardado: $FILENAME ($SIZE)"

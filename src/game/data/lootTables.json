@@ -1451,7 +1451,7 @@
       "minimumRarity": "epic",
       "relicDrop": {
         "itemId": "relic_spectral_echo",
-        "chance": 8,
+        "chance": 5,
         "chanceD4Bonus": 6
       },
       "stoneDrop": {

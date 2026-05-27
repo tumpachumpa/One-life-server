@@ -3502,8 +3502,8 @@
       "relicPassive": {
         "type": "barrier_on_heavy_hit",
         "threshold": 15,
-        "barrierAmount": 20,
-        "description": "When you take a hit greater than 15% of your max HP, gain a barrier that absorbs 20 damage."
+        "barrierAmount": 50,
+        "description": "When you take a hit greater than 15% of your max HP, gain a barrier that absorbs 50 damage."
       }
     },
     {

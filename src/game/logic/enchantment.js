@@ -204,23 +204,23 @@ export function getEnchantmentDisplay(enchantment) {
     case 'fire_proc_on_hit':
       return `${e.chance}% chance: ${e.damage} fire damage on hit${e.burnGuaranteed ? ' + guaranteed burn' : e.burnChanceBonus ? ` (+${e.burnChanceBonus}% burn chance)` : ''}`;
     case 'armor_reduce_on_hit':
-      return `${e.chance}% chance: -${e.reduction ?? e.minReduction ?? '?'} armor for ${e.durationSecs}s${e.blindChance ? ` +${e.blindChance}% blind chance` : ''}`;
+      return `${e.chance}% chance: -${e.reduction ?? e.minReduction ?? '?'} armor for ${e.durationSecs}s${e.trueDamage ? ` + ${e.trueDamage} true dmg` : ''}${e.blindChance ? ` +${e.blindChance}% blind chance` : ''}`;
     case 'debilitated_on_crit':
       return `${e.chance}% chance on crit: -${e.damageReductionPct}% enemy damage for ${e.debuffDurationSecs}s`;
     case 'consecutive_hit_scale':
       return `${e.chance}% chance: consecutive hits gain +${e.scalePerHit}% damage (max x${e.maxStacks})`;
     case 'lightning_proc_on_hit':
-      return `${e.chance}% chance: ${e.damage} lightning damage on hit${e.critStunSecs ? ` + ${e.critStunSecs}s stun on crit` : ''}${e.chainChance ? ` +${e.chainChance}% chain chance` : ''}`;
+      return `${e.chance}% chance: ${e.damage} lightning damage on hit${e.critStunSecs ? ` + ${e.critStunSecs}s stun on crit` : ''}${e.chainChance ? ` +${e.chainChance}% chain chance` : ''}${e.attackSpeedBonus ? ` +${e.attackSpeedBonus} attack speed` : ''}`;
     case 'passive_armor_bonus':
-      return `+${e.armor} armor`;
+      return `+${e.armor} armor${e.enemyAttackSpeedSlow ? ` + slow enemy attack speed by ${e.enemyAttackSpeedSlow}%` : ''}`;
     case 'passive_damage_reduction':
       return `-${e.reductionPct}% damage taken`;
     case 'frost_reflect':
       return `Reflects ${e.reflectDamage} frost damage to the attacker`;
     case 'passive_lifesteal':
-      return `+${e.lifestealPct}% lifesteal${e.killRestoreHpPct ? ` + kills restore ${e.killRestoreHpPct}% HP` : ''}${e.lowHpDamageBonus ? ` + +${e.lowHpDamageBonus}% damage below 50% HP` : ''}`;
+      return `+${e.lifestealPct}% lifesteal${e.killRestoreHpPct ? ` + kills restore ${e.killRestoreHpPct}% HP` : ''}${e.lowHpDamageBonus ? ` + +${e.lowHpDamageBonus}% damage below 50% HP` : ''}${e.outOfCombatRegenPerSec ? ` + ${e.outOfCombatRegenPerSec} HP/s out of combat` : ''}`;
     case 'passive_max_hp_bonus':
-      return `+${e.hp} max HP${e.scalesWithArmor ? ' (scales with armor)' : ''}`;
+      return `+${e.hp} max HP${e.scalesWithArmor ? ' (scales with armor)' : ''}${e.physicalDamageReductionPct ? ` + -${e.physicalDamageReductionPct}% physical damage taken` : ''}`;
     case 'kill_restore_hp_pct':
       return `Kills restore ${e.value}% max HP`;
     default:
@@ -234,27 +234,28 @@ function rng(min, max) {
 
 function describePoolEntry(entry) {
   if (!entry) return null;
+  const red = entry.reduction != null ? `${entry.reduction}` : rng(entry.minReduction, entry.maxReduction);
   switch (entry.type) {
     case 'fire_proc_on_hit':
       return `${entry.chance}% chance: ${rng(entry.minDamage, entry.maxDamage)} fire damage on hit${entry.burnGuaranteed ? ' + guaranteed burn' : entry.burnChanceBonus ? ` (+${entry.burnChanceBonus}% burn chance)` : ''}`;
     case 'armor_reduce_on_hit':
-      return `${entry.chance}% chance: -${rng(entry.minReduction, entry.maxReduction)} armor for ${entry.durationSecs}s${entry.blindChance ? ` +${entry.blindChance}% blind` : ''}`;
+      return `${entry.chance}% chance: -${red} armor for ${entry.durationSecs}s${entry.trueDamage ? ` + ${entry.trueDamage} true dmg` : ''}${entry.blindChance ? ` +${entry.blindChance}% blind` : ''}`;
     case 'debilitated_on_crit':
       return `${entry.chance}% chance on crit: -${entry.damageReductionPct}% enemy damage for ${entry.debuffDurationSecs}s`;
     case 'consecutive_hit_scale':
       return `${entry.chance}% chance: consecutive hits +${entry.scalePerHit}% damage (max x${entry.maxStacks})`;
     case 'lightning_proc_on_hit':
-      return `${entry.chance}% chance: ${rng(entry.minDamage, entry.maxDamage)} lightning on hit${entry.critStunSecs ? ` + ${entry.critStunSecs}s stun on crit` : ''}${entry.chainChance ? ` +${entry.chainChance}% chain` : ''}`;
+      return `${entry.chance}% chance: ${rng(entry.minDamage, entry.maxDamage)} lightning on hit${entry.critStunSecs ? ` + ${entry.critStunSecs}s stun on crit` : ''}${entry.chainChance ? ` +${entry.chainChance}% chain` : ''}${entry.attackSpeedBonus ? ` +${entry.attackSpeedBonus} attack speed` : ''}`;
     case 'passive_armor_bonus':
-      return `+${rng(entry.minArmor, entry.maxArmor)} armor`;
+      return `+${rng(entry.minArmor, entry.maxArmor)} armor${entry.enemyAttackSpeedSlow ? ` + slow enemy attack speed by ${entry.enemyAttackSpeedSlow}%` : ''}`;
     case 'passive_damage_reduction':
       return `-${entry.reductionPct}% damage taken`;
     case 'frost_reflect':
       return `Reflects ${entry.reflectDamage} frost damage to attacker`;
     case 'passive_lifesteal':
-      return `+${entry.lifestealPct}% lifesteal${entry.killRestoreHpPct ? ` + kills restore ${entry.killRestoreHpPct}% HP` : ''}${entry.lowHpDamageBonus ? ` + +${entry.lowHpDamageBonus}% damage below 50% HP` : ''}`;
+      return `+${entry.lifestealPct}% lifesteal${entry.killRestoreHpPct ? ` + kills restore ${entry.killRestoreHpPct}% HP` : ''}${entry.lowHpDamageBonus ? ` + +${entry.lowHpDamageBonus}% damage below 50% HP` : ''}${entry.outOfCombatRegenPerSec ? ` + ${entry.outOfCombatRegenPerSec} HP/s out of combat` : ''}`;
     case 'passive_max_hp_bonus':
-      return `+${rng(entry.minHp, entry.maxHp)} max HP${entry.scalesWithArmor ? ' (scales with armor)' : ''}`;
+      return `+${rng(entry.minHp, entry.maxHp)} max HP${entry.scalesWithArmor ? ' (scales with armor)' : ''}${entry.physicalDamageReductionPct ? ` + -${entry.physicalDamageReductionPct}% physical damage taken` : ''}`;
     case 'kill_restore_hp_pct':
       return `Kills restore ${entry.value}% max HP`;
     default:

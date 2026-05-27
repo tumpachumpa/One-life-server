@@ -1402,11 +1402,7 @@ export function completeNode(adventure, progress, nodeId, options = {}) {
     ? node.id
     : preferredNextNodeId
       ? preferredNextNodeId
-    : isChoiceRunProgress(safeProgress)
-      ? node.id
-    : !isWaypointNode(node) && nextNodes.length === 1 && unlockedNodes.includes(nextNodes[0])
-      ? nextNodes[0]
-      : node.id;
+    : node.id;
   return {
     ...safeProgress,
     selectedRouteId: route.id,

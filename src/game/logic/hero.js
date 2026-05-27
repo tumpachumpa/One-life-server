@@ -33,6 +33,8 @@ export const STR_DAMAGE_SCALE = 0.65;
 export const DEX_DAMAGE_SCALE = 0.08;
 export const RANGED_DEX_DAMAGE_SCALE = 0.65;
 export const RANGED_STR_DAMAGE_SCALE = 0.08;
+export const FINESSE_DEX_DAMAGE_SCALE = 0.60;
+export const FINESSE_STR_DAMAGE_SCALE = 0.08;
 export const ATTRIBUTE_UPGRADES = {
   str: 1,
   dex: 1,
@@ -78,8 +80,9 @@ export function getWeaponAttackType(weaponOrStats = {}) {
 
 export function getHeroRawDamageBase(stats = {}, weapon = null) {
   const ranged = isRangedWeapon(weapon || stats);
-  const strScale = ranged ? RANGED_STR_DAMAGE_SCALE : STR_DAMAGE_SCALE;
-  const dexScale = ranged ? RANGED_DEX_DAMAGE_SCALE : DEX_DAMAGE_SCALE;
+  const finesse = !ranged && !!stats.finesseScaling;
+  const strScale = ranged ? RANGED_STR_DAMAGE_SCALE : finesse ? FINESSE_STR_DAMAGE_SCALE : STR_DAMAGE_SCALE;
+  const dexScale = ranged ? RANGED_DEX_DAMAGE_SCALE : finesse ? FINESSE_DEX_DAMAGE_SCALE : DEX_DAMAGE_SCALE;
   return (stats.str || 0) * strScale + (stats.dex || 0) * dexScale + (stats.damage || 0);
 }
 
@@ -671,6 +674,7 @@ export function calcStats(hero) {
   stats.shadowResist = (stats.shadowResist || 0) + sumEffect(effects, "shadow_resist") + allElementalResist;
   stats.poisonResist = (stats.poisonResist || 0) + sumEffect(effects, "poison_resist") + allElementalResist;
   stats.magicFind = Math.max(0, sumEffect(effects, "magic_find"));
+  stats.finesseScaling = hero?.heroClass === "rogue";
 
   // Apply passive enchantment effects from equipped items and inventory
   applyEnchantmentPassives(hero, stats, equipment);

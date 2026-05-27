@@ -238,7 +238,8 @@
       "effects": [
         {
           "type": "lifesteal",
-          "value": 5
+          "value": 5,
+          "_base": true
         }
       ],
       "tags": [
@@ -3653,7 +3654,8 @@
       "effects": [
         {
           "type": "dodge_chance",
-          "value": 8
+          "value": 8,
+          "_base": true
         }
       ],
       "tags": [
@@ -3728,11 +3730,13 @@
       "effects": [
         {
           "type": "poison_resist",
-          "value": 12
+          "value": 12,
+          "_base": true
         },
         {
           "type": "dodge_chance",
-          "value": 4
+          "value": 4,
+          "_base": true
         }
       ],
       "tags": [
@@ -4463,11 +4467,13 @@
       "effects": [
         {
           "type": "shadow_resist",
-          "value": 8
+          "value": 8,
+          "_base": true
         },
         {
           "type": "dodge_chance",
-          "value": 8
+          "value": 8,
+          "_base": true
         }
       ],
       "tags": [

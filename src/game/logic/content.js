@@ -300,6 +300,12 @@ export function getItem(id) {
       if (template.damageDice) merged.damageDice = { ...template.damageDice };
       if (template.armorDice) merged.armorDice = { ...template.armorDice };
       if (template.size != null) merged.size = template.size;
+      const templateBaseEffects = (template.effects || []).filter(e => e._base);
+      if (templateBaseEffects.length > 0) {
+        const currentTypes = new Set((merged.effects || []).map(e => e.type + (e.stat ? ':' + e.stat : '')));
+        const missing = templateBaseEffects.filter(e => !currentTypes.has(e.type + (e.stat ? ':' + e.stat : '')));
+        if (missing.length > 0) merged.effects = [...missing, ...(merged.effects || [])];
+      }
       return normalizeItemVisuals(merged);
     }
     return normalizeItemVisuals(normalizeGeneratedBaseEffects(itemRef));

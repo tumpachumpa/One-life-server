@@ -3104,9 +3104,9 @@ function breakBearTrapOnAutoAttack(defender, tick, log, hero, enemy) {
 
 function getEvasionChancePct(defender) {
   const passiveChance = (defender.passiveEffects || []).reduce((total, effect) =>
-    effect.type === 'evasion_chance' ? total + (effect.value || effect.chance || 0) : total, 0);
+    (effect.type === 'evasion_chance' || effect.type === 'dodge_chance') ? total + (effect.value || effect.chance || 0) : total, 0);
   const activeChance = (defender.activeEffects || []).reduce((total, effect) =>
-    effect.type === 'evasion_chance' && isEffectActive(effect) ? total + (effect.value || effect.chance || 0) : total, 0);
+    (effect.type === 'evasion_chance' || effect.type === 'dodge_chance') && isEffectActive(effect) ? total + (effect.value || effect.chance || 0) : total, 0);
   const shadowVeil = getActiveShadowVeil(defender);
   return Math.max(0, Math.min(100, passiveChance + activeChance + (shadowVeil?.evasionChanceBonus || 0)));
 }

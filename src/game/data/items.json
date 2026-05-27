@@ -234,10 +234,13 @@
       "type": "gear",
       "slot": "ring",
       "family": "ring",
-      "baseStats": {
-        "lifesteal": 5
-      },
-      "effects": [],
+      "baseStats": {},
+      "effects": [
+        {
+          "type": "lifesteal",
+          "value": 5
+        }
+      ],
       "tags": [
         "ring",
         "lifesteal",

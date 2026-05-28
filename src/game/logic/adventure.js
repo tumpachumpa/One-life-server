@@ -1405,7 +1405,7 @@ export function completeNode(adventure, progress, nodeId, options = {}) {
     ? node.id
     : preferredNextNodeId
       ? preferredNextNodeId
-    : node.id;
+    : (nextNodes).find(id => unlockedNodes.includes(id)) ?? null;
   return {
     ...safeProgress,
     selectedRouteId: route.id,

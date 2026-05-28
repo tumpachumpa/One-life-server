@@ -1521,6 +1521,106 @@
         }
       ],
       "cocoonSprite": "/assets/sprites/encounters/Bosses/Coccon.png"
+    },
+    {
+      "id": "durnek_ironthane",
+      "name": "High Thane Durnek Ironthane",
+      "family": "dwarf",
+      "tags": ["dwarf", "boss"],
+      "tier": 5,
+      "threat": "boss",
+      "sprite": "/assets/items/Dwarf content/Dwarf Ironthane.png",
+      "baseStats": {
+        "maxHp": 962,
+        "attack": 80,
+        "armor": 38,
+        "attackSpeed": 0.58,
+        "blockChance": 20,
+        "blockPower": 65,
+        "blockPowerRegen": 2
+      },
+      "rewards": { "xp": 550, "gold": 220 },
+      "lootTable": "karag_thorn_boss",
+      "effects": [
+        { "type": "counter_chance", "value": 12 },
+        { "type": "armor_ignore", "value": 15 }
+      ],
+      "phases": [],
+      "abilities": [
+        {
+          "id": "durnek_hammer_slam",
+          "name": "Hammer Slam",
+          "description": "A thunderous ancestral hammer blow for 130% damage that stuns briefly.",
+          "type": "crushing_blow",
+          "castTicks": 2.5,
+          "cooldownSeconds": 9,
+          "damageMult": 1.3,
+          "stunTicks": 1,
+          "aiPool": "durnek_specials",
+          "aiUseChance": 35,
+          "aiWeight": 65
+        },
+        {
+          "id": "durnek_iron_bulwark",
+          "name": "Iron Bulwark",
+          "description": "Raises the ancestral shield — block chance surges for the next 4 incoming hits.",
+          "type": "guard_instinct",
+          "castTicks": 1,
+          "cooldownSeconds": 15,
+          "blockChanceBonus": 25,
+          "attacksReceived": 4,
+          "blockPowerRecoverPct": 50,
+          "aiPool": "durnek_specials",
+          "aiUseChance": 30,
+          "aiWeight": 45
+        },
+        {
+          "id": "durnek_ancestral_roar",
+          "name": "Ancestral Roar",
+          "description": "A soul-shaking roar from the ancient bloodline — weakens and staggers the hero.",
+          "type": "savage_roar",
+          "castTicks": 1,
+          "cooldownSeconds": 12,
+          "weakenDurationTicks": 4,
+          "damageMult": 0.75,
+          "staggerAttacks": 2,
+          "staggerDuration": 2,
+          "aiPool": "durnek_specials",
+          "aiUseChance": 30,
+          "aiWeight": 40
+        },
+        {
+          "id": "durnek_summon_kharvox",
+          "name": "Loose the Beast",
+          "description": "At half health, Durnek breaks the chains — Kharvox enters the fight.",
+          "type": "summon_add",
+          "castTicks": 1,
+          "cooldownSeconds": 999,
+          "once": true,
+          "requiresSelfHpPctBelow": 50,
+          "enemyId": "kharvox_chimera",
+          "maxAdds": 1,
+          "maxSummons": 1,
+          "pauseMs": 1500,
+          "aiPool": "durnek_specials",
+          "aiUseChance": 100,
+          "aiWeight": 1000
+        },
+        {
+          "id": "durnek_ancestral_wrath",
+          "name": "Ancestral Wrath",
+          "description": "Phase 2: A furious overhead smash for 180% damage with bonus critical chance.",
+          "type": "empowered_attack",
+          "castTicks": 2,
+          "cooldownSeconds": 7,
+          "requiresSelfHpPctBelow": 50,
+          "damageMult": 1.8,
+          "critChance": 10,
+          "aiPool": "durnek_specials",
+          "aiUseChance": 40,
+          "aiWeight": 70
+        }
+      ]
     }
   ]
 }

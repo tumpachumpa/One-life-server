@@ -3470,6 +3470,230 @@
         }
       ],
       "requiresAdventureCompletion": "orc_war_camp"
+    },
+    {
+      "id": "karag_thorn",
+      "zoneId": "karag_thorn",
+      "lootPoolId": "karag_thorn",
+      "regionId": "karag_thorn_region",
+      "name": "Karag-Thorn",
+      "description": "A hostile dwarven fortress built around a great forge and an ancient beast pit. Fight through the outer garrison, the forge halls, and the throne chamber to face High Thane Durnek Ironthane.",
+      "linearAdventure": true,
+      "disableChoiceRun": true,
+      "requiresAdventureCompletion": "rootspire_tower",
+      "routes": [
+        {
+          "id": "karag_thorn_path",
+          "name": "Karag-Thorn",
+          "nodes": [
+            {
+              "id": "kt_gate_sentinels",
+              "type": "combat",
+              "enemyId": "dwarf_sentinel",
+              "enemyIds": ["dwarf_sentinel", "dwarf_sentinel"],
+              "bossDeathEndsFight": false,
+              "addsDespawnOnBossDeath": false,
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": { "max": 5, "rechargeSeconds": 300 },
+              "next": ["kt_collapsed_tunnel"],
+              "stepIndex": 0
+            },
+            {
+              "id": "kt_collapsed_tunnel",
+              "type": "combat",
+              "enemyId": "dwarf_crossbowman",
+              "enemyIds": ["dwarf_crossbowman", "dwarf_crossbowman"],
+              "bossDeathEndsFight": false,
+              "addsDespawnOnBossDeath": false,
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": { "max": 5, "rechargeSeconds": 300 },
+              "next": ["kt_forge_ward"],
+              "stepIndex": 1
+            },
+            {
+              "id": "kt_forge_ward",
+              "type": "combat",
+              "enemyId": "dwarf_ironbreaker",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": { "max": 5, "rechargeSeconds": 300 },
+              "next": ["kt_warhound_kennels"],
+              "stepIndex": 2
+            },
+            {
+              "id": "kt_warhound_kennels",
+              "type": "combat",
+              "enemyId": "dwarf_handler",
+              "enemyIds": ["dwarf_handler", "karag_warhound", "karag_warhound"],
+              "bossDeathEndsFight": false,
+              "addsDespawnOnBossDeath": false,
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": { "max": 5, "rechargeSeconds": 300 },
+              "next": ["kt_outer_barracks"],
+              "stepIndex": 3
+            },
+            {
+              "id": "kt_outer_barracks",
+              "type": "combat",
+              "enemyId": "dwarf_berserker",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": { "max": 5, "rechargeSeconds": 300 },
+              "next": ["kt_guard_post"],
+              "stepIndex": 4
+            },
+            {
+              "id": "kt_guard_post",
+              "type": "event",
+              "repeatable": true,
+              "next": ["kt_bolgrak"],
+              "stepIndex": 5,
+              "event": {
+                "title": "The Guard Post",
+                "description": "An abandoned sentry post still holds a cold hearth and enough cover to rest unseen.",
+                "effects": [
+                  { "type": "restore_hp_pct", "value": 40 },
+                  { "type": "restore_energy", "value": 20 }
+                ]
+              }
+            },
+            {
+              "id": "kt_bolgrak",
+              "type": "combat",
+              "enemyId": "bolgrak_stonefist",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": { "max": 3, "rechargeSeconds": 420 },
+              "next": ["kt_smelting_hall"],
+              "stepIndex": 6,
+              "special": true
+            },
+            {
+              "id": "kt_smelting_hall",
+              "type": "combat",
+              "enemyId": "dwarf_ironbreaker",
+              "enemyIds": ["dwarf_ironbreaker", "dwarf_ironbreaker"],
+              "bossDeathEndsFight": false,
+              "addsDespawnOnBossDeath": false,
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": { "max": 5, "rechargeSeconds": 300 },
+              "next": ["kt_chain_pit"],
+              "stepIndex": 7
+            },
+            {
+              "id": "kt_chain_pit",
+              "type": "combat",
+              "enemyId": "pit_manticore",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": { "max": 5, "rechargeSeconds": 300 },
+              "next": ["kt_rune_foundry"],
+              "stepIndex": 8
+            },
+            {
+              "id": "kt_rune_foundry",
+              "type": "combat",
+              "enemyId": "karag_runic_construct",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": { "max": 5, "rechargeSeconds": 300 },
+              "next": ["kt_runesmiths_cache"],
+              "stepIndex": 9
+            },
+            {
+              "id": "kt_runesmiths_cache",
+              "type": "combat",
+              "enemyId": "dwarf_runecarver",
+              "enemyIds": ["dwarf_runecarver", "dwarf_runecarver"],
+              "bossDeathEndsFight": false,
+              "addsDespawnOnBossDeath": false,
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": { "max": 5, "rechargeSeconds": 300 },
+              "next": ["kt_brand_chamber_doors"],
+              "stepIndex": 10
+            },
+            {
+              "id": "kt_brand_chamber_doors",
+              "type": "combat",
+              "enemyId": "dwarf_honor_guard",
+              "enemyIds": ["dwarf_honor_guard", "dwarf_runecarver"],
+              "bossDeathEndsFight": false,
+              "addsDespawnOnBossDeath": false,
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": { "max": 5, "rechargeSeconds": 300 },
+              "next": ["kt_forge_antechamber"],
+              "stepIndex": 11
+            },
+            {
+              "id": "kt_forge_antechamber",
+              "type": "event",
+              "repeatable": true,
+              "next": ["kt_kharzun"],
+              "stepIndex": 12,
+              "event": {
+                "title": "The Forge Antechamber",
+                "description": "A cooling alcove between the forge and the brand chambers. A forge-priest left behind clean water and a prayer banner.",
+                "effects": [
+                  { "type": "restore_hp_pct", "value": 40 },
+                  { "type": "restore_energy", "value": 20 }
+                ]
+              }
+            },
+            {
+              "id": "kt_kharzun",
+              "type": "combat",
+              "enemyId": "kharzun_branded",
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": { "max": 3, "rechargeSeconds": 420 },
+              "next": ["kt_inner_sanctum"],
+              "stepIndex": 13,
+              "special": true
+            },
+            {
+              "id": "kt_inner_sanctum",
+              "type": "combat",
+              "enemyId": "dwarf_honor_guard",
+              "enemyIds": ["dwarf_honor_guard", "dwarf_honor_guard"],
+              "bossDeathEndsFight": false,
+              "addsDespawnOnBossDeath": false,
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": { "max": 5, "rechargeSeconds": 300 },
+              "next": ["kt_last_vanguard"],
+              "stepIndex": 14
+            },
+            {
+              "id": "kt_last_vanguard",
+              "type": "combat",
+              "enemyId": "dwarf_honor_guard",
+              "enemyIds": ["dwarf_honor_guard", "dwarf_berserker"],
+              "bossDeathEndsFight": false,
+              "addsDespawnOnBossDeath": false,
+              "encounterCap": 1,
+              "repeatable": true,
+              "charges": { "max": 5, "rechargeSeconds": 300 },
+              "next": ["kt_boss"],
+              "stepIndex": 15
+            },
+            {
+              "id": "kt_boss",
+              "type": "boss",
+              "bossId": "durnek_ironthane",
+              "encounterCap": 1,
+              "charges": { "max": 1, "rechargeSeconds": 600 },
+              "next": [],
+              "stepIndex": 16
+            }
+          ]
+        }
+      ]
     }
   ]
 }

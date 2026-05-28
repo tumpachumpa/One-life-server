@@ -345,6 +345,33 @@
         "encounterTableId": null,
         "encounterChance": 0
       }
+    },
+    {
+      "id": "karag_thorn",
+      "regionId": "karag_thorn_region",
+      "name": "Karag-Thorn",
+      "type": "location",
+      "x": 50,
+      "y": 50,
+      "connections": [],
+      "unlock": {
+        "type": "always"
+      },
+      "destination": {
+        "type": "adventure",
+        "view": "karag_thorn",
+        "adventureId": "karag_thorn",
+        "zoneId": "karag_thorn"
+      },
+      "travel": {
+        "costs": {
+          "energy": 0,
+          "hunger": 0,
+          "fatigue": 0
+        },
+        "encounterTableId": null,
+        "encounterChance": 0
+      }
     }
   ]
 }

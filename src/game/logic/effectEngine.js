@@ -119,7 +119,9 @@ export function collectTalentEffects(hero) {
 
 export function collectActiveFoodBuffEffects(hero) {
   const effects = [];
+  const now = Date.now();
   for (const buff of hero.activeBuffs || []) {
+    if (buff.expiresAt && buff.expiresAt <= now) continue;
     for (const [stat, value] of Object.entries(buff.stats || {})) {
       if (stat === "attackSpeedPct") {
         effects.push({ type: "attack_speed_pct", value, source: `food_${buff.itemId}` });

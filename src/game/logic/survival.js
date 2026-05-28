@@ -117,9 +117,14 @@ function formatFoodBuffStats(stats = {}) {
 }
 
 function getActiveFoodBuffLines(hero) {
+  const now = Date.now();
   return (hero?.activeBuffs || [])
-    .filter(buff => (buff.combatsLeft || 0) > 0)
-    .map(buff => `${buff.name || "Food"}: ${formatFoodBuffStats(buff.stats)} (${buff.combatsLeft} combat${buff.combatsLeft === 1 ? "" : "s"} left)`);
+    .filter(buff => buff.expiresAt && buff.expiresAt > now)
+    .map(buff => {
+      const secsLeft = Math.max(0, Math.ceil((buff.expiresAt - now) / 1000));
+      const timeStr = secsLeft < 60 ? `${secsLeft}s` : `${Math.ceil(secsLeft / 60)}m`;
+      return `${buff.name || "Food"}: ${formatFoodBuffStats(buff.stats)} (${timeStr} left)`;
+    });
 }
 
 export function getHungerSummary(hero) {

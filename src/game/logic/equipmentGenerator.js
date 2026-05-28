@@ -338,10 +338,12 @@ function rollAffixes(base, rarity, rng = Math.random) {
   const definitions = poolIds.flatMap(id => equipmentGenerationData.affixPools?.[id] || []);
   const result = [];
   const used = new Set((base.effects || []).map(affixIdentity));
+  const blocked = new Set(base.blockedAffixTypes || []);
   while (result.length < slots) {
     const candidates = definitions.filter(definition =>
       isGeneratedEquipmentAffixAllowedForBase(definition, base, rarity)
       && !used.has(affixIdentity(definition))
+      && !blocked.has(definition.type)
     );
     if (!candidates.length) break;
     const picked = materializeAffix(weightedPickByWeight(candidates, rng), rarity, rng);

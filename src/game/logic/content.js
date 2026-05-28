@@ -302,9 +302,15 @@ export function getItem(id) {
       if (template.size != null) merged.size = template.size;
       const templateBaseEffects = (template.effects || []).filter(e => e._base);
       if (templateBaseEffects.length > 0) {
+        const templateBaseTypes = new Set(templateBaseEffects.map(e => e.type + (e.stat ? ':' + e.stat : '')));
         const currentTypes = new Set((merged.effects || []).map(e => e.type + (e.stat ? ':' + e.stat : '')));
         const missing = templateBaseEffects.filter(e => !currentTypes.has(e.type + (e.stat ? ':' + e.stat : '')));
-        if (missing.length > 0) merged.effects = [...missing, ...(merged.effects || [])];
+        // Stamp _base: true on any stored effect whose type matches a template base effect
+        merged.effects = (merged.effects || []).map(e => {
+          const key = e.type + (e.stat ? ':' + e.stat : '');
+          return templateBaseTypes.has(key) ? { ...e, _base: true } : e;
+        });
+        if (missing.length > 0) merged.effects = [...missing, ...merged.effects];
       }
       return normalizeItemVisuals(merged);
     }

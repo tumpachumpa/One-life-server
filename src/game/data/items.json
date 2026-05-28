@@ -3610,39 +3610,15 @@
           "_base": true
         },
         {
-          "type": "block_power_regen",
-          "value": 5,
-          "_base": true
-        },
-        {
           "name": "First Wall",
           "type": "first_incoming_guaranteed_block",
           "counterDamageMult": 1,
           "description": "The first incoming hit each combat is completely blocked at no Block Power cost. The blow is immediately answered with a full-damage counter.",
           "_base": true
-        },
-        {
-          "type": "max_hp",
-          "value": 20
-        },
-        {
-          "type": "armor",
-          "value": 6
-        },
-        {
-          "type": "counter_chance",
-          "value": 3
-        },
-        {
-          "type": "crit_resist",
-          "value": 5
-        },
-        {
-          "type": "magic_defense",
-          "value": 5
         }
       ],
       "rarityAffixPools": ["guard", "survival"],
+      "blockedAffixTypes": ["armor_pct"],
       "tags": [
         "shield",
         "offhand",

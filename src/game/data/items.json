@@ -1170,6 +1170,48 @@
       "icon": "/assets/items/generated/hearty_stew.png"
     },
     {
+      "id": "inn_strength_stew",
+      "name": "Strength Stew",
+      "size": [1, 1],
+      "type": "consumable",
+      "family": "cooked_meal",
+      "effects": [
+        { "type": "food_buff", "minutes": 2, "stats": { "str": 2 } }
+      ],
+      "tags": ["food", "inn_food"],
+      "price": 100,
+      "stackable": true,
+      "icon": "/assets/items/generated/hearty_stew.png"
+    },
+    {
+      "id": "inn_swift_broth",
+      "name": "Swift Broth",
+      "size": [1, 1],
+      "type": "consumable",
+      "family": "cooked_meal",
+      "effects": [
+        { "type": "food_buff", "minutes": 2, "stats": { "dex": 2 } }
+      ],
+      "tags": ["food", "inn_food"],
+      "price": 100,
+      "stackable": true,
+      "icon": "/assets/items/generated/hearty_stew.png"
+    },
+    {
+      "id": "inn_fortifying_brew",
+      "name": "Fortifying Brew",
+      "size": [1, 1],
+      "type": "consumable",
+      "family": "cooked_meal",
+      "effects": [
+        { "type": "food_buff", "minutes": 2, "stats": { "maxHp": 10 } }
+      ],
+      "tags": ["food", "inn_food"],
+      "price": 100,
+      "stackable": true,
+      "icon": "/assets/items/generated/hearty_stew.png"
+    },
+    {
       "id": "campfire",
       "name": "Campfire",
       "size": [

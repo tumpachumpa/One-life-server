@@ -2188,7 +2188,6 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
 
   let phase = state.phase;
   const boss = enemies.find(foe => foe.id === (state.bossEnemyId || 'enemy')) || enemies[0] || null;
-  const bossDead = !!boss && state.bossDeathEndsFight !== false && boss.hp <= 0;
   for (const fallen of enemies) {
     if (fallen.hp > 0 || fallen._bondTriggered || !fallen.bond) continue;
     fallen._bondTriggered = true;
@@ -2209,6 +2208,7 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
   for (const foe of enemies) {
     if (foe.hp <= 0 && !foe.despawned) preventDeathWithLastBreath(foe, tick, log, hero);
   }
+  const bossDead = !!boss && state.bossDeathEndsFight !== false && boss.hp <= 0;
   const allEnemiesDead = enemies.length > 0 && enemies.every(foe => foe.hp <= 0);
   if (state.debugPreventHeroDeath && hero.hp <= 0 && !bossDead && !allEnemiesDead) {
     hero.hp = 1;
@@ -2320,9 +2320,17 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
       const procForImpact = procForActor || (defender?.isPlayer ? procState : null);
       const attack = createBasicAttackImpact(combatant, defender, tick, actorRng, ACTION.BASIC_ATTACK, { frontId, enemyFrontId, procState: procForImpact });
       if (combatant.isPlayer) attack.isMainHand = true;
+      const defenderHadLastBreath = !!(defender.activeEffects || []).find(
+        e => e.type === 'last_breath' && (e.remainingTicks == null || e.remainingTicks > 0));
+      const prevRelicDeathCheatFired = procState ? !!procState.relicDeathCheatFired : false;
       if (resolveBasicAttackImpact(attack, combatant, defender, tick, log, actorRng, hero, logEnemy, heroResources, heroConditions, heroWounds, procForImpact, heroProcNodes, { frontId, enemyFrontId, allies, enemyProcNodes, enemyProcState, enemyProcRng: rawEnemyProcRng })) {
         queue = removePendingBasicAttacksForActor(queue, defender.id);
       }
+      // Stop multi-hit catch-up if a death save fired — a second hit would bypass the save.
+      const defenderLostLastBreath = defenderHadLastBreath && !(defender.activeEffects || []).some(
+        e => e.type === 'last_breath' && (e.remainingTicks == null || e.remainingTicks > 0));
+      const defenderRelicSaved = !prevRelicDeathCheatFired && procState && !!procState.relicDeathCheatFired;
+      if ((defenderLostLastBreath || defenderRelicSaved) && defender.hp > 0) break;
       if (combatant.id === 'hero') {
         applyThresholdEffects(heroProcNodes, procState, hero, enemy, allies);
       }
@@ -2417,10 +2425,10 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
 
   let phase = state.phase;
   const boss = enemies.find(foe => foe.id === (state.bossEnemyId || 'enemy')) || enemies[0] || null;
-  const bossDead = !!boss && state.bossDeathEndsFight !== false && boss.hp <= 0;
   for (const foe of enemies) {
     if (foe.hp <= 0 && !foe.despawned) preventDeathWithLastBreath(foe, tick, log, hero);
   }
+  const bossDead = !!boss && state.bossDeathEndsFight !== false && boss.hp <= 0;
   const allEnemiesDead = enemies.length > 0 && enemies.every(foe => foe.hp <= 0);
   if (bossDead && state.addsDespawnOnBossDeath !== false) {
     enemies = enemies.map(foe => foe.id === boss.id ? foe : { ...foe, hp: 0, despawned: true });
@@ -2926,10 +2934,13 @@ function getParryChancePct(defender) {
   if (hasActiveEnGarde(defender)) return 100;
   const passiveChance = (defender.passiveEffects || []).reduce((total, effect) =>
     effect.type === 'parry_chance' ? total + (effect.value || effect.chance || 0) : total, 0);
-  const activeChance = (defender.activeEffects || []).reduce((total, effect) =>
-    effect.type === 'parry_guard' && (effect.attacksRemaining || 0) > 0
-      ? total + (effect.parryChanceBonus || effect.value || 0)
-      : total, 0);
+  const activeChance = (defender.activeEffects || []).reduce((total, effect) => {
+    if (effect.type === 'parry_guard' && (effect.attacksRemaining || 0) > 0)
+      return total + (effect.parryChanceBonus || effect.value || 0);
+    if (effect.type === 'parry_chance' && isEffectActive(effect))
+      return total + (effect.value || 0);
+    return total;
+  }, 0);
   return passiveChance + activeChance;
 }
 
@@ -5601,6 +5612,16 @@ function applyProcEffect(effect, ctx, procState, heroProcNodes, hero, enemy, tic
       });
       log.push(makeEntry(tick, 'hero', 'proc', `Perfect Rhythm: +${effect.value || 10}% dodge for ${effect.durationTicks || 5} seconds.`, 0, hero.hp, enemy?.hp, {}));
       break;
+    case 'gain_parry_chance_pct':
+      hero.activeEffects = hero.activeEffects || [];
+      hero.activeEffects.push({
+        type: 'parry_chance',
+        value: effect.value || 15,
+        remainingTicks: effect.durationTicks || 5,
+        source: ctx.nodeId,
+      });
+      log.push(makeEntry(tick, 'hero', 'proc', `Perfect Rhythm: +${effect.value || 15}% parry for ${effect.durationTicks || 5} seconds.`, 0, hero.hp, enemy?.hp, {}));
+      break;
     case 'set_bleed_carry':
       procState.bleedCarry = Math.max(procState.bleedCarry || 0, effect.value || 2);
       break;
@@ -5774,7 +5795,7 @@ function applyProcEffect(effect, ctx, procState, heroProcNodes, hero, enemy, tic
       const rawDmg = Math.max(1, Math.floor((hero.damage || 0) * (effect.damageMult || 1)));
       const dmg = applyArmor(rawDmg, getEffectiveArmor(enemy), 0);
       enemy.hp = Math.max(0, enemy.hp - dmg);
-      log.push(makeEntry(tick, 'hero', 'hit', `Shadow Opener: ${dmg} damage.`, dmg, hero.hp, enemy.hp, {
+      log.push(makeEntry(tick, 'hero', 'hit', `Ambush: ${dmg} damage.`, dmg, hero.hp, enemy.hp, {
         targetId: enemy.id,
         extraHit: true,
         extraHitSource: 'opener_attack',

@@ -188,7 +188,7 @@
     {
       "id": "en_garde",
       "name": "En Garde",
-      "description": "Instant. For 3 seconds, parry chance is 100%.",
+      "description": "Instant. For 5 seconds, parry chance is 100%.",
       "rageCost": 0,
       "castTicks": 0,
       "cooldownSeconds": 16,
@@ -201,7 +201,7 @@
       ],
       "requirementLabel": "melee weapon",
       "target": "self",
-      "durationTicks": 3,
+      "durationTicks": 5,
       "parryChance": 100,
       "bladeStackMultiplier": 1
     },

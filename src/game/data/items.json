@@ -3601,19 +3601,11 @@
       "effects": [
         {
           "type": "block_chance",
-          "value": 15
+          "value": 12
         },
         {
           "type": "block_power",
           "value": 40
-        },
-        {
-          "type": "block_power_regen",
-          "value": 4
-        },
-        {
-          "type": "counter_chance",
-          "value": 10
         },
         {
           "name": "First Wall",
@@ -3622,6 +3614,7 @@
           "description": "The first incoming hit each combat is completely blocked at no Block Power cost. The blow is immediately answered with a full-damage counter."
         }
       ],
+      "rarityAffixPools": ["guard", "survival"],
       "tags": [
         "shield",
         "offhand",

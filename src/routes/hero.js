@@ -7,7 +7,6 @@ const contentP = import('../game/logic/content.js');
 const snapModP = import('../game/snap.js');
 
 const ESSENCE_PER_HOUR = 100;
-const INV_COLS = 5; // mirrors client constants.js
 
 function reduceOrRemoveSlot(grid, idx, qty) {
   const slot = grid[idx];
@@ -144,7 +143,7 @@ async function heroRoutes(fastify) {
     }
 
     const { initHero, calcStats } = await heroLogicP;
-    const { migrateToGrid } = await inventoryLogicP;
+    const { migrateToGrid, INV_COLS } = await inventoryLogicP;
 
     const rawHero = initHero(trimmedName, {
       heroClass: heroClass || 'fighter',
@@ -153,8 +152,10 @@ async function heroRoutes(fastify) {
       weapon: weapon || null,
     });
 
-    const invRows = Math.max(6, Math.ceil((calcStats(rawHero).inventorySlots || 30) / INV_COLS));
-    const hero = { ...rawHero, inventory: migrateToGrid(rawHero.inventory, invRows) };
+    const newHeroStats = calcStats(rawHero);
+    const newHeroInvCols = INV_COLS + (newHeroStats.inventoryColsBonus || 0);
+    const invRows = Math.max(6, Math.ceil((newHeroStats.inventorySlots || 30) / newHeroInvCols));
+    const hero = { ...rawHero, inventory: migrateToGrid(rawHero.inventory, invRows, newHeroInvCols) };
 
     const saveData = {
       hero,
@@ -280,9 +281,11 @@ async function heroRoutes(fastify) {
       const classDef = heroClasses.find(c => c.id === hero.hero.heroClass);
       const forbidden = classDef?.forbiddenWeaponFamilies || [];
       if (forbidden.length) {
-        const { addToGrid } = await inventoryLogicP;
+        const { addToGrid, INV_COLS: INV_COLS_GAME } = await inventoryLogicP;
         const { calcStats } = await heroLogicP;
-        const invRows = Math.max(6, Math.ceil((calcStats(hero.hero).inventorySlots || 30) / INV_COLS));
+        const heroStats = calcStats(hero.hero);
+        const heroInvCols = INV_COLS_GAME + (heroStats.inventoryColsBonus || 0);
+        const invRows = Math.max(6, Math.ceil((heroStats.inventorySlots || 30) / heroInvCols));
         for (const slot of ['weapon', 'offhand']) {
           const equipped = hero.hero.equip[slot];
           if (!equipped) continue;

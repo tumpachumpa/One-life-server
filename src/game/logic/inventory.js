@@ -236,23 +236,23 @@ function normalizeGridEntry(rawEntry) {
   return { itemId: rawEntry, x: NaN, y: NaN, qty: 1 };
 }
 
-export function normalizeGridItems(items = [], rows = 6) {
+export function normalizeGridItems(items = [], rows = 6, cols = INV_COLS) {
   let result = [];
   for (const rawEntry of items || []) {
     const entry = normalizeGridEntry(rawEntry);
     if (!entry || !getItem(entry.itemId)) continue;
     const x = Math.floor(entry.x);
     const y = Math.floor(entry.y);
-    if (Number.isFinite(x) && Number.isFinite(y) && canPlace(result, entry.itemId, x, y, rows)) {
+    if (Number.isFinite(x) && Number.isFinite(y) && canPlace(result, entry.itemId, x, y, rows, -1, cols)) {
       result = [...result, { itemId: entry.itemId, x, y, qty: entry.qty }];
       continue;
     }
-    result = addToGrid(result, entry.itemId, rows, entry.qty) || result;
+    result = addToGrid(result, entry.itemId, rows, entry.qty, cols) || result;
   }
   return result;
 }
 
-export function normalizeGridItemsWithOverflow(items = [], rows = 6) {
+export function normalizeGridItemsWithOverflow(items = [], rows = 6, cols = INV_COLS) {
   let result = [];
   const overflow = [];
   for (const rawEntry of items || []) {
@@ -260,11 +260,11 @@ export function normalizeGridItemsWithOverflow(items = [], rows = 6) {
     if (!entry || !getItem(entry.itemId)) continue;
     const x = Math.floor(entry.x);
     const y = Math.floor(entry.y);
-    if (Number.isFinite(x) && Number.isFinite(y) && canPlace(result, entry.itemId, x, y, rows)) {
+    if (Number.isFinite(x) && Number.isFinite(y) && canPlace(result, entry.itemId, x, y, rows, -1, cols)) {
       result = [...result, { itemId: entry.itemId, x, y, qty: entry.qty }];
       continue;
     }
-    const added = addToGrid(result, entry.itemId, rows, entry.qty);
+    const added = addToGrid(result, entry.itemId, rows, entry.qty, cols);
     if (added) {
       result = added;
     } else {
@@ -275,15 +275,15 @@ export function normalizeGridItemsWithOverflow(items = [], rows = 6) {
   return { items: result, overflow };
 }
 
-export function migrateToGrid(oldInventory, rows = 6) {
-  return normalizeGridItems(oldInventory, rows);
+export function migrateToGrid(oldInventory, rows = 6, cols = INV_COLS) {
+  return normalizeGridItems(oldInventory, rows, cols);
 }
 
 const _TYPE_SORT_ORDER = { gear: 0, material: 1, enchantment_stone: 2, relic: 3, consumable: 4, resource: 5 };
 const _SLOT_SORT_ORDER = { weapon: 0, offhand: 1, helmet: 2, chest: 3, legs: 4, boots: 5, gloves: 6, cloak: 7, ring: 8, ring2: 9, amulet: 10, bag: 11 };
 const _RARITY_SORT_ORDER = { artifact: 0, legendary: 1, unique: 2, epic: 3, rare: 4, uncommon: 5, normal: 6 };
 
-export function sortInventory(items, rows) {
+export function sortInventory(items, rows, cols = INV_COLS) {
   const sorted = [...items].sort((a, b) => {
     const itemA = getItem(a.itemId);
     const itemB = getItem(b.itemId);
@@ -302,12 +302,12 @@ export function sortInventory(items, rows) {
   let newGrid = [];
   const skipped = [];
   for (const placed of sorted) {
-    const pos = autoPlace(newGrid, placed.itemId, rows);
+    const pos = autoPlace(newGrid, placed.itemId, rows, cols);
     if (pos) newGrid.push({ ...placed, x: pos.x, y: pos.y });
     else skipped.push(placed);
   }
   for (const placed of skipped) {
-    const pos = autoPlace(newGrid, placed.itemId, rows);
+    const pos = autoPlace(newGrid, placed.itemId, rows, cols);
     if (pos) newGrid.push({ ...placed, x: pos.x, y: pos.y });
     else newGrid.push(placed);
   }

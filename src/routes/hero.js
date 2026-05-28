@@ -81,6 +81,49 @@ function removeItemFromSave(saveData, entry) {
   }
 }
 
+const STONEWALL_CURRENT_EFFECTS = [
+  { type: 'block_chance', value: 12, _base: true },
+  { type: 'block_power', value: 40, _base: true },
+  { name: 'First Wall', type: 'first_incoming_guaranteed_block', counterDamageMult: 1, description: 'The first incoming hit each combat is completely blocked at no Block Power cost. The blow is immediately answered with a full-damage counter.', _base: true },
+  { type: 'block_power_regen', value: 5 },
+  { type: 'counter_chance', value: 7 },
+  { type: 'max_hp', value: 32 },
+  { type: 'crit_resist', value: 11 },
+  { type: 'magic_defense', value: 11 },
+];
+
+function migrateItemRef(itemRef) {
+  if (!itemRef || typeof itemRef !== 'object') return itemRef;
+  const item = (itemRef.itemId && typeof itemRef.itemId === 'object') ? itemRef.itemId : itemRef;
+  if (item?.id !== 'stonewall' || !Array.isArray(item.effects)) return itemRef;
+  const blockChance = item.effects.find(e => e.type === 'block_chance');
+  const needsMigration = !blockChance?._base || (blockChance?.value ?? 0) > 12 || item.effects.some(e => e.type === 'armor_pct');
+  if (!needsMigration) return itemRef;
+  const migratedItem = { ...item, effects: STONEWALL_CURRENT_EFFECTS };
+  return (itemRef.itemId && typeof itemRef.itemId === 'object') ? { ...itemRef, itemId: migratedItem } : migratedItem;
+}
+
+function migrateStonewallsInSave(hero) {
+  if (!hero) return;
+  if (hero.hero?.equip?.offhand?.id === 'stonewall') {
+    hero.hero.equip.offhand = migrateItemRef(hero.hero.equip.offhand);
+  }
+  if (Array.isArray(hero.hero?.inventory)) {
+    hero.hero.inventory = hero.hero.inventory.map(slot => {
+      const ref = slot?.itemId;
+      return (ref && typeof ref === 'object' && ref?.id === 'stonewall') ? { ...slot, itemId: migrateItemRef(ref) } : slot;
+    });
+  }
+  if (Array.isArray(hero.stash)) {
+    hero.stash = hero.stash.map(tab =>
+      Array.isArray(tab) ? tab.map(slot => {
+        const ref = slot?.itemId;
+        return (ref && typeof ref === 'object' && ref?.id === 'stonewall') ? { ...slot, itemId: migrateItemRef(ref) } : slot;
+      }) : tab
+    );
+  }
+}
+
 // Apply any pending PvP item removals to saveData and mark them applied atomically.
 // The UPDATE ... RETURNING pattern ensures concurrent POST /hero calls can't both claim the same rows.
 async function applyPendingRemovals(saveData, userId) {
@@ -299,6 +342,8 @@ async function heroRoutes(fastify) {
         }
       }
     }
+
+    migrateStonewallsInSave(hero);
 
     const removalsApplied = await applyPendingRemovals(hero, id);
     const lootApplied = await applyPendingLoot(hero, id);

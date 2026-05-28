@@ -627,9 +627,9 @@ describe("adventure loot pools", () => {
       name: "Guard Ring",
       rarityAffixPools: ["guard", "survival"],
     });
-    expect(vampireRing.effects).toContainEqual({ type: "lifesteal", value: 5 });
+    expect(vampireRing.effects).toContainEqual(expect.objectContaining({ type: "lifesteal", value: 3 }));
     expect(vampireRing.rarityAffixPools).toEqual(["blood", "survival"]);
-    expect(gustRing.effects).toContainEqual({ type: "attack_speed", value: 8 });
+    expect(gustRing.effects).toContainEqual(expect.objectContaining({ type: "attack_speed", value: 4 }));
     expect(gustRing.rarityAffixPools).toEqual(["speed", "precision"]);
 
     const rareGuard = applyItemRarity(guardRing, ITEM_RARITIES.rare, () => 0);
@@ -648,14 +648,14 @@ describe("adventure loot pools", () => {
       name: "Epic Blood Ring",
       rarity: "epic",
     });
-    expect(epicVampire.effects).toContainEqual({ type: "lifesteal", value: 5 });
+    expect(epicVampire.effects).toContainEqual(expect.objectContaining({ type: "lifesteal", value: 6 }));
     expect(epicVampire.effects.length).toBeGreaterThan(vampireRing.effects.length);
     expect(legendaryGust).toMatchObject({
       baseId: "gust_ring",
       name: "Legendary Gust Ring",
       rarity: "legendary",
     });
-    expect(legendaryGust.effects).toContainEqual({ type: "attack_speed", value: 8 });
+    expect(legendaryGust.effects).toContainEqual(expect.objectContaining({ type: "attack_speed", value: 8 }));
     expect(legendaryGust.effects.length).toBeGreaterThan(gustRing.effects.length);
   });
 

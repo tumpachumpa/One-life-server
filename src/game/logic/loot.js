@@ -514,6 +514,15 @@ export function applyItemRarity(item, rarity, rng = Math.random) {
   if (itemRarity.id === "normal" && !item.guaranteedAffixes && !baseStatEffect) return item;
   const scaledEffects = [
     ...(item.effects || []).map(effect => {
+      if ((effect?.rarityMin || effect?.rarityMax) && Number.isFinite(Number(effect.value))) {
+        const rid = itemRarity.id;
+        const min = Number(effect.rarityMin?.[rid] ?? effect.rarityMin?.normal ?? effect.value);
+        const max = Number(effect.rarityMax?.[rid] ?? effect.rarityMax?.normal ?? effect.value);
+        const scaled = (Number.isFinite(min) && Number.isFinite(max))
+          ? Math.max(1, Math.round(min + rng() * (max - min)))
+          : Number(effect.value);
+        return { ...effect, value: scaled };
+      }
       if (!ELEMENTAL_RESIST_EFFECTS.has(effect?.type) || !Number.isFinite(Number(effect.value))) return { ...effect };
       return {
         ...effect,

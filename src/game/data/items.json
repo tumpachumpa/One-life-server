@@ -238,8 +238,24 @@
       "effects": [
         {
           "type": "lifesteal",
-          "value": 5,
-          "_base": true
+          "value": 3,
+          "_base": true,
+          "rarityMin": {
+            "normal": 3,
+            "uncommon": 4,
+            "rare": 5,
+            "epic": 6,
+            "legendary": 7,
+            "artifact": 7
+          },
+          "rarityMax": {
+            "normal": 3,
+            "uncommon": 4,
+            "rare": 5,
+            "epic": 6,
+            "legendary": 7,
+            "artifact": 7
+          }
         }
       ],
       "tags": [
@@ -433,8 +449,24 @@
       "effects": [
         {
           "type": "attack_speed",
-          "value": 8,
-          "_base": true
+          "value": 4,
+          "_base": true,
+          "rarityMin": {
+            "normal": 4,
+            "uncommon": 5,
+            "rare": 5,
+            "epic": 6,
+            "legendary": 8,
+            "artifact": 8
+          },
+          "rarityMax": {
+            "normal": 4,
+            "uncommon": 5,
+            "rare": 5,
+            "epic": 6,
+            "legendary": 8,
+            "artifact": 8
+          }
         }
       ],
       "tags": [
@@ -3617,8 +3649,13 @@
           "_base": true
         }
       ],
-      "rarityAffixPools": ["guard", "survival"],
-      "blockedAffixTypes": ["armor_pct"],
+      "rarityAffixPools": [
+        "guard",
+        "survival"
+      ],
+      "blockedAffixTypes": [
+        "armor_pct"
+      ],
       "tags": [
         "shield",
         "offhand",
@@ -3631,7 +3668,6 @@
       "price": 5000,
       "dropWeight": 0,
       "icon": "/assets/items/Stonewall.png"
-
     },
     {
       "id": "spider_silk_cape",
@@ -3881,7 +3917,23 @@
         {
           "type": "block_chance",
           "value": 4,
-          "_base": true
+          "_base": true,
+          "rarityMin": {
+            "normal": 4,
+            "uncommon": 4,
+            "rare": 4,
+            "epic": 5,
+            "legendary": 5,
+            "artifact": 5
+          },
+          "rarityMax": {
+            "normal": 4,
+            "uncommon": 4,
+            "rare": 4,
+            "epic": 5,
+            "legendary": 5,
+            "artifact": 5
+          }
         }
       ],
       "tags": [
@@ -3918,7 +3970,23 @@
         {
           "type": "attack_speed",
           "value": 5,
-          "_base": true
+          "_base": true,
+          "rarityMin": {
+            "normal": 5,
+            "uncommon": 5,
+            "rare": 5,
+            "epic": 6,
+            "legendary": 6,
+            "artifact": 6
+          },
+          "rarityMax": {
+            "normal": 5,
+            "uncommon": 5,
+            "rare": 5,
+            "epic": 6,
+            "legendary": 6,
+            "artifact": 6
+          }
         }
       ],
       "tags": [
@@ -3953,8 +4021,24 @@
       "effects": [
         {
           "type": "attack_speed",
-          "value": 6,
-          "_base": true
+          "value": 4,
+          "_base": true,
+          "rarityMin": {
+            "normal": 4,
+            "uncommon": 4,
+            "rare": 5,
+            "epic": 5,
+            "legendary": 6,
+            "artifact": 6
+          },
+          "rarityMax": {
+            "normal": 4,
+            "uncommon": 4,
+            "rare": 5,
+            "epic": 5,
+            "legendary": 6,
+            "artifact": 6
+          }
         }
       ],
       "tags": [
@@ -3991,7 +4075,23 @@
         {
           "type": "dodge_chance",
           "value": 5,
-          "_base": true
+          "_base": true,
+          "rarityMin": {
+            "normal": 5,
+            "uncommon": 5,
+            "rare": 5,
+            "epic": 6,
+            "legendary": 6,
+            "artifact": 6
+          },
+          "rarityMax": {
+            "normal": 5,
+            "uncommon": 5,
+            "rare": 5,
+            "epic": 6,
+            "legendary": 6,
+            "artifact": 6
+          }
         }
       ],
       "tags": [
@@ -4027,8 +4127,24 @@
         },
         {
           "type": "dodge_chance",
-          "value": 6,
-          "_base": true
+          "value": 4,
+          "_base": true,
+          "rarityMin": {
+            "normal": 4,
+            "uncommon": 4,
+            "rare": 5,
+            "epic": 5,
+            "legendary": 6,
+            "artifact": 6
+          },
+          "rarityMax": {
+            "normal": 4,
+            "uncommon": 4,
+            "rare": 5,
+            "epic": 5,
+            "legendary": 6,
+            "artifact": 6
+          }
         }
       ],
       "tags": [
@@ -4196,8 +4312,24 @@
         },
         {
           "type": "dodge_chance",
-          "value": 5,
-          "_base": true
+          "value": 4,
+          "_base": true,
+          "rarityMin": {
+            "normal": 4,
+            "uncommon": 4,
+            "rare": 5,
+            "epic": 5,
+            "legendary": 6,
+            "artifact": 6
+          },
+          "rarityMax": {
+            "normal": 4,
+            "uncommon": 4,
+            "rare": 5,
+            "epic": 5,
+            "legendary": 6,
+            "artifact": 6
+          }
         }
       ],
       "tags": [

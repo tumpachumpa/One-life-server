@@ -4937,6 +4937,7 @@
       "name": "Spineback",
       "description": "A bow strung with manticore sinew, its stave threaded with venomous spines. Each arrow carries the pit's poison.",
       "rarity": "legendary",
+      "icon": "/assets/items/Dwarf content/Spineback bow.png",
       "size": [
         2,
         4
@@ -4977,8 +4978,7 @@
       "rarityAffixPools": [
         "precision",
         "venom"
-      ],
-      "icon": "/assets/items/Dwarf content/Spineback bow.png"
+      ]
     },
     {
       "id": "relic_warhound_fang",

@@ -74,6 +74,17 @@ export const ITEM_RARITY_TABLES = {
     ["epic", 14],
     ["legendary", 1],
   ],
+  karag_elite: [
+    ["rare", 38],
+    ["epic", 30],
+    ["legendary", 12],
+  ],
+  karag_boss: [
+    ["rare", 40],
+    ["epic", 35],
+    ["legendary", 18],
+    ["artifact", 7],
+  ],
 };
 
 export const LOOT_TABLES = lootTablesData.tables || {};

@@ -1675,6 +1675,431 @@
           "tracker_vest"
         ]
       }
+    },
+    "dwarf_sentinel": {
+      "rolls": 1,
+      "dropChance": 0.55,
+      "rarityTable": "rootspireElite",
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "itemWeights": {
+        "campfire": 3,
+        "ration": 5,
+        "mushroom": 6,
+        "warhound_meat": 3,
+        "oak_campfire": 2,
+        "rune_stone_shard": 2
+      },
+      "generatedEquipment": {
+        "enabled": true,
+        "dropChance": 0.08,
+        "itemLevelBonus": 3,
+        "baseIds": [
+          "dwarven_plate_helm", "dwarven_plate_helm",
+          "sentinel_dagger"
+        ]
+      },
+      "independentDrops": [
+        { "itemId": "rune_stone_shard", "dropChance": 0.03 }
+      ]
+    },
+    "dwarf_crossbowman": {
+      "rolls": 1,
+      "dropChance": 0.55,
+      "rarityTable": "rootspireElite",
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "itemWeights": {
+        "campfire": 3,
+        "ration": 5,
+        "mushroom": 4,
+        "warhound_meat": 3,
+        "oak_campfire": 2,
+        "rune_stone_shard": 2
+      },
+      "generatedEquipment": {
+        "enabled": true,
+        "dropChance": 0.08,
+        "itemLevelBonus": 3,
+        "baseIds": [
+          "dwarven_crossbow",
+          "karag_hunt_quiver",
+          "thornhide_hood", "thornhide_hood",
+          "thornhide_vest"
+        ]
+      },
+      "independentDrops": [
+        { "itemId": "rune_stone_shard", "dropChance": 0.03 }
+      ]
+    },
+    "dwarf_ironbreaker": {
+      "rolls": 1,
+      "dropChance": 0.55,
+      "rarityTable": "rootspireElite",
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "itemWeights": {
+        "campfire": 3,
+        "ration": 5,
+        "mushroom": 4,
+        "warhound_meat": 3,
+        "oak_campfire": 2,
+        "rune_stone_shard": 2
+      },
+      "generatedEquipment": {
+        "enabled": true,
+        "dropChance": 0.09,
+        "itemLevelBonus": 3,
+        "baseIds": [
+          "dwarven_plate_cuirass", "dwarven_plate_cuirass", "dwarven_plate_cuirass",
+          "dwarven_bulwark", "dwarven_bulwark",
+          "karag_war_maul", "karag_war_maul"
+        ]
+      },
+      "independentDrops": [
+        { "itemId": "rune_stone_shard", "dropChance": 0.03 }
+      ]
+    },
+    "dwarf_ironbreaker_f2": {
+      "rolls": 1,
+      "dropChance": 0.55,
+      "rarityTable": "rootspireElite",
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "itemWeights": {
+        "campfire": 3,
+        "ration": 5,
+        "mushroom": 4,
+        "warhound_meat": 3,
+        "oak_campfire": 2,
+        "rune_stone_shard": 2
+      },
+      "generatedEquipment": {
+        "enabled": true,
+        "dropChance": 0.09,
+        "itemLevelBonus": 5,
+        "baseIds": [
+          "dwarven_plate_cuirass", "dwarven_plate_cuirass", "dwarven_plate_cuirass",
+          "dwarven_bulwark", "dwarven_bulwark",
+          "karag_war_maul", "karag_war_maul"
+        ]
+      },
+      "independentDrops": [
+        { "itemId": "rune_stone_shard", "dropChance": 0.03 }
+      ]
+    },
+    "dwarf_handler": {
+      "rolls": 1,
+      "dropChance": 0.55,
+      "rarityTable": "rootspireElite",
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "itemWeights": {
+        "campfire": 3,
+        "ration": 5,
+        "mushroom": 4,
+        "warhound_meat": 3,
+        "oak_campfire": 2,
+        "rune_stone_shard": 2
+      },
+      "generatedEquipment": {
+        "enabled": true,
+        "dropChance": 0.08,
+        "itemLevelBonus": 3,
+        "baseIds": [
+          "command_pendant",
+          "thornhide_vest", "thornhide_vest",
+          "thornhide_leggings", "thornhide_leggings"
+        ]
+      },
+      "independentDrops": [
+        { "itemId": "rune_stone_shard", "dropChance": 0.03 }
+      ]
+    },
+    "karag_warhound": {
+      "rolls": 1,
+      "dropChance": 0.65,
+      "includeItemIds": ["warhound_meat", "campfire"],
+      "itemWeights": {
+        "warhound_meat": 8,
+        "campfire": 3
+      },
+      "relicDrop": {
+        "itemId": "relic_warhound_fang",
+        "chance": 0.5,
+        "chanceD4Bonus": 0.5
+      },
+      "equipmentDrops": {
+        "dropChance": 0.05,
+        "items": { "grimholt": 1 }
+      },
+      "independentDrops": [
+        { "itemId": "recipe_scroll_roasted_warhound", "dropChance": 0.03 }
+      ]
+    },
+    "dwarf_berserker": {
+      "rolls": 1,
+      "dropChance": 0.55,
+      "rarityTable": "rootspireElite",
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "itemWeights": {
+        "campfire": 3,
+        "ration": 5,
+        "mushroom": 4,
+        "warhound_meat": 3,
+        "oak_campfire": 2,
+        "rune_stone_shard": 2
+      },
+      "generatedEquipment": {
+        "enabled": true,
+        "dropChance": 0.10,
+        "itemLevelBonus": 3,
+        "baseIds": [
+          "karag_warblade", "karag_warblade",
+          "dwarven_plate_legguards", "dwarven_plate_legguards"
+        ]
+      },
+      "independentDrops": [
+        { "itemId": "rune_stone_shard", "dropChance": 0.03 }
+      ]
+    },
+    "bolgrak_stonefist": {
+      "rolls": 1,
+      "dropChance": 1.0,
+      "rarityTable": "karag_elite",
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "itemWeights": {
+        "campfire": 3,
+        "ration": 5,
+        "mushroom": 4,
+        "warhound_meat": 3,
+        "oak_campfire": 2,
+        "rune_stone_shard": 2
+      },
+      "generatedEquipment": {
+        "enabled": true,
+        "dropChance": 0.20,
+        "itemLevelBonus": 6,
+        "baseIds": [
+          "runic_maul", "runic_maul",
+          "dwarven_plate_cuirass", "dwarven_plate_cuirass", "dwarven_plate_cuirass",
+          "dwarven_bulwark", "dwarven_bulwark", "dwarven_bulwark",
+          "forge_power_ring", "forge_power_ring"
+        ]
+      },
+      "stoneDrop": {
+        "maxRarity": "rare",
+        "baseChance": 4,
+        "chanceD4Bonus": 4
+      },
+      "guaranteedDrops": ["rune_stone_shard"]
+    },
+    "pit_manticore": {
+      "rolls": 1,
+      "dropChance": 0.65,
+      "rarityTable": "rootspireElite",
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "itemWeights": {
+        "campfire": 3,
+        "ration": 5,
+        "mushroom": 4,
+        "warhound_meat": 3,
+        "oak_campfire": 2,
+        "rune_stone_shard": 2
+      },
+      "relicDrop": {
+        "itemId": "relic_manticore_spine",
+        "chance": 1,
+        "chanceD6Bonus": 3
+      },
+      "independentDrops": [
+        { "itemId": "manticore_meat", "dropChance": 0.25 },
+        { "itemId": "manticore_hide", "dropChance": 0.10 },
+        { "itemId": "recipe_scroll_manticore_stew", "dropChance": 0.05 },
+        { "itemId": "spineback_bow", "dropChance": 0.04 }
+      ]
+    },
+    "karag_runic_construct": {
+      "rolls": 1,
+      "dropChance": 0.55,
+      "rarityTable": "rootspireElite",
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "itemWeights": {
+        "campfire": 3,
+        "ration": 5,
+        "mushroom": 4,
+        "warhound_meat": 3,
+        "oak_campfire": 2,
+        "rune_stone_shard": 2
+      },
+      "generatedEquipment": {
+        "enabled": true,
+        "dropChance": 0.09,
+        "itemLevelBonus": 5,
+        "baseIds": [
+          "runic_maul", "runic_maul", "runic_maul",
+          "dwarven_bulwark", "dwarven_bulwark",
+          "dwarven_plate_cuirass", "dwarven_plate_cuirass"
+        ]
+      },
+      "independentDrops": [
+        { "itemId": "rune_stone_shard", "dropChance": 0.03 }
+      ]
+    },
+    "dwarf_runecarver": {
+      "rolls": 1,
+      "dropChance": 0.55,
+      "rarityTable": "rootspireElite",
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "itemWeights": {
+        "campfire": 3,
+        "ration": 5,
+        "mushroom": 4,
+        "warhound_meat": 3,
+        "oak_campfire": 2,
+        "rune_stone_shard": 2
+      },
+      "generatedEquipment": {
+        "enabled": true,
+        "dropChance": 0.08,
+        "itemLevelBonus": 5,
+        "baseIds": [
+          "karag_warblade", "karag_warblade",
+          "dwarven_plate_gauntlets", "dwarven_plate_gauntlets",
+          "command_pendant"
+        ]
+      },
+      "independentDrops": [
+        { "itemId": "rune_stone_shard", "dropChance": 0.03 }
+      ]
+    },
+    "dwarf_honor_guard": {
+      "rolls": 1,
+      "dropChance": 0.55,
+      "rarityTable": "rootspireElite",
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "itemWeights": {
+        "campfire": 3,
+        "ration": 5,
+        "mushroom": 4,
+        "warhound_meat": 3,
+        "oak_campfire": 2,
+        "rune_stone_shard": 2
+      },
+      "generatedEquipment": {
+        "enabled": true,
+        "dropChance": 0.10,
+        "itemLevelBonus": 5,
+        "baseIds": [
+          "dwarven_bulwark", "dwarven_bulwark", "dwarven_bulwark",
+          "dwarven_plate_cuirass", "dwarven_plate_cuirass",
+          "dwarven_plate_sabatons", "dwarven_plate_sabatons",
+          "double_strike_ring", "double_strike_ring"
+        ]
+      },
+      "independentDrops": [
+        { "itemId": "rune_stone_shard", "dropChance": 0.03 }
+      ]
+    },
+    "kharzun_branded": {
+      "rolls": 1,
+      "dropChance": 1.0,
+      "rarityTable": "karag_elite",
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "itemWeights": {
+        "campfire": 3,
+        "ration": 5,
+        "mushroom": 4,
+        "warhound_meat": 3,
+        "oak_campfire": 2,
+        "rune_stone_shard": 2
+      },
+      "generatedEquipment": {
+        "enabled": true,
+        "dropChance": 0.22,
+        "itemLevelBonus": 6,
+        "baseIds": [
+          "dwarven_crossbow",
+          "karag_warblade",
+          "runic_maul",
+          "karag_war_maul",
+          "sentinel_dagger",
+          "dwarven_plate_helm",
+          "dwarven_plate_cuirass",
+          "dwarven_plate_legguards",
+          "dwarven_plate_sabatons",
+          "dwarven_plate_gauntlets",
+          "dwarven_bulwark",
+          "thornhide_hood",
+          "thornhide_vest",
+          "thornhide_leggings",
+          "karag_hunt_quiver",
+          "command_pendant",
+          "double_strike_ring",
+          "forge_power_ring",
+          "runic_ward_ring", "runic_ward_ring"
+        ]
+      },
+      "stoneDrop": {
+        "maxRarity": "epic",
+        "baseChance": 5,
+        "chanceD4Bonus": 4
+      },
+      "guaranteedDrops": ["rune_stone_shard"],
+      "independentDrops": [
+        { "itemId": "ironthane_medallion", "dropChance": 0.01 }
+      ]
+    },
+    "karag_thorn_boss": {
+      "rolls": 2,
+      "preventDuplicateItems": true,
+      "dropChance": 1.0,
+      "rarityTable": "karag_boss",
+      "relicDrop": {
+        "itemId": "relic_durnek_sigil",
+        "chance": 0.5
+      },
+      "stoneDrop": {
+        "maxRarity": "legendary",
+        "baseChance": 8,
+        "chanceD4Bonus": 5
+      },
+      "generatedEquipment": {
+        "enabled": true,
+        "dropChance": 0.35,
+        "itemLevelBonus": 8,
+        "baseIds": [
+          "dwarven_crossbow",
+          "karag_warblade",
+          "runic_maul",
+          "karag_war_maul",
+          "sentinel_dagger",
+          "grimholt",
+          "dwarven_plate_helm",
+          "dwarven_plate_cuirass",
+          "dwarven_plate_legguards",
+          "dwarven_plate_sabatons",
+          "dwarven_plate_gauntlets",
+          "dwarven_bulwark",
+          "thornhide_hood",
+          "thornhide_vest",
+          "thornhide_leggings",
+          "karag_hunt_quiver",
+          "command_pendant",
+          "double_strike_ring",
+          "forge_power_ring",
+          "runic_ward_ring"
+        ]
+      },
+      "includeItemIds": [
+        "ironthane_signet_l",
+        "ironthane_signet_r",
+        "spineback_bow"
+      ],
+      "itemWeights": {
+        "ironthane_signet_l": 1,
+        "ironthane_signet_r": 1,
+        "spineback_bow": 2
+      },
+      "guaranteedDrops": ["rune_stone_shard"],
+      "independentDrops": [
+        { "itemId": "chimeric_mantle", "dropChance": 0.005 }
+      ]
     }
   }
 }

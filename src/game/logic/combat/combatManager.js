@@ -286,6 +286,9 @@ function createEnemyCombatant(enemyObj, id = 'enemy') {
     phase2AttackSpeed: enemyObj.phase2AttackSpeed ?? null,
     phase2SpellDamage: enemyObj.phase2SpellDamage ?? null,
     phase2Abilities: enemyObj.phase2Abilities ?? null,
+    activeEffects: basePassiveEffects.some(e => e.type === 'last_breath_once')
+      ? [...combatant.activeEffects, { type: 'last_breath' }]
+      : combatant.activeEffects,
   };
 }
 
@@ -2186,6 +2189,23 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
   let phase = state.phase;
   const boss = enemies.find(foe => foe.id === (state.bossEnemyId || 'enemy')) || enemies[0] || null;
   const bossDead = !!boss && state.bossDeathEndsFight !== false && boss.hp <= 0;
+  for (const fallen of enemies) {
+    if (fallen.hp > 0 || fallen._bondTriggered || !fallen.bond) continue;
+    fallen._bondTriggered = true;
+    for (const survivor of enemies) {
+      if (survivor.hp <= 0 || survivor.id === fallen.id || survivor.bond !== fallen.bond) continue;
+      survivor.activeEffects = survivor.activeEffects || [];
+      survivor.activeEffects.push({
+        type: 'damage_bonus_pct_buff',
+        value: 50,
+        remainingTicks: 99999,
+        source: 'bond_survivor',
+      });
+      log.push(makeEntry(tick, survivor.id, 'ability',
+        `${survivor.name} is enraged by a fallen ally! +50% damage!`,
+        0, hero.hp, survivor.hp, { abilityType: 'bond' }));
+    }
+  }
   const allEnemiesDead = enemies.length > 0 && enemies.every(foe => foe.hp <= 0);
   if (state.debugPreventHeroDeath && hero.hp <= 0 && !bossDead && !allEnemiesDead) {
     hero.hp = 1;
@@ -2523,6 +2543,16 @@ function tickActiveEffects(combatant, tick, log, procParams = null) {
           ? `${label} restores ${healed} HP. (${effect.remainingTicks} tick${effect.remainingTicks !== 1 ? 's' : ''} left)`
           : `${label}: ${combatant.name} restores ${healed} HP.`;
         log.push(makeEntry(tick, combatant.id, 'heal', text, 0, null, null));
+      }
+    }
+    if (effect.type === 'channeled_heal' && effect.remainingTicks > 0) {
+      const healAmt = Math.floor((combatant.maxHp || combatant.hp) * (effect.healPctPerTick || 5) / 100);
+      if (healAmt > 0 && combatant.hp < combatant.maxHp) {
+        combatant.hp = Math.min(combatant.maxHp, combatant.hp + healAmt);
+        const healText = combatant.isPlayer
+          ? `${effect.sourceAbilityName || 'Healing Seal'} restores ${healAmt} HP.`
+          : `${combatant.name} channels ${effect.sourceAbilityName || 'Healing Seal'}: +${healAmt} HP.`;
+        log.push(makeEntry(tick, combatant.id, 'heal', healText, 0, null, null));
       }
     }
     if ((effect.type === 'bleed' || effect.type === 'hemorrhage') && isBleedImmune(combatant)) {
@@ -4305,6 +4335,16 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
       applyHeroLifesteal(hero, applied.damage, tick, log, enemy, targetMeta);
       if (applied.damage > 0) applyCombatantStateHitReaction(hero, defender, tick, log, hero, enemy, procState);
       breakBearTrapOnAutoAttack(defender, tick, log, hero, enemy);
+      if (applied.damage > 0) {
+        const channeledHealIdx = (defender.activeEffects || []).findIndex(e => e.type === 'channeled_heal');
+        if (channeledHealIdx >= 0) {
+          const ch = defender.activeEffects[channeledHealIdx];
+          defender.activeEffects.splice(channeledHealIdx, 1);
+          log.push(makeEntry(tick, 'hero', 'interrupt',
+            `Your hit interrupts ${defender.name}'s ${ch.sourceAbilityName || 'Healing Seal'}!`,
+            0, hero.hp, enemy.hp, { abilityId: ch.sourceAbilityId || null, interrupted: true }));
+        }
+      }
       gainHeroRage(procState, action, tick);
       recordHeroCritLanded(procState, action, applied.damage);
       tryAddBerserkerCritCharge(hero, action);

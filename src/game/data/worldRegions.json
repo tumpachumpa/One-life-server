@@ -33,6 +33,16 @@
         "eastern_wilds_crossroad_2",
         "eastern_wilds_crossroad_1"
       ]
+    },
+    {
+      "id": "karag_thorn_region",
+      "name": "Karag-Thorn",
+      "description": "A hostile dwarven fortress built around an ancient forge and beast pits. No visitors are welcome.",
+      "zoneType": "gray",
+      "mapImage": "/assets/karag-thorn-map.png",
+      "locationIds": [
+        "karag_thorn"
+      ]
     }
   ]
 }

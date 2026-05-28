@@ -4700,6 +4700,499 @@
       "price": 60,
       "dropWeight": 0,
       "icon": "/assets/items/Forager satchel.png"
+    },
+    {
+      "id": "mushroom",
+      "name": "Mushroom",
+      "size": [
+        1,
+        1
+      ],
+      "type": "consumable",
+      "family": "forage",
+      "effects": [
+        {
+          "type": "restore_hunger",
+          "value": 10
+        }
+      ],
+      "tags": [
+        "food",
+        "foraged",
+        "mushroom",
+        "cooking_ingredient",
+        "consumable_raw"
+      ],
+      "price": 6,
+      "dropWeight": 0,
+      "stackable": true,
+      "icon": "/assets/items/Dwarf content/Mushroom.png"
+    },
+    {
+      "id": "warhound_meat",
+      "name": "Raw Warhound Meat",
+      "size": [
+        1,
+        1
+      ],
+      "type": "consumable",
+      "family": "raw_meat",
+      "effects": [
+        {
+          "type": "restore_hunger",
+          "value": 8
+        }
+      ],
+      "tags": [
+        "food",
+        "raw_meat",
+        "beast",
+        "cooking_ingredient",
+        "consumable_raw"
+      ],
+      "price": 8,
+      "dropWeight": 0,
+      "stackable": true,
+      "icon": "/assets/items/generated/wolf_meat.png"
+    },
+    {
+      "id": "manticore_meat",
+      "name": "Raw Manticore Meat",
+      "size": [
+        1,
+        1
+      ],
+      "type": "consumable",
+      "family": "raw_meat",
+      "effects": [
+        {
+          "type": "restore_hunger",
+          "value": 12
+        }
+      ],
+      "tags": [
+        "food",
+        "raw_meat",
+        "beast",
+        "cooking_ingredient",
+        "consumable_raw"
+      ],
+      "price": 12,
+      "dropWeight": 0,
+      "stackable": true,
+      "icon": "/assets/items/generated/wolf_meat.png"
+    },
+    {
+      "id": "manticore_hide",
+      "name": "Manticore Hide",
+      "size": [
+        1,
+        1
+      ],
+      "type": "material",
+      "tags": [
+        "material",
+        "karag_thorn",
+        "beast",
+        "crafting_ingredient"
+      ],
+      "price": 35,
+      "dropWeight": 0,
+      "stackable": true,
+      "icon": "/assets/items/Dwarf content/Chimera hide.png"
+    },
+    {
+      "id": "rune_stone_shard",
+      "name": "Rune Stone Shard",
+      "size": [
+        1,
+        1
+      ],
+      "type": "material",
+      "tags": [
+        "material",
+        "karag_thorn",
+        "forge",
+        "runeforging"
+      ],
+      "price": 18,
+      "dropWeight": 0,
+      "stackable": true,
+      "icon": "/assets/items/Dwarf content/Rune stone shard.png"
+    },
+    {
+      "id": "roasted_warhound",
+      "name": "Roasted Warhound Haunch",
+      "size": [
+        1,
+        1
+      ],
+      "type": "consumable",
+      "family": "cooked_meal",
+      "effects": [
+        {
+          "type": "restore_hunger",
+          "value": 45
+        },
+        {
+          "type": "food_buff",
+          "minutes": 4,
+          "stats": {
+            "str": 2,
+            "maxHp": 15
+          }
+        }
+      ],
+      "tags": [
+        "food",
+        "prepared_food",
+        "cooked_meal",
+        "warhound_meat",
+        "recipe_food",
+        "consumable_cooked"
+      ],
+      "price": 55,
+      "dropWeight": 0,
+      "stackable": true,
+      "icon": "/assets/items/generated/cooked_wolf_meat.png"
+    },
+    {
+      "id": "manticore_stew",
+      "name": "Manticore Stew",
+      "size": [
+        1,
+        1
+      ],
+      "type": "consumable",
+      "family": "cooked_meal",
+      "effects": [
+        {
+          "type": "restore_hunger",
+          "value": 65
+        },
+        {
+          "type": "food_buff",
+          "minutes": 6,
+          "stats": {
+            "str": 3,
+            "dex": 3,
+            "maxHp": 20
+          }
+        }
+      ],
+      "tags": [
+        "food",
+        "prepared_food",
+        "cooked_meal",
+        "manticore_meat",
+        "mushroom",
+        "recipe_food",
+        "consumable_cooked"
+      ],
+      "price": 90,
+      "dropWeight": 0,
+      "stackable": true,
+      "icon": "/assets/items/generated/hearty_stew.png"
+    },
+    {
+      "id": "recipe_scroll_roasted_warhound",
+      "name": "Recipe: Roasted Warhound Haunch",
+      "size": [
+        1,
+        1
+      ],
+      "type": "recipe_scroll",
+      "family": "recipe_scroll",
+      "unlocks": "roasted_warhound",
+      "tags": [
+        "recipe_scroll",
+        "cooking_recipe"
+      ],
+      "price": 0,
+      "dropWeight": 0,
+      "stackable": false,
+      "icon": "/assets/items/Dwarf content/Recipe.png"
+    },
+    {
+      "id": "recipe_scroll_manticore_stew",
+      "name": "Recipe: Manticore Stew",
+      "size": [
+        1,
+        1
+      ],
+      "type": "recipe_scroll",
+      "family": "recipe_scroll",
+      "unlocks": "manticore_stew",
+      "tags": [
+        "recipe_scroll",
+        "cooking_recipe"
+      ],
+      "price": 0,
+      "dropWeight": 0,
+      "stackable": false,
+      "icon": "/assets/items/Dwarf content/Recipe.png"
+    },
+    {
+      "id": "spineback_bow",
+      "name": "Spineback",
+      "description": "A bow strung with manticore sinew, its stave threaded with venomous spines. Each arrow carries the pit's poison.",
+      "rarity": "legendary",
+      "size": [
+        2,
+        4
+      ],
+      "type": "gear",
+      "slot": "weapon",
+      "family": "bow",
+      "weaponType": "two_handed_bow",
+      "hands": 2,
+      "attackSpeed": 0.88,
+      "damageDice": {
+        "count": 1,
+        "sides": 10,
+        "text": "1d10"
+      },
+      "baseStats": {
+        "damage": 14
+      },
+      "effects": [
+        {
+          "name": "Venom Spine",
+          "type": "poison_on_hit",
+          "chance": 25,
+          "duration": 3,
+          "damagePct": 0.85,
+          "_base": true
+        }
+      ],
+      "tags": [
+        "bow",
+        "weapon",
+        "ranged",
+        "two_handed",
+        "karag_thorn"
+      ],
+      "price": 420,
+      "dropWeight": 0,
+      "rarityAffixPools": [
+        "precision",
+        "venom"
+      ],
+      "icon": "/assets/items/Dwarf content/Spineback bow.png"
+    },
+    {
+      "id": "relic_warhound_fang",
+      "name": "Warhound Fang",
+      "size": [
+        1,
+        1
+      ],
+      "type": "relic",
+      "tags": [
+        "relic"
+      ],
+      "soulbound": false,
+      "source": "karag_warhound",
+      "dropWeight": 0,
+      "stackable": false,
+      "price": 0,
+      "icon": "/assets/items/Dwarf content/Warhound fang relic.png",
+      "relicPassive": {
+        "type": "attack_speed_pct",
+        "value": 5,
+        "description": "Increases your attack speed by 5%."
+      }
+    },
+    {
+      "id": "relic_manticore_spine",
+      "name": "Manticore's Spine",
+      "size": [
+        1,
+        1
+      ],
+      "type": "relic",
+      "tags": [
+        "relic"
+      ],
+      "soulbound": false,
+      "source": "pit_manticore",
+      "dropWeight": 0,
+      "stackable": false,
+      "price": 0,
+      "icon": "/assets/items/Dwarf content/Manticore_spine_relic.png",
+      "relicPassive": {
+        "type": "poison_on_hit",
+        "chance": 10,
+        "duration": 3,
+        "damagePct": 0.5,
+        "description": "Your attacks have a 10% chance to poison the target."
+      }
+    },
+    {
+      "id": "relic_durnek_sigil",
+      "name": "Iron Sigil of Durnek",
+      "size": [
+        1,
+        1
+      ],
+      "type": "relic",
+      "tags": [
+        "relic"
+      ],
+      "soulbound": false,
+      "source": "durnek_ironthane",
+      "dropWeight": 0,
+      "stackable": false,
+      "price": 0,
+      "icon": "/assets/items/Dwarf content/Relic_durnek_sigil.png",
+      "relicPassive": {
+        "type": "damage_taken_reduction_pct",
+        "value": 5,
+        "description": "Reduces all damage taken by 5%."
+      }
+    },
+    {
+      "id": "chimeric_mantle",
+      "name": "Chimeric Mantle",
+      "description": "Stitched from the hide of Kharvox himself. The runes sewn into its lining still pulse with his master's will.",
+      "rarity": "artifact",
+      "size": [
+        2,
+        3
+      ],
+      "type": "gear",
+      "slot": "cloak",
+      "family": "cloak",
+      "effects": [
+        {
+          "name": "Runic Reflection",
+          "type": "reflect_first_spell",
+          "once": true,
+          "_base": true
+        }
+      ],
+      "tags": [
+        "cloak",
+        "armor",
+        "artifact",
+        "karag_thorn"
+      ],
+      "price": 550,
+      "dropWeight": 0,
+      "rarityAffixPools": [
+        "survival",
+        "elemental"
+      ],
+      "icon": "/assets/items/Dwarf content/Chimera artifact cape.png"
+    },
+    {
+      "id": "ironthane_signet_l",
+      "name": "Ironthane's Left Signet",
+      "description": "One of a matched pair, worn by High Thane Durnek Ironthane. The brand of rulership, cast in iron and rune-fire.",
+      "rarity": "artifact",
+      "size": [
+        1,
+        1
+      ],
+      "type": "gear",
+      "slot": "ring",
+      "family": "ring",
+      "set": "ironthane_signet",
+      "effects": [
+        {
+          "type": "stat_bonus",
+          "stat": "str",
+          "value": 4,
+          "_base": true
+        }
+      ],
+      "tags": [
+        "ring",
+        "artifact",
+        "karag_thorn",
+        "ironthane_signet"
+      ],
+      "price": 480,
+      "dropWeight": 0,
+      "rarityAffixPools": [
+        "brutal",
+        "guard"
+      ],
+      "icon": "/assets/items/Dwarf content/Ironthane signet.png"
+    },
+    {
+      "id": "ironthane_signet_r",
+      "name": "Ironthane's Right Signet",
+      "description": "One of a matched pair, worn by High Thane Durnek Ironthane. The brand of rulership, cast in iron and rune-fire.",
+      "rarity": "artifact",
+      "size": [
+        1,
+        1
+      ],
+      "type": "gear",
+      "slot": "ring",
+      "family": "ring",
+      "set": "ironthane_signet",
+      "effects": [
+        {
+          "type": "stat_bonus",
+          "stat": "str",
+          "value": 4,
+          "_base": true
+        }
+      ],
+      "tags": [
+        "ring",
+        "artifact",
+        "karag_thorn",
+        "ironthane_signet"
+      ],
+      "price": 480,
+      "dropWeight": 0,
+      "rarityAffixPools": [
+        "brutal",
+        "guard"
+      ],
+      "icon": "/assets/items/Dwarf content/Ironthane signet.png"
+    },
+    {
+      "id": "ironthane_medallion",
+      "name": "Ironthane's Medallion",
+      "description": "The third piece of the High Thane's regalia. Together the set radiates an authority that bends lesser will.",
+      "rarity": "artifact",
+      "size": [
+        1,
+        1
+      ],
+      "type": "gear",
+      "slot": "amulet",
+      "family": "amulet",
+      "set": "ironthane_signet",
+      "effects": [
+        {
+          "type": "magic_find",
+          "value": 8,
+          "_base": true
+        },
+        {
+          "type": "crit_chance",
+          "value": 3,
+          "_base": true
+        }
+      ],
+      "tags": [
+        "amulet",
+        "artifact",
+        "karag_thorn",
+        "ironthane_signet"
+      ],
+      "price": 500,
+      "dropWeight": 0,
+      "rarityAffixPools": [
+        "treasure",
+        "precision"
+      ],
+      "icon": "/assets/items/Dwarf content/ironthane amulet.png"
     }
   ]
 }

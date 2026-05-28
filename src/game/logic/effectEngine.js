@@ -82,6 +82,19 @@ export function collectItemEffects(hero) {
     if (item?.enchantment?.effect?.type === 'passive_lifesteal') {
       effects.push({ type: 'lifesteal', value: item.enchantment.effect.lifestealPct || 0, source: item.uid || item.id });
     }
+    if (itemRef && typeof itemRef === 'object' && itemRef.runemarks?.marks?.length) {
+      for (const mark of itemRef.runemarks.marks) {
+        if (!mark?.type || mark.value == null) continue;
+        const source = `runemark_${slot}`;
+        if (mark.type === 'lifesteal_pct') {
+          effects.push({ type: 'lifesteal', value: mark.value, source });
+        } else if (mark.type === 'stat_bonus_str') {
+          effects.push({ type: 'stat_bonus', stat: 'str', value: mark.value, source });
+        } else {
+          effects.push({ type: mark.type, value: mark.value, source });
+        }
+      }
+    }
   }
   return effects;
 }

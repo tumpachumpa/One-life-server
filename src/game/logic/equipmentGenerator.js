@@ -274,15 +274,20 @@ function materializeAffix(definition, rarity, rng = Math.random) {
   return effect;
 }
 
-function scaleBaseEffectValueByRarity(effect, definition, rarity) {
+function scaleBaseEffectValueByRarity(effect, definition, rarity, rng = Math.random) {
   if (!definition?.rarityMin && !definition?.rarityMax) return false;
-  if (!Number.isFinite(effect.value)) return false;
   const rarityId = rarity?.id || "normal";
+  const rarityMin = Number(definition.rarityMin?.[rarityId] ?? definition.rarityMin?.normal ?? definition.min ?? definition.max ?? 0);
+  const rarityMax = Number(definition.rarityMax?.[rarityId] ?? definition.rarityMax?.normal ?? definition.max ?? definition.min ?? rarityMin);
+  if (!Number.isFinite(rarityMin) || !Number.isFinite(rarityMax)) return false;
+  if (!Number.isFinite(effect.value)) {
+    // No base value rolled — effect uses only rarity range; pick within it directly.
+    effect.value = Math.round(rarityMin + rng() * (rarityMax - rarityMin));
+    return true;
+  }
   const baseMin = Number(definition.min ?? definition.max);
   const baseMax = Number(definition.max ?? definition.min);
-  const rarityMin = Number(definition.rarityMin?.[rarityId] ?? definition.rarityMin?.normal ?? definition.min ?? definition.max);
-  const rarityMax = Number(definition.rarityMax?.[rarityId] ?? definition.rarityMax?.normal ?? definition.max ?? definition.min);
-  if (!Number.isFinite(baseMin) || !Number.isFinite(baseMax) || !Number.isFinite(rarityMin) || !Number.isFinite(rarityMax)) return false;
+  if (!Number.isFinite(baseMin) || !Number.isFinite(baseMax)) return false;
   const baseSpan = Math.max(0, baseMax - baseMin);
   const rollProgress = baseSpan > 0 ? Math.max(0, Math.min(1, (effect.value - baseMin) / baseSpan)) : 1;
   effect.value = Math.max(1, Math.round(rarityMin + rollProgress * (rarityMax - rarityMin)));
@@ -292,7 +297,7 @@ function scaleBaseEffectValueByRarity(effect, definition, rarity) {
 function materializeBaseEffect(definition, rarity, rng = Math.random) {
   const effect = materializeAffix(definition, { affixMult: 1 }, rng);
   effect._base = true;
-  if (scaleBaseEffectValueByRarity(effect, definition, rarity)) return effect;
+  if (scaleBaseEffectValueByRarity(effect, definition, rarity, rng)) return effect;
   if (!definition?.scalesWithRarity) return effect;
   const mult = Number(rarity?.statMult) || 1;
   if (Number.isFinite(effect.value)) effect.value = Math.max(1, Math.round(effect.value * mult));

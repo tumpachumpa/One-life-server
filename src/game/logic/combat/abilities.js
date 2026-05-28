@@ -1044,16 +1044,17 @@ export function resolveAbilityImpact(action, attacker, defender, tick, rng, cont
     }
 
     case 'counter_buff': {
+      const counterBonus = ability.counterBonus ?? ability.counterChanceBonus ?? 0;
       attacker.activeEffects.push({
         type: 'counter_chance_buff',
-        bonus: ability.counterBonus,
+        bonus: counterBonus,
         remainingTicks: ability.durationTicks,
         visual: ability.visual || null,
         sourceAbilityId: ability.id,
       });
-      attacker.counterChanceBonus = (attacker.counterChanceBonus || 0) + ability.counterBonus;
+      attacker.counterChanceBonus = (attacker.counterChanceBonus || 0) + counterBonus;
       const text = attacker.isPlayer
-        ? `${ability.name}: +${ability.counterBonus}% counter chance for ${ability.durationTicks} ticks.`
+        ? `${ability.name}: +${counterBonus}% counter chance for ${ability.durationTicks} ticks.`
         : `${attacker.name} uses ${ability.name}.`;
       entries.push({ type: 'ability', text, damage: 0 });
       break;
@@ -2129,6 +2130,54 @@ export function resolveAbilityImpact(action, attacker, defender, tick, rng, cont
           damage: 0,
         });
       }
+      break;
+    }
+
+    case 'enrage_buff': {
+      const attackSpeedPct = ability.attackSpeedBonusPct || 0;
+      const spellDmgBonus = ability.spellDamageBonus || 0;
+      if (attackSpeedPct > 0) {
+        attacker.activeEffects = (attacker.activeEffects || [])
+          .filter(e => !(e.type === 'attack_speed_buff' && e.sourceAbilityId === ability.id));
+        attacker.activeEffects.push({
+          type: 'attack_speed_buff',
+          value: attackSpeedPct,
+          remainingTicks: 99999,
+          sourceAbilityId: ability.id,
+          sourceAbilityName: ability.name,
+        });
+      }
+      if (spellDmgBonus > 0) {
+        attacker.spellDamage = (attacker.spellDamage || 0) + spellDmgBonus;
+        attacker.baseSpellDamage = (attacker.baseSpellDamage || 0) + spellDmgBonus;
+      }
+      entries.push({
+        type: 'ability',
+        text: attacker.isPlayer
+          ? `${ability.name}: attack speed +${attackSpeedPct}%, spell power +${spellDmgBonus}.`
+          : `${attacker.name} enrages! Attack speed and spell power surge!`,
+        damage: 0,
+      });
+      break;
+    }
+
+    case 'channeled_heal': {
+      attacker.activeEffects = (attacker.activeEffects || [])
+        .filter(e => e.sourceAbilityId !== ability.id);
+      attacker.activeEffects.push({
+        type: 'channeled_heal',
+        healPctPerTick: ability.healPctPerTick || 5,
+        remainingTicks: 99999,
+        sourceAbilityId: ability.id,
+        sourceAbilityName: ability.name,
+      });
+      entries.push({
+        type: 'ability',
+        text: attacker.isPlayer
+          ? `${ability.name}: channeling a healing seal.`
+          : `${attacker.name} begins channeling ${ability.name}! Hit to interrupt!`,
+        damage: 0,
+      });
       break;
     }
 

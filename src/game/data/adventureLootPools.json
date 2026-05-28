@@ -278,6 +278,72 @@
         "warg_meat": 2,
         "warg_fat": 2
       }
+    },
+    "karag_thorn": {
+      "rolls": 1,
+      "dropChance": 0.55,
+      "rarityTable": "rootspireElite",
+      "goodItemPenalty": 0.5,
+      "generatedEquipment": {
+        "enabled": true,
+        "weight": 38,
+        "itemLevelBonus": 5,
+        "baseIds": [
+          "dwarven_crossbow",
+          "karag_warblade",
+          "runic_maul",
+          "karag_war_maul",
+          "sentinel_dagger",
+          "grimholt",
+          "dwarven_plate_helm",
+          "dwarven_plate_cuirass",
+          "dwarven_plate_legguards",
+          "dwarven_plate_sabatons",
+          "dwarven_plate_gauntlets",
+          "dwarven_bulwark",
+          "thornhide_hood",
+          "thornhide_vest",
+          "thornhide_leggings",
+          "karag_hunt_quiver",
+          "command_pendant",
+          "double_strike_ring",
+          "forge_power_ring",
+          "runic_ward_ring"
+        ]
+      },
+      "items": [
+        {
+          "id": "ration",
+          "weight": 5
+        },
+        {
+          "id": "campfire",
+          "weight": 3
+        },
+        {
+          "id": "mushroom",
+          "weight": 4
+        },
+        {
+          "id": "warhound_meat",
+          "weight": 3
+        },
+        {
+          "id": "oak_campfire",
+          "weight": 2
+        },
+        {
+          "id": "rune_stone_shard",
+          "weight": 2
+        }
+      ],
+      "itemTiers": {
+        "campfire": 1,
+        "mushroom": 1,
+        "warhound_meat": 2,
+        "oak_campfire": 2,
+        "rune_stone_shard": 3
+      }
     }
   }
 }

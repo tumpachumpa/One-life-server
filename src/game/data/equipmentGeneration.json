@@ -613,6 +613,69 @@
         6,
         8
       ]
+    },
+    "pet_damage_quiver": {
+      "uncommon": [3, 3],
+      "rare": [3, 4],
+      "epic": [5, 6],
+      "legendary": [7, 8],
+      "artifact": [8, 10]
+    },
+    "crit_chance_axe": {
+      "uncommon": [2, 2],
+      "rare": [2, 3],
+      "epic": [3, 4],
+      "legendary": [5, 6],
+      "artifact": [6, 7]
+    },
+    "crit_chance_dagger": {
+      "normal": [2, 2],
+      "uncommon": [3, 3],
+      "rare": [4, 4],
+      "epic": [6, 6],
+      "legendary": [8, 8]
+    },
+    "parry_chance_handler": {
+      "normal": [2, 2],
+      "uncommon": [4, 4],
+      "rare": [6, 6],
+      "epic": [8, 8],
+      "legendary": [10, 10]
+    },
+    "magic_find_sentinel": {
+      "uncommon": [1, 2],
+      "rare": [3, 4],
+      "epic": [5, 6],
+      "legendary": [7, 8],
+      "artifact": [8, 9]
+    },
+    "double_hit_ring": {
+      "uncommon": [3, 4],
+      "rare": [5, 6],
+      "epic": [7, 9],
+      "legendary": [10, 13],
+      "artifact": [14, 17]
+    },
+    "damage_pct_ring": {
+      "uncommon": [3, 4],
+      "rare": [5, 7],
+      "epic": [8, 11],
+      "legendary": [12, 15],
+      "artifact": [16, 20]
+    },
+    "elemental_resist_ring": {
+      "uncommon": [4, 5],
+      "rare": [6, 8],
+      "epic": [9, 12],
+      "legendary": [13, 16],
+      "artifact": [17, 20]
+    },
+    "dex_leather": {
+      "uncommon": [2, 3],
+      "rare": [4, 5],
+      "epic": [6, 7],
+      "legendary": [8, 10],
+      "artifact": [11, 13]
     }
   },
   "weaponBases": [
@@ -1440,6 +1503,144 @@
       ],
       "price": 158,
       "icon": "/assets/items/generated/Heavy%20crossbow.png"
+    },
+    {
+      "id": "dwarven_crossbow",
+      "name": "Dwarven Crossbow",
+      "slot": "weapon",
+      "family": "crossbow",
+      "weaponType": "two_handed_crossbow",
+      "hands": 2,
+      "damageDice": { "count": 2, "sides": 8 },
+      "attackSpeed": 0.62,
+      "size": [3, 3],
+      "materialPool": ["worn", "normal", "excellent", "masterpiece"],
+      "affixPools": ["precision", "brutal"],
+      "tags": ["crossbow", "weapon", "ranged", "two_handed", "heavy", "karag_thorn"],
+      "price": 145,
+      "icon": "/assets/items/generated/Heavy%20crossbow.png"
+    },
+    {
+      "id": "karag_warblade",
+      "name": "Karag Warblade",
+      "slot": "weapon",
+      "family": "axe",
+      "weaponType": "one_handed_axe",
+      "hands": 1,
+      "damageDice": { "count": 1, "sides": 10 },
+      "attackSpeed": 0.88,
+      "size": [2, 3],
+      "materialPool": ["worn", "normal", "excellent", "masterpiece"],
+      "affixPools": ["brutal", "blood", "weapon_guard"],
+      "guaranteedAffixes": 1,
+      "effects": [
+        {
+          "type": "crit_chance",
+          "rarityMin": { "normal": 0, "uncommon": 2, "rare": 2, "epic": 3, "legendary": 5, "artifact": 6 },
+          "rarityMax": { "normal": 0, "uncommon": 2, "rare": 3, "epic": 4, "legendary": 6, "artifact": 7 }
+        }
+      ],
+      "tags": ["axe", "weapon", "melee", "one_handed", "karag_thorn"],
+      "price": 88,
+      "icon": "/assets/items/Dwarf content/Karag war_blade.png"
+    },
+    {
+      "id": "runic_maul",
+      "name": "Runic Maul",
+      "slot": "weapon",
+      "family": "mace",
+      "weaponType": "two_handed_mace",
+      "hands": 2,
+      "damageDice": { "count": 3, "sides": 8 },
+      "attackSpeed": 0.45,
+      "size": [2, 4],
+      "materialPool": ["worn", "normal", "excellent", "masterpiece"],
+      "affixPools": ["brutal"],
+      "guaranteedAffixes": 1,
+      "effects": [
+        {
+          "type": "stagger_on_hit",
+          "chance": 20,
+          "duration": 2,
+          "missPenalty": 30
+        }
+      ],
+      "tags": ["mace", "weapon", "melee", "two_handed", "heavy", "karag_thorn"],
+      "price": 168,
+      "icon": "/assets/items/Dwarf content/Runic_maul.png"
+    },
+    {
+      "id": "karag_war_maul",
+      "name": "War Maul",
+      "slot": "weapon",
+      "family": "mace",
+      "weaponType": "one_handed_mace",
+      "hands": 1,
+      "damageDice": { "count": 1, "sides": 12 },
+      "attackSpeed": 0.80,
+      "size": [2, 3],
+      "materialPool": ["worn", "normal", "excellent", "masterpiece"],
+      "affixPools": ["crusher", "guard", "weapon_guard"],
+      "guaranteedAffixes": 1,
+      "effects": [
+        {
+          "type": "stagger_on_hit",
+          "chance": 15,
+          "duration": 2,
+          "missPenalty": 25
+        }
+      ],
+      "tags": ["mace", "weapon", "melee", "one_handed", "heavy", "karag_thorn"],
+      "price": 95,
+      "icon": "/assets/items/generated/stun_mace.png"
+    },
+    {
+      "id": "sentinel_dagger",
+      "name": "Sentinel Dagger",
+      "slot": "weapon",
+      "family": "dagger",
+      "weaponType": "one_handed_dagger",
+      "hands": 1,
+      "damageDice": { "count": 1, "sides": 8 },
+      "attackSpeed": 1.1,
+      "size": [1, 2],
+      "materialPool": ["worn", "normal", "excellent", "masterpiece"],
+      "affixPools": ["speed", "precision", "venom"],
+      "guaranteedAffixes": 1,
+      "effects": [
+        {
+          "type": "crit_chance",
+          "rarityMin": { "normal": 2, "uncommon": 3, "rare": 4, "epic": 6, "legendary": 8 },
+          "rarityMax": { "normal": 2, "uncommon": 3, "rare": 4, "epic": 6, "legendary": 8 }
+        }
+      ],
+      "tags": ["dagger", "weapon", "melee", "fast", "one_handed", "karag_thorn"],
+      "price": 82,
+      "icon": "/assets/items/generated/dagger.png"
+    },
+    {
+      "id": "grimholt",
+      "name": "Grimholt",
+      "slot": "weapon",
+      "family": "sword",
+      "weaponType": "one_handed_sword",
+      "hands": 1,
+      "damageDice": { "count": 1, "sides": 6 },
+      "attackSpeed": 1.10,
+      "size": [1, 3],
+      "materialPool": ["worn", "normal", "excellent", "masterpiece"],
+      "affixPools": ["dueling", "speed"],
+      "guaranteedAffixes": 1,
+      "effects": [
+        {
+          "type": "parry_chance",
+          "rarityMin": { "normal": 2, "uncommon": 4, "rare": 6, "epic": 8, "legendary": 10 },
+          "rarityMax": { "normal": 2, "uncommon": 4, "rare": 6, "epic": 8, "legendary": 10 }
+        }
+      ],
+      "tags": ["sword", "weapon", "melee", "one_handed", "fast", "karag_thorn"],
+      "price": 72,
+      "icon": "/assets/items/Dwarf content/Grimholt.png"
     }
   ],
   "armorBases": [
@@ -3986,6 +4187,283 @@
       ],
       "price": 195,
       "icon": "/assets/items/Halberd.png"
+    },
+    {
+      "id": "dwarven_plate_helm",
+      "name": "Dwarven Plate Helm",
+      "slot": "helmet",
+      "family": "armor",
+      "armorType": "heavy",
+      "armorDice": { "count": 2, "sides": 8 },
+      "size": [2, 2],
+      "materialPool": ["worn", "normal", "excellent", "masterpiece"],
+      "affixPools": ["guard", "survival"],
+      "effects": [
+        { "type": "all_elemental_resist", "value": 5 }
+      ],
+      "tags": ["helmet", "heavy", "plate", "armor_heavy", "karag_thorn", "dwarven_plate"],
+      "price": 142,
+      "icon": "/assets/items/generated/plate_helm.png"
+    },
+    {
+      "id": "dwarven_plate_cuirass",
+      "name": "Dwarven Plate Cuirass",
+      "slot": "chest",
+      "family": "armor",
+      "armorType": "heavy",
+      "armorDice": { "count": 3, "sides": 8 },
+      "size": [2, 3],
+      "materialPool": ["worn", "normal", "excellent", "masterpiece"],
+      "affixPools": ["guard", "survival"],
+      "effects": [
+        { "type": "all_elemental_resist", "value": 8 }
+      ],
+      "tags": ["chest", "heavy", "plate", "armor_heavy", "karag_thorn", "dwarven_plate"],
+      "price": 205,
+      "icon": "/assets/items/generated/iron_chest.png"
+    },
+    {
+      "id": "dwarven_plate_legguards",
+      "name": "Dwarven Plate Legguards",
+      "slot": "legs",
+      "family": "armor",
+      "armorType": "heavy",
+      "armorDice": { "count": 2, "sides": 8 },
+      "size": [2, 3],
+      "materialPool": ["worn", "normal", "excellent", "masterpiece"],
+      "affixPools": ["guard", "survival"],
+      "effects": [
+        { "type": "all_elemental_resist", "value": 5 }
+      ],
+      "tags": ["legs", "heavy", "plate", "armor_heavy", "karag_thorn", "dwarven_plate"],
+      "price": 168,
+      "icon": "/assets/items/generated/plate_legguards.png"
+    },
+    {
+      "id": "dwarven_plate_sabatons",
+      "name": "Dwarven Plate Sabatons",
+      "slot": "boots",
+      "family": "armor",
+      "armorType": "heavy",
+      "armorDice": { "count": 1, "sides": 8 },
+      "size": [2, 2],
+      "materialPool": ["worn", "normal", "excellent", "masterpiece"],
+      "affixPools": ["guard", "survival"],
+      "effects": [
+        { "type": "all_elemental_resist", "value": 4 }
+      ],
+      "tags": ["boots", "heavy", "plate", "armor_heavy", "karag_thorn", "dwarven_plate"],
+      "price": 125,
+      "icon": "/assets/items/generated/Leather%20boots.png?v=2"
+    },
+    {
+      "id": "dwarven_plate_gauntlets",
+      "name": "Dwarven Plate Gauntlets",
+      "slot": "gloves",
+      "family": "armor",
+      "armorType": "heavy",
+      "armorDice": { "count": 1, "sides": 8 },
+      "size": [2, 2],
+      "materialPool": ["worn", "normal", "excellent", "masterpiece"],
+      "affixPools": ["guard", "crusher"],
+      "effects": [
+        { "type": "all_elemental_resist", "value": 4 }
+      ],
+      "tags": ["gloves", "heavy", "plate", "armor_heavy", "karag_thorn", "dwarven_plate"],
+      "price": 125,
+      "icon": "/assets/items/generated/duelist_gloves.png"
+    },
+    {
+      "id": "dwarven_bulwark",
+      "name": "Dwarven Bulwark",
+      "slot": "offhand",
+      "family": "shield",
+      "armorType": "shield",
+      "armorDice": { "count": 2, "sides": 6 },
+      "size": [2, 3],
+      "materialPool": ["worn", "normal", "excellent", "masterpiece"],
+      "affixPools": ["guard", "survival"],
+      "effects": [
+        { "type": "block_chance", "value": 9 },
+        { "type": "block_power", "value": 26 }
+      ],
+      "tags": ["shield", "heavy", "dwarven", "karag_thorn"],
+      "price": 145,
+      "icon": "/assets/items/generated/tower_shield.png"
+    },
+    {
+      "id": "thornhide_hood",
+      "name": "Thornhide Hood",
+      "slot": "helmet",
+      "family": "armor",
+      "armorType": "medium",
+      "armorDice": { "count": 2, "sides": 4 },
+      "size": [2, 2],
+      "materialPool": ["worn", "normal", "excellent", "masterpiece"],
+      "affixPools": ["speed", "precision", "survival"],
+      "guaranteedAffixes": 1,
+      "effects": [
+        {
+          "type": "stat_bonus",
+          "stat": "dex",
+          "rarityMin": { "normal": 0, "uncommon": 2, "rare": 4, "epic": 6, "legendary": 8, "artifact": 11 },
+          "rarityMax": { "normal": 0, "uncommon": 3, "rare": 5, "epic": 7, "legendary": 10, "artifact": 13 }
+        }
+      ],
+      "tags": ["helmet", "medium", "leather", "armor_medium", "karag_thorn", "thornhide"],
+      "price": 95,
+      "icon": "/assets/items/Dwarf content/Thornhide leather hood.png"
+    },
+    {
+      "id": "thornhide_vest",
+      "name": "Thornhide Vest",
+      "slot": "chest",
+      "family": "armor",
+      "armorType": "medium",
+      "armorDice": { "count": 2, "sides": 6 },
+      "size": [2, 3],
+      "materialPool": ["worn", "normal", "excellent", "masterpiece"],
+      "affixPools": ["speed", "survival", "dueling"],
+      "guaranteedAffixes": 1,
+      "effects": [
+        {
+          "type": "stat_bonus",
+          "stat": "dex",
+          "rarityMin": { "normal": 0, "uncommon": 2, "rare": 4, "epic": 6, "legendary": 8, "artifact": 11 },
+          "rarityMax": { "normal": 0, "uncommon": 3, "rare": 5, "epic": 7, "legendary": 10, "artifact": 13 }
+        }
+      ],
+      "tags": ["chest", "medium", "leather", "armor_medium", "karag_thorn", "thornhide"],
+      "price": 128,
+      "icon": "/assets/items/Dwarf content/Thornhide leather armor.png"
+    },
+    {
+      "id": "thornhide_leggings",
+      "name": "Thornhide Leggings",
+      "slot": "legs",
+      "family": "armor",
+      "armorType": "medium",
+      "armorDice": { "count": 1, "sides": 10 },
+      "size": [2, 3],
+      "materialPool": ["worn", "normal", "excellent", "masterpiece"],
+      "affixPools": ["speed", "precision"],
+      "guaranteedAffixes": 1,
+      "effects": [
+        {
+          "type": "stat_bonus",
+          "stat": "dex",
+          "rarityMin": { "normal": 0, "uncommon": 2, "rare": 4, "epic": 6, "legendary": 8, "artifact": 11 },
+          "rarityMax": { "normal": 0, "uncommon": 3, "rare": 5, "epic": 7, "legendary": 10, "artifact": 13 }
+        }
+      ],
+      "tags": ["legs", "medium", "leather", "armor_medium", "karag_thorn", "thornhide"],
+      "price": 108,
+      "icon": "/assets/items/Dwarf content/Thornhide legs.png"
+    },
+    {
+      "id": "karag_hunt_quiver",
+      "name": "Karag Hunt Quiver",
+      "slot": "bag",
+      "family": "quiver",
+      "armorType": "quiver",
+      "size": [1, 2],
+      "materialPool": ["worn", "normal", "excellent", "masterpiece"],
+      "affixPools": ["quiver"],
+      "guaranteedAffixes": 1,
+      "effects": [
+        {
+          "type": "pet_damage_pct",
+          "rarityMin": { "normal": 0, "uncommon": 3, "rare": 3, "epic": 5, "legendary": 7, "artifact": 8 },
+          "rarityMax": { "normal": 0, "uncommon": 3, "rare": 4, "epic": 6, "legendary": 8, "artifact": 10 }
+        }
+      ],
+      "tags": ["bag", "quiver", "ranged", "karag_thorn"],
+      "price": 125,
+      "icon": "/assets/items/Dwarf content/Karag_hunt_quiver.png"
+    },
+    {
+      "id": "command_pendant",
+      "name": "Command Pendant",
+      "slot": "amulet",
+      "family": "amulet",
+      "armorType": "amulet",
+      "size": [1, 2],
+      "materialPool": ["worn", "normal", "excellent", "masterpiece"],
+      "affixPools": ["hunt", "elemental"],
+      "guaranteedAffixes": 1,
+      "effects": [
+        {
+          "type": "pet_damage_pct",
+          "rarityMin": { "normal": 0, "uncommon": 3, "rare": 3, "epic": 5, "legendary": 7, "artifact": 8 },
+          "rarityMax": { "normal": 0, "uncommon": 3, "rare": 4, "epic": 6, "legendary": 8, "artifact": 10 }
+        }
+      ],
+      "tags": ["amulet", "accessory", "karag_thorn"],
+      "price": 148,
+      "icon": "/assets/items/Dwarf content/Command_pendant.png"
+    },
+    {
+      "id": "double_strike_ring",
+      "name": "Double Strike Ring",
+      "slot": "ring",
+      "family": "ring",
+      "armorType": "ring",
+      "size": [1, 1],
+      "materialPool": ["worn", "normal", "excellent", "masterpiece"],
+      "affixPools": ["precision", "brutal"],
+      "guaranteedAffixes": 1,
+      "effects": [
+        {
+          "type": "double_hit",
+          "rarityMin": { "normal": 0, "uncommon": 3, "rare": 5, "epic": 7, "legendary": 10, "artifact": 14 },
+          "rarityMax": { "normal": 0, "uncommon": 4, "rare": 6, "epic": 9, "legendary": 13, "artifact": 17 }
+        }
+      ],
+      "tags": ["ring", "accessory", "karag_thorn"],
+      "price": 175,
+      "icon": "/assets/items/Dwarf content/Generic ring.png"
+    },
+    {
+      "id": "forge_power_ring",
+      "name": "Forge Power Ring",
+      "slot": "ring",
+      "family": "ring",
+      "armorType": "ring",
+      "size": [1, 1],
+      "materialPool": ["worn", "normal", "excellent", "masterpiece"],
+      "affixPools": ["brutal", "elemental"],
+      "guaranteedAffixes": 1,
+      "effects": [
+        {
+          "type": "damage_bonus_pct",
+          "rarityMin": { "normal": 0, "uncommon": 3, "rare": 5, "epic": 8, "legendary": 12, "artifact": 16 },
+          "rarityMax": { "normal": 0, "uncommon": 4, "rare": 7, "epic": 11, "legendary": 15, "artifact": 20 }
+        }
+      ],
+      "tags": ["ring", "accessory", "karag_thorn"],
+      "price": 175,
+      "icon": "/assets/items/Dwarf content/Generic ring.png"
+    },
+    {
+      "id": "runic_ward_ring",
+      "name": "Runic Ward Ring",
+      "slot": "ring",
+      "family": "ring",
+      "armorType": "ring",
+      "size": [1, 1],
+      "materialPool": ["worn", "normal", "excellent", "masterpiece"],
+      "affixPools": ["elemental", "survival"],
+      "guaranteedAffixes": 1,
+      "effects": [
+        {
+          "type": "all_elemental_resist",
+          "rarityMin": { "normal": 0, "uncommon": 4, "rare": 6, "epic": 9, "legendary": 13, "artifact": 17 },
+          "rarityMax": { "normal": 0, "uncommon": 5, "rare": 8, "epic": 12, "legendary": 16, "artifact": 20 }
+        }
+      ],
+      "tags": ["ring", "accessory", "karag_thorn"],
+      "price": 165,
+      "icon": "/assets/items/Dwarf content/Generic ring.png"
     }
   ],
   "grades": [
@@ -4912,6 +5390,40 @@
             "type": "max_hp",
             "value": 10
           }
+        ]
+      }
+    },
+    "dwarven_plate": {
+      "name": "Dwarven Plate",
+      "pieces": [
+        "dwarven_plate_helm",
+        "dwarven_plate_cuirass",
+        "dwarven_plate_legguards",
+        "dwarven_plate_sabatons",
+        "dwarven_plate_gauntlets"
+      ],
+      "bonuses": {
+        "3": [
+          { "type": "max_hp", "value": 40 }
+        ],
+        "5": [
+          { "type": "armor", "value": 20 }
+        ]
+      }
+    },
+    "ironthane_signet": {
+      "name": "Ironthane's Regalia",
+      "pieces": [
+        "ironthane_signet_l",
+        "ironthane_signet_r",
+        "ironthane_medallion"
+      ],
+      "bonuses": {
+        "2": [
+          { "type": "mighty_dwarf_aura_proc", "chance": 5, "value": 20, "durationMs": 4000 }
+        ],
+        "3": [
+          { "type": "damage_bonus_pct", "value": 10 }
         ]
       }
     }

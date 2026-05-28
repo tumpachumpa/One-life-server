@@ -1488,7 +1488,7 @@ export function resolveAdventureNode(adventure, node, totalCombats = 0, rng = Ma
     const bossAboveBase = difficultyStars > ADVENTURE_DIFFICULTY_START_UNLOCKED_STAR;
     const bossRarity = bossAboveBase ? rollEnemyRarity(rng, { difficultyStars, boss: true }) : getNormalEnemyRarity();
     const rolledBoss = applyEnemyRarity(scaledBoss, bossRarity, { allowBossRarity: bossAboveBase });
-    return { type: "boss", idx: node.stepIndex ?? 0, enemy: rolledBoss, enemies: [rolledBoss], bossDeathEndsFight: true, addsDespawnOnBossDeath: true, node };
+    return { type: "boss", idx: node.stepIndex ?? 0, enemy: rolledBoss, enemies: [rolledBoss], bossDeathEndsFight: node.bossDeathEndsFight ?? true, addsDespawnOnBossDeath: node.addsDespawnOnBossDeath ?? true, node };
   }
   const tableRoll = node.encounterTableId ? rollEncounterTable(node.encounterTableId, rng) : null;
   const enemies = tableRoll?.enemies?.length ? tableRoll.enemies : resolveNodeEnemies(node);

@@ -2292,6 +2292,19 @@
       "effects": [],
       "abilities": [
         {
+          "id": "karag_construct_runic_zap",
+          "name": "Runic Zap",
+          "description": "A quick discharge of runic energy that arcs toward the target.",
+          "type": "spell_attack",
+          "element": "magic",
+          "castTicks": 1,
+          "cooldownSeconds": 3,
+          "damage": 28,
+          "aiPool": true,
+          "aiUseChance": 85,
+          "aiWeight": 80
+        },
+        {
           "id": "karag_construct_rune_pulse",
           "name": "Rune Pulse",
           "description": "Discharges stored runic energy in a concentrated pulse of arcane force.",
@@ -2305,7 +2318,20 @@
           "staggerMissPenalty": 30,
           "aiPool": true,
           "aiUseChance": 80,
-          "aiWeight": 3
+          "aiWeight": 60
+        },
+        {
+          "id": "karag_construct_runic_overload",
+          "name": "Runic Overload",
+          "description": "Channels all stored runic energy into a devastating arcane blast.",
+          "type": "spell_attack",
+          "element": "magic",
+          "castTicks": 3,
+          "cooldownSeconds": 15,
+          "damage": 68,
+          "aiPool": true,
+          "aiUseChance": 70,
+          "aiWeight": 40
         }
       ],
       "lootTable": "karag_runic_construct"
@@ -2322,7 +2348,7 @@
         "maxHp": 231,
         "attack": 42,
         "armor": 16,
-        "attackSpeed": 0.95
+        "attackSpeed": 1.5
       },
       "rewards": {
         "xp": 100,

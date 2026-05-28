@@ -2206,6 +2206,9 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
         0, hero.hp, survivor.hp, { abilityType: 'bond' }));
     }
   }
+  for (const foe of enemies) {
+    if (foe.hp <= 0 && !foe.despawned) preventDeathWithLastBreath(foe, tick, log, hero);
+  }
   const allEnemiesDead = enemies.length > 0 && enemies.every(foe => foe.hp <= 0);
   if (state.debugPreventHeroDeath && hero.hp <= 0 && !bossDead && !allEnemiesDead) {
     hero.hp = 1;
@@ -2415,6 +2418,9 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
   let phase = state.phase;
   const boss = enemies.find(foe => foe.id === (state.bossEnemyId || 'enemy')) || enemies[0] || null;
   const bossDead = !!boss && state.bossDeathEndsFight !== false && boss.hp <= 0;
+  for (const foe of enemies) {
+    if (foe.hp <= 0 && !foe.despawned) preventDeathWithLastBreath(foe, tick, log, hero);
+  }
   const allEnemiesDead = enemies.length > 0 && enemies.every(foe => foe.hp <= 0);
   if (bossDead && state.addsDespawnOnBossDeath !== false) {
     enemies = enemies.map(foe => foe.id === boss.id ? foe : { ...foe, hp: 0, despawned: true });
@@ -2757,7 +2763,10 @@ function preventDeathWithLastBreath(combatant, tick, log, enemy = null, procStat
   // Consume the last_breath effect — it fires once and is gone
   combatant.activeEffects = (combatant.activeEffects || []).filter(e => e !== lastBreath);
   combatant.hp = 1;
-  log.push(makeEntry(tick, combatant.id, 'proc', 'Last Breath keeps you standing at 1 HP.', 0, combatant.hp, enemy?.hp ?? null, {
+  const lastBreathText = combatant.isPlayer
+    ? 'Last Breath keeps you standing at 1 HP.'
+    : `${combatant.name}'s Last Breath — survives at 1 HP!`;
+  log.push(makeEntry(tick, combatant.id, 'proc', lastBreathText, 0, combatant.hp, enemy?.hp ?? null, {
     statusType: 'last_breath',
     preventedDeath: true,
   }));

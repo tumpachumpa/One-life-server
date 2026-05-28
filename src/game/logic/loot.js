@@ -694,7 +694,7 @@ export function rollLootTable(tableOrId, rng = Math.random, lootBonus = 0, force
   for (const itemId of table.guaranteedDrops || []) {
     const itemDef = items.find(i => i.id === itemId);
     if (itemDef) {
-      drops.push({ ...itemDef, rarity: itemDef.rarity || "normal" });
+      drops.push({ ...itemDef });
       pickedItemIds.add(itemId);
     }
   }

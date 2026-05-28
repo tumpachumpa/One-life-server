@@ -3691,7 +3691,9 @@
               "encounterCap": 1,
               "charges": { "max": 1, "rechargeSeconds": 600 },
               "next": [],
-              "stepIndex": 16
+              "stepIndex": 16,
+              "bossDeathEndsFight": false,
+              "addsDespawnOnBossDeath": false
             }
           ]
         }

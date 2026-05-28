@@ -2046,9 +2046,7 @@
       ]
     },
     "karag_thorn_boss": {
-      "rolls": 2,
       "preventDuplicateItems": true,
-      "dropChance": 1.0,
       "rarityTable": "karag_boss",
       "relicDrop": {
         "itemId": "relic_durnek_sigil",
@@ -2086,18 +2084,10 @@
           "runic_ward_ring"
         ]
       },
-      "includeItemIds": [
-        "ironthane_signet_l",
-        "ironthane_signet_r",
-        "spineback_bow"
-      ],
-      "itemWeights": {
-        "ironthane_signet_l": 1,
-        "ironthane_signet_r": 1,
-        "spineback_bow": 2
-      },
       "guaranteedDrops": ["rune_stone_shard"],
       "independentDrops": [
+        { "itemId": "ironthane_signet_l", "dropChance": 0.005 },
+        { "itemId": "ironthane_signet_r", "dropChance": 0.005 },
         { "itemId": "chimeric_mantle", "dropChance": 0.005 }
       ]
     }

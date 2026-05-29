@@ -3403,6 +3403,10 @@ function applyRelentlessPressure(hero, enemy, allies = [], procState = null) {
       value: heroBonus,
       source: RELENTLESS_PRESSURE_SOURCE,
     });
+    hero.passiveEffects.push({
+      type: 'relentless_pressure_active',
+      source: RELENTLESS_PRESSURE_SOURCE,
+    });
   }
   if (petBonus > 0) {
     for (const ally of allies || []) {
@@ -3410,6 +3414,10 @@ function applyRelentlessPressure(hero, enemy, allies = [], procState = null) {
       ally.passiveEffects.push({
         type: 'attack_speed_bonus_pct',
         value: petBonus,
+        source: RELENTLESS_PRESSURE_SOURCE,
+      });
+      ally.passiveEffects.push({
+        type: 'relentless_pressure_active',
         source: RELENTLESS_PRESSURE_SOURCE,
       });
     }

@@ -1745,6 +1745,16 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
   applyPetDeathSaves(hero, allies, procState, tick, log);
   applyPetLowHpGuards(hero, allies, procState, tick, log);
   applyThresholdEffects(heroProcNodes, procState, hero, enemy, allies);
+  if (procState.rpJustActivated) {
+    const rpEffect = (hero.basePassiveEffects || []).find(e => e.type === 'relentless_pressure');
+    const spd = rpEffect?.heroAttackSpeedPct || rpEffect?.value || 0;
+    log.push(makeEntry(tick, 'hero', 'proc', `Relentless Pressure: +${spd}% attack speed while enemy bleeds/poisons.`, 0, hero.hp, enemy?.hp ?? null, { source: RELENTLESS_PRESSURE_SOURCE }));
+    procState.rpJustActivated = false;
+  }
+  if (procState.rpJustDeactivated) {
+    log.push(makeEntry(tick, 'hero', 'proc', `Relentless Pressure fades.`, 0, hero.hp, enemy?.hp ?? null, { source: RELENTLESS_PRESSURE_SOURCE }));
+    procState.rpJustDeactivated = false;
+  }
   regenerateBlockPower(hero);
   for (const ally of allies) regenerateBlockPower(ally);
   for (const foe of enemies) regenerateBlockPower(foe);
@@ -3375,7 +3385,9 @@ function hasActiveDot(combatant) {
     && (effect.remainingTicks || 0) > 0);
 }
 
-function applyRelentlessPressure(hero, enemy, allies = []) {
+function applyRelentlessPressure(hero, enemy, allies = [], procState = null) {
+  const wasActive = !!(procState?.relentlessPressureActive);
+
   hero.passiveEffects = (hero.passiveEffects || []).filter(effect => effect.source !== RELENTLESS_PRESSURE_SOURCE);
   for (const ally of allies || []) {
     if (!ally?.isAlly) continue;
@@ -3383,7 +3395,16 @@ function applyRelentlessPressure(hero, enemy, allies = []) {
   }
 
   const effect = (hero.passiveEffects || []).find(entry => entry.type === 'relentless_pressure') || null;
-  if (!effect || !hasActiveDot(enemy)) return;
+  const dotActive = hasActiveDot(enemy);
+  const isActive = !!(effect && dotActive);
+
+  if (procState) {
+    procState.relentlessPressureActive = isActive;
+    if (isActive && !wasActive) procState.rpJustActivated = true;
+    else if (!isActive && wasActive) procState.rpJustDeactivated = true;
+  }
+
+  if (!isActive) return;
 
   const heroBonus = Math.max(0, effect.heroAttackSpeedPct || effect.value || 0);
   const petBonus = Math.max(0, effect.petAttackSpeedPct || effect.allyAttackSpeedPct || 0);
@@ -5993,7 +6014,7 @@ function applyThresholdEffects(heroProcNodes, procState, hero, enemy, allies = [
     hero.passiveEffects.push({ type: 'threshold_status', statusType: node.id });
     hero.passiveEffects.push(...effects.map(e => (e.chance > 0 ? { ...e, _threshold: true } : e)));
   }
-  applyRelentlessPressure(hero, enemy, allies);
+  applyRelentlessPressure(hero, enemy, allies, procState);
   applyPetAliveDamageReduction(hero, allies);
 }
 

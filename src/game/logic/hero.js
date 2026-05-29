@@ -677,7 +677,7 @@ export function calcStats(hero) {
   stats.finesseScaling = hero?.heroClass === "rogue";
 
   // Apply passive enchantment effects from equipped items and inventory
-  applyEnchantmentPassives(hero, stats, equipment);
+  applyEnchantmentPassives(stats, equipment);
 
   // Apply relic stat bonuses (e.g. max_hp_pct_bonus)
   const relicBoostedStats = applyRelicStatBonuses(hero, stats);
@@ -687,20 +687,14 @@ export function calcStats(hero) {
 }
 
 /**
- * Apply passive stat bonuses from enchantments on equipped items and inventory items.
+ * Apply passive stat bonuses from enchantments on equipped items.
  * Modifies the stats object in-place.
  */
-function applyEnchantmentPassives(hero, stats, equipment) {
-  // Collect enchantments from equipped items
+function applyEnchantmentPassives(stats, equipment) {
+  // Collect enchantments from equipped items only
   const enchantedItems = [];
   for (const [, item] of Object.entries(equipment || {})) {
     if (item?.enchantment) enchantedItems.push(item);
-  }
-  // Collect enchantments from inventory items (object-form itemId with enchantment)
-  for (const placed of (hero?.inventory || [])) {
-    if (placed?.itemId && typeof placed.itemId === 'object' && placed.itemId.enchantment) {
-      enchantedItems.push(placed.itemId);
-    }
   }
 
   let totalArmorBonus = 0;

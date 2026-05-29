@@ -608,7 +608,10 @@
       "effects": [
         {
           "type": "attack_speed",
-          "value": 4
+          "value": 4,
+          "_base": true,
+          "rarityMin": { "normal": 4, "uncommon": 5, "rare": 7, "epic": 10, "legendary": 13, "artifact": 16 },
+          "rarityMax": { "normal": 4, "uncommon": 6, "rare": 9, "epic": 12, "legendary": 15, "artifact": 20 }
         }
       ],
       "rarityAffixPools": [

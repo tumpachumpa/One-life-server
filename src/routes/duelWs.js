@@ -1,5 +1,27 @@
+'use strict';
+
 const { WebSocketServer } = require('ws');
 const { createVerifier } = require('fast-jwt');
+
+// The combat engine is ESM (src/game has { "type": "module" }); CommonJS loads it
+// via dynamic import, the same pattern routes/adventure.js uses. Kick the load off
+// at module init so it's resolved before the first duel ticks.
+const combatModP = import('../game/logic/combat/combatManager.js');
+const typesModP  = import('../game/logic/combat/types.js');
+let _combat = null;
+async function loadCombat() {
+  if (_combat) return _combat;
+  const [cm, types] = await Promise.all([combatModP, typesModP]);
+  _combat = {
+    initCombat:             cm.initCombat,
+    processTick:            cm.processTick,
+    processAutoAttackFrame: cm.processAutoAttackFrame,
+    ACTION: types.ACTION,
+    PHASE:  types.PHASE,
+    TICK_MS: types.TICK_MS,
+  };
+  return _combat;
+}
 
 const SLOT_TO_ACTION = [
   'ability_0', 'ability_1', 'ability_2',
@@ -7,10 +29,14 @@ const SLOT_TO_ACTION = [
 ];
 const ACTION_NONE = 'none';
 const SESSION_TTL_MS = 10 * 60 * 1000;
-const TICK_RESOLVE_TIMEOUT_MS = 600; // wait up to 600ms for both inputs before defaulting
+const MAX_DUEL_TICKS = 1200; // 20 min at 1s/tick — hard cap against runaway fights
 
-// sessionId → { p1: { ws, userId } | null, p2: { ws, userId } | null, createdAt, tickInputs }
-// tickInputs: Map of tick → { p1: string|null, p2: string|null, timer: TimeoutId }
+// sessionId → {
+//   p1: { ws, userId, heroInitArgs } | null,
+//   p2: { ... } | null,
+//   createdAt,
+//   combat: { state, timer, tickCount, logCursor, pendingP1, pendingP2, ended } | null,
+// }
 const sessions = new Map();
 
 let _verify = null;
@@ -23,13 +49,111 @@ function send(ws, obj) {
   if (ws && ws.readyState === 1) ws.send(JSON.stringify(obj));
 }
 
+function broadcast(session, obj) {
+  send(session.p1?.ws, obj);
+  send(session.p2?.ws, obj);
+}
+
 function pruneStale() {
   const now = Date.now();
   for (const [id, s] of sessions) {
-    if (now - s.createdAt > SESSION_TTL_MS) sessions.delete(id);
+    if (now - s.createdAt > SESSION_TTL_MS) {
+      if (s.combat?.timer) clearInterval(s.combat.timer);
+      sessions.delete(id);
+    }
   }
 }
 setInterval(pruneStale, 60_000).unref();
+
+// ── Authoritative simulation ───────────────────────────────────────────────────
+// p1 = hero, p2 = opponent. One sim is the single source of truth; both clients
+// render the DUEL_TICK / DUEL_END it broadcasts (no client-side simulation).
+
+async function startCombat(session) {
+  if (session.combat || !session.p1 || !session.p2) return;
+  const C = await loadCombat();
+  // A player may have dropped while the engine module was loading.
+  if (!session.p1 || !session.p2) return;
+
+  // p1's heroInitArgs already contains its own enemyObj (its snapshot of p2); we
+  // override enemyProcNodes with p2's real proc nodes so both sides' procs fire.
+  const initArgs = {
+    ...session.p1.heroInitArgs,
+    enemyProcNodes: session.p2.heroInitArgs?.heroProcNodes || [],
+  };
+  const state = C.initCombat(initArgs);
+  session.combat = {
+    state,
+    tickCount: 0,
+    logCursor: (state.log || []).length,
+    pendingP1: null,
+    pendingP2: null,
+    ended: false,
+    timer: null,
+  };
+  session.combat.timer = setInterval(() => runDuelTick(session, C), C.TICK_MS);
+}
+
+function runDuelTick(session, C) {
+  const cm = session.combat;
+  if (!cm || cm.ended) return;
+
+  cm.tickCount++;
+  if (cm.tickCount > MAX_DUEL_TICKS) {
+    endDuel(session, null, null); // timeout / draw — no winner
+    return;
+  }
+
+  const p1Action = cm.pendingP1 ?? C.ACTION.NONE;
+  const p2Action = cm.pendingP2 ?? C.ACTION.NONE;
+  cm.pendingP1 = null;
+  cm.pendingP2 = null;
+
+  // Advance auto-attacks by exactly one tick (fixed TICK_MS, never wall-clock —
+  // a wall-clock delta would burst on an event-loop stall). Then resolve the tick
+  // with p1 as hero and p2 as the manual enemy input.
+  let state = C.processAutoAttackFrame(cm.state, C.TICK_MS, Math.random);
+  state = C.processTick(state, p1Action, Math.random, {
+    disableEnemyAi: true,
+    enemyActions: { enemy: { action: p2Action, targetId: null } },
+  });
+  cm.state = state;
+
+  const newLogEntries = (state.log || []).slice(cm.logCursor);
+  cm.logCursor = (state.log || []).length;
+
+  const heroHp = Math.max(0, Math.floor(state.combatants.hero?.hp ?? 0));
+  const enemyC = state.combatants.enemy || (state.combatants.enemies || [])[0];
+  const opponentHp = Math.max(0, Math.floor(enemyC?.hp ?? 0));
+
+  broadcast(session, {
+    type: 'duel_tick',
+    tick: state.tick,
+    phase: state.phase,
+    p1Hp: heroHp,
+    p2Hp: opponentHp,
+    newLogEntries,
+  });
+
+  if (state.phase !== C.PHASE.FIGHTING) {
+    const p1Won = state.phase === C.PHASE.WON;
+    endDuel(
+      session,
+      p1Won ? session.p1?.userId : session.p2?.userId,
+      p1Won ? session.p2?.userId : session.p1?.userId,
+    );
+  }
+}
+
+function endDuel(session, winnerId, loserId) {
+  const cm = session.combat;
+  if (cm) {
+    if (cm.ended) return;
+    cm.ended = true;
+    clearInterval(cm.timer);
+  }
+  broadcast(session, { type: 'duel_end', winnerId: winnerId || null, loserId: loserId || null });
+}
 
 function setupDuelWs(httpServer) {
   const wss = new WebSocketServer({ noServer: true });
@@ -64,24 +188,34 @@ function setupDuelWs(httpServer) {
           ws.close();
           return;
         }
+        if (!msg.heroInitArgs || typeof msg.heroInitArgs !== 'object') {
+          send(ws, { type: 'error', code: 'BAD_REQUEST', message: 'heroInitArgs required' });
+          ws.close();
+          return;
+        }
 
         pruneStale();
         let session = sessions.get(sessionId);
         if (!session) {
-          session = { p1: null, p2: null, createdAt: Date.now() };
+          session = { p1: null, p2: null, createdAt: Date.now(), combat: null };
           sessions.set(sessionId, session);
         }
 
         if (!session.p1) {
-          session.p1 = { ws, userId };
+          session.p1 = { ws, userId, heroInitArgs: msg.heroInitArgs };
           role = 'p1';
-          send(ws, { type: 'duel_state', sessionId, ready: false });
+          // `side` lets the client map p1Hp/p2Hp onto me/opponent (casual assigns
+          // p1/p2 by connection order, not challenger/defender).
+          send(ws, { type: 'duel_state', sessionId, ready: false, side: 'p1' });
         } else if (!session.p2 && session.p1.userId !== userId) {
-          session.p2 = { ws, userId };
+          session.p2 = { ws, userId, heroInitArgs: msg.heroInitArgs };
           role = 'p2';
-          const readyMsg = { type: 'duel_state', sessionId, ready: true };
-          send(session.p1.ws, readyMsg);
-          send(session.p2.ws, readyMsg);
+          send(ws, { type: 'duel_state', sessionId, ready: false, side: 'p2' });
+          broadcast(session, { type: 'duel_state', sessionId, ready: true });
+          startCombat(session).catch(err => {
+            console.error('[duel] startCombat failed', err);
+            broadcast(session, { type: 'error', code: 'DUEL_INIT_FAILED', message: 'Could not start duel' });
+          });
         } else {
           send(ws, { type: 'error', code: 'SESSION_FULL', message: 'Session full or already joined' });
           ws.close();
@@ -92,58 +226,12 @@ function setupDuelWs(httpServer) {
       if (msg.type === 'duel_action') {
         if (!sessionId || !role) return;
         const session = sessions.get(sessionId);
-        if (!session) return;
+        if (!session || !session.combat || session.combat.ended) return;
 
         const slot = typeof msg.abilitySlot === 'number' ? msg.abilitySlot : -1;
         const action = slot >= 0 && slot <= 5 ? SLOT_TO_ACTION[slot] : ACTION_NONE;
-
-        if (role === 'p1') {
-          send(session.p2?.ws, { type: 'duel_tick', p1Action: action, p2Action: ACTION_NONE });
-        } else {
-          send(session.p1?.ws, { type: 'duel_tick', p1Action: ACTION_NONE, p2Action: action });
-        }
-      }
-
-      // Lockstep tick input: client submits their intended action for a given tick.
-      // When both players have submitted (or timeout), broadcast the resolved tick to both.
-      if (msg.type === 'duel_tick_input') {
-        if (!sessionId || !role) return;
-        const session = sessions.get(sessionId);
-        if (!session || !session.p1 || !session.p2) return;
-
-        const tick = typeof msg.tick === 'number' ? msg.tick : -1;
-        if (tick < 0 || tick > 10000) return; // sanity check
-        const rawAction = typeof msg.action === 'string' ? msg.action : ACTION_NONE;
-        // Normalise: only allow known action strings
-        const VALID_ACTIONS = new Set([ACTION_NONE, 'basic_attack',
-          'ability_0', 'ability_1', 'ability_2', 'ability_3', 'ability_4', 'ability_5']);
-        const action = VALID_ACTIONS.has(rawAction) ? rawAction : ACTION_NONE;
-
-        if (!session.tickInputs) session.tickInputs = new Map();
-
-        const resolveAndBroadcast = (td, resolvedTick) => {
-          clearTimeout(td.timer);
-          // Default to basic_attack (not none) so timed-out players still auto-attack.
-          const p1 = td.p1 ?? 'basic_attack';
-          const p2 = td.p2 ?? 'basic_attack';
-          session.tickInputs.delete(resolvedTick);
-          const msg = { type: 'duel_tick_resolved', tick: resolvedTick, p1Action: p1, p2Action: p2 };
-          send(session.p1?.ws, msg);
-          send(session.p2?.ws, msg);
-        };
-
-        if (!session.tickInputs.has(tick)) {
-          const td = { p1: null, p2: null, timer: null };
-          td.timer = setTimeout(() => resolveAndBroadcast(td, tick), TICK_RESOLVE_TIMEOUT_MS);
-          session.tickInputs.set(tick, td);
-        }
-
-        const td = session.tickInputs.get(tick);
-        if (td[role] === null) td[role] = action; // first submission wins
-
-        if (td.p1 !== null && td.p2 !== null) {
-          resolveAndBroadcast(td, tick);
-        }
+        if (role === 'p1') session.combat.pendingP1 = action;
+        else                session.combat.pendingP2 = action;
       }
     });
 
@@ -151,13 +239,19 @@ function setupDuelWs(httpServer) {
       if (!sessionId) return;
       const session = sessions.get(sessionId);
       if (!session) return;
-      if (role === 'p1') {
-        session.p1 = null;
-        send(session.p2?.ws, { type: 'error', code: 'OPPONENT_DISCONNECTED', message: 'Opponent disconnected' });
-      } else if (role === 'p2') {
-        session.p2 = null;
-        send(session.p1?.ws, { type: 'error', code: 'OPPONENT_DISCONNECTED', message: 'Opponent disconnected' });
+      const opponentWs = role === 'p1' ? session.p2?.ws : session.p1?.ws;
+      const opponentId = role === 'p1' ? session.p2?.userId : session.p1?.userId;
+      const leaverId   = role === 'p1' ? session.p1?.userId : session.p2?.userId;
+
+      if (session.combat && !session.combat.ended) {
+        // Mid-fight drop — opponent wins by forfeit.
+        endDuel(session, opponentId || null, leaverId || null);
+      } else if (!session.combat) {
+        // Dropped before the fight started — tell the opponent.
+        send(opponentWs, { type: 'error', code: 'OPPONENT_DISCONNECTED', message: 'Opponent disconnected' });
       }
+      if (role === 'p1') session.p1 = null;
+      else if (role === 'p2') session.p2 = null;
     });
   });
 }

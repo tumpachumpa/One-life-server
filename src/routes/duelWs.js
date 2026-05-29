@@ -67,6 +67,18 @@ function autoSchedule(c) {
   };
 }
 
+// Per-combatant display state the client can't derive without the sim: active
+// buffs/debuffs (bleed, poison, stun, damage buffs, shields…), stun expiry, and
+// whether the fighter is mid-cast. Drives the status chips and cast/auto bars.
+function combatantDisplay(c) {
+  if (!c) return null;
+  return {
+    activeEffects: Array.isArray(c.activeEffects) ? c.activeEffects : [],
+    stunUntilTick: c.stunUntilTick ?? null,
+    isCasting: !!c.isCasting,
+  };
+}
+
 function pruneStale() {
   const now = Date.now();
   for (const [id, s] of sessions) {
@@ -117,6 +129,18 @@ function runDuelTick(session, C) {
     return;
   }
 
+  try {
+    stepDuelTick(session, C, cm);
+  } catch (err) {
+    // A combat-engine edge case must NOT throw out of the interval callback — an
+    // unhandled throw here would crash the whole server process (every session).
+    // End this duel gracefully instead.
+    console.error('[duel] tick error — ending duel', err);
+    endDuel(session, null, null);
+  }
+}
+
+function stepDuelTick(session, C, cm) {
   const p1Action = cm.pendingP1 ?? C.ACTION.NONE;
   const p2Action = cm.pendingP2 ?? C.ACTION.NONE;
   cm.pendingP1 = null;
@@ -147,6 +171,8 @@ function runDuelTick(session, C) {
     p2Hp: opponentHp,
     p1Auto: autoSchedule(state.combatants.hero),
     p2Auto: autoSchedule(enemyC),
+    p1Display: combatantDisplay(state.combatants.hero),
+    p2Display: combatantDisplay(enemyC),
     newLogEntries,
   });
 

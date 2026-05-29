@@ -54,6 +54,19 @@ function broadcast(session, obj) {
   send(session.p2?.ws, obj);
 }
 
+// Compact auto-attack schedule so the client can render the autoattack charge bar
+// (the client runs no sim of its own, so it can't derive these locally).
+function autoSchedule(c) {
+  if (!c) return null;
+  return {
+    rate: c.autoAttackRate ?? null,
+    progressTicks: c.autoAttackProgressTicks ?? null,
+    lastTick: c.lastAutoAttackTick ?? null,
+    nextTick: c.nextAutoAttackTick ?? null,
+    started: !!c.autoAttackStarted,
+  };
+}
+
 function pruneStale() {
   const now = Date.now();
   for (const [id, s] of sessions) {
@@ -132,6 +145,8 @@ function runDuelTick(session, C) {
     phase: state.phase,
     p1Hp: heroHp,
     p2Hp: opponentHp,
+    p1Auto: autoSchedule(state.combatants.hero),
+    p2Auto: autoSchedule(enemyC),
     newLogEntries,
   });
 

@@ -704,7 +704,7 @@ export function resolveAbilityImpact(action, attacker, defender, tick, rng, cont
     case 'empowered_attack': {
       const variance = Math.floor(rng() * 4);
       const base = Math.max(1, attacker.damage + variance);
-      const empowered = spellDamage(attacker, Math.floor(base * ability.damageMult));
+      const empowered = applyWeaponDamageAbilityBonuses(attacker, defender, Math.floor(base * ability.damageMult));
       const critChance = getEffectiveCritChance(ability.critChance || 0, defender);
       const forcedNextCrit = !!(attacker.isPlayer && context.procState?.forcedNextCrit);
       if (forcedNextCrit) context.procState.forcedNextCrit = false;
@@ -1453,7 +1453,8 @@ export function resolveAbilityImpact(action, attacker, defender, tick, rng, cont
       const attackerIsPlayerSide = isPlayerSideCombatant(attacker);
       const variance = Math.floor(rng() * 4);
       const base = Math.max(1, attacker.damage + variance);
-      const dmg = Math.max(1, Math.floor(base * (ability.damageMult || 1.1)));
+      const raw = Math.max(1, Math.floor(base * (ability.damageMult || 1.1)));
+      const dmg = applyWeaponDamageAbilityBonuses(attacker, defender, raw);
       const result = resolvePhysicalImpact(attacker, defender, applyLowHpDamageBonuses(attacker, defender, dmg), rng);
       if (result.dodged) {
         entries.push({ type: 'dodged', text: attackerIsPlayerSide ? `${defender.name} dodges ${ability.name}!` : `You dodge ${ability.name}!`, damage: 0 });
@@ -1478,10 +1479,11 @@ export function resolveAbilityImpact(action, attacker, defender, tick, rng, cont
     case 'power_shot': {
       const variance = Math.floor(rng() * 4);
       const base = Math.max(1, attacker.damage + variance);
-      const dmg = Math.max(1, Math.floor(base * (ability.damageMult || 2)));
+      const raw = Math.max(1, Math.floor(base * (ability.damageMult || 2)));
+      const boosted = applyWeaponDamageAbilityBonuses(attacker, defender, raw);
       const critChance = getAbilityCritChance(attacker, defender);
       const isCrit = critChance > 0 && rng() * 100 < critChance;
-      const finalDmg = isCrit ? Math.floor(dmg * (attacker.critMult || 2)) : dmg;
+      const finalDmg = isCrit ? Math.floor(boosted * (attacker.critMult || 2)) : boosted;
       const result = resolvePhysicalImpact(attacker, defender, applyLowHpDamageBonuses(attacker, defender, finalDmg), rng, ability);
       if (result.dodged) {
         entries.push({ type: 'dodged', text: attacker.isPlayer ? `${defender.name} dodges ${ability.name}!` : `You dodge ${ability.name}!`, damage: 0 });
@@ -1516,7 +1518,8 @@ export function resolveAbilityImpact(action, attacker, defender, tick, rng, cont
         const variance = Math.floor(rng() * 4);
         const base = Math.max(1, attacker.damage + variance);
         const raw = Math.max(1, Math.floor(base * damageMult));
-        const result = resolvePhysicalImpact(attacker, defender, applyLowHpDamageBonuses(attacker, defender, raw), rng, ability);
+        const boosted = applyWeaponDamageAbilityBonuses(attacker, defender, raw);
+        const result = resolvePhysicalImpact(attacker, defender, applyLowHpDamageBonuses(attacker, defender, boosted), rng, ability);
         if (result.dodged) {
           dodgedHits += 1;
           continue;
@@ -1552,10 +1555,11 @@ export function resolveAbilityImpact(action, attacker, defender, tick, rng, cont
       const variance = Math.floor(rng() * 4);
       const base = Math.max(1, attacker.damage + variance);
       const raw = Math.max(1, Math.floor(base * (ability.damageMult || 2.8)));
+      const boosted = applyWeaponDamageAbilityBonuses(attacker, defender, raw);
       const critChance = getAbilityCritChance(attacker, defender);
       const isCrit = critChance > 0 && rng() * 100 < critChance;
       const critMult = (attacker.critMult || 1.5) * (1 + getAbilityCritDamageBonusPct(attacker) / 100);
-      const finalDmg = isCrit ? Math.max(1, Math.floor(raw * critMult)) : raw;
+      const finalDmg = isCrit ? Math.max(1, Math.floor(boosted * critMult)) : boosted;
       const result = resolvePhysicalImpact(attacker, defender, applyLowHpDamageBonuses(attacker, defender, finalDmg), rng, ability);
       if (result.dodged) {
         entries.push({ type: 'dodged', text: attacker.isPlayer ? `${defender.name} dodges your ${ability.name}!` : `You dodge ${ability.name}!`, damage: 0 });
@@ -1585,7 +1589,8 @@ export function resolveAbilityImpact(action, attacker, defender, tick, rng, cont
     case 'aimed_shot': {
       const variance = Math.floor(rng() * 4);
       const base = Math.max(1, attacker.damage + variance);
-      const dmg = Math.max(1, Math.floor(base * (ability.damageMult || 1.5)));
+      const raw = Math.max(1, Math.floor(base * (ability.damageMult || 1.5)));
+      const dmg = applyWeaponDamageAbilityBonuses(attacker, defender, raw);
       const critChance = getAbilityCritChance(attacker, defender, ability.critChanceBonus || 0);
       const isCrit = critChance > 0 && rng() * 100 < critChance;
       const finalDmg = isCrit ? Math.floor(dmg * (attacker.critMult || 1.5)) : dmg;
@@ -1610,7 +1615,8 @@ export function resolveAbilityImpact(action, attacker, defender, tick, rng, cont
       const attackerIsPlayerSide = isPlayerSideCombatant(attacker);
       const variance = Math.floor(rng() * 4);
       const base = Math.max(1, attacker.damage + variance);
-      const dmg = Math.max(1, Math.floor(base * (ability.damageMult || 1.3)));
+      const raw = Math.max(1, Math.floor(base * (ability.damageMult || 1.3)));
+      const dmg = applyWeaponDamageAbilityBonuses(attacker, defender, raw);
       const result = resolvePhysicalImpact(attacker, defender, applyLowHpDamageBonuses(attacker, defender, dmg), rng);
       if (result.dodged) {
         entries.push({ type: 'dodged', text: attackerIsPlayerSide ? `${defender.name} dodges ${ability.name}!` : `You dodge ${ability.name}!`, damage: 0 });

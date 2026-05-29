@@ -83,7 +83,6 @@ export const ITEM_RARITY_TABLES = {
     ["rare", 40],
     ["epic", 35],
     ["legendary", 18],
-    ["artifact", 7],
   ],
 };
 

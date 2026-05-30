@@ -4442,7 +4442,7 @@
       "armorType": "ring",
       "size": [1, 1],
       "materialPool": ["worn", "normal", "excellent", "masterpiece"],
-      "affixPools": ["brutal", "elemental"],
+      "affixPools": ["brutal", "precision", "treasure", "elemental"],
       "guaranteedAffixes": 1,
       "effects": [
         {

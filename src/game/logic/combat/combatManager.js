@@ -4938,6 +4938,19 @@ function tryApplyOnHitEffects(attacker, defender, tick, log, rng, heroConditions
   // consuming rng() at all — otherwise every passive entry shifts the sequence.
   const procRng = options.procRng || rng;
   for (const effect of getOnHitEffects(attacker, action)) {
+    if (effect.type === 'momentum_on_hit') {
+      // Enemy "Momentum" (mirrors the Fighter's): each landed hit stacks attack speed up to a cap.
+      // Stored on a single refreshing attack_speed_buff so getEffectiveAutoAttackRate picks it up;
+      // the stack count lives on the buff and fades if the attacker stops hitting.
+      const maxStacks = effect.maxStacks || 6;
+      const perStackPct = effect.perStackPct || 4;
+      const durationTicks = effect.durationTicks || 4;
+      const existing = (attacker.activeEffects || []).find(e => e.type === 'attack_speed_buff' && e.source === 'berserker_momentum');
+      const stacks = Math.min(maxStacks, (existing?.stacks || 0) + 1);
+      attacker.activeEffects = (attacker.activeEffects || []).filter(e => !(e.type === 'attack_speed_buff' && e.source === 'berserker_momentum'));
+      attacker.activeEffects.push({ type: 'attack_speed_buff', value: stacks * perStackPct, remainingTicks: durationTicks, source: 'berserker_momentum', stacks });
+      continue;
+    }
     if (effect.type === 'bleed_on_hit' && options.allowBleed === false) continue;
     if (effect.type === 'poison_on_hit' && options.allowPoison === false) continue;
     // crit-only effects skip the RNG roll entirely on non-crit hits

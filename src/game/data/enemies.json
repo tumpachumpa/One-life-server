@@ -2030,6 +2030,21 @@
           "missPenalty": 35
         }
       ],
+      "abilities": [
+        {
+          "id": "dwarf_sentinel_crossbow_volley",
+          "name": "Crossbow Volley",
+          "description": "Looses a rapid volley of crossbow bolts — three shots at 55% weapon damage each.",
+          "type": "covering_fire",
+          "castTicks": 2,
+          "cooldownSeconds": 10,
+          "hits": 3,
+          "damageMult": 0.55,
+          "aiPool": true,
+          "aiUseChance": 45,
+          "aiWeight": 2
+        }
+      ],
       "lootTable": "dwarf_sentinel"
     },
     {
@@ -2199,6 +2214,30 @@
         },
         {
           "type": "last_breath_once"
+        },
+        {
+          "type": "momentum_on_hit",
+          "perStackPct": 4,
+          "maxStacks": 6,
+          "durationTicks": 4
+        }
+      ],
+      "abilities": [
+        {
+          "id": "dwarf_berserker_headbutt",
+          "name": "Headbutt",
+          "description": "A brutal headbutt for 115% weapon damage that briefly stuns and staggers.",
+          "type": "crushing_blow",
+          "castTicks": 1.5,
+          "cooldownSeconds": 9,
+          "damageMult": 1.15,
+          "stunTicks": 1,
+          "staggerAttacks": 2,
+          "staggerDurationTicks": 2,
+          "staggerMissPenalty": 40,
+          "aiPool": true,
+          "aiUseChance": 50,
+          "aiWeight": 2
         }
       ],
       "lootTable": "dwarf_berserker"

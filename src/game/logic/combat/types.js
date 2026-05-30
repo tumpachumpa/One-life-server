@@ -1,7 +1,7 @@
 export const TICK_MS = 1000;
 export const CAST_TICKS = 2;
 export const AUTO_ATTACK_TICKS = 3;
-export const MOMENTUM_ATTACK_SPEED_PCT_PER_STACK = 6;
+export const MOMENTUM_ATTACK_SPEED_PCT_PER_STACK = 4;
 export const COMBAT_OPENING_TICKS = 2;
 export const BLOCK_DODGE_COOLDOWN = 4;
 

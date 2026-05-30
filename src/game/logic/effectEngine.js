@@ -90,6 +90,8 @@ export function collectItemEffects(hero) {
           effects.push({ type: 'lifesteal', value: mark.value, source });
         } else if (mark.type === 'stat_bonus_str') {
           effects.push({ type: 'stat_bonus', stat: 'str', value: mark.value, source });
+        } else if (mark.type === 'stat_bonus_dex') {
+          effects.push({ type: 'stat_bonus', stat: 'dex', value: mark.value, source });
         } else {
           effects.push({ type: mark.type, value: mark.value, source });
         }

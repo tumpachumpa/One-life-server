@@ -5,6 +5,20 @@ function effectHasTime(effect) {
   return effect.remainingTicks == null || effect.remainingTicks > 0;
 }
 
+// Internal cooldown on passive (chance-based) blocks. After one lands, no further passive block for
+// this many ticks (TICK_MS = 1000ms, so 3 ticks = 3s). Modelled as a self-expiring activeEffect that
+// tickActiveEffects decrements each tick. Forced/active blocks (shield wall, parry) are not gated.
+const PASSIVE_BLOCK_ICD_TICKS = 3;
+
+function isBlockOnCooldown(defender) {
+  return (defender?.activeEffects || []).some(effect => effect.type === 'block_icd' && effectHasTime(effect));
+}
+
+function startBlockCooldown(defender) {
+  defender.activeEffects = defender.activeEffects || [];
+  defender.activeEffects.push({ type: 'block_icd', remainingTicks: PASSIVE_BLOCK_ICD_TICKS });
+}
+
 function getActiveShieldUpEffect(defender, options = {}) {
   if (isBlockDisabled(defender)) return null;
   if (!options.incomingAutoAttack) return null;
@@ -108,12 +122,14 @@ export function resolveImpact(action, defender, options = {}) {
   if ((action.damage || 0) <= 0) {
     const zeroDamageBlockChance = getActiveBlockChance(defender, options);
     const zeroDamagePassiveBlock = !defender.blocking
+      && !isBlockOnCooldown(defender)
       && canSpendBlockPower(defender)
       && zeroDamageBlockChance > 0
       && options.rng
       && options.rng() * 100 < zeroDamageBlockChance;
     if (!blockDisabled && (defender.blocking || zeroDamagePassiveBlock || shieldUp)) {
       defender.blocking = false;
+      if (zeroDamagePassiveBlock) startBlockCooldown(defender);
       if (options.incomingAutoAttack) consumeIncomingAutoAttackEffects(defender);
       return {
         damage: 0,
@@ -138,6 +154,7 @@ export function resolveImpact(action, defender, options = {}) {
   const armoredDamage = applyPhysicalReduction(applyArmor(action.damage, effectiveArmor), defender);
   const blockChance = getActiveBlockChance(defender, options);
   const passiveBlock = !defender.blocking
+    && !isBlockOnCooldown(defender)
     && canSpendBlockPower(defender)
     && blockChance > 0
     && options.rng
@@ -160,6 +177,7 @@ export function resolveImpact(action, defender, options = {}) {
 
   if (!blockDisabled && (defender.blocking || passiveBlock || forcedBlock)) {
     defender.blocking = false;
+    if (passiveBlock) startBlockCooldown(defender);
     const blockEffectivenessPct = Math.max(0, Math.min(100, options.blockEffectivenessPct ?? 100));
     const available = Math.max(0, Math.floor((defender.blockPower || 0) * blockEffectivenessPct / 100));
     const absorbed = Math.min(armoredDamage, available);

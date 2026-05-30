@@ -4582,8 +4582,10 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
           const p = relic?.relicPassive;
           if (p?.type === 'barrier_on_heavy_hit') {
             const threshold = (hero.maxHp || 1) * (p.threshold || 15) / 100;
-            if (incomingDamage > threshold && !(procState.relicBarrier > 0)) {
+            const onCooldown = tick < (procState.relicBarrierCooldownUntilTick || 0);
+            if (incomingDamage > threshold && !onCooldown) {
               procState.relicBarrier = p.barrierAmount || 20;
+              procState.relicBarrierCooldownUntilTick = tick + (p.cooldownSeconds || 10);
               log.push(makeEntry(tick, 'hero', 'proc', `Black Armor: barrier of ${procState.relicBarrier} damage activated.`, 0, hero.hp, enemy.hp, {}));
             }
           }
@@ -6297,8 +6299,10 @@ export function applyRelicBarrierOnHeavyHit(heroObj, incomingDamage, tick, log, 
     const threshold = passive.threshold || 15;
     const barrierAmount = passive.barrierAmount || 20;
     const hpPct = (heroObj.maxHp || 1) * threshold / 100;
-    if (incomingDamage > hpPct && !(procState.relicBarrier > 0)) {
+    const onCooldown = tick < (procState.relicBarrierCooldownUntilTick || 0);
+    if (incomingDamage > hpPct && !onCooldown) {
       procState.relicBarrier = barrierAmount;
+      procState.relicBarrierCooldownUntilTick = tick + (passive.cooldownSeconds || 10);
       log.push(makeEntry(tick, 'hero', 'proc', `Black Armor: barrier of ${barrierAmount} damage activated.`, 0, heroObj.hp, null, {}));
     }
   }

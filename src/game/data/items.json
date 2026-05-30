@@ -3550,9 +3550,10 @@
       "icon": "/assets/items/relics/Black armor relic.png",
       "relicPassive": {
         "type": "barrier_on_heavy_hit",
-        "threshold": 15,
-        "barrierAmount": 50,
-        "description": "When you take a hit greater than 15% of your max HP, gain a barrier that absorbs 50 damage."
+        "threshold": 10,
+        "barrierAmount": 40,
+        "cooldownSeconds": 10,
+        "description": "When you take a hit greater than 10% of your max HP, gain a barrier that absorbs 40 damage. 10 second cooldown."
       }
     },
     {

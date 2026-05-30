@@ -625,7 +625,7 @@
                   "id": "warmonger_juggernaut",
                   "name": "Juggernaut",
                   "summary": [
-                    "At 10 Scar Stacks: enter Juggernaut - armor cannot be reduced, take 50% less damage, and deal 20% less damage. Lasts until combat ends."
+                    "At 10 Scar Stacks: enter Juggernaut - armor cannot be reduced, take 30% less damage, and deal 20% less damage. Lasts until combat ends."
                   ],
                   "proc": {
                     "trigger": "on_scar_stacks_reach",

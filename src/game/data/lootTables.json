@@ -404,7 +404,7 @@
         "warg_fang_necklace"
       ],
       "itemWeights": {
-        "warg_meat": 6,
+        "warg_meat": 2,
         "bone": 1,
         "warg_fat": 5,
         "warg_fang_necklace": 1
@@ -442,7 +442,7 @@
         "ration"
       ],
       "itemWeights": {
-        "warg_meat": 5,
+        "warg_meat": 2,
         "ration": 3,
         "warg_fat": 2,
         "warg_fang_necklace": 1

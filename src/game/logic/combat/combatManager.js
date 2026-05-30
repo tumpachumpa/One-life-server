@@ -26,7 +26,7 @@ const HERO_ENERGY_PER_TICK = 5;
 export const ENERGY_CLASSES = new Set(['rogue']);
 const PLAYER_BLEED_REFRESH_TICKS = 4;
 const SCAR_STACK_MAX = 15;
-const JUGGERNAUT_DAMAGE_TAKEN_REDUCTION_PCT = 50;
+const JUGGERNAUT_DAMAGE_TAKEN_REDUCTION_PCT = 30;
 const JUGGERNAUT_DAMAGE_DEALT_PCT = -20;
 const MOMENTUM_BASE_MAX = 10;
 const SUMMON_DEATH_BOSS_STUN_TICKS = 3;
@@ -5831,7 +5831,7 @@ function applyProcEffect(effect, ctx, procState, heroProcNodes, hero, enemy, tic
       break;
     case 'enter_juggernaut':
       procState.juggernaut = true;
-      log.push(makeEntry(tick, 'hero', 'proc', `JUGGERNAUT: armor cannot be reduced, -50% damage taken, -20% damage dealt.`, 0, hero.hp, enemy?.hp, {}));
+      log.push(makeEntry(tick, 'hero', 'proc', `JUGGERNAUT: armor cannot be reduced, -30% damage taken, -20% damage dealt.`, 0, hero.hp, enemy?.hp, {}));
       break;
     case 'death_cheat':
       hero.activeEffects = (hero.activeEffects || []).filter(active => active.type !== 'last_breath');

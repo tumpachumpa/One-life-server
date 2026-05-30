@@ -4231,7 +4231,8 @@
       ],
       "tags": ["chest", "heavy", "plate", "armor_heavy", "karag_thorn", "dwarven_plate"],
       "price": 205,
-      "icon": "/assets/items/Dwarven armor.png"
+      "icon": "/assets/items/Dwarven armor.png",
+      "iconScale": 1.3
     },
     {
       "id": "dwarven_plate_legguards",
@@ -4400,7 +4401,7 @@
       "armorType": "amulet",
       "size": [1, 2],
       "materialPool": ["worn", "normal", "excellent", "masterpiece"],
-      "affixPools": ["hunt", "elemental"],
+      "affixPools": ["hunt", "brutal"],
       "guaranteedAffixes": 1,
       "effects": [
         {

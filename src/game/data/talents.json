@@ -703,11 +703,11 @@
                   "id": "shadow_mark_passive",
                   "name": "Shadow Mark",
                   "summary": [
-                    "Autoattacks have a 20% chance to apply a Shadow Mark to the target. Max 5 marks."
+                    "Autoattacks have a 35% chance to apply a Shadow Mark to the target. Max 5 marks."
                   ],
                   "proc": {
                     "trigger": "on_hit",
-                    "chance": 20,
+                    "chance": 35,
                     "condition": null,
                     "effect": {
                       "type": "apply_shadow_mark",
@@ -766,6 +766,29 @@
                       "damagePct": 0.5
                     }
                   }
+                },
+                {
+                  "id": "shadow_predators_focus",
+                  "name": "Predator's Focus",
+                  "summary": [
+                    "Critical strikes refund 8 Energy.",
+                    "Your critical strikes deal +8% damage per Shadow Mark on the target (up to +40% at 5 marks)."
+                  ],
+                  "proc": {
+                    "trigger": "on_crit",
+                    "chance": 100,
+                    "condition": null,
+                    "effect": {
+                      "type": "predators_focus",
+                      "energy": 8
+                    }
+                  },
+                  "effects": [
+                    {
+                      "type": "crit_damage_pct_per_mark",
+                      "value": 8
+                    }
+                  ]
                 }
               ]
             },
@@ -1153,7 +1176,7 @@
                   "id": "bleeder_hemorrhage_mastery",
                   "name": "Hemorrhage Mastery",
                   "summary": [
-                    "When Bleed deals damage at 4+ stacks: automatically apply Hemorrhage (4% max HP per second for 4 seconds)"
+                    "When Bleed deals damage at 4+ stacks: apply Hemorrhage — 1.5% max HP as true damage per second for 3 seconds"
                   ],
                   "proc": {
                     "trigger": "on_bleed_tick",

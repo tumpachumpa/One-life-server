@@ -386,7 +386,7 @@
       ],
       "requirementLabel": "ranged weapon",
       "damageMult": 1.3,
-      "hemorrhageDamagePct": 1.25,
+      "hemorrhageDamagePct": 1.5,
       "hemorrhageDuration": 3
     },
     {

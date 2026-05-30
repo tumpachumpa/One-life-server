@@ -408,6 +408,16 @@ function getAbilityCritDamageBonusPct(attacker) {
   return Math.max(0, passiveBonus + activeBonus);
 }
 
+// Predator's Focus: crit damage scales by the number of Shadow Marks on the defender.
+// Returns perMarkPct × markStacks (0 if the attacker lacks the passive or the target is unmarked).
+function getCritDamageVsMarkedPct(attacker, defender) {
+  const perMark = (attacker?.passiveEffects || []).reduce((total, effect) =>
+    effect.type === 'crit_damage_pct_per_mark' ? total + (effect.value || 0) : total, 0);
+  if (perMark <= 0) return 0;
+  const marks = (defender?.activeEffects || []).find(e => e.type === 'shadow_mark')?.stacks || 0;
+  return perMark * marks;
+}
+
 export function resolveAbilityImpact(action, attacker, defender, tick, rng, context = {}) {
   const { ability } = action;
   const entries = [];
@@ -709,7 +719,8 @@ export function resolveAbilityImpact(action, attacker, defender, tick, rng, cont
       const forcedNextCrit = !!(attacker.isPlayer && context.procState?.forcedNextCrit);
       if (forcedNextCrit) context.procState.forcedNextCrit = false;
       const isCrit = forcedNextCrit || (critChance > 0 && rng() * 100 < critChance);
-      const finalDmg = isCrit ? Math.floor(empowered * 1.5) : empowered;
+      const markCritBonusPct = isCrit ? getCritDamageVsMarkedPct(attacker, defender) : 0;
+      const finalDmg = isCrit ? Math.floor(empowered * 1.5 * (1 + markCritBonusPct / 100)) : empowered;
       const result = resolvePhysicalImpact(attacker, defender, applyLowHpDamageBonuses(attacker, defender, finalDmg), rng, ability);
       if (result.dodged) {
         const text = attacker.isPlayer
@@ -1511,8 +1522,9 @@ export function resolveAbilityImpact(action, attacker, defender, tick, rng, cont
       const damageMult = ability.damageMult || 0.4;
       let totalDmg = 0;
       let landedHits = 0;
-      let blockedHits = 0;
-      let dodgedHits = 0;
+      // Emit a separate entry per arrow so all arrows produce their own hit-splat in the same
+      // tick — the renderer spreads same-tick splats apart, so the burst shows 3 splashes at once
+      // instead of a single combined number.
       for (let i = 0; i < hits; i += 1) {
         if (!defender || defender.hp <= 0) break;
         const variance = Math.floor(rng() * 4);
@@ -1521,13 +1533,28 @@ export function resolveAbilityImpact(action, attacker, defender, tick, rng, cont
         const boosted = applyWeaponDamageAbilityBonuses(attacker, defender, raw);
         const result = resolvePhysicalImpact(attacker, defender, applyLowHpDamageBonuses(attacker, defender, boosted), rng, ability);
         if (result.dodged) {
-          dodgedHits += 1;
+          entries.push({
+            type: 'dodged',
+            text: attacker.isPlayer
+              ? `${ability.name}: ${defender.name} avoids arrow ${i + 1}.`
+              : `${attacker.name}'s arrow ${i + 1} misses.`,
+            damage: 0,
+            targetId: defender.id,
+          });
           continue;
         }
         const applied = applyCombatantDamage(defender, result.damage);
         totalDmg += applied.damage;
         landedHits += 1;
-        if (result.blocked) blockedHits += 1;
+        entries.push({
+          type: result.blocked ? 'blocked' : 'ability',
+          text: attacker.isPlayer
+            ? `${ability.name}: arrow ${i + 1} hits for ${applied.damage}${result.blocked ? ' (blocked)' : ''}.`
+            : `${attacker.name}'s ${ability.name} arrow ${i + 1} hits for ${applied.damage}.`,
+          damage: applied.damage,
+          absorbed: applied.absorbed || 0,
+          targetId: defender.id,
+        });
       }
       if ((ability.forceMissAttacks || 0) > 0 && defender?.hp > 0) {
         defender.activeEffects = (defender.activeEffects || [])
@@ -1538,16 +1565,16 @@ export function resolveAbilityImpact(action, attacker, defender, tick, rng, cont
           sourceAbilityId: ability.id,
           sourceAbilityName: ability.name,
         });
+        if (attacker.isPlayer) {
+          // damage:0 → no extra splat; this line only summarises the snare in the combat log.
+          entries.push({
+            type: 'ability',
+            text: `${ability.name}: ${landedHits}/${hits} arrows landed (${totalDmg} total). ${defender.name}'s next auto attack will miss.`,
+            damage: 0,
+            targetId: defender.id,
+          });
+        }
       }
-      const blockedText = blockedHits > 0 ? ` ${blockedHits} blocked.` : '';
-      const missedText = dodgedHits > 0 ? ` ${dodgedHits} avoided.` : '';
-      entries.push({
-        type: blockedHits > 0 && landedHits === blockedHits ? 'blocked' : 'ability',
-        text: attacker.isPlayer
-          ? `${ability.name}: ${landedHits}/${hits} arrows land for ${totalDmg} total damage. ${defender.name}'s next auto attack will miss.${blockedText}${missedText}`
-          : `${attacker.name}'s ${ability.name} deals ${totalDmg} total damage.`,
-        damage: totalDmg,
-      });
       break;
     }
 

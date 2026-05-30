@@ -2856,6 +2856,16 @@ function getCritDamageVsArmorDebuffPct(combatant) {
     effect.type === 'crit_damage_vs_armor_debuff_pct' ? total + (effect.value || 0) : total, 0);
 }
 
+// Predator's Focus: crit damage scales by the number of Shadow Marks on the defender.
+// Returns perMarkPct × markStacks (0 if the attacker lacks the passive or the target is unmarked).
+function getCritDamagePerMarkBonusPct(attacker, defender) {
+  const perMark = (attacker?.passiveEffects || []).reduce((total, effect) =>
+    effect.type === 'crit_damage_pct_per_mark' ? total + (effect.value || 0) : total, 0);
+  if (perMark <= 0) return 0;
+  const marks = (defender?.activeEffects || []).find(e => e.type === 'shadow_mark')?.stacks || 0;
+  return perMark * marks;
+}
+
 function getDamageTakenBonusPct(defender, attacker) {
   if (!attacker?.isPlayer || !defender) return 0;
   return (defender.activeEffects || []).reduce((total, effect) => {
@@ -3911,7 +3921,8 @@ function prepareBasicAttack(combatant, defender, rng, opts = {}) {
   const critResist = getCritResistPct(defender);
   const isCrit = forceCrit || (critChance > 0 && rng() * 100 < critChance);
   const armorDebuffCritDamageBonusPct = hasArmorDebuff(defender) ? getCritDamageVsArmorDebuffPct(combatant) : 0;
-  const critDamageBonusPct = getCritDamageBonusPct(combatant) + armorDebuffCritDamageBonusPct;
+  const markCritDamageBonusPct = getCritDamagePerMarkBonusPct(combatant, defender);
+  const critDamageBonusPct = getCritDamageBonusPct(combatant) + armorDebuffCritDamageBonusPct + markCritDamageBonusPct;
   const critMult = (combatant.critMult || 1.5) * (1 + critDamageBonusPct / 100);
   const damageMult = getOutgoingDamageMult(combatant);
   if (swordStance) consumeSwordStanceCharge(combatant);
@@ -5607,7 +5618,10 @@ function applyProcEffect(effect, ctx, procState, heroProcNodes, hero, enemy, tic
       if (stacks > 0) {
         const speedVal = (effect.valuePerStack || 4) * stacks;
         hero.activeEffects = hero.activeEffects || [];
-        hero.activeEffects.push({ type: 'attack_speed_buff', value: speedVal, remainingTicks: effect.durationTicks || 1 });
+        // Tagged source:'bloodrush' + stacks so the UI can show a dedicated Bloodrush icon with the
+        // number of Bleed stacks fuelling the current buff. Refresh (replace) instead of piling up.
+        hero.activeEffects = hero.activeEffects.filter(e => !(e.type === 'attack_speed_buff' && e.source === 'bloodrush'));
+        hero.activeEffects.push({ type: 'attack_speed_buff', value: speedVal, remainingTicks: effect.durationTicks || 1, source: 'bloodrush', stacks });
       }
       break;
     }
@@ -5655,11 +5669,13 @@ function applyProcEffect(effect, ctx, procState, heroProcNodes, hero, enemy, tic
       }
       break;
     case 'apply_hemorrhage_auto': {
+      // Hemorrhage: 1.5% max HP TRUE damage per second for 3 seconds (3 ticks). True damage —
+      // the tick loop subtracts it straight from HP, bypassing armor, resists and shields.
       if (enemy && enemy.hp > 0) {
         const existing = (enemy.activeEffects || []).find(e => e.type === 'hemorrhage');
         if (!existing) {
           enemy.activeEffects = enemy.activeEffects || [];
-          enemy.activeEffects.push({ type: 'hemorrhage', remainingTicks: 4, damagePctPerTick: 1.5, stacks: 1 });
+          enemy.activeEffects.push({ type: 'hemorrhage', remainingTicks: 3, damagePctPerTick: 1.5, stacks: 1 });
           log.push(makeEntry(tick, 'hero', 'bleed', `Hemorrhage Mastery: ${enemy.name} begins hemorrhaging!`, 0, hero.hp, enemy.hp, {}));
         }
       }
@@ -5840,6 +5856,16 @@ function applyProcEffect(effect, ctx, procState, heroProcNodes, hero, enemy, tic
       log.push(makeEntry(tick, 'hero', 'proc', `Shadow Mark: ${enemy.name} marked (${stacks}/${maxStacks}).`, 0, hero.hp, enemy.hp, {
         targetId: enemy.id,
       }));
+      break;
+    }
+    case 'predators_focus': {
+      // Predator's Focus (Shadow tree): on crit, refund Energy. (The crit-damage-per-mark half is a
+      // passive `crit_damage_pct_per_mark` effect applied in the crit calc, not here.) Silent — crits
+      // are frequent, so logging every refund would spam the combat log.
+      const energyGain = effect.energy ?? 8;
+      if (energyGain > 0) {
+        procState.energy = Math.min(HERO_ENERGY_MAX, (procState.energy || 0) + energyGain);
+      }
       break;
     }
     case 'gain_energy_per_bleed_tick': {

@@ -2037,7 +2037,7 @@
           "description": "Looses a rapid volley of crossbow bolts — three shots at 55% weapon damage each.",
           "type": "covering_fire",
           "castTicks": 2,
-          "cooldownSeconds": 10,
+          "cooldownSeconds": 8,
           "hits": 3,
           "damageMult": 0.55,
           "aiPool": true,
@@ -2200,7 +2200,7 @@
         "maxHp": 294,
         "attack": 58,
         "armor": 18,
-        "attackSpeed": 0.68
+        "attackSpeed": 1.2
       },
       "rewards": {
         "xp": 147,

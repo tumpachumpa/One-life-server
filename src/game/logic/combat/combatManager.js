@@ -1,6 +1,6 @@
 import { PHASE, ACTION, BLOCK_DODGE_COOLDOWN, ATTACK_ACTIONS, ABILITY_ACTIONS, ABILITY_SLOT_INDEX, TICK_MS, AUTO_ATTACK_TICKS, MOMENTUM_ATTACK_SPEED_PCT_PER_STACK } from './types.js';
 import { getActiveRelics, getActiveRelicByType } from '../relics.js';
-import { absorbDamageShield, applyCombatantDamage, createCombatant, canBlock, canDodge, getAbilityEnergyCost, getAbilityUseFailureReason, getActiveEffectTotal, getEffectiveArmor, getEffectiveCritChance, getPassiveArmorPenPct, getCritResistPct, getTargetBleedStacks, hasCombatTrigger, isAllyTargetAbility, isBleedImmune, isPoisonImmune, isStunned, resolveElementalDamage } from './combatant.js';
+import { absorbDamageShield, applyCombatantDamage, createCombatant, canBlock, canDodge, getAbilityEnergyCost, getAbilityUseFailureReason, getActiveEffectTotal, getEffectiveArmor, getEffectiveCritChance, getPassiveArmorPenPct, getCritResistPct, getTargetBleedStacks, hasCombatTrigger, isAllyTargetAbility, isBleedImmune, isInvulnerable, isPoisonImmune, isStunned, resolveElementalDamage } from './combatant.js';
 import {
   createActionQueue,
   enqueueAction,
@@ -2511,6 +2511,8 @@ function tickActiveEffects(combatant, tick, log, procParams = null) {
   const activeEffectsAtStart = combatant.activeEffects;
   const remaining = [];
   const followups = [];
+  // While invulnerable (e.g. the Last Breath window) damage-over-time ticks deal 0 but still expire.
+  const dotImmune = isInvulnerable(combatant);
   for (const effect of activeEffectsAtStart) {
     if (effect.remainingTicks == null) {
       remaining.push(effect);
@@ -2599,7 +2601,7 @@ function tickActiveEffects(combatant, tick, log, procParams = null) {
         : 0;
       const hasMarks = bleedVsMarkedBonusPct > 0 && (combatant.activeEffects || []).some(e => e.type === 'shadow_mark' && (e.stacks || 0) > 0);
       const bleedVsMarkedMult = hasMarks ? (1 + bleedVsMarkedBonusPct / 100) : 1;
-      const dmg = Math.max(1, Math.floor((combatant.maxHp || combatant.hp) * (effect.damagePctPerTick || 2) * stacks / 100 * bleedVsMarkedMult));
+      const dmg = dotImmune ? 0 : Math.max(1, Math.floor((combatant.maxHp || combatant.hp) * (effect.damagePctPerTick || 2) * stacks / 100 * bleedVsMarkedMult));
       const hpBeforeDot = combatant.hp;
       combatant.hp = Math.max(0, combatant.hp - dmg);
       const label = effect.type === 'hemorrhage' ? 'Hemorrhage' : 'Bleeding';
@@ -2663,7 +2665,7 @@ function tickActiveEffects(combatant, tick, log, procParams = null) {
       const hpBeforePoison = combatant.hp;
       const stacks = Math.max(1, effect.stacks || 1);
       const raw = Math.max(1, Math.floor((combatant.maxHp || combatant.hp) * (effect.damagePctPerTick || 1.4) * stacks / 100));
-      const dmg = resolveElementalDamage(raw, 'poison', combatant);
+      const dmg = dotImmune ? 0 : resolveElementalDamage(raw, 'poison', combatant);
       combatant.hp = Math.max(0, combatant.hp - dmg);
       const text = combatant.isPlayer
         ? `Poison deals ${dmg} poison damage. (${effect.remainingTicks} tick${effect.remainingTicks !== 1 ? 's' : ''} left)`
@@ -2682,7 +2684,7 @@ function tickActiveEffects(combatant, tick, log, procParams = null) {
       const hpBeforeVenom = combatant.hp;
       const stacks = Math.max(1, Math.min(5, effect.stacks || 1));
       const raw = Math.max(1, Math.floor((combatant.maxHp || combatant.hp) * (effect.damagePctPerTick || 0.65) * stacks / 100));
-      const dmg = resolveElementalDamage(raw, 'poison', combatant);
+      const dmg = dotImmune ? 0 : resolveElementalDamage(raw, 'poison', combatant);
       combatant.hp = Math.max(0, combatant.hp - dmg);
       const stackText = stacks > 1 ? ` (${stacks} stacks)` : '';
       const text = combatant.isPlayer
@@ -2691,7 +2693,7 @@ function tickActiveEffects(combatant, tick, log, procParams = null) {
       log.push(makeEntry(tick, combatant.id, 'poison', text, dmg, null, null, { element: 'poison' }));
       if (stacks >= 5) {
         const shockRaw = Math.max(1, Math.floor((combatant.maxHp || combatant.hp) * 6.5 / 100));
-        const shockDmg = resolveElementalDamage(shockRaw, 'poison', combatant);
+        const shockDmg = dotImmune ? 0 : resolveElementalDamage(shockRaw, 'poison', combatant);
         combatant.hp = Math.max(0, combatant.hp - shockDmg);
         log.push(makeEntry(tick, combatant.id, 'poison',
           combatant.isPlayer

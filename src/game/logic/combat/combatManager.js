@@ -1450,6 +1450,7 @@ export function initCombat({
   bossEnemyId = null, bossDeathEndsFight = true, addsDespawnOnBossDeath = true,
   heroProcNodes = [], heroProcOpts = {},
   enemyProcNodes = [], enemyProcOpts = {},
+  preferredFrontId = null,
   debugPreventHeroDeath = false,
 }) {
   const enemyDefinitions = (Array.isArray(enemyObjs) && enemyObjs.length ? enemyObjs : [enemyObj]).filter(Boolean);
@@ -1515,7 +1516,8 @@ export function initCombat({
       enemies,
       allies: allyCombatants,
     },
-    frontId: getFrontId(null, allyCombatants, allyCombatants[0]?.id || 'hero'),
+    // preferredFrontId === 'hero' makes the hero start in front; otherwise the first ally (pet) leads.
+    frontId: getFrontId(null, allyCombatants, preferredFrontId === 'hero' ? 'hero' : (allyCombatants[0]?.id || 'hero')),
     enemyFrontId: resolvedEnemyFrontId,
     selectedTargetId: resolvedEnemyFrontId || enemy.id,
     bossEnemyId: bossEnemyId || enemy.id,

@@ -2019,7 +2019,7 @@
         "blockPowerRegen": 1
       },
       "rewards": {
-        "xp": 88,
+        "xp": 101,
         "gold": 34
       },
       "effects": [
@@ -2047,7 +2047,7 @@
         "attackSpeed": 0.65
       },
       "rewards": {
-        "xp": 90,
+        "xp": 103,
         "gold": 36
       },
       "effects": [],
@@ -2086,7 +2086,7 @@
         "blockPowerRegen": 1
       },
       "rewards": {
-        "xp": 110,
+        "xp": 126,
         "gold": 44
       },
       "effects": [],
@@ -2122,7 +2122,7 @@
         "attackSpeed": 0.82
       },
       "rewards": {
-        "xp": 95,
+        "xp": 109,
         "gold": 38
       },
       "effects": [],
@@ -2159,7 +2159,7 @@
         "attackSpeed": 1.25
       },
       "rewards": {
-        "xp": 85,
+        "xp": 98,
         "gold": 30
       },
       "effects": [
@@ -2188,7 +2188,7 @@
         "attackSpeed": 0.68
       },
       "rewards": {
-        "xp": 128,
+        "xp": 147,
         "gold": 52
       },
       "effects": [
@@ -2218,7 +2218,7 @@
         "attackSpeed": 1.05
       },
       "rewards": {
-        "xp": 145,
+        "xp": 167,
         "gold": 58
       },
       "effects": [
@@ -2286,7 +2286,7 @@
         "attackSpeed": 0
       },
       "rewards": {
-        "xp": 120,
+        "xp": 138,
         "gold": 48
       },
       "effects": [],
@@ -2351,7 +2351,7 @@
         "attackSpeed": 1.5
       },
       "rewards": {
-        "xp": 100,
+        "xp": 115,
         "gold": 40
       },
       "effects": [
@@ -2424,7 +2424,7 @@
         "blockPowerRegen": 1
       },
       "rewards": {
-        "xp": 148,
+        "xp": 170,
         "gold": 60
       },
       "effects": [],
@@ -2478,7 +2478,7 @@
         "blockPowerRegen": 2
       },
       "rewards": {
-        "xp": 260,
+        "xp": 299,
         "gold": 105
       },
       "effects": [
@@ -2561,7 +2561,7 @@
         "attackSpeed": 0.78
       },
       "rewards": {
-        "xp": 280,
+        "xp": 322,
         "gold": 112
       },
       "effects": [
@@ -2654,7 +2654,7 @@
         "blockPowerRegen": 2
       },
       "rewards": {
-        "xp": 550,
+        "xp": 633,
         "gold": 220
       },
       "effects": [

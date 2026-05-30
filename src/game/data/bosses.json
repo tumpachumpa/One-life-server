@@ -1539,7 +1539,7 @@
         "blockPower": 65,
         "blockPowerRegen": 2
       },
-      "rewards": { "xp": 550, "gold": 220 },
+      "rewards": { "xp": 633, "gold": 220 },
       "lootTable": "karag_thorn_boss",
       "effects": [
         { "type": "counter_chance", "value": 12 },

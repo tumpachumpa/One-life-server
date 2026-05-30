@@ -35,7 +35,10 @@ function isAutoAttackImminent(combatant, tick) {
   if ((combatant.autoAttackRate ?? 0) <= 0) return false;
   if (!combatant.autoAttackStarted) return false;
   if (!Number.isFinite(combatant.nextAutoAttackTick)) return false;
-  return tick >= combatant.nextAutoAttackTick;
+  // Only hold on the exact tick the auto fires. Using `>=` latched true whenever nextAutoAttackTick
+  // fell at/behind the current tick (common for slow attackers, since casting advances the auto
+  // schedule), which permanently suppressed every ability (e.g. Durnek never summoned Kharvox).
+  return combatant.nextAutoAttackTick === tick;
 }
 
 // Returns the action the enemy AI wants to take this tick.

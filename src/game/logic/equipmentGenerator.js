@@ -437,6 +437,7 @@ export function rollGeneratedEquipment(options = {}, rng = Math.random) {
     tags: unique([...(base.tags || []), "generated", "dice_v1", grade.id, `ilvl_${itemLevel}`]),
     price,
     icon: base.icon,
+    ...(base.iconScale != null ? { iconScale: base.iconScale } : {}),
     ...(dice ? { [diceKey]: dice } : {}),
   };
 }

@@ -101,23 +101,16 @@ export function xpToLevel(xp) {
 }
 
 // Rarity IDs match ENEMY_RARITIES keys (normal / raro / epico / legendario).
-// Each tier's "center level" = tier * 5 - 2 (tier 1 ≈ 3, tier 2 ≈ 8, tier 3 ≈ 13 …).
-// Rarer enemies have higher effective levels so they stay relevant longer.
-// Energy is a minor factor: being well-rested (≥75) gives 1 level of grace.
-// Extra XP for killing rare/epic/legendary enemies (stacks on top of overlevel mult).
+// Extra XP for killing rare/epic/legendary enemies.
 export function getRarityXpMult(rarityId) {
   const RARITY_XP = { normal: 1.0, raro: 1.5, epico: 2.5, legendario: 4.0 };
   return RARITY_XP[rarityId] ?? 1.0;
 }
 
-export function getOverlevelXpMult(heroLevel, enemyTier, rarityId, heroEnergy) {
-  const RARITY_BONUS = { normal: 0, raro: 3, epico: 7, legendario: 12 };
-  const rarityBonus = RARITY_BONUS[rarityId] ?? 0;
-  const energyGrace = (heroEnergy || 0) >= 75 ? 1 : 0;
-  const enemyEffectiveLevel = (enemyTier || 1) * 5 - 2 + rarityBonus + energyGrace;
-  const levelGap = Math.max(0, heroLevel - enemyEffectiveLevel);
-  if (levelGap === 0) return 1.0;
-  return Math.max(0.5, 1.0 - levelGap * 0.05);
+// No overlevel XP reduction — XP is always granted in full, regardless of how far the hero
+// outlevels the enemy. Kept as a function (always returns 1.0) so callers stay unchanged.
+export function getOverlevelXpMult() {
+  return 1.0;
 }
 
 export function getHeroClassDefinition(classId) {

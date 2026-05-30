@@ -3548,7 +3548,6 @@
             {
               "id": "kt_guard_post",
               "type": "event",
-              "repeatable": true,
               "next": ["kt_bolgrak"],
               "stepIndex": 5,
               "event": {

@@ -223,6 +223,11 @@ function normalizeGeneratedBaseEffects(item) {
       attackSpeed: generatedBase.attackSpeed,
     };
   }
+  // Carry the paperdoll icon scale from the generated base so items dropped before iconScale was
+  // set on the base (or before the generator copied it) still render at the tuned size.
+  if (generatedBase && normalized.iconScale == null && generatedBase.iconScale != null) {
+    normalized = { ...normalized, iconScale: generatedBase.iconScale };
+  }
   // Retroactively add armorDice/damageDice if the base defines them but the item predates the dice system
   if (generatedBase) {
     const isWeapon = item.slot === "weapon";

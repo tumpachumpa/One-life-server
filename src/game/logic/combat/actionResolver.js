@@ -1,5 +1,5 @@
 import { applyArmor } from '../hero.js';
-import { getDamageTakenBonusPct, getDamageTakenReductionPct, getEffectiveArmor } from './combatant.js';
+import { getDamageTakenBonusPct, getDamageTakenReductionPct, getEffectiveArmor, isInvulnerable } from './combatant.js';
 
 function effectHasTime(effect) {
   return effect.remainingTicks == null || effect.remainingTicks > 0;
@@ -106,6 +106,10 @@ function applyPhysicalReduction(damage, defender) {
 // Resolves physical impact against a defender.
 // Block Chance decides if a passive block happens; Block Power decides how much physical damage is absorbed.
 export function resolveImpact(action, defender, options = {}) {
+  // Invulnerable (e.g. the brief window after Last Breath saves a combatant): take no damage.
+  if (isInvulnerable(defender)) {
+    return { damage: 0, dodged: false, blocked: false, absorbed: 0, invulnerable: true };
+  }
   const shieldUp = getActiveShieldUpEffect(defender, options);
   const blockDisabled = isBlockDisabled(defender);
 

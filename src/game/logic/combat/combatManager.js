@@ -2783,6 +2783,8 @@ function preventDeathWithLastBreath(combatant, tick, log, enemy = null, procStat
   // Consume the last_breath effect — it fires once and is gone
   combatant.activeEffects = (combatant.activeEffects || []).filter(e => e !== lastBreath);
   combatant.hp = 1;
+  // Grant a brief invulnerability window so the survivor isn't instantly re-killed.
+  combatant.activeEffects.push({ type: 'invulnerable', remainingTicks: 2, source: 'last_breath' });
   const lastBreathText = combatant.isPlayer
     ? 'Last Breath keeps you standing at 1 HP.'
     : `${combatant.name}'s Last Breath — survives at 1 HP!`;

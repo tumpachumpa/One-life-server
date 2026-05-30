@@ -253,7 +253,13 @@ export function absorbDamageShield(combatant, amount) {
   return { damage: remainingDamage, absorbed, shields };
 }
 
+export function isInvulnerable(combatant) {
+  return (combatant?.activeEffects || []).some(effect =>
+    effect.type === 'invulnerable' && (effect.remainingTicks == null || effect.remainingTicks > 0));
+}
+
 export function applyCombatantDamage(combatant, amount) {
+  if (isInvulnerable(combatant)) return { damage: 0, absorbed: 0, shields: [] };
   let finalAmount = amount;
   if (combatant.inCocoon) {
     finalAmount = Math.max(1, Math.floor(amount * 0.10));

@@ -2687,7 +2687,7 @@
         "maxHp": 962,
         "attack": 80,
         "armor": 38,
-        "attackSpeed": 0.58,
+        "attackSpeed": 0.6,
         "blockChance": 20,
         "blockPower": 65,
         "blockPowerRegen": 2

@@ -308,6 +308,10 @@ export function getItem(id) {
       // Relic passives are balance data, not per-item rolls — always use the live definition so
       // tuning changes apply to relics already saved/equipped (they're stored as full objects).
       if (template.relicPassive != null) merged.relicPassive = template.relicPassive;
+      // Same for enchantment-stone effect pools: stones are stored as full object snapshots, so an
+      // old saved stone keeps a stale pool (e.g. a rare Blood stone still rolling the removed
+      // "+5% damage below 50% HP"). Always resolve the pool from the live definition.
+      if (template.enchantmentPool != null) merged.enchantmentPool = template.enchantmentPool;
       const templateBaseEffects = (template.effects || []).filter(e => e._base);
       if (templateBaseEffects.length > 0) {
         const templateBaseTypes = new Set(templateBaseEffects.map(e => e.type + (e.stat ? ':' + e.stat : '')));

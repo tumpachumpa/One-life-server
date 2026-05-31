@@ -1,4 +1,4 @@
-import { ABILITY_ACTIONS, ACTION } from './types.js';
+import { ABILITY_ACTIONS, ACTION, AUTO_ATTACK_TICKS } from './types.js';
 import { canUseAbility, isStunned } from './combatant.js';
 
 const ENEMY_ABILITY_ACTIONS = [...ABILITY_ACTIONS];
@@ -27,18 +27,19 @@ function passesOncePerCombatChance(combatant, ability, rng) {
   return !!combatant.usedAbilityIds[successKey];
 }
 
-// True when this combatant's auto attack is due to fire this tick. Starting an ability cast now would
-// advance/reschedule that pending auto (combatManager folds the cast time into the auto window), so we
-// hold off: let the imminent auto land, then the AI casts on a following tick.
+// Hold an ability cast when the auto attack is already more than half charged, so the imminent auto
+// lands first (the AI casts on a later tick once the auto has fired and the charge resets).
+// We gate on auto-attack PROGRESS, not nextAutoAttackTick: progress resets to ~0 when the auto fires,
+// so it can never latch true and suppress all abilities (the bug the old `tick >= nextAutoAttackTick`
+// had for slow attackers, where nextAutoAttackTick fell permanently behind the current tick).
 function isAutoAttackImminent(combatant, tick) {
   if (!combatant || combatant.disableAutoAttack) return false;
   if ((combatant.autoAttackRate ?? 0) <= 0) return false;
   if (!combatant.autoAttackStarted) return false;
-  if (!Number.isFinite(combatant.nextAutoAttackTick)) return false;
-  // Only hold on the exact tick the auto fires. Using `>=` latched true whenever nextAutoAttackTick
-  // fell at/behind the current tick (common for slow attackers, since casting advances the auto
-  // schedule), which permanently suppressed every ability (e.g. Durnek never summoned Kharvox).
-  return combatant.nextAutoAttackTick === tick;
+  const progress = Number(combatant.autoAttackProgressTicks);
+  if (Number.isFinite(progress) && progress >= AUTO_ATTACK_TICKS * 0.5) return true;
+  // Safety net: also hold on the exact tick the auto is scheduled to fire.
+  return Number.isFinite(combatant.nextAutoAttackTick) && combatant.nextAutoAttackTick === tick;
 }
 
 // Returns the action the enemy AI wants to take this tick.

@@ -305,6 +305,9 @@ export function getItem(id) {
       if (template.damageDice) merged.damageDice = { ...template.damageDice };
       if (template.armorDice) merged.armorDice = { ...template.armorDice };
       if (template.size != null) merged.size = template.size;
+      // Relic passives are balance data, not per-item rolls — always use the live definition so
+      // tuning changes apply to relics already saved/equipped (they're stored as full objects).
+      if (template.relicPassive != null) merged.relicPassive = template.relicPassive;
       const templateBaseEffects = (template.effects || []).filter(e => e._base);
       if (templateBaseEffects.length > 0) {
         const templateBaseTypes = new Set(templateBaseEffects.map(e => e.type + (e.stat ? ':' + e.stat : '')));

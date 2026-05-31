@@ -1200,13 +1200,13 @@
           },
           "purple": {
             "type": "shadow_backlash",
-            "damage": 20,
+            "damage": 15,
             "element": "shadow",
             "dot": {
               "type": "shadow_burn",
-              "damageFlat": 20,
+              "damageFlat": 12,
               "durationTicks": 3,
-              "maxStacks": 3,
+              "maxStacks": 2,
               "element": "shadow"
             },
             "logText": "Purple oath-fire lashes back."

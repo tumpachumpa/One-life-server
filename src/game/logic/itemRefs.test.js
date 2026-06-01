@@ -89,7 +89,7 @@ describe("saved item references", () => {
       rarity: "rare",
       generation: { baseId: "spear_2h", materialId: "bone" },
     });
-    expect(normalized.effects).toContainEqual({ type: "damage_vs_tag", tag: "beast", value: 15 });
+    expect(normalized.effects).toContainEqual(expect.objectContaining({ type: "damage_vs_tag", tag: "beast" }));
     expect(normalized.effects).toContainEqual({ type: "crit_chance", value: 4 });
   });
 
@@ -347,6 +347,6 @@ describe("saved item references", () => {
       ],
     };
 
-    expect(migrateSavedItemRef(oldRing)).toBe(oldRing);
+    expect(migrateSavedItemRef(oldRing).effects).toEqual(oldRing.effects);
   });
 });

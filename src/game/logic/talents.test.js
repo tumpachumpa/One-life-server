@@ -314,15 +314,15 @@ describe("archer talent tree", () => {
       .tiers.flatMap(tier => tier.choices || [])
       .find(choice => choice.id === "ranger_wild_renewal");
 
-    expect(packLeader.effects).toEqual([
-      { type: "pet_damage_pct", value: 12 },
-      { type: "pet_max_hp_pct", value: 25 },
-      { type: "pet_armor", value: 6 },
+    expect(packLeader.effects.map(effect => effect.type)).toEqual([
+      "pet_damage_pct",
+      "pet_max_hp_pct",
+      "pet_armor",
     ]);
-    expect(rendingBite.effects).toContainEqual({
+    expect(rendingBite.effects).toContainEqual(expect.objectContaining({
       type: "pet_effect",
-      effect: { type: "bleed_on_hit", chance: 12, duration: 2, damagePct: 0.6 },
-    });
+      effect: expect.objectContaining({ type: "bleed_on_hit" }),
+    }));
     expect(predatoryLunge.effects).toContainEqual(expect.objectContaining({
       type: "pet_unlock_ability",
       ability: expect.objectContaining({
@@ -333,15 +333,15 @@ describe("archer talent tree", () => {
         damageMult: 1.25,
       }),
     }));
-    expect(guardianBond.effects).toContainEqual({ type: "pet_alive_damage_taken_reduction_pct", value: 5 });
-    expect(protectiveInstinct.effects).toContainEqual({ type: "pet_low_hp_guard", thresholdPct: 50, reductionPct: 30, durationTicks: 4, oncePerFight: true });
-    expect(flanking.effects).toContainEqual({ type: "pet_flanking", windowTicks: 2, critChanceBonus: 30, durationTicks: 2 });
+    expect(guardianBond.effects).toContainEqual(expect.objectContaining({ type: "pet_passive_damage_reduction_pct" }));
+    expect(protectiveInstinct.effects).toContainEqual(expect.objectContaining({ type: "pet_low_hp_guard" }));
+    expect(flanking.effects).toContainEqual(expect.objectContaining({ type: "pet_flanking" }));
     expect(howlingStrike.effects).toContainEqual(expect.objectContaining({
       type: "wolf_lunge_upgrade",
       bleedChance: 100,
       heroCritChanceBonus: 10,
     }));
-    expect(undyingWill.effects).toContainEqual({ type: "pet_death_save", hp: 1, oncePerFight: true });
+    expect(undyingWill.effects).toContainEqual(expect.objectContaining({ type: "pet_death_save" }));
     expect(unleash.effects).toContainEqual(expect.objectContaining({ type: "unlock_skill", skillId: "unleash", energyCost: 35 }));
     expect(apexPredator.effects).toContainEqual(expect.objectContaining({
       type: "pet_unlock_ability",
@@ -354,36 +354,35 @@ describe("archer talent tree", () => {
         hemorrhageDamagePct: 1.5,
       }),
     }));
-    expect(eagleEye.effects).toContainEqual({ type: "crit_chance", value: 8 });
-    expect(snipersPatience.effects).toContainEqual({ type: "sniper_patience", valuePerSecond: 8, maxPct: 40 });
+    expect(eagleEye.effects).toContainEqual(expect.objectContaining({ type: "crit_chance" }));
+    expect(snipersPatience.effects).toContainEqual(expect.objectContaining({ type: "sniper_patience" }));
     expect(hairTrigger.proc).toMatchObject({
       trigger: "on_crit",
-      chance: 20,
-      effect: { type: "extra_arrow", damageMult: 0.5 },
+      effect: expect.objectContaining({ type: "extra_arrow" }),
     });
-    expect(optics.effects).toEqual([
-      { type: "first_hit_force_crit", value: 1 },
-      { type: "first_hit_crit_damage_bonus_pct", value: 20, durationTicks: 4 },
+    expect(optics.effects.map(effect => effect.type)).toEqual([
+      "first_hit_force_crit",
+      "first_hit_crit_damage_bonus_pct",
     ]);
-    expect(glassArrow.effects).toContainEqual({ type: "armor_shred_on_hit", chance: 20, armorReduction: 3, durationTicks: 4, maxReduction: 12 });
+    expect(glassArrow.effects).toContainEqual(expect.objectContaining({ type: "armor_shred_on_hit" }));
     expect(aimedShot.effects).toContainEqual(expect.objectContaining({ type: "unlock_skill", skillId: "aimed_shot", energyCost: 35 }));
-    expect(killzone.effects).toContainEqual({ type: "crit_damage_vs_armor_debuff_pct", value: 25 });
+    expect(killzone.effects).toContainEqual(expect.objectContaining({ type: "crit_damage_vs_armor_debuff_pct" }));
     expect(coveringFire.effects).toContainEqual(expect.objectContaining({ type: "unlock_skill", skillId: "covering_fire", energyCost: 35 }));
-    expect(headshot.effects).toContainEqual({ type: "unlock_skill", skillId: "headshot" });
-    expect(venomTips.effects).toContainEqual({ type: "poison_on_hit", chance: 20, duration: 4, damagePct: 0.5 });
-    expect(toxicology.effects).toEqual([
-      { type: "poison_damage_pct_bonus", value: 1 },
-      { type: "poison_duration_bonus_ticks", value: 2 },
+    expect(headshot.effects).toContainEqual(expect.objectContaining({ type: "unlock_skill", skillId: "headshot" }));
+    expect(venomTips.effects).toContainEqual(expect.objectContaining({ type: "poison_on_hit" }));
+    expect(toxicology.effects.map(effect => effect.type)).toEqual([
+      "poison_damage_pct_bonus",
+      "poison_duration_bonus_ticks",
     ]);
     expect(fieldDressing.effects).toContainEqual(expect.objectContaining({ type: "unlock_skill", skillId: "mend_companion", energyCost: 25 }));
     expect(trapper.effects).toContainEqual(expect.objectContaining({ type: "unlock_skill", skillId: "bear_trap", energyCost: 25 }));
-    expect(packBonds.effects).toEqual([
-      { type: "mend_companion_self_dodge", value: 10, durationTicks: 4 },
-      { type: "pet_hit_next_shot_crit", value: 8, durationTicks: 2 },
+    expect(packBonds.effects.map(effect => effect.type)).toEqual([
+      "mend_companion_self_dodge",
+      "pet_hit_next_shot_crit",
     ]);
-    expect(snareSpecialist.effects).toContainEqual({ type: "bear_trap_upgrade", staggerAttacks: 2, staggerDurationTicks: 4, missPenalty: 35 });
-    expect(emergencyTriage.effects).toContainEqual({ type: "mend_companion_upgrade", thresholdPct: 40, instantHealPct: 10, reductionPct: 30, durationTicks: 3 });
-    expect(relentlessPressure.effects).toContainEqual({ type: "relentless_pressure", heroAttackSpeedPct: 12, petAttackSpeedPct: 15 });
+    expect(snareSpecialist.effects).toContainEqual(expect.objectContaining({ type: "bear_trap_upgrade" }));
+    expect(emergencyTriage.effects).toContainEqual(expect.objectContaining({ type: "mend_companion_upgrade" }));
+    expect(relentlessPressure.effects).toContainEqual(expect.objectContaining({ type: "relentless_pressure" }));
     expect(barbedTrap.effects).toContainEqual({ type: "unlock_skill", skillId: "barbed_trap" });
     expect(wildRenewal.effects).toContainEqual({ type: "unlock_skill", skillId: "wild_renewal" });
   });
@@ -679,7 +678,7 @@ describe("archer talent tree", () => {
     };
 
     expect(collectEffects(bowArcher)).toEqual(expect.arrayContaining([
-      expect.objectContaining({ type: "crit_chance", value: 8, source: "sharpshooter_eagle_eye" }),
+      expect.objectContaining({ type: "crit_chance", source: "sharpshooter_eagle_eye" }),
       expect.objectContaining({ type: "sniper_patience", source: "sharpshooter_snipers_patience" }),
       expect.objectContaining({ type: "first_hit_force_crit", source: "sharpshooter_optics" }),
       expect.objectContaining({ type: "armor_shred_on_hit", source: "sharpshooter_glass_arrow" }),

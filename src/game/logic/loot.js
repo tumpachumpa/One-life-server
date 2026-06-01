@@ -257,6 +257,18 @@ function getRarityWithMinimum(rarity, minimumRarity = null) {
   return ITEM_RARITIES[minimumId] || rarity;
 }
 
+// Return whichever of two rarities is higher-ranked (either may be a rarity id
+// string, a rarity object, or null). Used so a table's minimumRarity can RAISE a
+// drop's floor but never LOWER an item's own authored rarity — e.g. an authored
+// artifact (Fang) must stay artifact even when it drops from an epic-minimum table.
+function higherRarity(a, b) {
+  if (!a) return b || null;
+  if (!b) return a || null;
+  const ra = ITEM_RARITY_RANKS[typeof a === "string" ? a : a?.id] ?? -1;
+  const rb = ITEM_RARITY_RANKS[typeof b === "string" ? b : b?.id] ?? -1;
+  return ra >= rb ? a : b;
+}
+
 function getLootTableRollCount(table = {}, lootBonus = 0) {
   const baseRolls = Math.max(0, Math.floor(Number(table.rolls ?? 1)));
   if (table.allowBonusRolls !== true) return baseRolls;
@@ -550,7 +562,9 @@ export function applyItemRarity(item, rarity, rng = Math.random) {
 
 export function createLootItem(item, tableName = "normal", rng = Math.random, minimumRarity = null, lootBonus = 0) {
   if (!item || (!isCampfireItem(item) && !(item.type === "gear" && item.rarityAffixPools?.length))) return item;
-  const effectiveMinimum = minimumRarity || item.rarity || null;
+  // A table's minimumRarity may RAISE the floor but must not LOWER an item's own
+  // authored rarity (authored artifacts must stay artifact even in an epic-min table).
+  const effectiveMinimum = higherRarity(minimumRarity, item.rarity);
   return applyItemRarity(item, getRarityWithMinimum(rollItemRarityWithLootBonus(tableName, rng, lootBonus), effectiveMinimum), rng);
 }
 

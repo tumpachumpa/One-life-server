@@ -64,6 +64,12 @@ function autoSchedule(c) {
     lastTick: c.lastAutoAttackTick ?? null,
     nextTick: c.nextAutoAttackTick ?? null,
     started: !!c.autoAttackStarted,
+    // Offhand (dual-wield, e.g. Rogue) so the client can render the 2nd bar live.
+    offhandRate: c.offhandAutoAttackRate ?? null,
+    offhandProgressTicks: c.offhandAutoAttackProgressTicks ?? null,
+    offhandLastTick: c.offhandLastAutoAttackTick ?? null,
+    offhandNextTick: c.offhandNextAutoAttackTick ?? null,
+    offhandStarted: !!c.offhandAutoAttackStarted,
   };
 }
 
@@ -201,7 +207,10 @@ function setupDuelWs(httpServer) {
 
   httpServer.on('upgrade', (req, socket, head) => {
     const path = (req.url || '').split('?')[0];
-    if (path !== '/ws-duel') { socket.destroy(); return; }
+    // Cooperative: another noServer WSS (the adventure-fight route) shares this
+    // server's 'upgrade' event, so ignore paths we don't own rather than
+    // destroying the socket out from under it.
+    if (path !== '/ws-duel') return;
     wss.handleUpgrade(req, socket, head, ws => wss.emit('connection', ws));
   });
 

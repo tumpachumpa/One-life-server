@@ -2317,6 +2317,11 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
     if (combatant.disableAutoAttack || isStunned(combatant, tick) || isCasting(queue, combatant.id, tick)) return;
     if (actorOpts.skipAuto) return;
     const attackCount = getReadyAutoAttackCountForElapsed(combatant, elapsedTicks);
+    // getReadyAutoAttackCountForElapsed runs in tick-relative space (tick 0) and
+    // nulls lastAutoAttackTick on a swing. Re-stamp it to the real tick so clients
+    // can render the auto-attack bar off the authoritative [last,next] window
+    // instead of re-deriving the attack rate (which over/under-shot the bar).
+    if (attackCount > 0) combatant.lastAutoAttackTick = tick;
     if (attackCount <= 0) return;
 
     triggerBarbedTrapOnAutoAttack(combatant, tick, log);
@@ -2365,7 +2370,9 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
     const offhandAttackCount = getReadyAutoAttackCountForElapsed(offhandProxy, elapsedTicks);
     hero.offhandAutoAttackProgressTicks = offhandProxy.autoAttackProgressTicks;
     hero.offhandAutoAttackStarted = offhandProxy.autoAttackStarted;
-    hero.offhandLastAutoAttackTick = offhandProxy.lastAutoAttackTick;
+    // Stamp the real tick on a swing (offhandProxy ran in tick-0 space → null) so
+    // the offhand bar gets the same authoritative [last,next] window as main-hand.
+    hero.offhandLastAutoAttackTick = offhandAttackCount > 0 ? tick : offhandProxy.lastAutoAttackTick;
     // Re-anchor schedule to actual game tick so the UI bar stays in sync
     // (getReadyAutoAttackCountForElapsed uses tick=0 internally, which drifts from currentTick)
     {

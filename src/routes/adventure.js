@@ -156,6 +156,21 @@ async function adventureRoutes(fastify) {
     const session = await getActiveSession(userId);
     if (!session) return reply.status(404).send({ error: 'No active adventure' });
 
+    // Phase 2: when a server-authoritative fight ran for THIS node, trust its
+    // recorded outcome over the client's implicit "I completed it" claim. Only
+    // engages for the dark-launched server-combat path, which is the only thing
+    // that writes adventure_sessions.last_fight; flag-off players have none, so
+    // they fall through to the unchanged legacy path below. nodeId + freshness
+    // guard so a stale/other-node result can't be replayed.
+    const lf = session.last_fight;
+    const serverFight = (lf && lf.nodeId === nodeId && Number.isFinite(lf.at)
+      && (Date.now() - lf.at) < 10 * 60 * 1000) ? lf : null;
+    if (serverFight && serverFight.result !== 'won') {
+      return reply.status(409).send({
+        error: 'Server fight not won', code: 'FIGHT_NOT_WON', result: serverFight.result,
+      });
+    }
+
     const [
       {
         getAdventure,
@@ -219,10 +234,29 @@ async function adventureRoutes(fastify) {
 
     await pool.query(
       `UPDATE adventure_sessions
-       SET progress = $1, run_loot = $2, run_xp = $3, run_gold = $4, status = $5, updated_at = NOW()
+       SET progress = $1, run_loot = $2, run_xp = $3, run_gold = $4, status = $5,
+           last_fight = NULL, updated_at = NOW()
        WHERE id = $6`,
       [JSON.stringify(newProgress), JSON.stringify(runLoot), runXp, runGold, newStatus, session.id]
     );
+
+    // Phase 2: carry the server's authoritative remaining HP into the saved hero so
+    // the next node's fight (which starts from save_data.hero.hp) begins there — the
+    // player can't refill by cheating. Targeted jsonb_set leaves the rest of the save
+    // untouched. (Locking POST /hero against client HP overwrites mid-run is Phase 4.)
+    if (serverFight) {
+      try {
+        await pool.query(
+          `UPDATE heroes SET save_data = jsonb_set(save_data, '{hero,hp}', to_jsonb($1::int)), updated_at = NOW()
+           WHERE user_id = $2 AND slot_id = $3`,
+          [serverFight.heroHpLeft, userId, session.slot_id || 'slot_1']
+        );
+      } catch (err) {
+        // Node already advanced above; don't fail the completion if the HP carry
+        // write hiccups — just log it.
+        fastify.log.error({ err }, '[adventure] HP carry write failed');
+      }
+    }
 
     return {
       progress: newProgress,
@@ -235,6 +269,7 @@ async function adventureRoutes(fastify) {
       xpGained,
       goldGained,
       lootItems,
+      heroHpLeft: serverFight ? serverFight.heroHpLeft : null,
     };
   });
 

@@ -3,3 +3,11 @@ node_modules/
 server.log
 *.log
 backups/
+
+# Local-only — NEVER commit (player-save backups + one-off GM/dev scripts).
+# Tracked maintenance scripts use the patch_* prefix and are unaffected.
+scripts/local/
+scripts/_*
+scripts/*backup*.json
+scripts/fix_*.mjs
+scripts/restore_*.mjs

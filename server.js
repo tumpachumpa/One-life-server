@@ -3,11 +3,29 @@ const fastify = require('fastify')({ logger: true });
 const { setupDuelWs } = require('./src/routes/duelWs');
 const { setupAdventureFightWs } = require('./src/routes/adventureFightWs');
 
+// Identifies the running build. Changes on every deploy (Railway injects the
+// commit SHA), so clients can detect when the server has been updated mid-session
+// and prompt a refresh — important now that combat is server-authoritative and an
+// old client can be protocol-incompatible. Falls back to the package version (a
+// stable value, so a plain restart does NOT look like a new version).
+const APP_VERSION = process.env.RAILWAY_GIT_COMMIT_SHA
+  || process.env.APP_VERSION
+  || (() => { try { return require('./package.json').version; } catch { return null; } })()
+  || String(Date.now());
+
 fastify.register(require('@fastify/cors'), {
   origin: process.env.CLIENT_ORIGIN ? process.env.CLIENT_ORIGIN.split(',') : false,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['X-App-Version'],
   credentials: true,
+});
+
+// Stamp the running build version on every response so the client can notice a
+// deploy and force a refresh before an outdated build does something unsafe.
+fastify.addHook('onSend', (request, reply, payload, done) => {
+  reply.header('X-App-Version', APP_VERSION);
+  done(null, payload);
 });
 
 fastify.register(require('./src/plugins/auth'));
@@ -24,7 +42,7 @@ fastify.register(require('./src/routes/casualDuels'));
 
 let dbReady = false;
 
-fastify.get('/health', async () => ({ status: dbReady ? 'ok' : 'degraded', db: dbReady }));
+fastify.get('/health', async () => ({ status: dbReady ? 'ok' : 'degraded', db: dbReady, version: APP_VERSION }));
 
 async function waitForDb() {
   const pool = require('./src/db/pool');

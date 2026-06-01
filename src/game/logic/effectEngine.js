@@ -1,4 +1,5 @@
 import { equipmentSets, getItem, getTalentNode, talentTrees } from "./content.js";
+import { runemarkValueFor } from "./runemarks.js";
 
 const SPECIALIZATION_REQUIREMENTS = {
   two_handed_weapons: {
@@ -84,16 +85,20 @@ export function collectItemEffects(hero) {
     }
     if (itemRef && typeof itemRef === 'object' && itemRef.runemarks?.marks?.length) {
       for (const mark of itemRef.runemarks.marks) {
-        if (!mark?.type || mark.value == null) continue;
+        if (!mark?.type) continue;
+        // Recompute from the current pool by tier so rebalanced tier values
+        // apply to already-forged items; fall back to the stored value.
+        const value = runemarkValueFor(mark.type, mark.tier) ?? mark.value;
+        if (value == null) continue;
         const source = `runemark_${slot}`;
         if (mark.type === 'lifesteal_pct') {
-          effects.push({ type: 'lifesteal', value: mark.value, source });
+          effects.push({ type: 'lifesteal', value, source });
         } else if (mark.type === 'stat_bonus_str') {
-          effects.push({ type: 'stat_bonus', stat: 'str', value: mark.value, source });
+          effects.push({ type: 'stat_bonus', stat: 'str', value, source });
         } else if (mark.type === 'stat_bonus_dex') {
-          effects.push({ type: 'stat_bonus', stat: 'dex', value: mark.value, source });
+          effects.push({ type: 'stat_bonus', stat: 'dex', value, source });
         } else {
-          effects.push({ type: mark.type, value: mark.value, source });
+          effects.push({ type: mark.type, value, source });
         }
       }
     }

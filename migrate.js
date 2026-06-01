@@ -39,6 +39,12 @@ async function run() {
     console.log('DB unreachable at startup, skipping migrations.');
     return;
   }
+  // Never let a held lock wedge the deploy: if a migration can't acquire its lock
+  // quickly, fail fast (it's caught + logged + skipped below, and server.js still
+  // starts) instead of hanging `node migrate.js` forever — which previously blocked
+  // `&& node server.js` and took the whole service down (a stuck mid-INSERT
+  // connection held an ACCESS EXCLUSIVE-conflicting lock on heroes).
+  await pool.query("SET lock_timeout = '15s'").catch(() => {});
   for (const file of MIGRATIONS) {
     const sql = fs.readFileSync(path.join(__dirname, file), 'utf8');
     try {

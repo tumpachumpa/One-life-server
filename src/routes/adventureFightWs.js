@@ -219,18 +219,13 @@ async function startFight(f) {
   const hero = heroRes.rows[0]?.save_data?.hero;
   if (!hero) { send(f.ws, { type: 'error', code: 'NO_HERO' }); cleanup(f); return; }
 
-  // Phase 2: carry HP between nodes. The session's last_fight holds the authoritative
-  // remaining HP from THIS run's previous fight, so start this fight there — damage
-  // persists across nodes instead of resetting to full. The client hero save can't be
-  // trusted for hp (it round-trips back to full). First fight of a run has no
-  // last_fight, so it starts from the saved hp. NOTE: out-of-combat heal/rest between
-  // nodes is not yet reflected server-side — that's Phase 4 (server owns all hp).
-  const carry = session.last_fight;
-  if (carry && (carry.result === 'won' || carry.result === 'fled')
-      && Number.isFinite(carry.heroHpLeft) && Number.isFinite(carry.at)
-      && (Date.now() - carry.at) < 60 * 60 * 1000) {
-    hero.hp = Math.max(1, Math.floor(carry.heroHpLeft));
-  }
+  // HP carry: start from the hero's SAVED hp (hero.hp). The client tracks current HP
+  // across nodes — both damage carried forward AND out-of-combat regen/rest/food
+  // healing — so the saved value is the correct starting HP. (An earlier attempt
+  // forced last_fight.heroHpLeft here for anti-cheat, but that ignored legit healing:
+  // a player who healed to full still started the next fight at the prior fight's
+  // remaining HP. Making HP fully server-authoritative — incl. owning out-of-combat
+  // healing so a refill can't be faked — is Phase 4. For now trust the saved hp.)
 
   // Match the client's resolveAdventureNode args exactly (App.jsx fight/room):
   //   totalCombats   = hero.combatsWon          (drives day/night → enemy stats)

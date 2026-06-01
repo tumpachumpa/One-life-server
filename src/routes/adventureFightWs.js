@@ -20,17 +20,20 @@
 const { WebSocketServer } = require('ws');
 const { createVerifier } = require('fast-jwt');
 const pool = require('../db/pool');
+const { serverRunHp } = require('../lib/runHp');
 
 const combatModP    = import('../game/logic/combat/combatManager.js');
 const typesModP     = import('../game/logic/combat/types.js');
 const builderModP   = import('../game/logic/combat/buildInitArgs.js');
 const adventureModP = import('../game/logic/adventure.js');
 const contentModP   = import('../game/logic/content.js');
+const heroModP      = import('../game/logic/hero.js');
+const survivalModP  = import('../game/logic/survival.js');
 
 let _mods = null;
 async function loadMods() {
   if (_mods) return _mods;
-  const [cm, types, builder, adv, content] = await Promise.all([combatModP, typesModP, builderModP, adventureModP, contentModP]);
+  const [cm, types, builder, adv, content, heroL, surv] = await Promise.all([combatModP, typesModP, builderModP, adventureModP, contentModP, heroModP, survivalModP]);
   _mods = {
     getItem:                content.getItem,
     initCombat:             cm.initCombat,
@@ -46,6 +49,8 @@ async function loadMods() {
     getNodeEncounterPool:         adv.getNodeEncounterPool,
     getActiveAdventureDifficulty: adv.getActiveAdventureDifficulty,
     getAdventureRunDifficulty:    adv.getAdventureRunDifficulty,
+    calcStats:                  heroL.calcStats,
+    getPassiveRegenFromHunger:  surv.getPassiveRegenFromHunger,
   };
   return _mods;
 }
@@ -219,13 +224,18 @@ async function startFight(f) {
   const hero = heroRes.rows[0]?.save_data?.hero;
   if (!hero) { send(f.ws, { type: 'error', code: 'NO_HERO' }); cleanup(f); return; }
 
-  // HP carry: start from the hero's SAVED hp (hero.hp). The client tracks current HP
-  // across nodes — both damage carried forward AND out-of-combat regen/rest/food
-  // healing — so the saved value is the correct starting HP. (An earlier attempt
-  // forced last_fight.heroHpLeft here for anti-cheat, but that ignored legit healing:
-  // a player who healed to full still started the next fight at the prior fight's
-  // remaining HP. Making HP fully server-authoritative — incl. owning out-of-combat
-  // healing so a refill can't be faked — is Phase 4. For now trust the saved hp.)
+  // Phase 4 HP carry: HP is now server-authoritative within a run. Seed this
+  // fight from the session's authoritative run_hp (carried from the prior fight's
+  // heroHpLeft + server-credited passive regen + server-validated item heals via
+  // POST /adventure/heal), NOT from the client-saved hero.hp — which a cheater
+  // could set to full to start every fight at max. serverRunHp caps at maxHp and
+  // credits passive hunger regen for elapsed wall-clock time. Legacy/in-progress
+  // sessions (no run_hp; e.g. started before this deploy) fall back to saved hp.
+  if (session.run_hp) {
+    const maxHp = M.calcStats(hero).maxHp;
+    const seeded = serverRunHp(session.run_hp, maxHp, hero.hunger, Date.now(), M.getPassiveRegenFromHunger);
+    if (Number.isFinite(seeded)) hero.hp = seeded;
+  }
 
   // Match the client's resolveAdventureNode args exactly (App.jsx fight/room):
   //   totalCombats   = hero.combatsWon          (drives day/night → enemy stats)
@@ -257,17 +267,52 @@ async function startFight(f) {
   // Precompute the hero's escape-item flee bonus once; fed to processTick on flee.
   f.fleeItemBonus = fleeItemBonusFor(hero, M.getItem);
 
-  // Send the server-resolved enemies so the client renders the SAME encounter the
-  // server is simulating (the server re-rolls rarity/group from the node, so the
-  // client must not use its own independent roll or sprites/names would mismatch).
+  // Remember what the start handshake needs so a reconnecting client can be
+  // re-sent the SAME encounter (server re-rolls rarity/group from the node, so
+  // the client must not roll its own or sprites/names would mismatch).
+  f.enemies = enemyObjs;
+  f.bossDeathEndsFight = encounter?.bossDeathEndsFight ?? true;
+  f.addsDespawnOnBossDeath = encounter?.addsDespawnOnBossDeath ?? true;
+
+  sendStart(f);
+  f.timer = setInterval(() => runTick(f, M), M.TICK_MS);
+}
+
+function sendStart(f) {
   send(f.ws, {
     type: 'adventure_fight_start',
     nodeId: f.nodeId,
-    enemies: enemyObjs,
-    bossDeathEndsFight: encounter?.bossDeathEndsFight ?? true,
-    addsDespawnOnBossDeath: encounter?.addsDespawnOnBossDeath ?? true,
+    enemies: f.enemies,
+    bossDeathEndsFight: f.bossDeathEndsFight,
+    addsDespawnOnBossDeath: f.addsDespawnOnBossDeath,
   });
-  f.timer = setInterval(() => runTick(f, M), M.TICK_MS);
+}
+
+// Re-attach a dropped client to an in-flight fight: re-send the start handshake
+// and a FULL snapshot tick (entire log, current HP/queues) so the client can
+// rebuild the fight view, then let the running sim resume streaming. The sim
+// itself never paused — it kept ticking authoritatively while disconnected, so
+// a player cannot dodge a loss by pulling the cable.
+function resumeFight(f) {
+  if (!f || f.ended || !f.state) return;
+  sendStart(f);
+  send(f.ws, buildTick(f, f.state, f.state.log || []));
+}
+
+// A reconnecting client whose fight already finished while it was away: replay
+// the authoritative outcome from the session's last_fight so the client can
+// resolve the node. `replayed:true` tells the client this is a cold result (no
+// preceding ticks) so it synthesises the combat-end instead of waiting for a
+// final tick that will never come.
+async function replayEndedFight(ws, userId, nodeId) {
+  const session = await getActiveSession(userId);
+  const lf = session?.last_fight;
+  const fresh = lf && lf.nodeId === nodeId && Number.isFinite(lf.at) && (Date.now() - lf.at) < SESSION_TTL_MS;
+  if (fresh) {
+    send(ws, { type: 'adventure_fight_end', nodeId, result: lf.result, heroHpLeft: lf.heroHpLeft, replayed: true });
+  } else {
+    send(ws, { type: 'error', code: 'NO_FIGHT', message: 'No fight to resume' });
+  }
 }
 
 function runTick(f, M) {
@@ -305,11 +350,24 @@ function stepTick(f, M) {
   const newLogEntries = (state.log || []).slice(f.logCursor);
   f.logCursor = (state.log || []).length;
 
+  send(f.ws, buildTick(f, state, newLogEntries));
+
+  if (state.phase !== M.PHASE.FIGHTING) {
+    const result = state.phase === M.PHASE.WON ? 'won'
+      : state.phase === M.PHASE.FLED ? 'fled'
+      : 'lost';
+    endFight(f, M, result).catch(err => console.error('[adv-fight] endFight error', err));
+  }
+}
+
+// Build the adventure_tick payload from a combat state. Extracted so a
+// reconnecting client can be sent a full snapshot (entire log) via resumeFight.
+function buildTick(f, state, newLogEntries) {
   const hero = state.combatants.hero;
   const allEnemies = state.combatants.enemies || (state.combatants.enemy ? [state.combatants.enemy] : []);
   const enemy = state.combatants.enemy || allEnemies[0];
 
-  send(f.ws, {
+  return {
     type:  'adventure_tick',
     tick:  state.tick,
     phase: state.phase,
@@ -380,14 +438,7 @@ function stepTick(f, M) {
       queue: castEntriesFor(state, foe.id),
     })),
     newLogEntries,
-  });
-
-  if (state.phase !== M.PHASE.FIGHTING) {
-    const result = state.phase === M.PHASE.WON ? 'won'
-      : state.phase === M.PHASE.FLED ? 'fled'
-      : 'lost';
-    endFight(f, M, result).catch(err => console.error('[adv-fight] endFight error', err));
-  }
+  };
 }
 
 async function endFight(f, M, result) {
@@ -398,14 +449,22 @@ async function endFight(f, M, result) {
   const heroHpLeft = Math.max(0, Math.floor(f.state?.combatants?.hero?.hp ?? 0));
 
   // Persist the authoritative result on the session. Phase 2 wires
-  // /adventure/complete-node to trust this instead of the client's claim.
+  // /adventure/complete-node to trust last_fight instead of the client's claim.
+  // Phase 4: also write run_hp so the NEXT fight carries this fight's remaining
+  // HP server-side (startFight seeds from it; POST /hero clamps to it). `at`
+  // stamps the regen clock so passive healing accrues between nodes.
   try {
     if (f.sessionRowId) {
+      const now = Date.now();
       await pool.query(
         `UPDATE adventure_sessions
-         SET last_fight = $1, updated_at = NOW()
-         WHERE id = $2`,
-        [JSON.stringify({ nodeId: f.nodeId, result, heroHpLeft, at: Date.now() }), f.sessionRowId],
+         SET last_fight = $1, run_hp = $2, updated_at = NOW()
+         WHERE id = $3`,
+        [
+          JSON.stringify({ nodeId: f.nodeId, result, heroHpLeft, at: now }),
+          JSON.stringify({ hp: heroHpLeft, at: now }),
+          f.sessionRowId,
+        ],
       );
     }
   } catch (err) {
@@ -440,11 +499,39 @@ function setupAdventureFightWs(httpServer) {
         }
         userId = String(payload.id);
         if (!msg.nodeId) { send(ws, { type: 'error', code: 'BAD_REQUEST', message: 'nodeId required' }); ws.close(); return; }
+        const reqNodeId = String(msg.nodeId);
 
-        // One fight per player: drop any stale one.
+        // Reconnect/resume: if an in-flight fight for this player is still running
+        // for the SAME node (e.g. the client dropped and re-opened the socket),
+        // re-attach this socket to it and re-send a full snapshot instead of
+        // starting a fresh fight (which would re-roll the enemy + reset HP). The
+        // sim kept ticking authoritatively while disconnected.
         const existing = fights.get(userId);
-        if (existing) cleanup(existing);
-
+        if (existing && !existing.ended && existing.state) {
+          // A live fight is still running for this player (the sim keeps going
+          // across disconnects). Same node → reconnect/resume into it.
+          if (existing.nodeId === reqNodeId) {
+            existing.ws = ws;
+            resumeFight(existing);
+            return;
+          }
+          // DIFFERENT node while a fight is unresolved: refuse to start a new
+          // one (which would silently discard the running fight — an F5-to-dodge
+          // -a-loss escape hatch). Tell the client to resume the live fight.
+          send(ws, { type: 'error', code: 'FIGHT_IN_PROGRESS', nodeId: existing.nodeId });
+          return;
+        }
+        // No live fight. A reconnect (resume:true) means the sim ended while the
+        // client was away — replay the authoritative result so the client
+        // resolves the node instead of dangling / re-rolling a fresh fight.
+        if (msg.resume) {
+          replayEndedFight(ws, userId, reqNodeId).catch(err => {
+            console.error('[adv-fight] replay failed', err);
+            send(ws, { type: 'error', code: 'NO_FIGHT' });
+          });
+          return;
+        }
+        // No live fight, fresh start.
         const f = {
           ws, userId,
           nodeId: String(msg.nodeId),
@@ -493,10 +580,33 @@ function setupAdventureFightWs(httpServer) {
     ws.on('close', () => {
       if (!userId) return;
       const f = fights.get(userId);
-      // Mid-fight disconnect = abandon (no result persisted → counts as not-won).
-      if (f) cleanup(f);
+      if (!f) return;
+      // Only detach the socket that is actually the one closing — a reconnect may
+      // already have swapped f.ws to a newer socket; closing the OLD one must not
+      // tear down the live fight.
+      if (f.ws !== ws) return;
+      if (f.ended || !f.state) {
+        // No live sim to preserve → clean up immediately.
+        cleanup(f);
+        return;
+      }
+      // Mid-fight disconnect: DO NOT abandon. Detach the socket and let the
+      // authoritative sim keep running to its real conclusion (send() no-ops on a
+      // null socket). The result persists via endFight → last_fight/run_hp, so a
+      // player can't escape a loss by disconnecting, and a reconnect (same nodeId)
+      // can re-attach and resume. A never-reconnecting fight self-cleans when it
+      // ends; pruneStale reaps anything stuck past SESSION_TTL_MS.
+      f.ws = null;
     });
   });
 }
 
-module.exports = { setupAdventureFightWs };
+// The nodeId of the live (still-running) fight for this user, or null. Lets the
+// REST layer (GET /adventure/fight-status) tell a freshly-loaded client to
+// auto-resume an in-progress fight after a reload.
+function getActiveFightNodeId(userId) {
+  const f = fights.get(String(userId));
+  return (f && !f.ended && f.state) ? f.nodeId : null;
+}
+
+module.exports = { setupAdventureFightWs, getActiveFightNodeId };

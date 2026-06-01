@@ -1,11 +1,26 @@
 'use strict';
 
 const pool = require('../db/pool');
+const { serverRunHp } = require('../lib/runHp');
+const { getActiveFightNodeId } = require('./adventureFightWs');
 
 // Start loading ESM game modules immediately (loaded once, reused)
-const adventureModP = import('../game/logic/adventure.js');
-const lootModP      = import('../game/logic/loot.js');
-const heroModP      = import('../game/logic/hero.js');
+const adventureModP  = import('../game/logic/adventure.js');
+const lootModP       = import('../game/logic/loot.js');
+const heroModP       = import('../game/logic/hero.js');
+const survivalModP   = import('../game/logic/survival.js');
+const contentModP    = import('../game/logic/content.js');
+
+// Resolve an inventory slot's stored item id (string), handling both the
+// string form and the embedded-object form { itemId: { id, uid, ... } }.
+function slotItemId(slot) {
+  const ref = slot?.itemId;
+  return (ref && typeof ref === 'object') ? ref.id : ref;
+}
+function slotItemUid(slot) {
+  const ref = slot?.itemId;
+  return (ref && typeof ref === 'object') ? ref.uid : undefined;
+}
 
 async function getActiveSession(userId) {
   const r = await pool.query(
@@ -63,12 +78,24 @@ async function adventureRoutes(fastify) {
     const choices = getAdventureChoiceNodes(adventure, started);
     const status  = getAdventureStatus(adventure, started);
 
+    // Phase 4: seed authoritative run HP from the hero's entry HP. This is the
+    // carry source for server-authoritative combat (read in adventureFightWs
+    // .startFight and POST /hero). Only ever READ on the server-combat path
+    // (active session has last_fight), so flag-off players are unaffected.
+    let runHpJson = null;
+    if (saveData.hero) {
+      const { calcStats } = await heroModP;
+      const maxHp = calcStats(saveData.hero).maxHp;
+      const hp = Math.max(1, Math.min(maxHp, Math.floor(saveData.hero.hp ?? maxHp)));
+      runHpJson = JSON.stringify({ hp, at: Date.now() });
+    }
+
     const sessionResult = await pool.query(
       `INSERT INTO adventure_sessions
-         (user_id, adventure_id, slot_id, status, progress, hero_snap, run_loot, run_xp, run_gold)
-       VALUES ($1, $2, $3, 'active', $4, $5, '[]', 0, 0)
+         (user_id, adventure_id, slot_id, status, progress, hero_snap, run_loot, run_xp, run_gold, run_hp)
+       VALUES ($1, $2, $3, 'active', $4, $5, '[]', 0, 0, $6)
        RETURNING id`,
-      [userId, adventureId, slotId, JSON.stringify(started), JSON.stringify(saveData.hero || null)]
+      [userId, adventureId, slotId, JSON.stringify(started), JSON.stringify(saveData.hero || null), runHpJson]
     );
     const sessionId = sessionResult.rows[0].id;
 
@@ -104,6 +131,27 @@ async function adventureRoutes(fastify) {
       runXp:    session.run_xp    || 0,
       runGold:  session.run_gold  || 0,
     };
+  });
+
+  // GET /adventure/fight-status — does this player have a fight to resume?
+  // Used after a reload (F5) so the client can auto-rejoin an in-progress fight
+  // instead of landing on the map (where starting another node would desync /
+  // try to dodge the unresolved fight). Reports a LIVE fight (sim still running)
+  // or a fight that ENDED while the client was away but hasn't been resolved
+  // (node not completed) — both resume via the WS, which streams live or replays
+  // the result.
+  fastify.get('/adventure/fight-status', { preHandler: fastify.authenticate }, async (request) => {
+    const { id: userId } = request.user;
+    const liveNode = getActiveFightNodeId(userId);
+    if (liveNode) return { active: true, nodeId: liveNode, live: true };
+
+    const session = await getActiveSession(userId);
+    const lf = session?.last_fight;
+    if (lf && Number.isFinite(lf.at) && (Date.now() - lf.at) < 10 * 60 * 1000) {
+      const completed = (session.progress?.completedNodes || []).includes(lf.nodeId);
+      if (!completed) return { active: true, nodeId: lf.nodeId, live: false, result: lf.result };
+    }
+    return { active: false };
   });
 
   // POST /adventure/select-node — player taps a node to navigate to
@@ -181,7 +229,7 @@ async function adventureRoutes(fastify) {
         resolveAdventureNode,
       },
       { rollCombatLoot },
-      { getHungerLevel, getOverlevelXpMult, xpToLevel },
+      { getHungerLevel, getOverlevelXpMult, xpToLevel, calcStats },
     ] = await Promise.all([adventureModP, lootModP, heroModP]);
 
     const adventure = getAdventure(session.adventure_id);
@@ -232,6 +280,23 @@ async function adventureRoutes(fastify) {
     const complete  = !!newProgress.bossCompleted;
     const newStatus = complete ? 'completed' : 'active';
 
+    // Phase 4: when this node's XP crosses a level boundary, the client heals
+    // the hero to full (App.jsx leveledUp ? maxHp). The Part C POST /hero lock
+    // would otherwise revert that heal to the carried run_hp, so grant it
+    // server-side here. Level is derived from session-tracked run XP (start
+    // snapshot + run total), independent of client saves. Only touches run_hp
+    // on the server-combat path (run_hp already set).
+    let runHpJson = null;
+    if (session.run_hp) {
+      const startXp     = session.hero_snap?.xp || 0;
+      const prevLevel   = xpToLevel(startXp + (session.run_xp || 0)).lvl;
+      const newLevel    = xpToLevel(startXp + runXp).lvl;
+      if (newLevel > prevLevel) {
+        const maxHp = calcStats(hero).maxHp;
+        runHpJson = JSON.stringify({ hp: maxHp, at: Date.now() });
+      }
+    }
+
     // NOTE: last_fight is intentionally NOT cleared here. HP carry between nodes is
     // done server-side in adventureFightWs.startFight, which reads the prior fight's
     // heroHpLeft off the session — the client save can't be trusted for hp (it round-
@@ -240,9 +305,10 @@ async function adventureRoutes(fastify) {
     // the nodeId, and completeNode is idempotent for an already-completed node.
     await pool.query(
       `UPDATE adventure_sessions
-       SET progress = $1, run_loot = $2, run_xp = $3, run_gold = $4, status = $5, updated_at = NOW()
+       SET progress = $1, run_loot = $2, run_xp = $3, run_gold = $4, status = $5,
+           run_hp = COALESCE($7, run_hp), updated_at = NOW()
        WHERE id = $6`,
-      [JSON.stringify(newProgress), JSON.stringify(runLoot), runXp, runGold, newStatus, session.id]
+      [JSON.stringify(newProgress), JSON.stringify(runLoot), runXp, runGold, newStatus, session.id, runHpJson]
     );
 
     return {
@@ -258,6 +324,100 @@ async function adventureRoutes(fastify) {
       lootItems,
       heroHpLeft: serverFight ? serverFight.heroHpLeft : null,
     };
+  });
+
+  // POST /adventure/heal — consume a healing consumable (campfire/food/treatment)
+  // during a server-authoritative run. The server validates the item is actually
+  // possessed, enqueues a durable removal (so autosave can't restore it and heal
+  // again), and applies the heal to the session's authoritative run_hp. This is
+  // the ONLY way HP rises between fights on the server-combat path — POST /hero
+  // hp is clamped to run_hp (Part C), so a client cannot fake a refill.
+  fastify.post('/adventure/heal', { preHandler: fastify.authenticate }, async (request, reply) => {
+    const { id: userId } = request.user;
+    const { itemId, itemUid, index } = request.body || {};
+    if (!itemId && !itemUid && !Number.isInteger(index)) {
+      return reply.status(400).send({ error: 'Missing item reference' });
+    }
+
+    const session = await getActiveSession(userId);
+    if (!session) return reply.status(404).send({ error: 'No active adventure' });
+
+    const [{ getItem }, { calcStats }, { getPassiveRegenFromHunger }] =
+      await Promise.all([contentModP, heroModP, survivalModP]);
+
+    const heroResult = await pool.query(
+      'SELECT save_data FROM heroes WHERE user_id = $1 AND slot_id = $2',
+      [userId, session.slot_id || 'slot_1']
+    );
+    const hero = heroResult.rows[0]?.save_data?.hero;
+    if (!hero) return reply.status(404).send({ error: 'No hero' });
+    const inventory = Array.isArray(hero.inventory) ? hero.inventory : [];
+
+    // Locate the slot the client is consuming: by uid (preferred, unique), else
+    // by explicit index, else the first slot matching the item id.
+    let slot = null;
+    if (itemUid) {
+      slot = inventory.find(s => slotItemUid(s) === itemUid) || null;
+    } else if (Number.isInteger(index) && inventory[index] &&
+               (!itemId || slotItemId(inventory[index]) === itemId)) {
+      slot = inventory[index];
+    } else if (itemId) {
+      slot = inventory.find(s => slotItemId(s) === itemId) || null;
+    }
+    if (!slot) return reply.status(409).send({ error: 'Item not in inventory', code: 'NO_ITEM' });
+
+    // Must actually be an HP consumable.
+    const item = getItem(slot.itemId);
+    const healEffect = (item?.effects || []).find(e => e.type === 'restore_hp_pct');
+    const pct = Number(healEffect?.value) || 0;
+    if (pct <= 0) return reply.status(400).send({ error: 'Item does not restore HP', code: 'BAD_ITEM' });
+
+    // Possession check against (inventory count − already-pending removals) so a
+    // cheater can't re-add the item via autosave and heal off the same item twice.
+    const uid = slotItemUid(slot);
+    const baseId = slotItemId(slot);
+    const matches = (kind, key) => kind === 'uid'
+      ? (s) => slotItemUid(s) === key
+      : (s) => slotItemUid(s) == null && slotItemId(s) === key;
+    const kind = uid ? 'uid' : 'id';
+    const key  = uid || baseId;
+    const invCount = inventory.filter(matches(kind, key)).reduce((n, s) => n + (s.qty || 1), 0);
+
+    const pendingRes = await pool.query(
+      `SELECT entry FROM adventure_pending_removals WHERE user_id = $1 AND applied = FALSE`,
+      [userId]
+    );
+    const pendingCount = pendingRes.rows.reduce((n, row) => {
+      const e = row.entry || {};
+      const m = kind === 'uid' ? e.itemUid === key : (!e.itemUid && e.itemId === key);
+      return n + (m ? (e.qty || 1) : 0);
+    }, 0);
+
+    if (invCount - pendingCount < 1) {
+      return reply.status(409).send({ error: 'Item not available', code: 'NO_ITEM' });
+    }
+
+    // Enqueue the durable consumption (applied on next POST /hero).
+    const entry = uid ? { itemUid: uid, qty: 1 } : { itemId: baseId, source: 'inventory', qty: 1 };
+    await pool.query(
+      `INSERT INTO adventure_pending_removals (user_id, entry) VALUES ($1, $2)`,
+      [userId, JSON.stringify(entry)]
+    );
+
+    // Apply the heal to authoritative run HP.
+    const now = Date.now();
+    const maxHp = calcStats(hero).maxHp;
+    const cur = serverRunHp(session.run_hp, maxHp, hero.hunger, now, getPassiveRegenFromHunger)
+      ?? Math.max(1, Math.min(maxHp, Math.floor(hero.hp ?? maxHp)));
+    const healAmt = Math.round(maxHp * pct / 100);
+    const newHp = Math.min(maxHp, cur + healAmt);
+
+    await pool.query(
+      `UPDATE adventure_sessions SET run_hp = $1, updated_at = NOW() WHERE id = $2`,
+      [JSON.stringify({ hp: newHp, at: now }), session.id]
+    );
+
+    return { ok: true, hp: newHp, maxHp, healed: newHp - cur };
   });
 
   // POST /adventure/fail-node — player died, abandon the run

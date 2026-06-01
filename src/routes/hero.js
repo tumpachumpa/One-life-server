@@ -1,10 +1,12 @@
 const pool = require('../db/pool');
+const { serverRunHp } = require('../lib/runHp');
 
 // ESM game modules — loaded once, reused across requests
 const heroLogicP = import('../game/logic/hero.js');
 const inventoryLogicP = import('../game/logic/inventory.js');
 const contentP = import('../game/logic/content.js');
 const snapModP = import('../game/snap.js');
+const survivalP = import('../game/logic/survival.js');
 
 const ESSENCE_PER_HOUR = 100;
 
@@ -133,6 +135,23 @@ async function applyPendingRemovals(saveData, userId) {
   );
   if (!pending.rows.length) return false;
 
+  for (const row of pending.rows) {
+    removeItemFromSave(saveData, row.entry);
+  }
+  return true;
+}
+
+// Phase 4: apply any pending adventure heal-item consumptions (from
+// POST /adventure/heal) to saveData and mark them applied. Same mechanism as
+// applyPendingRemovals but a separate table (no pvp_records FK). This is what
+// makes server-validated heals durable: even if the client autosaves an
+// inventory that still contains a consumed campfire, it is stripped here.
+async function applyAdventureRemovals(saveData, userId) {
+  const pending = await pool.query(
+    `UPDATE adventure_pending_removals SET applied = TRUE WHERE user_id = $1 AND applied = FALSE RETURNING id, entry`,
+    [userId]
+  );
+  if (!pending.rows.length) return false;
   for (const row of pending.rows) {
     removeItemFromSave(saveData, row.entry);
   }
@@ -345,7 +364,34 @@ async function heroRoutes(fastify) {
 
     migrateStonewallsInSave(hero);
 
+    // Phase 4 HP lock: on the server-combat path (an active adventure session
+    // that has a last_fight — only the server WS fight writes that), HP is
+    // server-authoritative. Override the client's claimed hp with the session's
+    // run_hp (carry + passive regen), so a cheater can't refill via autosave.
+    // Gated on last_fight so flag-off / legacy players are completely unaffected
+    // (their save path below is unchanged).
+    let hpLocked = false;
+    if (hero.hero) {
+      const sessionRes = await pool.query(
+        `SELECT run_hp, last_fight FROM adventure_sessions
+         WHERE user_id = $1 AND status = 'active' AND last_fight IS NOT NULL
+         ORDER BY created_at DESC LIMIT 1`,
+        [id]
+      );
+      const sess = sessionRes.rows[0];
+      if (sess && sess.run_hp) {
+        const [{ calcStats }, { getPassiveRegenFromHunger }] = await Promise.all([heroLogicP, survivalP]);
+        const maxHp = calcStats(hero.hero).maxHp;
+        const authoritativeHp = serverRunHp(sess.run_hp, maxHp, hero.hero.hunger, Date.now(), getPassiveRegenFromHunger);
+        if (Number.isFinite(authoritativeHp) && hero.hero.hp !== authoritativeHp) {
+          hero.hero.hp = authoritativeHp;
+          hpLocked = true;
+        }
+      }
+    }
+
     const removalsApplied = await applyPendingRemovals(hero, id);
+    const advRemovalsApplied = await applyAdventureRemovals(hero, id);
     const lootApplied = await applyPendingLoot(hero, id);
 
     const heroSaveP = pool.query(
@@ -372,7 +418,7 @@ async function heroRoutes(fastify) {
     return {
       ok: true,
       // Return appliedHero whenever hero values were changed server-side so client stays in sync
-      ...((removalsApplied || heroWasClamped) ? { appliedHero: hero.hero } : {}),
+      ...((removalsApplied || advRemovalsApplied || heroWasClamped || hpLocked) ? { appliedHero: hero.hero } : {}),
       ...(lootApplied ? { appliedPendingLoot: hero.pendingLoot || [] } : {}),
     };
   });

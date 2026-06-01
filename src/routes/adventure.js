@@ -232,31 +232,18 @@ async function adventureRoutes(fastify) {
     const complete  = !!newProgress.bossCompleted;
     const newStatus = complete ? 'completed' : 'active';
 
+    // NOTE: last_fight is intentionally NOT cleared here. HP carry between nodes is
+    // done server-side in adventureFightWs.startFight, which reads the prior fight's
+    // heroHpLeft off the session — the client save can't be trusted for hp (it round-
+    // trips back to full, which also clobbered an earlier save_data.hero.hp approach).
+    // Leaving it set is safe: each fight overwrites it, the win-gate above re-checks
+    // the nodeId, and completeNode is idempotent for an already-completed node.
     await pool.query(
       `UPDATE adventure_sessions
-       SET progress = $1, run_loot = $2, run_xp = $3, run_gold = $4, status = $5,
-           last_fight = NULL, updated_at = NOW()
+       SET progress = $1, run_loot = $2, run_xp = $3, run_gold = $4, status = $5, updated_at = NOW()
        WHERE id = $6`,
       [JSON.stringify(newProgress), JSON.stringify(runLoot), runXp, runGold, newStatus, session.id]
     );
-
-    // Phase 2: carry the server's authoritative remaining HP into the saved hero so
-    // the next node's fight (which starts from save_data.hero.hp) begins there — the
-    // player can't refill by cheating. Targeted jsonb_set leaves the rest of the save
-    // untouched. (Locking POST /hero against client HP overwrites mid-run is Phase 4.)
-    if (serverFight) {
-      try {
-        await pool.query(
-          `UPDATE heroes SET save_data = jsonb_set(save_data, '{hero,hp}', to_jsonb($1::int)), updated_at = NOW()
-           WHERE user_id = $2 AND slot_id = $3`,
-          [serverFight.heroHpLeft, userId, session.slot_id || 'slot_1']
-        );
-      } catch (err) {
-        // Node already advanced above; don't fail the completion if the HP carry
-        // write hiccups — just log it.
-        fastify.log.error({ err }, '[adventure] HP carry write failed');
-      }
-    }
 
     return {
       progress: newProgress,

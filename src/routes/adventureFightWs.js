@@ -219,6 +219,19 @@ async function startFight(f) {
   const hero = heroRes.rows[0]?.save_data?.hero;
   if (!hero) { send(f.ws, { type: 'error', code: 'NO_HERO' }); cleanup(f); return; }
 
+  // Phase 2: carry HP between nodes. The session's last_fight holds the authoritative
+  // remaining HP from THIS run's previous fight, so start this fight there — damage
+  // persists across nodes instead of resetting to full. The client hero save can't be
+  // trusted for hp (it round-trips back to full). First fight of a run has no
+  // last_fight, so it starts from the saved hp. NOTE: out-of-combat heal/rest between
+  // nodes is not yet reflected server-side — that's Phase 4 (server owns all hp).
+  const carry = session.last_fight;
+  if (carry && (carry.result === 'won' || carry.result === 'fled')
+      && Number.isFinite(carry.heroHpLeft) && Number.isFinite(carry.at)
+      && (Date.now() - carry.at) < 60 * 60 * 1000) {
+    hero.hp = Math.max(1, Math.floor(carry.heroHpLeft));
+  }
+
   // Match the client's resolveAdventureNode args exactly (App.jsx fight/room):
   //   totalCombats   = hero.combatsWon          (drives day/night → enemy stats)
   //   difficultyStars = getAdventureRunDifficulty (drives rarity weights)

@@ -26,6 +26,7 @@ const MIGRATIONS = [
   'src/db/migrations/014_encounter_charges.sql',
   'src/db/migrations/015_hero_slots.sql',
   'src/db/migrations/016_session_nonce.sql',
+  'src/db/migrations/018_adventure_fight.sql',
 ];
 
 async function run() {

@@ -191,17 +191,14 @@
                   "id": "berserker_lingering_rage",
                   "name": "Lingering Rage",
                   "summary": [
-                    "On combat start: if you carried Rage from last fight, restore 30% of it"
+                    "Start combat with 15 Rage"
                   ],
                   "proc": {
                     "trigger": "on_combat_start",
                     "chance": 100,
-                    "condition": {
-                      "carried_rage_gt": 0
-                    },
                     "effect": {
-                      "type": "gain_rage_from_carry",
-                      "pct": 30
+                      "type": "gain_rage",
+                      "value": 15
                     }
                   }
                 }

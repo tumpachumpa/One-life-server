@@ -179,6 +179,20 @@ export function collectEffects(hero) {
   return [...collectItemEffects(hero), ...collectTalentEffects(hero), ...collectActiveFoodBuffEffects(hero), ...collectSetBonuses(hero)];
 }
 
+// Enchantment-stone effects from every equipped item. These drive on-hit elemental
+// procs and ancestral (Frost/Earth) passives in combat via procState.enchantmentEffects.
+// Kept here (shared, mirrored) so buildCombatInitArgs wires them for BOTH the client
+// render and the server-authoritative sim — otherwise enchants silently do nothing.
+export function getEquippedEnchantmentEffects(hero) {
+  const effects = [];
+  for (const ref of Object.values(hero?.equip || {})) {
+    if (!ref) continue;
+    const enchantment = typeof ref === 'object' ? ref?.enchantment : null;
+    if (enchantment?.effect) effects.push(enchantment.effect);
+  }
+  return effects;
+}
+
 export function collectProcNodes(hero) {
   const nodes = [];
   for (const [talentId, rank] of Object.entries(hero?.talents || {})) {

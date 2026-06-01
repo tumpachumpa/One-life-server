@@ -39,6 +39,13 @@ export function buildCombatSnapFromHero(hero) {
 
   const hungerLevel = getHungerLevel(hero.hunger ?? 100);
   const attackRate = Math.max(0.35, (stats.weaponAttackSpeed || 1) * (stats.attackSpeedMult || 1));
+  // Offhand (dual-wield) auto-attack rate — mirrors buildCombatInitArgs so a Rogue's
+  // second weapon swings (and shows its bar) in duels, not just solo combat.
+  const mainWeaponBase = equipment.weapon?.attackSpeed || equipment.weapon?.baseStats?.attackSpeed || 1;
+  const weaponSpeedEffectFactor = (stats.weaponAttackSpeed || 1) / mainWeaponBase;
+  const offhandRate = (equipment.offhand && equipment.offhand.slot === 'weapon')
+    ? Math.max(0.35, (equipment.offhand.attackSpeed || equipment.offhand.baseStats?.attackSpeed || 1) * weaponSpeedEffectFactor * (stats.attackSpeedMult || 1) * 0.5)
+    : 0;
   const damageMult = (hungerLevel.dmgMult ?? 1) * (stats.damageMult ?? 1) * (1 + physDmgBonus / 100);
   const damage = Math.max(1, Math.floor(
     getHeroRawDamageBase(stats, equipment.weapon) * damageMult
@@ -70,6 +77,7 @@ export function buildCombatSnapFromHero(hero) {
     weaponTags:       [...(equipment.weapon?.tags || stats.weaponTags || [])],
     attackType:       getWeaponAttackType(equipment.weapon || stats),
     offhandFamily:    equipment.offhand?.family || null,
+    offhandRate,
     passiveEffects:   heroEffects,
     heroClass:        normalizedHeroClass,
     talents:          hero.talents || {},

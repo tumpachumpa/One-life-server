@@ -172,6 +172,12 @@ const DEPRECATED_GENERATED_BASE_EFFECTS = {
     { type: "armor", value: 1 },
     { type: "max_hp", value: 4 },
   ],
+  // imp_ember_ring's burn_on_hit was removed for being too strong; strip it from
+  // copies already rolled before the template was fixed (they now use the named
+  // fire_resist + attack_speed profile instead).
+  imp_ember_ring: [
+    { type: "burn_on_hit", chance: 8, duration: 2, damagePct: 2 },
+  ],
 };
 
 function itemEffectIdentity(effect) {

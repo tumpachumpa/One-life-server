@@ -4124,6 +4124,11 @@
           "type": "fire_resist",
           "value": 10,
           "_base": true
+        },
+        {
+          "type": "attack_speed",
+          "value": 3,
+          "_base": true
         }
       ],
       "tags": [
@@ -4292,6 +4297,10 @@
       "baseStats": {
         "armor": 9
       },
+      "effects": [
+        { "type": "armor", "value": 3, "_base": true },
+        { "type": "crit_resist", "value": 3, "_base": true }
+      ],
       "tags": [
         "boots",
         "heavy",
@@ -4323,6 +4332,10 @@
       "baseStats": {
         "armor": 8
       },
+      "effects": [
+        { "type": "armor", "value": 2, "_base": true },
+        { "type": "counter_chance", "value": 4, "_base": true }
+      ],
       "tags": [
         "gloves",
         "heavy",
@@ -4457,6 +4470,9 @@
       "baseStats": {
         "damage": 11
       },
+      "effects": [
+        { "type": "armor_ignore", "value": 10, "_base": true }
+      ],
       "tags": [
         "weapon",
         "melee",
@@ -4503,7 +4519,8 @@
       ],
       "rarityAffixPools": [
         "guard",
-        "ember"
+        "ember",
+        "treasure"
       ],
       "price": 290,
       "dropWeight": 3,
@@ -4547,7 +4564,8 @@
       ],
       "rarityAffixPools": [
         "evasion",
-        "warding"
+        "warding",
+        "treasure"
       ],
       "price": 270,
       "dropWeight": 3,
@@ -5140,8 +5158,15 @@
       "price": 550,
       "dropWeight": 0,
       "rarityAffixPools": [
-        "survival",
-        "elemental"
+        "elemental",
+        "precision",
+        "brutal",
+        "speed",
+        "blood",
+        "venom",
+        "treasure",
+        "dueling",
+        "evasion"
       ],
       "icon": "/assets/items/Dwarf content/Chimera artifact cape.png"
     },

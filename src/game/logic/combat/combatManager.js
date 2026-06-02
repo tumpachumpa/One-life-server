@@ -6483,7 +6483,10 @@ export function buildCombatResult(state) {
     won: state.phase === PHASE.WON,
     fled: state.phase === PHASE.FLED,
     log: state.log,
-    hpLeft: Math.max(0, Math.floor(state.combatants.hero.hp)),
+    // A successful flee means you survived — never report 0 HP (a last-breath/low-HP
+    // frame could leave the combat HP at 0). Keeps the bar/sidebar from flashing 0 on
+    // escape; the saved HP is already clamped to >=1 downstream.
+    hpLeft: Math.max(state.phase === PHASE.FLED ? 1 : 0, Math.floor(state.combatants.hero.hp)),
     allies,
     rounds: state.tick,
     heroConditions: state.heroConditions || { bleeding: null, poison: null },

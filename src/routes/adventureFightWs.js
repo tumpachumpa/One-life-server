@@ -389,6 +389,13 @@ function buildTick(f, state, newLogEntries) {
     // the queued/casting button state never render, and impact looks like it never
     // happens. Forwarding the queue lets the client render the cast exactly.
     p1Queue: castEntriesFor(state, 'hero'),
+    // Ability cooldowns ({abilityId: readyTick}) + one-shot used flags. The client
+    // runs no sim, so without these its hero.abilityCooldowns stays empty → every
+    // ability shows permanently ready and presses made during cooldown are silently
+    // dropped server-side. readyTick is in this sim's tick space; the client renders
+    // off the same synced tick, so the countdown lines up.
+    p1Cooldowns: hero?.abilityCooldowns || {},
+    p1UsedAbilities: hero?.usedAbilityIds || {},
     // So the client disables the flee button after the one allowed attempt.
     p1FleeAttempted: !!state.fleeAttempted,
     // Which combatant is in front (hero vs companion). Swap (ACTION.SWAP_FRONT)

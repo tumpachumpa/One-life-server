@@ -20,6 +20,31 @@ export function normalizeEffects(effects = []) {
   return effects.map(effect => ({ ...effect }));
 }
 
+// Map each talent id → the class that owns its tree, so talent effects/procs only
+// apply for the hero's CURRENT class. Without this, a character that still holds
+// off-class talents in its save (e.g. tested/respecced from another class) keeps
+// firing them — e.g. a Fighter applying the Rogue's Shadow Marks.
+let _talentClassById = null;
+function getTalentClassById() {
+  if (_talentClassById) return _talentClassById;
+  const map = {};
+  for (const tree of talentTrees || []) {
+    const cls = tree.class || tree.classId || null;
+    const add = nodes => { for (const n of nodes || []) if (n?.id) map[n.id] = cls; };
+    for (const level of tree.levels || []) add(level.choices);
+    for (const branch of tree.branches || []) for (const tier of branch.tiers || []) add(tier.choices);
+  }
+  _talentClassById = map;
+  return map;
+}
+
+function talentMatchesHeroClass(talentId, hero) {
+  const cls = getTalentClassById()[talentId];
+  // Unknown-class talents (data gaps) are allowed through; otherwise the talent's
+  // owning class must equal the hero's current class.
+  return !cls || !hero?.heroClass || cls === hero.heroClass;
+}
+
 function getTalentEquipmentRequirement(talentId) {
   for (const tree of talentTrees) {
     for (const branch of tree.branches || []) {
@@ -116,6 +141,7 @@ export function collectTalentEffects(hero) {
   const effects = [];
   for (const [talentId, rank] of Object.entries(hero.talents || {})) {
     if (!rank) continue;
+    if (!talentMatchesHeroClass(talentId, hero)) continue;
     const requirement = getTalentEquipmentRequirement(talentId);
     if (!matchesEquipmentRequirement(hero, requirement)) continue;
     const node = getTalentNode(talentId);
@@ -208,6 +234,7 @@ export function collectProcNodes(hero) {
   const nodes = [];
   for (const [talentId, rank] of Object.entries(hero?.talents || {})) {
     if (!rank) continue;
+    if (!talentMatchesHeroClass(talentId, hero)) continue;
     const requirement = getTalentEquipmentRequirement(talentId);
     if (!matchesEquipmentRequirement(hero, requirement)) continue;
     const node = getTalentNode(talentId);

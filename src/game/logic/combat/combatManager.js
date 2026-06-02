@@ -2901,7 +2901,9 @@ function hasArmorDebuff(combatant) {
     return effect.type === 'armor_shred'
       || effect.type === 'armor_reduction'
       || effect.type === 'armor_reduction_debuff'
-      || effect.type === 'power_shot_armor_break';
+      || effect.type === 'power_shot_armor_break'
+      || effect.type === 'armor_debuff_enchant'
+      || effect.type === 'armor_debuff_relic';
   });
 }
 

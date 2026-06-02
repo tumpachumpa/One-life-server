@@ -33,6 +33,11 @@ export function getEffectiveArmor(combatant) {
     if (effect.type === "armor_reduction" || effect.type === "armor_reduction_debuff") {
       return total + Math.max(0, effect.armorReduction || effect.value || 0);
     }
+    // Sunder enchant (shadow stone) and the Infernal Fang relic both push these armor
+    // debuffs but they were never subtracted here — so the debuff did nothing.
+    if (effect.type === "armor_debuff_enchant" || effect.type === "armor_debuff_relic") {
+      return total + Math.max(0, effect.value || effect.armorReduction || effect.reduction || 0);
+    }
     return total;
   }, 0);
   return Math.max(0, baseArmor - activeReduction);

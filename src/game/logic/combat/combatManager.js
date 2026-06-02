@@ -165,11 +165,13 @@ function getMomentumMax(heroProcNodes = [], hero = null) {
 function extractEnchantPassiveValues(enchEffects) {
   let enemyAttackSpeedSlowPct = 0;
   let physicalDmgReductionPct = 0;
+  let reflectDamage = 0;
   for (const e of enchEffects || []) {
     if (e?.enemyAttackSpeedSlow) enemyAttackSpeedSlowPct += Number(e.enemyAttackSpeedSlow) || 0;
     if (e?.physicalDamageReductionPct) physicalDmgReductionPct += Number(e.physicalDamageReductionPct) || 0;
+    if (e?.type === 'frost_reflect') reflectDamage += Number(e.reflectDamage) || 0;
   }
-  return { enemyAttackSpeedSlowPct, physicalDmgReductionPct };
+  return { enemyAttackSpeedSlowPct, physicalDmgReductionPct, reflectDamage };
 }
 
 function applyScarStackArmor(hero, procState) {
@@ -1548,6 +1550,10 @@ export function initCombat({
   if (heroEnch.physicalDmgReductionPct > 0) {
     state.combatants.hero.physicalDmgReductionPct = heroEnch.physicalDmgReductionPct;
   }
+  if (heroEnch.reflectDamage > 0) {
+    // Void frost_reflect: flat frost damage dealt back to whoever hits the hero.
+    state.combatants.hero.enchantReflectDamage = heroEnch.reflectDamage;
+  }
   if (enemyProcState) {
     const enemyEnch = extractEnchantPassiveValues(enemyProcState.enchantmentEffects);
     if (enemyEnch.enemyAttackSpeedSlowPct > 0) {
@@ -1578,6 +1584,7 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
   const hero = cloneCombatant(state.combatants.hero);
   const heroHpAtTickStart = hero.hp;
   let enemies = getStateEnemies(state.combatants).map(cloneCombatant);
+  const enemyIdsAliveAtTickStart = new Set(enemies.filter(foe => foe.hp > 0).map(foe => foe.id));
   let allies = getStateAllies(state.combatants).map(cloneCombatant);
   let frontId = getFrontId(hero, allies, state.frontId);
   let frontTarget = getFrontCombatant(hero, allies, frontId);
@@ -2270,6 +2277,7 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
   for (const ally of allies) syncCombatantAutoAttackSchedule(ally, tick);
   for (const foe of enemies) syncCombatantAutoAttackSchedule(foe, tick);
 
+  applyOnKillHeals(hero, enemies, enemyIdsAliveAtTickStart, tick, log, procState);
   return { ...state, tick, phase, combatants: buildCombatants(hero, enemies, allies), frontId, enemyFrontId, selectedTargetId, actionQueue: queue, log, heroConditions, heroWounds, heroResources: syncHeroCombatResources(heroResources, procState), ultimateChargePct, procState, heroProcNodes, enemyProcNodes, enemyProcState, fleeAttempted };
 }
 
@@ -2283,6 +2291,7 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
   const tick = state.tick || 0;
   const hero = cloneCombatant(state.combatants.hero);
   let enemies = getStateEnemies(state.combatants).map(cloneCombatant);
+  const enemyIdsAliveAtFrameStart = new Set(enemies.filter(foe => foe.hp > 0).map(foe => foe.id));
   let allies = getStateAllies(state.combatants).map(cloneCombatant);
   let frontId = getFrontId(hero, allies, state.frontId);
   let frontTarget = getFrontCombatant(hero, allies, frontId);
@@ -2474,6 +2483,7 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
     }
   }
 
+  applyOnKillHeals(hero, enemies, enemyIdsAliveAtFrameStart, tick, log, procState);
   return {
     ...state,
     phase,
@@ -4601,6 +4611,12 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
         }
       }
       log.push(makeEntry(tick, attacker.id, 'hit', `${attacker.name} hits you for ${incomingDamage}${action.isCrit ? ' (CRIT)' : ''}.`, incomingDamage, hero.hp, enemy.hp, { isCrit: !!action.isCrit, ...targetMeta }));
+      // Void frost_reflect: return flat frost damage to whoever hit the hero.
+      if (hero.enchantReflectDamage > 0 && incomingDamage > 0 && attacker.hp > 0) {
+        const refl = Math.max(1, Math.floor(hero.enchantReflectDamage));
+        attacker.hp = Math.max(0, attacker.hp - refl);
+        log.push(makeEntry(tick, 'hero', 'proc', `Frost Reflect: ${refl} frost damage returned to ${attacker.name}.`, refl, hero.hp, attacker.hp, { targetId: attacker.id, element: 'cold' }));
+      }
       applyLifeDrain(attacker, incomingDamage, tick, log, hero, enemy);
       tryAddBerserkerCritCharge(enemy, action);
       tryAddRapidFireCritCharge(enemy, action);
@@ -6224,9 +6240,23 @@ export function applyImpetusDamage(damage, procState) {
 /**
  * Apply relic kill effects (kill_heal_pct).
  */
+// Fire on-kill heals once for each enemy that died this frame after being alive at
+// its start. applyRelicOnKill previously had NO caller, so relic kill_heal, ancestral
+// lifesteal killRestore, and Void enchant kill_restore_hp_pct were all dead. The
+// onKillHealed flag (preserved through cloneCombatant) prevents double-heals across
+// the auto-attack frame + tick of the same kill.
+function applyOnKillHeals(heroObj, enemies, aliveAtStartIds, tick, log, procState) {
+  if (!heroObj || !procState || !aliveAtStartIds) return;
+  for (const foe of enemies || []) {
+    if (!foe || foe.hp > 0 || foe.onKillHealed || !aliveAtStartIds.has(foe.id)) continue;
+    foe.onKillHealed = true;
+    applyRelicOnKill(heroObj, heroObj.maxHp, tick, log, procState);
+  }
+}
+
 export function applyRelicOnKill(heroObj, heroMaxHp, tick, log, procState) {
-  if (!heroObj?.relics) return;
-  for (const relic of heroObj.relics) {
+  if (!heroObj) return;
+  for (const relic of (procState?.activeRelics || heroObj.relics || [])) {
     const passive = relic?.relicPassive;
     if (!passive) continue;
     if (passive.type === 'kill_heal_pct') {
@@ -6238,6 +6268,14 @@ export function applyRelicOnKill(heroObj, heroMaxHp, tick, log, procState) {
       const healAmt = Math.max(1, Math.round((heroObj.maxHp || 0) * passive.killRestoreHpPct / 100));
       heroObj.hp = Math.min(heroObj.maxHp, heroObj.hp + healAmt);
       log.push(makeEntry(tick, 'hero', 'proc', `Ancestral Stone: kills restore ${healAmt} HP.`, 0, heroObj.hp, null, {}));
+    }
+  }
+  // Void enchant kill_restore_hp_pct: heal a % of max HP on kill.
+  for (const e of procState?.enchantmentEffects || []) {
+    if (e?.type === 'kill_restore_hp_pct' && (e.value || 0) > 0) {
+      const healAmt = Math.max(1, Math.round((heroObj.maxHp || 0) * e.value / 100));
+      heroObj.hp = Math.min(heroObj.maxHp, heroObj.hp + healAmt);
+      log.push(makeEntry(tick, 'hero', 'proc', `Void Stone: kill restores ${healAmt} HP.`, 0, heroObj.hp, null, {}));
     }
   }
 }

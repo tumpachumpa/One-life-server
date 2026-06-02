@@ -83,6 +83,12 @@ export function collectItemEffects(hero) {
     if (item?.enchantment?.effect?.type === 'passive_lifesteal') {
       effects.push({ type: 'lifesteal', value: item.enchantment.effect.lifestealPct || 0, source: item.uid || item.id });
     }
+    if (item?.enchantment?.effect?.type === 'passive_damage_reduction') {
+      // Void enchant: flat % less damage taken. Routed through the standard
+      // damage_taken_reduction_pct passive so combat actually applies it (it was
+      // previously only recorded into an unused stat).
+      effects.push({ type: 'damage_taken_reduction_pct', value: item.enchantment.effect.reductionPct || 0, source: item.uid || item.id });
+    }
     if (itemRef && typeof itemRef === 'object' && itemRef.runemarks?.marks?.length) {
       for (const mark of itemRef.runemarks.marks) {
         if (!mark?.type) continue;

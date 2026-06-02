@@ -706,11 +706,9 @@ function applyEnchantmentPassives(stats, equipment) {
         // Tierra legendary: additionally scales with hero armor ×0.5
         totalMaxHpBonus += Math.floor((stats.armor || 0) * 0.5);
       }
-    } else if (e.type === 'passive_damage_reduction') {
-      // Record for use in combat; not a direct stat but store as damageTakenReductionPct
-      stats.enchantDamageTakenReductionPct = (stats.enchantDamageTakenReductionPct || 0) + Number(e.reductionPct || 0);
     }
-
+    // passive_damage_reduction is handled in effectEngine.collectItemEffects (routed
+    // to a damage_taken_reduction_pct passive that combat actually reads).
   }
 
   if (totalArmorBonus > 0) {

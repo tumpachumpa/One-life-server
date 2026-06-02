@@ -18,6 +18,15 @@ import { getBossPhase, scaleMonsterAbilities, scaleMonsterArmor, scaleMonsterAtt
 import { getDiceAverage, rollDice } from '../equipmentGenerator.js';
 
 const TESTING_DISABLE_WOUNDS = true;
+// Diminishing returns on damage-over-time stacks (bleed/poison). A lone stack is
+// full value, but stacks no longer add linearly: at the 6-stack cap the DoT does
+// ~4x a single stack instead of 6x, so high-stack DoTs don't melt big-HP targets.
+// Index by stack count (1..6); index 0 is unused.
+const DOT_STACK_MULTIPLIER = [0, 1, 1.8, 2.5, 3.1, 3.6, 4.0];
+function dotStackMultiplier(stacks) {
+  const s = Math.max(1, Math.min(DOT_STACK_MULTIPLIER.length - 1, Math.floor(stacks || 1)));
+  return DOT_STACK_MULTIPLIER[s];
+}
 const HERO_RAGE_MAX = 100;
 const HERO_RAGE_DECAY_PER_IDLE_TICK = 3;
 const HERO_RAGE_INACTIVITY_GRACE_TICKS = 4;
@@ -2647,7 +2656,7 @@ function tickActiveEffects(combatant, tick, log, procParams = null) {
         : 0;
       const hasMarks = bleedVsMarkedBonusPct > 0 && (combatant.activeEffects || []).some(e => e.type === 'shadow_mark' && (e.stacks || 0) > 0);
       const bleedVsMarkedMult = hasMarks ? (1 + bleedVsMarkedBonusPct / 100) : 1;
-      const dmg = dotImmune ? 0 : Math.max(1, Math.floor((combatant.maxHp || combatant.hp) * (effect.damagePctPerTick || 2) * stacks / 100 * bleedVsMarkedMult));
+      const dmg = dotImmune ? 0 : Math.max(1, Math.floor((combatant.maxHp || combatant.hp) * (effect.damagePctPerTick || 2) * dotStackMultiplier(stacks) / 100 * bleedVsMarkedMult));
       const hpBeforeDot = combatant.hp;
       combatant.hp = Math.max(0, combatant.hp - dmg);
       const label = effect.type === 'hemorrhage' ? 'Hemorrhage' : 'Bleeding';
@@ -2710,7 +2719,7 @@ function tickActiveEffects(combatant, tick, log, procParams = null) {
       }
       const hpBeforePoison = combatant.hp;
       const stacks = Math.max(1, effect.stacks || 1);
-      const raw = Math.max(1, Math.floor((combatant.maxHp || combatant.hp) * (effect.damagePctPerTick || 1.4) * stacks / 100));
+      const raw = Math.max(1, Math.floor((combatant.maxHp || combatant.hp) * (effect.damagePctPerTick || 1.4) * dotStackMultiplier(stacks) / 100));
       const dmg = dotImmune ? 0 : resolveElementalDamage(raw, 'poison', combatant);
       combatant.hp = Math.max(0, combatant.hp - dmg);
       const text = combatant.isPlayer
@@ -5882,7 +5891,7 @@ function applyProcEffect(effect, ctx, procState, heroProcNodes, hero, enemy, tic
       const stacks = Math.max(1, bleedEff?.stacks || 1);
       const damagePctPerTick = bleedEff?.damagePctPerTick || 2;
       const remainingTicks = bleedEff?.remainingTicks || 1;
-      const dmgPerTick = Math.max(1, Math.floor((enemy.maxHp || enemy.hp) * damagePctPerTick * stacks / 100));
+      const dmgPerTick = Math.max(1, Math.floor((enemy.maxHp || enemy.hp) * damagePctPerTick * dotStackMultiplier(stacks) / 100));
       const dmg = Math.max(1, dmgPerTick * remainingTicks);
       enemy.hp = Math.max(0, enemy.hp - dmg);
       applyStunToCombatant(enemy, tick, effect.stunTicks || 1);

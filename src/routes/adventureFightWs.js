@@ -437,12 +437,35 @@ function buildTick(f, state, newLogEntries) {
     })),
     // Full per-enemy state so multi-enemy packs render each member by id (the
     // p2* fields above only carry the primary enemy — back-compat with duels).
+    // Includes render identity + lifecycle so the client can show MID-FIGHT SUMMONS
+    // (boss Oath Pillars, hazards, revived adds) that aren't in the initial encounter,
+    // and hide a boss (phasedOut/combatHidden) while it stands behind them. The client
+    // builds a render combatant for any id it doesn't already have.
     enemies: allEnemies.map(foe => ({
       id:   foe.id,
+      sourceId: foe.sourceId || foe.id,
+      name: foe.name || null,
       hp:   Math.max(0, Math.floor(foe?.hp ?? 0)),
+      maxHp: Math.max(1, Math.floor(foe?.maxHp ?? 1)),
       auto: autoSchedule(foe),
       display: combatantDisplay(foe),
       queue: castEntriesFor(state, foe.id),
+      sprite: foe.sprite || null,
+      visual: foe.visual || null,
+      combatVisual: foe.combatVisual || null,
+      stateSprites: foe.stateSprites || null,
+      colorState: foe.colorState ?? null,
+      pillarState: foe.pillarState ?? null,
+      family: foe.family || null,
+      isPillar: !!foe.isPillar,
+      isHazard: !!foe.isHazard,
+      isSummon: !!foe.isSummon,
+      spawnTick: foe.spawnTick ?? null,
+      explodeTick: foe.explodeTick ?? null,
+      reviveAtTick: foe.reviveAtTick ?? null,
+      phasedOut: !!foe.phasedOut,
+      combatHidden: !!foe.combatHidden,
+      untargetable: !!foe.untargetable,
     })),
     newLogEntries,
   };

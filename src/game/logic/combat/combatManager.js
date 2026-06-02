@@ -1246,7 +1246,7 @@ function summonHazard(summoner, effect, enemies, tick, log, hero) {
   return [...enemies, hazard];
 }
 
-function applyTimedBossSpells(combatant, tick, log, hero, target = hero) {
+function applyTimedBossSpells(combatant, tick, log, hero, target = hero, procState = null) {
   if (!combatant?.phaseEffects?.length || combatant.hp <= 0 || target.hp <= 0 || isStunned(combatant, tick)) return;
   for (const effect of combatant.phaseEffects.filter(entry => entry.type === 'timed_spell')) {
     if (!isPhaseEffectHpReady(effect, combatant)) continue;
@@ -1263,6 +1263,16 @@ function applyTimedBossSpells(combatant, tick, log, hero, target = hero) {
     const rawDamage = Math.max(1, Math.floor(effect.damage ?? combatant.spellDamage ?? combatant.damage ?? 1));
     const element = effect.element || effect.damageElement || 'magic';
     const damage = resolveElementalDamage(rawDamage, element, target);
+    // Chimeric Mantle (reflect_first_spell): negate + reflect the first incoming spell.
+    if (target.isPlayer && procState?.reflectFirstSpellReady) {
+      procState.reflectFirstSpellReady = false;
+      if (combatant.hp > 0) combatant.hp = Math.max(0, combatant.hp - damage);
+      log.push(makeEntry(tick, 'hero', 'proc', `Runic Reflection negates ${effect.name || 'the spell'} and reflects ${damage} damage back at ${combatant.name}!`, damage, hero.hp, combatant.hp, {
+        targetId: combatant.id,
+        element,
+      }));
+      break;
+    }
     target.hp = Math.max(0, target.hp - damage);
     const elementLabel = element !== 'magic' ? ` ${element}` : '';
     log.push(makeEntry(tick, combatant.id, 'ability', `${combatant.name} casts ${effect.name || 'Spell'} for ${damage}${elementLabel} damage.`, damage, hero.hp, combatant.hp, {
@@ -1799,7 +1809,7 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
   ({ enemies, queue } = applyPillarIntermissions(enemies, queue, tick, log, hero));
   for (const foe of enemies) {
     if (isEnemyUntargetable(foe)) continue;
-    applyTimedBossSpells(foe, tick, log, hero, frontTarget);
+    applyTimedBossSpells(foe, tick, log, hero, frontTarget, procState);
   }
   applyPetDeathSaves(hero, allies, procState, tick, log);
   applyPetLowHpGuards(hero, allies, procState, tick, log);
@@ -2027,6 +2037,25 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
         if (attacker.id === 'hero' && e.isCrit) grantCombatTrigger(hero, 'after_crit');
         if (attacker.id === 'hero') recordHeroCritLanded(procState, e, e.damage || 0);
         if (e.type === 'blocked') grantCombatTrigger(defender, 'after_block');
+      }
+      // Chimeric Mantle (reflect_first_spell): once per combat, negate the first
+      // incoming enemy SPELL and hurl the damage back at the caster.
+      if (abilityDamageDealt > 0 && defender.isPlayer && !attackerIsPlayerSide && procState?.reflectFirstSpellReady) {
+        const ab = action.ability;
+        const elem = ab?.element || ab?.damageElement;
+        const isSpell = !!ab && (ab.type === 'spell_attack' || ab.isSpell === true
+          || ['fire', 'cold', 'ice', 'frost', 'lightning', 'shadow', 'dark', 'poison', 'magic', 'arcane', 'holy'].includes(elem));
+        if (isSpell) {
+          procState.reflectFirstSpellReady = false;
+          const reflected = abilityDamageDealt;
+          defender.hp = Math.min(defender.maxHp, defender.hp + reflected); // negate the spell
+          abilityDamageDealt = 0;
+          if (attacker.hp > 0) attacker.hp = Math.max(0, attacker.hp - reflected);
+          log.push(makeEntry(tick, 'hero', 'proc', `Runic Reflection negates ${ab?.name || 'the spell'} and reflects ${reflected} damage back at ${attacker.name}!`, reflected, hero.hp, attacker.hp, {
+            targetId: attacker.id,
+            element: elem || 'magic',
+          }));
+        }
       }
       if (abilityDamageDealt > 0) {
         applyCombatantStateHitReaction(attacker, defender, tick, log, hero, logEnemy, procState);
@@ -2472,8 +2501,8 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
       }
       const targetHadBleed = (defeated?.activeEffects || []).some(e => e.type === 'bleed');
       fireProcTrigger('on_kill', { targetHadBleed }, procState, heroProcNodes, hero, defeated || enemy, tick, log, playerRng);
-      // Apply relic kill effects (kill_heal_pct)
-      applyRelicKillEffects(hero, procState, tick, log);
+      // Relic kill_heal_pct (Soul Fragment) now heals per-kill via applyOnKillHeals →
+      // applyRelicOnKill, including this final killing blow. No win-only heal here.
       procState.carriedRage = procState.rage;
     } else {
       phase = PHASE.LOST;
@@ -4532,6 +4561,16 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
             log.push(makeEntry(tick, 'hero', 'proc', `Storm: ${enemy.name} is stunned by the crit!`, 0, hero.hp, enemy.hp, {}));
           }
         }
+        // Ironthane's Regalia 2-set (mighty_dwarf_aura_proc): chance on hit to flare a
+        // temporary damage aura. Source is the set bonus, carried in hero.passiveEffects.
+        const auraProc = (hero.passiveEffects || []).find(e => e?.type === 'mighty_dwarf_aura_proc');
+        if (auraProc && procRng() * 100 < (auraProc.chance || 0)) {
+          const auraTicks = Math.max(1, Math.round((auraProc.durationMs || 4000) / TICK_MS));
+          const auraVal = auraProc.value || 20;
+          hero.activeEffects = (hero.activeEffects || []).filter(e => e.source !== 'ironthane_aura');
+          hero.activeEffects.push({ type: 'damage_bonus_pct_buff', value: auraVal, remainingTicks: auraTicks, source: 'ironthane_aura' });
+          log.push(makeEntry(tick, 'hero', 'proc', `Ironthane's Might surges (+${auraVal}% damage)!`, 0, hero.hp, enemy.hp, {}));
+        }
       }
       // Fire duel-enemy defensive procs (on_take_damage, on_take_crit) when the defender is a duel player.
       if (defender.isDuelPlayer && opts.enemyProcState) {
@@ -5483,6 +5522,7 @@ export function createInitialProcState(initialHp = 100, opts = {}) {
     parryCountThisTick: 0,
     firstHitFired: false,
     stonewallFirstBlockReady: (opts.heroEffects || []).some(e => e.type === 'first_incoming_guaranteed_block'),
+    reflectFirstSpellReady: (opts.heroEffects || []).some(e => e.type === 'reflect_first_spell'),
     onceFiredIds: [],
     hasTakenDamageThisFight: false,
     hasTakenDamageLastFight: opts.hasTakenDamageLastFight || false,
@@ -6122,20 +6162,6 @@ function getRelicDotImmunityTick(procState) {
   return 0;
 }
 
-function applyRelicKillEffects(hero, procState, tick, log) {
-  if (!hero?.isPlayer || !procState) return;
-  const relics = procState.activeRelics || [];
-  for (const relic of relics) {
-    const passive = relic?.relicPassive;
-    if (!passive) continue;
-    if (passive.type === 'kill_heal_pct') {
-      const healAmt = Math.max(1, Math.round((hero.maxHp || 0) * (passive.value || 2) / 100));
-      hero.hp = Math.min(hero.maxHp, hero.hp + healAmt);
-      log.push(makeEntry(tick, 'hero', 'proc', `Soul Fragment restores ${healAmt} HP.`, 0, hero.hp, null, {}));
-    }
-  }
-}
-
 function applyRelicTickEffectsForHeroTick(hero, allies, procState, tick, log) {
   if (!hero?.isPlayer || !procState) return;
   const relics = procState.activeRelics || [];
@@ -6267,10 +6293,19 @@ function applyOnKillHeals(heroObj, enemies, aliveAtStartIds, tick, log, procStat
 
 export function applyRelicOnKill(heroObj, heroMaxHp, tick, log, procState) {
   if (!heroObj) return;
-  // NOTE: relic kill_heal_pct (Soul Fragment) is handled separately in
-  // applyRelicKillEffects (fired on the winning kill) — do NOT duplicate it here or
-  // it double-heals. This per-kill hook only covers the Void enchant kill-restore,
-  // which has no other handler.
+  // Relic kill_heal_pct (Soul Fragment): heal a % of max HP on EACH kill.
+  // This is the sole handler — applyRelicKillEffects no longer fires it on win, so
+  // there is no double-heal. In multi-enemy fights it now heals per kill as described.
+  if (heroObj.isPlayer && procState) {
+    for (const relic of procState.activeRelics || []) {
+      const passive = relic?.relicPassive;
+      if (passive?.type === 'kill_heal_pct') {
+        const healAmt = Math.max(1, Math.round((heroObj.maxHp || 0) * (passive.value || 2) / 100));
+        heroObj.hp = Math.min(heroObj.maxHp, heroObj.hp + healAmt);
+        log.push(makeEntry(tick, 'hero', 'proc', `Soul Fragment restores ${healAmt} HP.`, 0, heroObj.hp, null, {}));
+      }
+    }
+  }
   // Void enchant kill_restore_hp_pct: heal a % of max HP on kill.
   for (const e of procState?.enchantmentEffects || []) {
     if (e?.type === 'kill_restore_hp_pct' && (e.value || 0) > 0) {

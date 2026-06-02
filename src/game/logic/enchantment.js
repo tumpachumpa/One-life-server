@@ -46,6 +46,7 @@ const VOID_POOL = [
   { type: 'passive_max_hp_bonus', minHp: 15, maxHp: 30 },
   { type: 'passive_damage_reduction', reductionPct: 5 },
   { type: 'kill_restore_hp_pct', value: 4 },
+  { type: 'frost_reflect', reflectDamage: 6 },
 ];
 
 /**

@@ -1274,13 +1274,6 @@
         {
           "type": "restore_hp_pct",
           "value": 60
-        },
-        {
-          "type": "active_buff",
-          "stats": {
-            "maxHpPct": 5
-          },
-          "combats": 1
         }
       ],
       "tags": [
@@ -1304,13 +1297,6 @@
         {
           "type": "restore_hp_pct",
           "value": 80
-        },
-        {
-          "type": "active_buff",
-          "stats": {
-            "maxHpPct": 7
-          },
-          "combats": 1
         }
       ],
       "tags": [
@@ -1334,13 +1320,6 @@
         {
           "type": "restore_hp_pct",
           "value": 100
-        },
-        {
-          "type": "active_buff",
-          "stats": {
-            "maxHpPct": 10
-          },
-          "combats": 1
         }
       ],
       "tags": [

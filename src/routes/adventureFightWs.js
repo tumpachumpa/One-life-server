@@ -127,6 +127,13 @@ function autoSchedule(c) {
     lastTick:      c.lastAutoAttackTick ?? null,
     nextTick:      c.nextAutoAttackTick ?? null,
     started:       !!c.autoAttackStarted,
+    // Offhand (dual-wield, e.g. Rogue) so the client can render+advance the 2nd bar.
+    // Without these the offhand bar shows from the init args but never updates (stuck).
+    offhandRate:          c.offhandAutoAttackRate ?? null,
+    offhandProgressTicks: c.offhandAutoAttackProgressTicks ?? null,
+    offhandLastTick:      c.offhandLastAutoAttackTick ?? null,
+    offhandNextTick:      c.offhandNextAutoAttackTick ?? null,
+    offhandStarted:       !!c.offhandAutoAttackStarted,
   };
 }
 

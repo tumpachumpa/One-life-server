@@ -2810,8 +2810,7 @@
           "type": "lightning_proc_on_hit",
           "chance": 7,
           "minDamage": 5,
-          "maxDamage": 8,
-          "attackSpeedBonus": 1
+          "maxDamage": 8
         }
       ]
     },

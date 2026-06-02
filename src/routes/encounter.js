@@ -26,6 +26,15 @@ async function getChargeConfigs() {
   return map;
 }
 
+// Charge keys are `${nodeId}@d${difficulty}` (per-difficulty pools). The config is
+// keyed by the bare node/region id, so strip the suffix to look it up. Bare keys
+// (no suffix, e.g. non-difficulty-scoped regions) pass through unchanged.
+function chargeBaseId(key) {
+  const s = String(key || '');
+  const i = s.indexOf('@d');
+  return i >= 0 ? s.slice(0, i) : s;
+}
+
 // Mirrors src/logic/encounterCharges.js — kept inline so no shared ESM dependency
 function getAvailable(max, rechargeMs, current, lastRechargeAt, nowMs) {
   return Math.min(max, current + Math.floor((nowMs - lastRechargeAt) / rechargeMs));
@@ -67,7 +76,7 @@ async function encounterRoutes(fastify) {
     if (!regionId) return reply.status(400).send({ error: 'Missing regionId' });
 
     const chargeConfigs = await getChargeConfigs();
-    const chargeConfig = chargeConfigs.get(regionId);
+    const chargeConfig = chargeConfigs.get(chargeBaseId(regionId));
     if (!chargeConfig) {
       return reply.status(404).send({ error: 'Node not found or not chargeable' });
     }

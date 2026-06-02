@@ -660,10 +660,9 @@ export function rollRelicDrop(lootTable, difficulty = 0, heroRelicIds = [], rng 
   const relicDrop = lootTable?.relicDrop;
   if (!relicDrop?.itemId) return null;
 
-  const baseChance = relicDrop.chance || 0;
-  const d4Bonus = relicDrop.chanceD4Bonus || 0;
-  const isD4Plus = difficulty >= 4;
-  const finalChance = isD4Plus ? Math.min(100, baseChance + d4Bonus) : baseChance;
+  // Relic drop chance is a flat base chance — no difficulty bonus. Loot scaling at
+  // higher difficulty comes solely from rarer monsters (their rarity lootBonus).
+  const finalChance = relicDrop.chance || 0;
 
   if (rng() * 100 >= finalChance) return null;
 
@@ -685,10 +684,8 @@ export function rollBossStoneDrop(lootTable, difficulty = 0, zoneId = null, rng 
   const stoneDrop = lootTable?.stoneDrop;
   if (!stoneDrop) return null;
 
-  const baseChance = stoneDrop.baseChance || 0;
-  const d4Bonus = stoneDrop.chanceD4Bonus || 0;
-  const isD4Plus = difficulty >= 4;
-  const finalChance = isD4Plus ? Math.min(100, baseChance + d4Bonus) : baseChance;
+  // Stone drop chance is a flat base chance — no difficulty bonus (see rollRelicDrop).
+  const finalChance = stoneDrop.baseChance || 0;
 
   if (rng() * 100 >= finalChance) return null;
 

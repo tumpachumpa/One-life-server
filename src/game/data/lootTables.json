@@ -334,8 +334,7 @@
       "dropChance": 1,
       "relicDrop": {
         "itemId": "relic_bear_hide",
-        "chance": 2,
-        "chanceD4Bonus": 2
+        "chance": 2
       },
       "includeItemIds": [
         "bear_meat",
@@ -480,13 +479,11 @@
       "rarityTable": "boss",
       "relicDrop": {
         "itemId": "relic_shaman_mark",
-        "chance": 4,
-        "chanceD4Bonus": 4
+        "chance": 4
       },
       "stoneDrop": {
         "maxRarity": "rare",
-        "baseChance": 4,
-        "chanceD4Bonus": 3
+        "baseChance": 4
       },
       "generatedEquipment": {
         "enabled": true,
@@ -527,13 +524,11 @@
       "rarityTable": "boss",
       "relicDrop": {
         "itemId": "relic_broken_standard",
-        "chance": 6,
-        "chanceD4Bonus": 5
+        "chance": 6
       },
       "stoneDrop": {
         "maxRarity": "rare",
-        "baseChance": 4,
-        "chanceD4Bonus": 3
+        "baseChance": 4
       },
       "generatedEquipment": {
         "enabled": true,
@@ -619,13 +614,11 @@
       "rarityTable": "boss",
       "relicDrop": {
         "itemId": "relic_sacred_horn",
-        "chance": 8,
-        "chanceD4Bonus": 6
+        "chance": 8
       },
       "stoneDrop": {
         "maxRarity": "uncommon",
-        "baseChance": 3,
-        "chanceD4Bonus": 3
+        "baseChance": 3
       },
       "generatedEquipment": {
         "enabled": true,
@@ -763,13 +756,11 @@
       "rarityTable": "boss",
       "relicDrop": {
         "itemId": "relic_soul_fragment",
-        "chance": 6,
-        "chanceD4Bonus": 5
+        "chance": 6
       },
       "stoneDrop": {
         "maxRarity": "rare",
-        "baseChance": 3,
-        "chanceD4Bonus": 3
+        "baseChance": 3
       },
       "generatedEquipment": {
         "enabled": true,
@@ -1225,13 +1216,11 @@
       "rarityTable": "wyvern",
       "relicDrop": {
         "itemId": "relic_igneous_scale",
-        "chance": 5,
-        "chanceD4Bonus": 4
+        "chance": 5
       },
       "stoneDrop": {
         "maxRarity": "epic",
-        "baseChance": 5,
-        "chanceD4Bonus": 4
+        "baseChance": 5
       },
       "ancestralDrop": {
         "itemId": null,
@@ -1302,8 +1291,7 @@
       "dropChance": 0.5,
       "relicDrop": {
         "itemId": "relic_infernal_fang",
-        "chance": 2,
-        "chanceD4Bonus": 2
+        "chance": 2
       },
       "rarityTable": "specialChest",
       "includeItemIds": ["ash"],
@@ -1330,8 +1318,7 @@
       "dropChance": 0,
       "relicDrop": {
         "itemId": "relic_troll_tooth",
-        "chance": 1,
-        "chanceD4Bonus": 2
+        "chance": 1
       },
       "rarityTable": "specialChest",
       "generatedEquipment": {
@@ -1360,8 +1347,7 @@
       "dropChance": 0.85,
       "relicDrop": {
         "itemId": "relic_stone_core",
-        "chance": 2,
-        "chanceD4Bonus": 2
+        "chance": 2
       },
       "rarityTable": "specialChest",
       "generatedEquipment": {
@@ -1384,8 +1370,7 @@
       "dropChance": 0,
       "relicDrop": {
         "itemId": "relic_black_armor",
-        "chance": 1,
-        "chanceD4Bonus": 2
+        "chance": 1
       },
       "rarityTable": "specialChest",
       "equipmentDrops": {
@@ -1403,8 +1388,7 @@
       "dropChance": 0.9,
       "relicDrop": {
         "itemId": "relic_abyssal_seal",
-        "chance": 1,
-        "chanceD4Bonus": 1
+        "chance": 1
       },
       "rarityTable": "specialChest",
       "generatedEquipment": {
@@ -1451,13 +1435,11 @@
       "minimumRarity": "epic",
       "relicDrop": {
         "itemId": "relic_spectral_echo",
-        "chance": 5,
-        "chanceD4Bonus": 6
+        "chance": 5
       },
       "stoneDrop": {
         "maxRarity": "epic",
-        "baseChance": 8,
-        "chanceD4Bonus": 6
+        "baseChance": 8
       },
       "generatedEquipment": {
         "enabled": true,
@@ -1821,8 +1803,7 @@
       },
       "relicDrop": {
         "itemId": "relic_warhound_fang",
-        "chance": 0.5,
-        "chanceD4Bonus": 0.5
+        "chance": 0.5
       },
       "equipmentDrops": {
         "dropChance": 0.05,
@@ -1884,8 +1865,7 @@
       },
       "stoneDrop": {
         "maxRarity": "rare",
-        "baseChance": 4,
-        "chanceD4Bonus": 4
+        "baseChance": 4
       },
       "guaranteedDrops": ["rune_stone_shard"]
     },
@@ -1904,8 +1884,7 @@
       },
       "relicDrop": {
         "itemId": "relic_manticore_spine",
-        "chance": 1,
-        "chanceD6Bonus": 3
+        "chance": 1
       },
       "independentDrops": [
         { "itemId": "manticore_meat", "dropChance": 0.25 },
@@ -2037,8 +2016,7 @@
       },
       "stoneDrop": {
         "maxRarity": "epic",
-        "baseChance": 5,
-        "chanceD4Bonus": 4
+        "baseChance": 5
       },
       "guaranteedDrops": ["rune_stone_shard"],
       "independentDrops": [
@@ -2054,8 +2032,7 @@
       },
       "stoneDrop": {
         "maxRarity": "legendary",
-        "baseChance": 8,
-        "chanceD4Bonus": 5
+        "baseChance": 8
       },
       "generatedEquipment": {
         "enabled": true,

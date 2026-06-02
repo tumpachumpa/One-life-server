@@ -483,7 +483,6 @@ describe("adventure loot pools", () => {
     expect(LOOT_TABLES.fallen_knight_boss.relicDrop).toEqual({
       itemId: "relic_spectral_echo",
       chance: 8,
-      chanceD4Bonus: 6,
     });
     expect(LOOT_TABLES.fallen_knight_boss.includeItemIds).toContain("fang_of_the_red_viper");
     expect(LOOT_TABLES.fallen_knight_boss.itemWeights.fang_of_the_red_viper).toBe(1);

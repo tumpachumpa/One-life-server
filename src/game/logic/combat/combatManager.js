@@ -4521,6 +4521,17 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
             log.push(makeEntry(tick, 'hero', 'proc', sunderMsg, e.trueDamage || 0, hero.hp, enemy.hp, {}));
           }
         }
+        // Storm Ancestral: stun on crit (critStunSecs rider on the lightning enchant).
+        // Fires on any landing crit (like the burn_on_crit relic) — NOT gated behind the
+        // separate 14% damage proc, so the legendary stone's signature stun actually shows.
+        if (action.isCrit && enemy.hp > 0) {
+          const stunEnch = (procState.enchantmentEffects || []).find(e => (e?.critStunSecs || 0) > 0);
+          if (stunEnch) {
+            const stunTicks = Math.max(1, Math.round((stunEnch.critStunSecs * 1000) / TICK_MS));
+            applyStunToCombatant(enemy, tick, stunTicks);
+            log.push(makeEntry(tick, 'hero', 'proc', `Storm: ${enemy.name} is stunned by the crit!`, 0, hero.hp, enemy.hp, {}));
+          }
+        }
       }
       // Fire duel-enemy defensive procs (on_take_damage, on_take_crit) when the defender is a duel player.
       if (defender.isDuelPlayer && opts.enemyProcState) {

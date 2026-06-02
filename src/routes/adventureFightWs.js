@@ -575,6 +575,22 @@ function setupAdventureFightWs(httpServer) {
         if (!f || f.ended || !f.state) return;
         f.pending = 'swap_front'; // ACTION.SWAP_FRONT — engine swaps hero/companion front
       }
+
+      if (msg.type === 'adventure_fight_target') {
+        if (!userId) return;
+        const f = fights.get(userId);
+        if (!f || f.ended || !f.state) return;
+        // Multi-enemy focus switch. The engine reads state.selectedTargetId to pick
+        // the hero's auto-attack + ability target (combatManager processAutoAttackFrame
+        // / processTick), and re-resolves it each tick (falling back when the target
+        // dies). Setting it here retargets from the next tick. Only honor a currently
+        // living enemy id; the engine ignores untargetable ones anyway.
+        const enemies = f.state.combatants?.enemies
+          || (f.state.combatants?.enemy ? [f.state.combatants.enemy] : []);
+        if (enemies.some(e => e && e.id === msg.targetId && (e.hp ?? 0) > 0)) {
+          f.state.selectedTargetId = msg.targetId;
+        }
+      }
     });
 
     ws.on('close', () => {

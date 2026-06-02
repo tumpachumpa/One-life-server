@@ -4341,7 +4341,8 @@
       ],
       "tags": ["helmet", "medium", "leather", "armor_medium", "karag_thorn", "thornhide"],
       "price": 95,
-      "icon": "/assets/items/Dwarf content/Thornhide leather hood.png"
+      "icon": "/assets/items/Dwarf content/Thornhide leather hood.png",
+      "iconScale": 1.35
     },
     {
       "id": "thornhide_vest",
@@ -4364,7 +4365,8 @@
       ],
       "tags": ["chest", "medium", "leather", "armor_medium", "karag_thorn", "thornhide"],
       "price": 128,
-      "icon": "/assets/items/Dwarf content/Thornhide leather armor.png"
+      "icon": "/assets/items/Dwarf content/Thornhide leather armor.png",
+      "iconScale": 1.20
     },
     {
       "id": "thornhide_leggings",
@@ -4387,7 +4389,8 @@
       ],
       "tags": ["legs", "medium", "leather", "armor_medium", "karag_thorn", "thornhide"],
       "price": 108,
-      "icon": "/assets/items/Dwarf content/Thornhide legs.png"
+      "icon": "/assets/items/Dwarf content/Thornhide legs.png",
+      "iconScale": 1.35
     },
     {
       "id": "karag_hunt_quiver",

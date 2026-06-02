@@ -4428,7 +4428,16 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
         logDamageShieldAbsorb(enemy, grudgeApplied, tick, log, hero, enemy, targetMeta);
         procState.grudge = 0;
       }
-      const _hitDmg = enemy.physicalDmgReductionPct > 0 ? Math.max(0, Math.floor(result.damage * (1 - enemy.physicalDmgReductionPct / 100))) : result.damage;
+      // Broken Standard relic: consume Impetus stacks (gained on ally/pet hits) →
+      // +5% damage per stack on this attack, then reset. Was previously dead (stacks
+      // were gained but applyImpetusDamage was never called).
+      let _impetusDmg = result.damage;
+      if (procState && (procState.impetusStacks || 0) > 0) {
+        const _impStacks = procState.impetusStacks;
+        _impetusDmg = applyImpetusDamage(result.damage, procState);
+        log.push(makeEntry(tick, 'hero', 'proc', `Impetus surges (+${_impStacks * 5}% damage)!`, 0, hero.hp, enemy.hp, {}));
+      }
+      const _hitDmg = enemy.physicalDmgReductionPct > 0 ? Math.max(0, Math.floor(_impetusDmg * (1 - enemy.physicalDmgReductionPct / 100))) : _impetusDmg;
       const applied = applyCombatantDamage(enemy, _hitDmg);
       const hitHandTag = action.isOffhand ? '[OH] ' : action.isMainHand ? '[MH] ' : '';
       const offhandReductionNote = action.isOffhand && action.preReductionDamage != null

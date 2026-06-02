@@ -179,6 +179,14 @@ function stepDuelTick(session, C, cm) {
     p2Auto: autoSchedule(enemyC),
     p1Display: combatantDisplay(state.combatants.hero),
     p2Display: combatantDisplay(enemyC),
+    // Ability cooldowns ({abilityId: readyTick}) + one-shot used flags for BOTH
+    // sides; each client adopts its own (normalizeServerDuelTick maps by side).
+    // Without this the client (which runs no sim) shows every ability ready and
+    // cooldown presses are dropped server-side.
+    p1Cooldowns: state.combatants.hero?.abilityCooldowns || {},
+    p2Cooldowns: enemyC?.abilityCooldowns || {},
+    p1UsedAbilities: state.combatants.hero?.usedAbilityIds || {},
+    p2UsedAbilities: enemyC?.usedAbilityIds || {},
     newLogEntries,
   });
 

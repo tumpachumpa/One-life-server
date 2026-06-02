@@ -1,3 +1,21 @@
+// Encounter charges are tracked per (node, difficulty) so each difficulty has its
+// own pool — depleting charges at one difficulty doesn't carry into another. The
+// storage/transport key is `${baseId}@d${difficultyStars}`; the base id (used to look
+// up the charge config) is recovered by stripping the suffix. A null/absent difficulty
+// keeps the bare base id (single-encounter regions that aren't difficulty-scoped).
+const CHARGE_KEY_SEP = "@d";
+
+export function encounterChargeKey(baseId, difficultyStars = null) {
+  if (baseId == null) return baseId;
+  return difficultyStars == null ? String(baseId) : `${baseId}${CHARGE_KEY_SEP}${difficultyStars}`;
+}
+
+export function encounterChargeBaseId(key = "") {
+  const s = String(key);
+  const i = s.indexOf(CHARGE_KEY_SEP);
+  return i >= 0 ? s.slice(0, i) : s;
+}
+
 export function getAvailableCharges(chargeConfig, savedState, nowMs) {
   const { max, rechargeSeconds } = chargeConfig;
   const { current, lastRechargeAt } = savedState ?? { current: max, lastRechargeAt: nowMs };

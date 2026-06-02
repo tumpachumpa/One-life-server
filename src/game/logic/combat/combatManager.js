@@ -6267,20 +6267,10 @@ function applyOnKillHeals(heroObj, enemies, aliveAtStartIds, tick, log, procStat
 
 export function applyRelicOnKill(heroObj, heroMaxHp, tick, log, procState) {
   if (!heroObj) return;
-  for (const relic of (procState?.activeRelics || heroObj.relics || [])) {
-    const passive = relic?.relicPassive;
-    if (!passive) continue;
-    if (passive.type === 'kill_heal_pct') {
-      const healAmt = Math.max(1, Math.round((heroMaxHp || 0) * (passive.value || 2) / 100));
-      heroObj.hp = Math.min(heroObj.maxHp, heroObj.hp + healAmt);
-      log.push(makeEntry(tick, 'hero', 'proc', `Soul Fragment restores ${healAmt} HP.`, 0, heroObj.hp, null, {}));
-    }
-    if (passive.type === 'passive_lifesteal' && passive.killRestoreHpPct) {
-      const healAmt = Math.max(1, Math.round((heroObj.maxHp || 0) * passive.killRestoreHpPct / 100));
-      heroObj.hp = Math.min(heroObj.maxHp, heroObj.hp + healAmt);
-      log.push(makeEntry(tick, 'hero', 'proc', `Ancestral Stone: kills restore ${healAmt} HP.`, 0, heroObj.hp, null, {}));
-    }
-  }
+  // NOTE: relic kill_heal_pct (Soul Fragment) is handled separately in
+  // applyRelicKillEffects (fired on the winning kill) — do NOT duplicate it here or
+  // it double-heals. This per-kill hook only covers the Void enchant kill-restore,
+  // which has no other handler.
   // Void enchant kill_restore_hp_pct: heal a % of max HP on kill.
   for (const e of procState?.enchantmentEffects || []) {
     if (e?.type === 'kill_restore_hp_pct' && (e.value || 0) > 0) {

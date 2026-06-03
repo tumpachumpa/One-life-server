@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { buildDuelHeroInitArgs, buildDuelEnemy } from '../lib/duels.js';
 import { initCombat, processAutoAttackFrame, processTick } from './combat/combatManager.js';
+import { getAbilityUseFailureReason } from './combat/combatant.js';
 import { AUTO_ATTACK_TICKS, TICK_MS } from './combat/types.js';
 import { mulberry32, duelSeed } from '../lib/rng.js';
 
@@ -165,6 +166,57 @@ describe('Duel — lifesteal (generic, attacker-based)', () => {
     state.combatants.enemy.hp = 50;
     state = processAutoAttackFrame(state, AUTO_ATTACK_TICKS * TICK_MS, () => 0.5);
     expect(state.combatants.enemy.hp).toBeLessThanOrEqual(50);
+  });
+});
+
+describe('Duel — opponent ability rage gating (anti-spam)', () => {
+  const punchingBag = (overrides = {}) => buildDuelEnemy('Bag', {
+    combatSnap: {
+      maxHp: 100000, damage: 5, armor: 0, attackSpeed: 1, hitChanceBonus: 100,
+      critChance: 0, critResist: 0, weaponTags: [], allies: [], passiveEffects: [],
+      ...overrides,
+    },
+  });
+
+  it('gates a duel opponent ability on rage (was unenforced for p2 → free/spammable)', () => {
+    const ability = { id: 'shield_wall', name: 'Shield Wall', rageCost: 35 };
+    const opponent = {
+      isDuelPlayer: true, isPlayer: false, abilities: [ability],
+      abilityCooldowns: {}, usedAbilityIds: {}, activeEffects: [],
+      weaponFamily: null, offhandFamily: null,
+    };
+    // Before the fix the resource check was skipped for a non-isPlayer combatant, so
+    // this returned null at 0 rage. Now it must report insufficient rage.
+    expect(getAbilityUseFailureReason(opponent, ability, 1, { rage: { value: 10 } })).toMatch(/Not enough Rage/);
+    expect(getAbilityUseFailureReason(opponent, ability, 1, { rage: { value: 40 } })).toBeNull();
+  });
+
+  it('a duel opponent cannot cast a rage ability it cannot afford, even spamming every tick', () => {
+    const heroSnap = makeSnap({ maxHp: 100000, damage: 1, attackSpeed: 1, hitChanceBonus: 100 });
+    let state = initCombat(buildDuelHeroInitArgs('Hero', heroSnap, punchingBag()));
+    // Cost above the rage cap (100) → never affordable → must never fire.
+    state.combatants.enemy.abilities = [{ id: 'too_expensive', name: 'Too Expensive', rageCost: 200, castTicks: 1, target: 'enemy' }];
+    const rng = mulberry32(duelSeed('id-aaa', 'id-bbb'));
+    for (let i = 0; i < 20; i++) {
+      state = processAutoAttackFrame(state, TICK_MS, () => 0.5);
+      state = processTick(state, null, rng, { disableEnemyAi: true, enemyActions: { enemy: { action: 'ability_0' } } });
+    }
+    const casts = state.log.filter(e => e.abilityId === 'too_expensive' && e.type === 'cast_start').length;
+    expect(casts).toBe(0); // before the fix the opponent cast it free every tick
+  });
+
+  it('a duel opponent CAN cast an affordable ability (enforcement does not lock casting)', () => {
+    const heroSnap = makeSnap({ maxHp: 100000, damage: 1, attackSpeed: 1, hitChanceBonus: 100 });
+    let state = initCombat(buildDuelHeroInitArgs('Hero', heroSnap, punchingBag()));
+    // Free ability → resource gate is a no-op → it should fire.
+    state.combatants.enemy.abilities = [{ id: 'free_strike', name: 'Free Strike', rageCost: 0, castTicks: 1, target: 'enemy' }];
+    const rng = mulberry32(duelSeed('id-aaa', 'id-bbb'));
+    for (let i = 0; i < 12; i++) {
+      state = processAutoAttackFrame(state, TICK_MS, () => 0.5);
+      state = processTick(state, null, rng, { disableEnemyAi: true, enemyActions: { enemy: { action: 'ability_0' } } });
+    }
+    const casts = state.log.filter(e => e.abilityId === 'free_strike' && e.type === 'cast_start').length;
+    expect(casts).toBeGreaterThan(0);
   });
 });
 

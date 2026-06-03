@@ -1947,10 +1947,17 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
           if (!selectedTargetId || selectedTargetId === previousEnemyFrontId) selectedTargetId = enemyFrontId;
           enemy = getLivingEnemy(enemies, selectedTargetId) || getLivingEnemy(enemies, enemyFrontId) || enemies[0];
           queue = removePendingBasicAttacksForActor(queue, attacker.id);
+          // Swapping interrupts the swing: the new front fighter starts a fresh auto
+          // instead of inheriting the previous fighter's charged bar.
+          if (enemy) resetAutoAttackCycle(enemy, tick);
         } else {
           frontId = completeFrontSwap(hero, allies, frontId, action.nextFrontId || action.targetId, tick, log);
           frontTarget = getFrontCombatant(hero, allies, frontId);
           queue = removePendingBasicAttacksForPlayerSide(queue, allies);
+          // Swap restarts the front fighter's auto-attack from zero (a new swing),
+          // rather than continuing the bar from where it was before the swap.
+          resetAutoAttackCycle(hero, tick);
+          if (frontTarget && frontTarget.id !== 'hero') resetAutoAttackCycle(frontTarget, tick);
         }
         continue;
       }

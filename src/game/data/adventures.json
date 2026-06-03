@@ -2683,6 +2683,7 @@
       "regionId": "sunken_forge_region",
       "name": "The Sunken Forge",
       "description": "The Umbral Key opens the road toward a drowned dwarven mine. For now, only the entrance is mapped.",
+      "unfinished": true,
       "choiceRun": false,
       "disableChoiceRun": true,
       "routes": [

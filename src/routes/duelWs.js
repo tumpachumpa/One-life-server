@@ -85,6 +85,10 @@ function combatantDisplay(c) {
     activeEffects: Array.isArray(c.activeEffects) ? c.activeEffects : [],
     stunUntilTick: c.stunUntilTick ?? null,
     isCasting: !!c.isCasting,
+    // Block Power changes every tick (consumed on block, regenerated) — sync it so the
+    // client bar reflects it instead of freezing at the fight-start value.
+    blockPower: c.blockPower ?? null,
+    blockPowerMax: c.blockPowerMax ?? null,
   };
 }
 

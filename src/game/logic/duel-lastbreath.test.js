@@ -98,6 +98,46 @@ describe('Duel — seed & Last Breath', () => {
   });
 });
 
+describe('Duel — lifesteal (generic, attacker-based)', () => {
+  const punchingBag = (overrides = {}) => buildDuelEnemy('Bag', {
+    combatSnap: {
+      maxHp: 100000, damage: 1, armor: 0, attackSpeed: 1, hitChanceBonus: 100,
+      critChance: 0, critResist: 0, weaponTags: [], allies: [], passiveEffects: [],
+      ...overrides,
+    },
+  });
+
+  it('heals the HERO (p1) on auto-attacks (regression)', () => {
+    const heroSnap = makeSnap({ maxHp: 200, damage: 60, attackSpeed: 1, hitChanceBonus: 100,
+      passiveEffects: [{ type: 'lifesteal', value: 50 }] });
+    let state = initCombat(buildDuelHeroInitArgs('Hero', heroSnap, punchingBag()));
+    state.combatants.hero.hp = 50; // leave room to heal
+    state = processAutoAttackFrame(state, AUTO_ATTACK_TICKS * TICK_MS, () => 0.5);
+    expect(state.combatants.hero.hp).toBeGreaterThan(50);
+    expect(state.log.some(e => e.type === 'heal' && /Lifesteal restores/.test(e.text || ''))).toBe(true);
+  });
+
+  it('heals the ENEMY/opponent (p2) on auto-attacks — the fix', () => {
+    // Hero is a near-immortal, near-harmless bag; the opponent has lifesteal and hits hard.
+    const heroSnap = makeSnap({ maxHp: 100000, damage: 1, hitChanceBonus: 100 });
+    const enemyObj = punchingBag({ maxHp: 200, damage: 60, hitChanceBonus: 100,
+      passiveEffects: [{ type: 'lifesteal', value: 50 }] });
+    let state = initCombat(buildDuelHeroInitArgs('Hero', heroSnap, enemyObj));
+    state.combatants.enemy.hp = 50; // leave room to heal
+    state = processAutoAttackFrame(state, AUTO_ATTACK_TICKS * TICK_MS, () => 0.5);
+    expect(state.combatants.enemy.hp).toBeGreaterThan(50); // before the fix this stayed ≤ 50
+  });
+
+  it('does NOT heal an opponent without lifesteal (control)', () => {
+    const heroSnap = makeSnap({ maxHp: 100000, damage: 1, hitChanceBonus: 100 });
+    const enemyObj = punchingBag({ maxHp: 200, damage: 60, hitChanceBonus: 100, passiveEffects: [] });
+    let state = initCombat(buildDuelHeroInitArgs('Hero', heroSnap, enemyObj));
+    state.combatants.enemy.hp = 50;
+    state = processAutoAttackFrame(state, AUTO_ATTACK_TICKS * TICK_MS, () => 0.5);
+    expect(state.combatants.enemy.hp).toBeLessThanOrEqual(50);
+  });
+});
+
 function makeSnap(overrides = {}) {
   return {
     maxHp: 100, damage: 5, armor: 0, attackSpeed: 1,

@@ -2459,12 +2459,11 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
   applyPetLowHpGuards(hero, allies, procState, tick, log);
   applyThresholdEffects(heroProcNodes, procState, hero, enemy, allies);
   if (enemyProcState && enemy?.isDuelPlayer) applyThresholdEffects(enemyProcNodes, enemyProcState, enemy, hero, []);
-  frontId = getFrontId(hero, allies, frontId);
-  frontTarget = getFrontCombatant(hero, allies, frontId);
-  enemyFrontId = getEnemyFrontId(enemies, enemyFrontId);
-  enemy = getLivingEnemy(enemies, selectedTargetId) || getLivingEnemy(enemies, enemyFrontId) || enemies[0];
-  selectedTargetId = enemy?.id || selectedTargetId;
-
+  // Intercept deaths (cocoon transform + Last Breath) BEFORE recomputing the player's
+  // target. An enemy that hits 0 HP this frame is otherwise dropped by getLivingEnemy and
+  // the target switches away an instant before it's revived — leaving the survivor un-hit
+  // at 1 HP so it appears not to die (e.g. Dwarf Berserker's Last Stand). processTick
+  // already revives before retargeting; this matches that order.
   // Cocoon transformation: intercept first death and guard HP during cocoon phase
   for (const foe of enemies) {
     if (foe.hp <= 0 && foe.hasCocoonTransform && !foe.hasTransformed) {
@@ -2494,6 +2493,15 @@ export function processAutoAttackFrame(state, elapsedMs = 0, rng = Math.random, 
   for (const foe of enemies) {
     if (foe.hp <= 0 && !foe.despawned) preventDeathWithLastBreath(foe, tick, log, hero);
   }
+
+  // Now recompute front/target — revived enemies (hp 1) remain valid targets, so the
+  // player keeps hitting the Last Breath survivor instead of switching off it.
+  frontId = getFrontId(hero, allies, frontId);
+  frontTarget = getFrontCombatant(hero, allies, frontId);
+  enemyFrontId = getEnemyFrontId(enemies, enemyFrontId);
+  enemy = getLivingEnemy(enemies, selectedTargetId) || getLivingEnemy(enemies, enemyFrontId) || enemies[0];
+  selectedTargetId = enemy?.id || selectedTargetId;
+
   const bossDead = !!boss && state.bossDeathEndsFight !== false && boss.hp <= 0;
   const allEnemiesDead = enemies.length > 0 && enemies.every(foe => foe.hp <= 0);
   if (bossDead && state.addsDespawnOnBossDeath !== false) {

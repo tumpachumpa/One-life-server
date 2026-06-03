@@ -98,6 +98,36 @@ describe('Duel — seed & Last Breath', () => {
   });
 });
 
+describe('Last Breath — target persistence (Dwarf Berserker Last Stand)', () => {
+  it('does not switch the player off an enemy that Last Breath revives this frame', () => {
+    const heroSnap = makeSnap({ maxHp: 100000, damage: 10000, attackSpeed: 2, hitChanceBonus: 100 });
+    const frontEnemy = buildDuelEnemy('Berserker', { combatSnap: {
+      maxHp: 50, damage: 1, armor: 0, attackSpeed: 1, hitChanceBonus: 0,
+      critChance: 0, critResist: 0, weaponTags: [], allies: [],
+      passiveEffects: [{ type: 'last_breath_once' }],
+    }});
+    const backEnemy = buildDuelEnemy('Bystander', { combatSnap: {
+      maxHp: 5000, damage: 1, armor: 0, attackSpeed: 1, hitChanceBonus: 0,
+      critChance: 0, critResist: 0, weaponTags: [], allies: [],
+    }});
+    const initArgs = buildDuelHeroInitArgs('Hero', heroSnap, frontEnemy);
+    initArgs.enemyObjs = [frontEnemy, backEnemy]; // front = 'enemy', back = 'enemy_1'
+    let state = initCombat(initArgs);
+    expect(state.combatants.enemies.length).toBe(2);
+
+    let fired = false;
+    for (let i = 0; i < 8 && state.phase === 'fighting'; i++) {
+      state = processAutoAttackFrame(state, AUTO_ATTACK_TICKS * TICK_MS, () => 0.5);
+      if (state.log.some(e => /Last Breath/.test(e.text || ''))) { fired = true; break; }
+    }
+    expect(fired).toBe(true);
+    // The fix: target must still be the revived front enemy, not switched to enemy_1.
+    expect(state.selectedTargetId).toBe('enemy');
+    const front = state.combatants.enemies.find(e => e.id === 'enemy');
+    expect(front.hp).toBe(1); // revived at 1 HP, still the active target
+  });
+});
+
 describe('Duel — lifesteal (generic, attacker-based)', () => {
   const punchingBag = (overrides = {}) => buildDuelEnemy('Bag', {
     combatSnap: {

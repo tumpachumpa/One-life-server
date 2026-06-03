@@ -133,6 +133,19 @@ function getHeroCombatResources(rage = 0, heroClass = null) {
   };
 }
 
+// Build a resources object for a DUEL OPPONENT (p2) from its own procState, so the
+// shared ability-affordability check (getAbilityUseFailureReason) and spend
+// (spendAbilityResources) can gate the opponent's rage/energy abilities exactly like
+// the hero's. The opponent's canonical rage/energy lives in enemyProcState; this just
+// shapes it into the { rage|energy: { value } } form the check expects.
+function buildDuelCombatantResources(combatant, procState) {
+  if (!procState) return {};
+  if (ENERGY_CLASSES.has(combatant?.heroClass)) {
+    return { energy: { key: 'energy', label: 'Energy', value: Math.max(0, procState.energy || 0), max: HERO_ENERGY_MAX } };
+  }
+  return { rage: { key: 'rage', label: 'Rage', value: Math.max(0, Math.floor(procState.rage || 0)), max: HERO_RAGE_MAX } };
+}
+
 function syncHeroCombatResources(heroResources, procState) {
   if (!heroResources || !procState) return heroResources;
   if ('energy' in heroResources) {
@@ -284,6 +297,9 @@ function createEnemyCombatant(enemyObj, id = 'enemy') {
     combatVisual: enemyObj.combatVisual || null,
     isDuelPlayer: enemyObj.isDuelPlayer || false,
     isDuelCompanion: enemyObj.isDuelCompanion || false,
+    // Needed so the duel opponent's ability resource gating picks the right pool
+    // (energy for rogue, rage otherwise) — see buildDuelCombatantResources.
+    heroClass: enemyObj.heroClass || null,
     dodgePhaseConfig: enemyObj.dodgePhaseConfig || null,
     _baseDisableAutoAttack: baseDisableAutoAttack,
     hasCocoonTransform: enemyObj.hasCocoonTransform || false,
@@ -1487,7 +1503,7 @@ export function initCombat({
     (enemyProcOpts?.enchantmentEffects?.length > 0) ||
     (enemyProcOpts?.activeRelics?.length > 0)
   );
-  const enemyProcState = ((enemyProcNodes && enemyProcNodes.length) || opponentHasStonewall || duelOpponentNeedsProcState)
+  const enemyProcState = ((enemyProcNodes && enemyProcNodes.length) || opponentHasStonewall || duelOpponentNeedsProcState || enemy?.isDuelPlayer)
     ? createInitialProcState(enemy?.hp || 100, enemy?.isDuelPlayer ? { ...enemyProcOpts, heroEffects: duelEnemyEffects } : enemyProcOpts)
     : null;
   const state = {
@@ -1724,6 +1740,12 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
     if (canDecayRage) {
       procState.rage = Math.max(0, procState.rage - HERO_RAGE_DECAY_PER_IDLE_TICK);
     }
+  }
+  // Duel opponent (p2) energy regen — energy classes (rogue) refill their pool each
+  // tick like the hero does, so their energy abilities are gated by a real, recovering
+  // resource rather than being free. Rage-class opponents earn rage from hits instead.
+  if (enemy?.isDuelPlayer && enemyProcState && ENERGY_CLASSES.has(enemy.heroClass)) {
+    enemyProcState.energy = Math.min(HERO_ENERGY_MAX, (enemyProcState.energy || 0) + HERO_ENERGY_PER_TICK);
   }
   // Tick flow state duration
   if ((procState.flowStateTicks || 0) > 0) {
@@ -4605,6 +4627,9 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
         const eProcState = opts.enemyProcState;
         const eProcNodes = opts.enemyProcNodes || [];
         eProcState.hasTakenDamageThisFight = true;
+        // Mirror the hero's +3 rage-on-taking-hit so the opponent earns rage to spend
+        // (rage classes only; energy classes regen passively each tick instead).
+        if (!ENERGY_CLASSES.has(defender.heroClass)) gainRageOnTakingHit(eProcState, applied.damage, tick);
         fireProcTrigger('on_take_damage', { damage: applied.damage, isCrit: !!action.isCrit, attacker }, eProcState, eProcNodes, defender, hero, tick, log, rng);
         if (action.isCrit) fireProcTrigger('on_take_crit', { damage: applied.damage }, eProcState, eProcNodes, defender, hero, tick, log, rng);
         syncDuelEnemyProcEffects(eProcNodes, eProcState, defender, hero, tick);
@@ -4732,6 +4757,12 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
           eProcState.consecutiveHits = (eProcState.consecutiveHits || 0) + 1;
           if (action.isCrit) eProcState.consecutiveCrits = (eProcState.consecutiveCrits || 0) + 1;
           else eProcState.consecutiveCrits = 0;
+          // Mirror the hero's +6/+9 auto-attack rage gain for the duel opponent (basic
+          // attacks only — abilities don't grant rage; energy classes regen instead).
+          if (!action.ability && !ENERGY_CLASSES.has(attacker.heroClass)) {
+            eProcState.rage = Math.min(HERO_RAGE_MAX, (eProcState.rage || 0) + (action.isCrit ? 9 : 6) + (attacker.rageGainFlat || 0));
+            markRageActivity(eProcState, tick);
+          }
           fireProcTrigger('on_hit', { damage: incomingDamage, isCrit: !!action.isCrit }, eProcState, eProcNodes, attacker, hero, tick, log, rng);
           if (action.isCrit) fireProcTrigger('on_crit', { damage: incomingDamage }, eProcState, eProcNodes, attacker, hero, tick, log, rng);
           syncDuelEnemyProcEffects(eProcNodes, eProcState, attacker, hero, tick);
@@ -5448,7 +5479,10 @@ function applyAction(combatant, action, tick, queue, log, rng, heroResources, de
       if (combatant.isPlayer) log.push(makeEntry(tick, combatant.id, 'ability_fail', reason, 0, null, null));
       return applyAction(combatant, ACTION.BASIC_ATTACK, tick, queue, log, rng, heroResources, defender, procState, opts);
     }
-    const reason = getAbilityUseFailureReason(combatant, ability, tick, combatant.isPlayer ? heroResources : {}, abilityTarget, { procState });
+    const actorResources = combatant.isPlayer
+      ? heroResources
+      : (combatant.isDuelPlayer ? buildDuelCombatantResources(combatant, procState) : {});
+    const reason = getAbilityUseFailureReason(combatant, ability, tick, actorResources, abilityTarget, { procState });
     if (reason) {
       if (combatant.isPlayer) log.push(makeEntry(tick, combatant.id, 'ability_fail', reason, 0, null, null));
       return applyAction(combatant, ACTION.BASIC_ATTACK, tick, queue, log, rng, heroResources, defender, procState, opts);
@@ -5456,12 +5490,16 @@ function applyAction(combatant, action, tick, queue, log, rng, heroResources, de
     if (!['sword_stance', 'berserker_stance', 'serrated_strikes', 'stagger_spell', 'rapid_fire', 'heavy_strikes', 'parry_guard', 'en_garde', 'shield_up', 'shield_wall', 'guard_instinct', 'mace_mastery', 'daze_shout', 'battle_focus', 'iron_will', 'pet_unleash'].includes(ability?.type)) {
       resetAutoAttackCycle(combatant, tick);
     }
-    if (combatant.isPlayer) markRageActivity(procState, tick);
+    if (combatant.isPlayer || combatant.isDuelPlayer) markRageActivity(procState, tick);
     if (combatant.isPlayer && procState && !isAllyTargetAbility(ability) && ability?.target !== 'self') {
       procState.heroAttackedThisTick = true;
       procState.sniperPatiencePct = 0;
     }
     if (combatant.isPlayer) spendAbilityResources(heroResources, procState, ability, combatant);
+    // Duel opponent (p2): spend from its own procState (rage/energy). Without this the
+    // opponent's rage abilities were free + spammable — the affordability check above
+    // (now duel-aware) is meaningless unless the cost is actually deducted.
+    else if (combatant.isDuelPlayer && procState) spendAbilityResources(buildDuelCombatantResources(combatant, procState), procState, ability, combatant);
     consumeAbilityTrigger(combatant, ability);
     queue = removePendingBasicAttacksForActor(queue, combatant.id);
 

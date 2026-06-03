@@ -414,7 +414,7 @@ export function getAbilityUseFailureReason(combatant, abilityOrId, tick, heroRes
     if (ability.requiredTrigger === "after_parry") return `${ability.name} requires a parry first.`;
     return `${ability.name} requires ${ability.requiredTrigger}.`;
   }
-  if (combatant.isPlayer) {
+  if (combatant.isPlayer || combatant.isDuelPlayer) {
     const cost = getAbilityEnergyCost(ability);
     const isBerserkerDeactivate = ability.type === "berserker_stance" && hasActiveBerserkerStance(combatant);
     if (!isBerserkerDeactivate && cost > 0) {

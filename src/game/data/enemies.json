@@ -2249,7 +2249,7 @@
       "tags": ["beast"],
       "tier": 5,
       "threat": "dangerous",
-      "sprite": "/assets/sprites/encounters/HellhounD.png",
+      "sprite": "/assets/sprites/encounters/Pit manticore.png",
       "baseStats": {
         "maxHp": 402,
         "attack": 48,
@@ -2316,7 +2316,7 @@
       "tags": ["bleed_immune", "poison_immune"],
       "tier": 5,
       "threat": "dangerous",
-      "sprite": "/assets/sprites/encounters/Stone golem.png",
+      "sprite": "/assets/sprites/encounters/Runic construct.png",
       "disableAutoAttack": true,
       "baseStats": {
         "maxHp": 350,

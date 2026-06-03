@@ -28,8 +28,11 @@ const SLOT_TO_ACTION = [
   'ability_3', 'ability_4', 'ability_5',
 ];
 const ACTION_NONE = 'none';
-const SESSION_TTL_MS = 10 * 60 * 1000;
 const MAX_DUEL_TICKS = 1200; // 20 min at 1s/tick — hard cap against runaway fights
+// Idle/abandoned sessions are reaped after this long. MUST exceed the max duel
+// duration (MAX_DUEL_TICKS × 1s = 20 min) or pruneStale would delete a session
+// mid-fight; pruneStale also refuses to touch an active combat as a second guard.
+const SESSION_TTL_MS = 30 * 60 * 1000;
 
 // sessionId → {
 //   p1: { ws, userId, heroInitArgs } | null,
@@ -88,6 +91,10 @@ function combatantDisplay(c) {
 function pruneStale() {
   const now = Date.now();
   for (const [id, s] of sessions) {
+    // Never reap a duel that's still being fought — only idle/finished/abandoned
+    // sessions. Previously a long fight (TTL 10 min < 20 min cap) was deleted mid-
+    // tick with no duel_end, freezing both clients.
+    if (s.combat && !s.combat.ended) continue;
     if (now - s.createdAt > SESSION_TTL_MS) {
       if (s.combat?.timer) clearInterval(s.combat.timer);
       sessions.delete(id);
@@ -135,13 +142,29 @@ function runDuelTick(session, C) {
     return;
   }
 
+  // Snapshot the inputs before stepDuelTick consumes (nulls) them, so the crash log
+  // can show which action triggered a throw.
+  const actionP1 = cm.pendingP1;
+  const actionP2 = cm.pendingP2;
   try {
     stepDuelTick(session, C, cm);
   } catch (err) {
     // A combat-engine edge case must NOT throw out of the interval callback — an
     // unhandled throw here would crash the whole server process (every session).
-    // End this duel gracefully instead.
-    console.error('[duel] tick error — ending duel', err);
+    // End this duel gracefully instead. Log full context (session, tick, both player
+    // ids, full stack) so the offending state is diagnosable from prod logs — the
+    // throw is otherwise invisible because it's swallowed here.
+    console.error('[duel] tick error — ending duel', {
+      sessionId: session?.id || null,
+      tick: cm?.tickCount,
+      p1: session?.p1?.userId || null,
+      p2: session?.p2?.userId || null,
+      heroClass: cm?.state?.combatants?.hero?.heroClass || null,
+      enemyClass: cm?.state?.combatants?.enemy?.heroClass || null,
+      lastP1Action: actionP1 || null,
+      lastP2Action: actionP2 || null,
+      error: err?.stack || err?.message || String(err),
+    });
     endDuel(session, null, null);
   }
 }
@@ -255,7 +278,7 @@ function setupDuelWs(httpServer) {
         pruneStale();
         let session = sessions.get(sessionId);
         if (!session) {
-          session = { p1: null, p2: null, createdAt: Date.now(), combat: null };
+          session = { id: sessionId, p1: null, p2: null, createdAt: Date.now(), combat: null };
           sessions.set(sessionId, session);
         }
 

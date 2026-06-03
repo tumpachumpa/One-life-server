@@ -4327,7 +4327,7 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
         ...targetMeta,
       }));
       logDamageShieldAbsorb(enemy, applied, tick, log, hero, enemy, targetMeta);
-      applyHeroLifesteal(hero, applied.damage, tick, log, enemy, targetMeta);
+      applyAttackerLifesteal(hero, applied.damage, tick, log, hero, enemy, targetMeta);
       if (applied.damage > 0) applyCombatantStateHitReaction(hero, defender, tick, log, hero, enemy, procState);
       tryShieldUpCounter(enemy, hero, result, tick, log, hero, enemy);
       const impactPct = getImpactOnBlockPct(hero);
@@ -4453,7 +4453,7 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
         ...targetMeta,
       }));
       logDamageShieldAbsorb(enemy, applied, tick, log, hero, enemy, targetMeta);
-      applyHeroLifesteal(hero, applied.damage, tick, log, enemy, targetMeta);
+      applyAttackerLifesteal(hero, applied.damage, tick, log, hero, enemy, targetMeta);
       if (applied.damage > 0) applyCombatantStateHitReaction(hero, defender, tick, log, hero, enemy, procState);
       breakBearTrapOnAutoAttack(defender, tick, log, hero, enemy);
       if (applied.damage > 0) {
@@ -4688,6 +4688,7 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
         log.push(makeEntry(tick, 'hero', 'proc', `Frost Reflect: ${refl} frost damage returned to ${attacker.name}.`, refl, hero.hp, attacker.hp, { targetId: attacker.id, element: 'cold' }));
       }
       applyLifeDrain(attacker, incomingDamage, tick, log, hero, enemy);
+      applyAttackerLifesteal(attacker, incomingDamage, tick, log, hero, enemy, targetMeta);
       tryAddBerserkerCritCharge(enemy, action);
       tryAddRapidFireCritCharge(enemy, action);
       tryApplyOnHitEffects(enemy, hero, tick, log, rng, heroConditions, action, { procRng: enemyAttackerProcRng });
@@ -4839,15 +4840,24 @@ function syncDuelEnemyProcEffects(enemyProcNodes, enemyProcState, duelEnemy, her
   if (duelEnemy.autoAttackStarted) scheduleNextAutoAttackFromProgress(duelEnemy, tick);
 }
 
-function applyHeroLifesteal(hero, damage, tick, log, enemy, targetMeta) {
-  if (damage <= 0 || hero.hp <= 0) return;
-  const stealPct = (hero.passiveEffects || []).reduce((total, effect) =>
+// Generic lifesteal: heals whichever combatant landed the auto-attack, from its own
+// `lifesteal` passiveEffects. Attacker-based (like applyLifeDrain) so it works for the
+// hero, a duel opponent (p2 — previously never healed), AND any future mob that gains a
+// `lifesteal` effect, with no per-caller scoping. Auto-attacks only: every caller is
+// inside the basic-attack impact path. `hero`/`enemy` are passed only to populate the
+// log entry's HP-bar fields, not to choose who heals.
+function applyAttackerLifesteal(attacker, damage, tick, log, hero, enemy, meta) {
+  if (!attacker || damage <= 0 || attacker.hp <= 0) return;
+  const stealPct = (attacker.passiveEffects || []).reduce((total, effect) =>
     effect.type === 'lifesteal' ? total + (effect.value || 0) : total, 0);
   if (stealPct <= 0) return;
-  const healed = Math.min(hero.maxHp - hero.hp, Math.max(1, Math.floor(damage * stealPct / 100)));
+  const healed = Math.min(attacker.maxHp - attacker.hp, Math.max(1, Math.floor(damage * stealPct / 100)));
   if (healed <= 0) return;
-  hero.hp = Math.min(hero.maxHp, hero.hp + healed);
-  log.push(makeEntry(tick, 'hero', 'heal', `Lifesteal restores ${healed} HP.`, 0, hero.hp, enemy?.hp, targetMeta));
+  attacker.hp = Math.min(attacker.maxHp, attacker.hp + healed);
+  const text = attacker.isPlayer
+    ? `Lifesteal restores ${healed} HP.`
+    : `${attacker.name} steals ${healed} HP.`;
+  log.push(makeEntry(tick, attacker.id, 'heal', text, 0, hero?.hp, enemy?.hp, meta));
 }
 
 function applyLifeDrain(attacker, damage, tick, log, hero, enemy) {
@@ -5699,7 +5709,7 @@ function applyProcEffect(effect, ctx, procState, heroProcNodes, hero, enemy, tic
         shieldAbsorbed: applied.absorbed || 0,
       }));
       logDamageShieldAbsorb(enemy, applied, tick, log, hero, enemy, { targetId: enemy.id });
-      applyHeroLifesteal(hero, applied.damage, tick, log, enemy, {
+      applyAttackerLifesteal(hero, applied.damage, tick, log, hero, enemy, {
         targetId: enemy.id,
         extraHit: true,
         extraHitSource: source,

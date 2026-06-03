@@ -1662,14 +1662,13 @@
       "rolls": 1,
       "dropChance": 0.55,
       "rarityTable": "rootspireElite",
-      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
         "ration": 5,
         "mushroom": 6,
         "warhound_meat": 3,
-        "oak_campfire": 2,
-        "rune_stone_shard": 2
+        "oak_campfire": 2
       },
       "generatedEquipment": {
         "enabled": true,
@@ -1681,21 +1680,20 @@
         ]
       },
       "independentDrops": [
-        { "itemId": "rune_stone_shard", "dropChance": 0.03 }
+        { "itemId": "rune_stone_shard", "dropChance": 0.06, "lootBonusDivisor": 570 }
       ]
     },
     "dwarf_crossbowman": {
       "rolls": 1,
       "dropChance": 0.55,
       "rarityTable": "rootspireElite",
-      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
         "ration": 5,
         "mushroom": 4,
         "warhound_meat": 3,
-        "oak_campfire": 2,
-        "rune_stone_shard": 2
+        "oak_campfire": 2
       },
       "generatedEquipment": {
         "enabled": true,
@@ -1709,21 +1707,20 @@
         ]
       },
       "independentDrops": [
-        { "itemId": "rune_stone_shard", "dropChance": 0.03 }
+        { "itemId": "rune_stone_shard", "dropChance": 0.06, "lootBonusDivisor": 570 }
       ]
     },
     "dwarf_ironbreaker": {
       "rolls": 1,
       "dropChance": 0.55,
       "rarityTable": "rootspireElite",
-      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
         "ration": 5,
         "mushroom": 4,
         "warhound_meat": 3,
-        "oak_campfire": 2,
-        "rune_stone_shard": 2
+        "oak_campfire": 2
       },
       "generatedEquipment": {
         "enabled": true,
@@ -1736,21 +1733,20 @@
         ]
       },
       "independentDrops": [
-        { "itemId": "rune_stone_shard", "dropChance": 0.03 }
+        { "itemId": "rune_stone_shard", "dropChance": 0.06, "lootBonusDivisor": 570 }
       ]
     },
     "dwarf_ironbreaker_f2": {
       "rolls": 1,
       "dropChance": 0.55,
       "rarityTable": "rootspireElite",
-      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
         "ration": 5,
         "mushroom": 4,
         "warhound_meat": 3,
-        "oak_campfire": 2,
-        "rune_stone_shard": 2
+        "oak_campfire": 2
       },
       "generatedEquipment": {
         "enabled": true,
@@ -1763,21 +1759,20 @@
         ]
       },
       "independentDrops": [
-        { "itemId": "rune_stone_shard", "dropChance": 0.03 }
+        { "itemId": "rune_stone_shard", "dropChance": 0.06, "lootBonusDivisor": 570 }
       ]
     },
     "dwarf_handler": {
       "rolls": 1,
       "dropChance": 0.55,
       "rarityTable": "rootspireElite",
-      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
         "ration": 5,
         "mushroom": 4,
         "warhound_meat": 3,
-        "oak_campfire": 2,
-        "rune_stone_shard": 2
+        "oak_campfire": 2
       },
       "generatedEquipment": {
         "enabled": true,
@@ -1790,7 +1785,7 @@
         ]
       },
       "independentDrops": [
-        { "itemId": "rune_stone_shard", "dropChance": 0.03 }
+        { "itemId": "rune_stone_shard", "dropChance": 0.06, "lootBonusDivisor": 570 }
       ]
     },
     "karag_warhound": {
@@ -1817,14 +1812,13 @@
       "rolls": 1,
       "dropChance": 0.55,
       "rarityTable": "rootspireElite",
-      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
         "ration": 5,
         "mushroom": 4,
         "warhound_meat": 3,
-        "oak_campfire": 2,
-        "rune_stone_shard": 2
+        "oak_campfire": 2
       },
       "generatedEquipment": {
         "enabled": true,
@@ -1836,21 +1830,20 @@
         ]
       },
       "independentDrops": [
-        { "itemId": "rune_stone_shard", "dropChance": 0.03 }
+        { "itemId": "rune_stone_shard", "dropChance": 0.06, "lootBonusDivisor": 570 }
       ]
     },
     "bolgrak_stonefist": {
       "rolls": 1,
       "dropChance": 1.0,
       "rarityTable": "karag_elite",
-      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
         "ration": 5,
         "mushroom": 4,
         "warhound_meat": 3,
-        "oak_campfire": 2,
-        "rune_stone_shard": 2
+        "oak_campfire": 2
       },
       "generatedEquipment": {
         "enabled": true,
@@ -1867,20 +1860,21 @@
         "maxRarity": "rare",
         "baseChance": 4
       },
-      "guaranteedDrops": ["rune_stone_shard"]
+      "independentDrops": [
+        { "itemId": "rune_stone_shard", "dropChance": 0.50, "ignoreLootBonus": true, "extraChance": 0.50 }
+      ]
     },
     "pit_manticore": {
       "rolls": 1,
       "dropChance": 0.65,
       "rarityTable": "rootspireElite",
-      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
         "ration": 5,
         "mushroom": 4,
         "warhound_meat": 3,
-        "oak_campfire": 2,
-        "rune_stone_shard": 2
+        "oak_campfire": 2
       },
       "relicDrop": {
         "itemId": "relic_manticore_spine",
@@ -1890,21 +1884,21 @@
         { "itemId": "manticore_meat", "dropChance": 0.25 },
         { "itemId": "manticore_hide", "dropChance": 0.10 },
         { "itemId": "recipe_scroll_manticore_stew", "dropChance": 0.05 },
-        { "itemId": "spineback_bow", "dropChance": 0.04 }
+        { "itemId": "spineback_bow", "dropChance": 0.04 },
+        { "itemId": "rune_stone_shard", "dropChance": 0.06, "lootBonusDivisor": 570 }
       ]
     },
     "karag_runic_construct": {
       "rolls": 1,
       "dropChance": 0.55,
       "rarityTable": "rootspireElite",
-      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
         "ration": 5,
         "mushroom": 4,
         "warhound_meat": 3,
-        "oak_campfire": 2,
-        "rune_stone_shard": 2
+        "oak_campfire": 2
       },
       "generatedEquipment": {
         "enabled": true,
@@ -1917,21 +1911,20 @@
         ]
       },
       "independentDrops": [
-        { "itemId": "rune_stone_shard", "dropChance": 0.03 }
+        { "itemId": "rune_stone_shard", "dropChance": 0.06, "lootBonusDivisor": 570 }
       ]
     },
     "dwarf_runecarver": {
       "rolls": 1,
       "dropChance": 0.55,
       "rarityTable": "rootspireElite",
-      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
         "ration": 5,
         "mushroom": 4,
         "warhound_meat": 3,
-        "oak_campfire": 2,
-        "rune_stone_shard": 2
+        "oak_campfire": 2
       },
       "generatedEquipment": {
         "enabled": true,
@@ -1944,21 +1937,20 @@
         ]
       },
       "independentDrops": [
-        { "itemId": "rune_stone_shard", "dropChance": 0.03 }
+        { "itemId": "rune_stone_shard", "dropChance": 0.06, "lootBonusDivisor": 570 }
       ]
     },
     "dwarf_honor_guard": {
       "rolls": 1,
       "dropChance": 0.55,
       "rarityTable": "rootspireElite",
-      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
         "ration": 5,
         "mushroom": 4,
         "warhound_meat": 3,
-        "oak_campfire": 2,
-        "rune_stone_shard": 2
+        "oak_campfire": 2
       },
       "generatedEquipment": {
         "enabled": true,
@@ -1972,21 +1964,20 @@
         ]
       },
       "independentDrops": [
-        { "itemId": "rune_stone_shard", "dropChance": 0.03 }
+        { "itemId": "rune_stone_shard", "dropChance": 0.06, "lootBonusDivisor": 570 }
       ]
     },
     "kharzun_branded": {
       "rolls": 1,
       "dropChance": 1.0,
       "rarityTable": "karag_elite",
-      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire", "rune_stone_shard"],
+      "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
         "ration": 5,
         "mushroom": 4,
         "warhound_meat": 3,
-        "oak_campfire": 2,
-        "rune_stone_shard": 2
+        "oak_campfire": 2
       },
       "generatedEquipment": {
         "enabled": true,
@@ -2018,9 +2009,9 @@
         "maxRarity": "epic",
         "baseChance": 5
       },
-      "guaranteedDrops": ["rune_stone_shard"],
       "independentDrops": [
-        { "itemId": "ironthane_medallion", "dropChance": 0.01 }
+        { "itemId": "ironthane_medallion", "dropChance": 0.01 },
+        { "itemId": "rune_stone_shard", "dropChance": 0.50, "ignoreLootBonus": true, "extraChance": 0.50 }
       ]
     },
     "karag_thorn_boss": {
@@ -2065,7 +2056,9 @@
       "independentDrops": [
         { "itemId": "ironthane_signet_l", "dropChance": 0.005 },
         { "itemId": "ironthane_signet_r", "dropChance": 0.005 },
-        { "itemId": "chimeric_mantle", "dropChance": 0.005 }
+        { "itemId": "chimeric_mantle", "dropChance": 0.005 },
+        { "itemId": "rune_stone_shard", "dropChance": 0.35, "ignoreLootBonus": true, "allowDuplicate": true },
+        { "itemId": "rune_stone_shard", "dropChance": 0.15, "ignoreLootBonus": true, "allowDuplicate": true }
       ]
     }
   }

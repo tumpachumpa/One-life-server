@@ -781,13 +781,22 @@ export function rollLootTable(tableOrId, rng = Math.random, lootBonus = 0, force
   if (Array.isArray(table.independentDrops)) {
     for (const entry of table.independentDrops) {
       if (!entry?.itemId) continue;
-      const chance = Math.min(1, (entry.dropChance || 0) + lootBonus / 200);
+      // Per-entry tuning:
+      //  ignoreLootBonus  - chance stays flat (don't add the rarity/magic-find bonus)
+      //  lootBonusDivisor - gentler scaling than the default /200 (e.g. 570 ≈ +14% at lootBonus 80)
+      //  allowDuplicate   - don't skip when the same item already dropped (stack extra copies)
+      //  extraChance      - if it drops, roll once more for a bonus copy (e.g. "1 or 2")
+      const bonus = entry.ignoreLootBonus ? 0 : lootBonus / (entry.lootBonusDivisor || 200);
+      const chance = Math.min(1, (entry.dropChance || 0) + bonus);
       if (rng() > chance) continue;
       const drop = items.find(i => i.id === entry.itemId);
       if (!drop) continue;
       const dropId = getLootDropId(drop);
-      if (preventDuplicateItems && dropId && pickedItemIds.has(dropId)) continue;
-      drops.push(createLootItem(drop, rarityTable, rng, minimumApplied ? null : minimumRarity, lootBonus));
+      if (!entry.allowDuplicate && preventDuplicateItems && dropId && pickedItemIds.has(dropId)) continue;
+      const copies = 1 + ((entry.extraChance && rng() < entry.extraChance) ? 1 : 0);
+      for (let c = 0; c < copies; c++) {
+        drops.push(createLootItem(drop, rarityTable, rng, minimumApplied ? null : minimumRarity, lootBonus));
+      }
       if (dropId) pickedItemIds.add(dropId);
     }
   }

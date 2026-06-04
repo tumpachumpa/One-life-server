@@ -23,8 +23,7 @@
           "max": 15
         },
         "armor": {
-          "base": 0,
-          "heroArmorPct": 0
+          "perHeroLevel": 1.5
         }
       },
       "effects": [],

@@ -10,6 +10,7 @@ const lootModP       = import('../game/logic/loot.js');
 const heroModP       = import('../game/logic/hero.js');
 const survivalModP   = import('../game/logic/survival.js');
 const contentModP    = import('../game/logic/content.js');
+const campfiresModP  = import('../game/logic/campfires.js');
 
 // Resolve an inventory slot's stored item id (string), handling both the
 // string form and the embedded-object form { itemId: { id, uid, ... } }.
@@ -342,8 +343,8 @@ async function adventureRoutes(fastify) {
     const session = await getActiveSession(userId);
     if (!session) return reply.status(404).send({ error: 'No active adventure' });
 
-    const [{ getItem }, { calcStats }, { getPassiveRegenFromHunger }] =
-      await Promise.all([contentModP, heroModP, survivalModP]);
+    const [{ getItem }, { calcStats, healHeroPetByPct, getHeroPetStatus }, { getPassiveRegenFromHunger }, { isCampfireItem }] =
+      await Promise.all([contentModP, heroModP, survivalModP, campfiresModP]);
 
     const heroResult = await pool.query(
       'SELECT save_data FROM heroes WHERE user_id = $1 AND slot_id = $2',
@@ -417,7 +418,33 @@ async function adventureRoutes(fastify) {
       [JSON.stringify({ hp: newHp, at: now }), session.id]
     );
 
-    return { ok: true, hp: newHp, maxHp, healed: newHp - cur };
+    // Campfires also heal the hero's pet by the same %. Pet HP isn't carried in
+    // run_hp (that's hero-only) — it lives in save_data.hero.pet.hp, which the
+    // next fight's buildPetCombatant reads. The client heals the pet locally too,
+    // but that relies on an autosave landing before the next fight's DB read; do
+    // it authoritatively here so the heal can't be lost to that race. Surgical
+    // jsonb_set on the pet.hp leaf avoids clobbering other save_data the client
+    // may have changed since this request loaded the hero.
+    let petHp = null;
+    if (isCampfireItem(item) && getHeroPetStatus(hero)) {
+      const healedHero = healHeroPetByPct(hero, pct);
+      const healedPet = healedHero?.pet || null;
+      if (healedPet) {
+        petHp = healedPet.hp ?? null;
+        // Write the whole pet object (not just the hp leaf) so jsonb_set still
+        // lands if save_data had no hero.pet yet — jsonb_set won't create a
+        // missing intermediate key.
+        await pool.query(
+          `UPDATE heroes
+             SET save_data = jsonb_set(save_data, '{hero,pet}', $1::jsonb, true),
+                 updated_at = NOW()
+           WHERE user_id = $2 AND slot_id = $3`,
+          [JSON.stringify(healedPet), userId, session.slot_id || 'slot_1']
+        );
+      }
+    }
+
+    return { ok: true, hp: newHp, maxHp, healed: newHp - cur, petHp };
   });
 
   // POST /adventure/fail-node — player died, abandon the run

@@ -4,13 +4,13 @@ import adventureLootPoolsData from "../data/adventureLootPools.json" with { type
 import { applyCampfireRarityToItem, isCampfireItem } from "./campfires.js";
 import { rollEquipmentAffixes, rollGeneratedEquipment } from "./equipmentGenerator.js";
 
-const ENEMY_RARITY_LOOT_BONUS = {
-  normal:    0,
-  uncommon:  10,
-  rare:      25,
-  epic:      50,
-  legendary: 80,
-};
+// ─── Rarity quality system ────────────────────────────────────────────────────
+// One base chance per tier; everything else is a multiplier on top:
+//   P(tier) ∝ weight × mobRarityMult (epic+legendary) × (1 + magicFind × 1.5%)
+// Mob rarity ids come from ENEMY_RARITIES in enemies.js (raro/epico/legendario).
+export const MOB_RARITY_QUALITY_MULT = { raro: 2, epico: 3, legendario: 4 };
+const MAGIC_FIND_WEIGHT_PER_POINT = 0.015; // each magic find point = +1.5% relative weight
+const QUALITY_MULT_RARITIES = new Set(["epic", "legendary"]);
 
 export const ITEM_RARITIES = {
   normal: { id: "normal", label: "", color: "#aaa", statMult: 1, priceMult: 1, effectSlots: 0 },
@@ -23,68 +23,37 @@ export const ITEM_RARITIES = {
 };
 
 export const ITEM_RARITY_TABLES = {
-  normal: [
-    ["normal", 60],
+  adventure: [
+    ["normal", 62],
     ["uncommon", 20],
     ["rare", 12],
-    ["epic", 6.5],
-    ["legendary", 1.5],
-  ],
-  specialChest: [
-    ["normal", 45],
-    ["uncommon", 20],
-    ["rare", 24],
-    ["epic", 9],
-    ["legendary", 2],
-  ],
-  forestChest: [
-    ["normal", 25],
-    ["uncommon", 20],
-    ["rare", 35],
-    ["epic", 16],
-    ["legendary", 4],
+    ["epic", 5],
+    ["legendary", 0.5],
   ],
   boss: [
-    ["rare", 72],
-    ["epic", 22],
-    ["legendary", 3],
-  ],
-  rootspire: [
-    ["normal", 40],
-    ["uncommon", 22],
-    ["rare", 24],
-    ["epic", 11],
-    ["legendary", 2.5],
-  ],
-  rootspireElite: [
-    ["uncommon", 15],
-    ["rare", 45],
-    ["epic", 20],
-    ["legendary", 7],
-  ],
-  wyvern: [
-    ["rare", 55],
-    ["epic", 32],
-    ["legendary", 9],
-  ],
-  miniboss: [
-    ["normal", 30],
-    ["uncommon", 15],
-    ["rare", 40],
-    ["epic", 14],
-    ["legendary", 1],
-  ],
-  karag_elite: [
-    ["rare", 38],
+    ["rare", 60],
     ["epic", 30],
-    ["legendary", 12],
-  ],
-  karag_boss: [
-    ["rare", 40],
-    ["epic", 35],
-    ["legendary", 18],
+    ["legendary", 10],
   ],
 };
+
+// Legacy table names → unified tables, so stale data/code references keep working.
+const RARITY_TABLE_ALIASES = {
+  normal: "adventure",
+  specialChest: "adventure",
+  forestChest: "adventure",
+  rootspire: "adventure",
+  rootspireElite: "adventure",
+  miniboss: "adventure",
+  karag_elite: "adventure",
+  wyvern: "boss",
+  karag_boss: "boss",
+};
+
+export function resolveRarityTableName(tableName) {
+  const resolved = RARITY_TABLE_ALIASES[tableName] || tableName;
+  return ITEM_RARITY_TABLES[resolved] ? resolved : "adventure";
+}
 
 export const LOOT_TABLES = lootTablesData.tables || {};
 export const ADVENTURE_LOOT_POOLS = adventureLootPoolsData.pools || {};
@@ -269,33 +238,8 @@ function higherRarity(a, b) {
   return ra >= rb ? a : b;
 }
 
-function getLootTableRollCount(table = {}, lootBonus = 0) {
-  const baseRolls = Math.max(0, Math.floor(Number(table.rolls ?? 1)));
-  if (table.allowBonusRolls !== true) return baseRolls;
-  const bonusStep = Math.max(1, Number(table.bonusRollStep || 100));
-  const maxBonusRolls = Math.max(0, Math.floor(Number(table.maxBonusRolls ?? 1)));
-  const bonusRolls = Math.floor(Math.max(0, Number(lootBonus) || 0) / bonusStep);
-  return baseRolls + Math.min(maxBonusRolls, bonusRolls);
-}
-
-function getLootBonusQualityRerolls(table = {}, lootBonus = 0) {
-  if (table.qualityBonusRerolls === false) return 0;
-  const bonusStep = Math.max(1, Number(table.qualityBonusStep || 30));
-  const maxRerolls = Math.max(0, Math.floor(Number(table.maxQualityBonusRerolls ?? 3)));
-  const rerolls = Math.floor(Math.max(0, Number(lootBonus) || 0) / bonusStep);
-  return Math.min(maxRerolls, rerolls);
-}
-
-function rollItemRarityWithLootBonus(tableName = "normal", rng = Math.random, lootBonus = 0, table = {}) {
-  let best = capRandomLootRarity(rollItemRarity(tableName, rng));
-  const rerolls = getLootBonusQualityRerolls(table, lootBonus);
-  for (let i = 0; i < rerolls; i++) {
-    const candidate = capRandomLootRarity(rollItemRarity(tableName, rng));
-    if ((ITEM_RARITY_RANKS[candidate?.id] ?? 0) > (ITEM_RARITY_RANKS[best?.id] ?? 0)) {
-      best = candidate;
-    }
-  }
-  return best;
+function getLootTableRollCount(table = {}) {
+  return Math.max(0, Math.floor(Number(table.rolls ?? 1)));
 }
 
 function shouldPreventDuplicateItems(table = {}, rolls = 1) {
@@ -321,7 +265,7 @@ function isRarityAtLeast(rarity, minimumRarity = null) {
   return (ITEM_RARITY_RANKS[rarityId] ?? 0) >= (ITEM_RARITY_RANKS[minimumId] ?? 0);
 }
 
-function rollGeneratedEquipmentFromPool(pool = {}, enemy = null, rng = Math.random, rarityTable = "normal", minimumRarity = null, lootBonus = 0) {
+function rollGeneratedEquipmentFromPool(pool = {}, enemy = null, rng = Math.random, rarityTable = "adventure", minimumRarity = null, quality = {}) {
   const config = getGeneratedEquipmentConfig(pool);
   if (!config) return null;
   const {
@@ -337,7 +281,7 @@ function rollGeneratedEquipmentFromPool(pool = {}, enemy = null, rng = Math.rand
   const enemyRank = enemy ? getEnemyLootRank(enemy) : 0;
   const finalItemLevel = Math.max(1, Math.floor(Number(itemLevel) || (enemyRank + 1 + Number(itemLevelBonus || 0))));
   const rarity = getRarityWithMinimum(
-    rollItemRarityWithLootBonus(generatedRarityTable || rarityTable || "normal", rng, lootBonus, pool),
+    capRandomLootRarity(rollItemRarity(generatedRarityTable || rarityTable || "adventure", rng, quality)),
     minimumRarity
   );
   return rollGeneratedEquipment({
@@ -350,10 +294,11 @@ function rollGeneratedEquipmentFromPool(pool = {}, enemy = null, rng = Math.rand
 export function rollAdventureLootPool(adventureOrPool, enemy = null, rng = Math.random, lootBonus = 0, forcedRarityTable = null, options = {}) {
   const pool = expandPoolItems(resolveAdventureLootPool(adventureOrPool, options.zone) || adventureOrPool);
   if (!pool) return [];
+  const quality = options.quality || {};
   const drops = [];
-  const rolls = getLootTableRollCount(pool, lootBonus);
+  const rolls = getLootTableRollCount(pool);
   const dropChance = Math.min(1, (pool.dropChance ?? 0) + lootBonus / 100);
-  const rarityTable = forcedRarityTable || pool.rarityTable || "normal";
+  const rarityTable = forcedRarityTable || pool.rarityTable || "adventure";
   const pickedItemIds = new Set();
   const preventDuplicateItems = shouldPreventDuplicateItems(pool, rolls);
   for (let i = 0; i < rolls; i++) {
@@ -367,10 +312,10 @@ export function rollAdventureLootPool(adventureOrPool, enemy = null, rng = Math.
       : dropPool;
     const drop = weightedPool.length ? weightedPick(weightedPool, rng) : null;
     if (drop?.generatedEquipment) {
-      const generated = rollGeneratedEquipmentFromPool(pool, enemy, rng, rarityTable, null, lootBonus);
+      const generated = rollGeneratedEquipmentFromPool(pool, enemy, rng, rarityTable, null, quality);
       if (generated) drops.push(generated);
     } else if (drop) {
-      drops.push(createLootItem(drop, rarityTable, rng, null, lootBonus));
+      drops.push(createLootItem(drop, rarityTable, rng, null, quality));
       const dropId = getLootDropId(drop);
       if (dropId) pickedItemIds.add(dropId);
     }
@@ -378,15 +323,17 @@ export function rollAdventureLootPool(adventureOrPool, enemy = null, rng = Math.
   return drops;
 }
 
-export function rollEventLootEffect(effect, rng = Math.random, lootBonus = 0) {
+// Events/chests: magicFind boosts quality only (drop chances stay as authored).
+export function rollEventLootEffect(effect, rng = Math.random, magicFind = 0) {
   if (!effect || effect.type !== "grant_loot") return [];
   const rolls = Math.max(1, Math.floor(Number(effect.rolls || 1)));
+  const quality = { magicFind };
   if (effect.lootPoolId) {
     const pool = ADVENTURE_LOOT_POOLS[effect.lootPoolId];
     if (!pool) return [];
-    return rollAdventureLootPool({ ...pool, rolls }, null, rng, lootBonus, effect.rarityTable || null).slice(0, rolls);
+    return rollAdventureLootPool({ ...pool, rolls }, null, rng, 0, effect.rarityTable || null, { quality }).slice(0, rolls);
   }
-  return rollLootTable(effect.lootTable, rng, lootBonus, effect.rarityTable || null).slice(0, rolls);
+  return rollLootTable(effect.lootTable, rng, 0, effect.rarityTable || null, quality).slice(0, rolls);
 }
 
 function getContextLootBonus(context = {}) {
@@ -395,6 +342,14 @@ function getContextLootBonus(context = {}) {
 
 function getContextDifficulty(context = {}) {
   return Math.max(0, Math.floor(Number(context.difficultyStars ?? context.difficulty ?? context.adventure?.difficultyStars ?? 0)));
+}
+
+// Null-aware variant for the diff-0 legendary gate: contexts that don't carry a
+// difficulty (single encounters, events) return null and are NOT gated.
+function getContextDifficultyStarsOrNull(context = {}) {
+  const raw = context.difficultyStars ?? context.difficulty ?? context.adventure?.difficultyStars ?? null;
+  if (raw == null) return null;
+  return Math.max(0, Math.floor(Number(raw)));
 }
 
 function getContextStoneZoneId(context = {}) {
@@ -463,41 +418,57 @@ function getManualCombatLootTable(enemy) {
   return LOOT_TABLES[enemy.lootTable] || (enemy.phases ? LOOT_TABLES.boss : LOOT_TABLES.forest_basic);
 }
 
-function rollManualCombatLoot(enemy, rng = Math.random, contextLootBonus = 0) {
+function rollManualCombatLoot(enemy, rng = Math.random, quality = {}) {
   const table = getManualCombatLootTable(enemy);
-  const lootBonus = (enemy.lootBonus || 0) + contextLootBonus;
+  // Mob rarity lootBonus (15/35/65) boosts drop CHANCE only; rarity quality is in `quality`.
+  const lootBonus = enemy.lootBonus || 0;
   if (Array.isArray(enemy.lootTags) && enemy.lootTags.length) {
-    return rollLootTable({ rolls: enemy.lootRolls || 1, tags: enemy.lootTags, dropChance: enemy.lootChance ?? 1, rarityTable: enemy.lootRarityTable || (enemy.phases ? "boss" : enemy.isMiniBoss ? "miniboss" : "normal") }, rng, lootBonus, enemy.lootRarityTable || null);
+    return rollLootTable({ rolls: enemy.lootRolls || 1, tags: enemy.lootTags, dropChance: enemy.lootChance ?? 1, rarityTable: enemy.lootRarityTable || (enemy.phases ? "boss" : "adventure") }, rng, lootBonus, enemy.lootRarityTable || null, quality);
   }
-  const fallbackRarityTable = enemy.phases ? "boss" : enemy.isMiniBoss ? "miniboss" : null;
-  return rollLootTable(table, rng, lootBonus, enemy.lootRarityTable || (table.rarityTable ? null : fallbackRarityTable));
+  const fallbackRarityTable = enemy.phases ? "boss" : null;
+  return rollLootTable(table, rng, lootBonus, enemy.lootRarityTable || (table.rarityTable ? null : fallbackRarityTable), quality);
 }
 
 export function rollCombatLoot(enemy, rng = Math.random, context = {}) {
   if (!enemy) return [];
-  const rarityLootBonus = ENEMY_RARITY_LOOT_BONUS[enemy?.rarity?.id] ?? 0;
-  const contextLootBonus = getContextLootBonus(context) + rarityLootBonus;
-  // Boss-type enemies always use their own manual tables regardless of adventure pool
-  const isBossEnemy = enemy?.phases || enemy?.boss || enemy?.isMiniBoss
-    || enemy?.threat === "boss" || enemy?.threat === "special";
-  if (isBossEnemy) {
-    const table = getManualCombatLootTable(enemy);
-    return appendCombatBonusDrops(rollManualCombatLoot(enemy, rng, contextLootBonus), enemy, table, rng, context);
-  }
-  // Each enemy uses its own individual table (adventure pools disabled)
+  const quality = {
+    rarityMult: MOB_RARITY_QUALITY_MULT[enemy?.rarity?.id] ?? 1,
+    magicFind: getContextLootBonus(context),
+    difficultyStars: getContextDifficultyStarsOrNull(context),
+  };
   const table = getManualCombatLootTable(enemy);
-  return appendCombatBonusDrops(rollManualCombatLoot(enemy, rng, contextLootBonus), enemy, table, rng, context);
+  return appendCombatBonusDrops(rollManualCombatLoot(enemy, rng, quality), enemy, table, rng, context);
 }
 
-export function rollItemRarity(tableName = "normal", rng = Math.random) {
-  const table = ITEM_RARITY_TABLES[tableName] || ITEM_RARITY_TABLES.normal;
+// Quality inputs that shape a rarity roll:
+//   rarityMult      - mob rarity multiplier on epic+legendary weights (MOB_RARITY_QUALITY_MULT)
+//   magicFind       - hero magic find; multiplies every tier above the table's lowest
+//   difficultyStars - adventure difficulty; at 0, random legendaries are gated off
+//                     (boss table exempt; null/undefined = unknown context, no gate)
+export function getItemRarityWeights(tableName = "adventure", quality = {}) {
+  const resolvedName = resolveRarityTableName(tableName);
+  const base = ITEM_RARITY_TABLES[resolvedName];
+  const rarityMult = Math.max(1, Number(quality.rarityMult) || 1);
+  const magicFindMult = 1 + Math.max(0, Number(quality.magicFind) || 0) * MAGIC_FIND_WEIGHT_PER_POINT;
+  const gateLegendary = resolvedName !== "boss" && quality.difficultyStars === 0;
+  return base.map(([id, weight], index) => {
+    let scaled = weight;
+    if (QUALITY_MULT_RARITIES.has(id)) scaled *= rarityMult;
+    if (index > 0) scaled *= magicFindMult;
+    if (gateLegendary && id === "legendary") scaled = 0;
+    return [id, scaled];
+  });
+}
+
+export function rollItemRarity(tableName = "adventure", rng = Math.random, quality = {}) {
+  const table = getItemRarityWeights(tableName, quality);
   const total = table.reduce((sum, [, weight]) => sum + weight, 0);
   let roll = rng() * total;
   for (const [id, weight] of table) {
     roll -= weight;
-    if (roll <= 0) return ITEM_RARITIES[id];
+    if (roll <= 0 && weight > 0) return ITEM_RARITIES[id];
   }
-  return ITEM_RARITIES.normal;
+  return ITEM_RARITIES[table[0]?.[0]] || ITEM_RARITIES.normal;
 }
 
 function capRandomLootRarity(rarity) {
@@ -560,12 +531,12 @@ export function applyItemRarity(item, rarity, rng = Math.random) {
   };
 }
 
-export function createLootItem(item, tableName = "normal", rng = Math.random, minimumRarity = null, lootBonus = 0) {
+export function createLootItem(item, tableName = "adventure", rng = Math.random, minimumRarity = null, quality = {}) {
   if (!item || (!isCampfireItem(item) && !(item.type === "gear" && item.rarityAffixPools?.length))) return item;
   // A table's minimumRarity may RAISE the floor but must not LOWER an item's own
   // authored rarity (authored artifacts must stay artifact even in an epic-min table).
   const effectiveMinimum = higherRarity(minimumRarity, item.rarity);
-  return applyItemRarity(item, getRarityWithMinimum(rollItemRarityWithLootBonus(tableName, rng, lootBonus), effectiveMinimum), rng);
+  return applyItemRarity(item, getRarityWithMinimum(capRandomLootRarity(rollItemRarity(tableName, rng, quality)), effectiveMinimum), rng);
 }
 
 // ─── Stone Drop System ────────────────────────────────────────────────────────
@@ -705,7 +676,8 @@ export function rollBossStoneDrop(lootTable, difficulty = 0, zoneId = null, rng 
   return items.find(item => item.id === stoneId) || null;
 }
 
-export function rollLootTable(tableOrId, rng = Math.random, lootBonus = 0, forcedRarityTable = null) {
+// lootBonus boosts drop CHANCE only (mob rarity 15/35/65); quality shapes rarity rolls.
+export function rollLootTable(tableOrId, rng = Math.random, lootBonus = 0, forcedRarityTable = null, quality = {}) {
   const table = typeof tableOrId === "string" ? LOOT_TABLES[tableOrId] : tableOrId;
   if (!table) return [];
   const drops = [];
@@ -717,9 +689,9 @@ export function rollLootTable(tableOrId, rng = Math.random, lootBonus = 0, force
       pickedItemIds.add(itemId);
     }
   }
-  const rolls = getLootTableRollCount(table, lootBonus);
+  const rolls = getLootTableRollCount(table);
   const dropChance = Math.min(1, (table.dropChance || 0) + lootBonus / 100);
-  const rarityTable = forcedRarityTable || table.rarityTable || "normal";
+  const rarityTable = forcedRarityTable || table.rarityTable || "adventure";
   const minimumRarity = table.minimumRarity || table.minRarity || null;
   let minimumApplied = false;
   const generatedConfig = getGeneratedEquipmentConfig(table);
@@ -741,10 +713,10 @@ export function rollLootTable(tableOrId, rng = Math.random, lootBonus = 0, force
     const minimumForDrop = minimumApplied ? null : minimumRarity;
     const previousDropCount = drops.length;
     if (drop?.generatedEquipment) {
-      const generated = rollGeneratedEquipmentFromPool(table, null, rng, rarityTable, minimumForDrop, lootBonus);
+      const generated = rollGeneratedEquipmentFromPool(table, null, rng, rarityTable, minimumForDrop, quality);
       if (generated) drops.push(generated);
     } else if (drop) {
-      drops.push(createLootItem(drop, rarityTable, rng, minimumForDrop, lootBonus));
+      drops.push(createLootItem(drop, rarityTable, rng, minimumForDrop, quality));
       const dropId = getLootDropId(drop);
       if (dropId) pickedItemIds.add(dropId);
     }
@@ -755,7 +727,7 @@ export function rollLootTable(tableOrId, rng = Math.random, lootBonus = 0, force
   if (useIndependentEquipment) {
     const equipChance = Math.min(1, (generatedConfig.dropChance || 0) + lootBonus / 200);
     if (rng() <= equipChance) {
-      const generated = rollGeneratedEquipmentFromPool(table, null, rng, rarityTable, minimumApplied ? null : minimumRarity, lootBonus);
+      const generated = rollGeneratedEquipmentFromPool(table, null, rng, rarityTable, minimumApplied ? null : minimumRarity, quality);
       if (generated) {
         drops.push(generated);
         minimumApplied = true;
@@ -772,7 +744,7 @@ export function rollLootTable(tableOrId, rng = Math.random, lootBonus = 0, force
       );
       const drop = eqPool.length ? weightedPick(eqPool, rng) : null;
       if (drop) {
-        drops.push(createLootItem(drop, rarityTable, rng, minimumApplied ? null : minimumRarity, lootBonus));
+        drops.push(createLootItem(drop, rarityTable, rng, minimumApplied ? null : minimumRarity, quality));
         const dropId = getLootDropId(drop);
         if (dropId) pickedItemIds.add(dropId);
       }
@@ -795,7 +767,7 @@ export function rollLootTable(tableOrId, rng = Math.random, lootBonus = 0, force
       if (!entry.allowDuplicate && preventDuplicateItems && dropId && pickedItemIds.has(dropId)) continue;
       const copies = 1 + ((entry.extraChance && rng() < entry.extraChance) ? 1 : 0);
       for (let c = 0; c < copies; c++) {
-        drops.push(createLootItem(drop, rarityTable, rng, minimumApplied ? null : minimumRarity, lootBonus));
+        drops.push(createLootItem(drop, rarityTable, rng, minimumApplied ? null : minimumRarity, quality));
       }
       if (dropId) pickedItemIds.add(dropId);
     }

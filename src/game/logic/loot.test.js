@@ -7,6 +7,7 @@ import {
   ITEM_RARITY_TABLES,
   applyItemRarity,
   getAdventureDropPool,
+  getItemRarityWeights,
   rollAdventureLootPool,
   rollCombatLoot,
   rollEventLootEffect,
@@ -224,27 +225,50 @@ describe("adventure loot pools", () => {
     expect(wargDrops.map(drop => drop.id)).toContain("warg_meat");
   });
 
-  it("gives Ancient Forest chests a guaranteed generated-equipment roll chance with boosted rarity odds", () => {
+  it("gives Ancient Forest chests a guaranteed generated-equipment roll chance", () => {
     const table = LOOT_TABLES.forest_chest_equipment;
-    const nonNormalWeight = tableName => ITEM_RARITY_TABLES[tableName]
-      .filter(([id]) => id !== "normal")
-      .reduce((sum, [, weight]) => sum + weight, 0);
     const [drop] = rollLootTable("forest_chest_equipment", () => 0.99);
 
-    expect(table).toMatchObject({ rolls: 1, dropChance: 1, rarityTable: "forestChest" });
+    expect(table).toMatchObject({ rolls: 1, dropChance: 1, rarityTable: "adventure" });
     expect(table.tags).toEqual([]);
     expect(table.generatedEquipment.weight).toBeGreaterThan(20);
     expect(table.includeItemIds).toEqual(expect.arrayContaining(["campfire", "small_bag", "quiver", "fur_cloak"]));
     expect(table.includeItemIds.every(id => itemById[id])).toBe(true);
-    expect(nonNormalWeight("forestChest")).toBeGreaterThan(nonNormalWeight("specialChest"));
     expect(drop.generated).toBe(true);
     expect(drop.damageDice || drop.armorDice).toBeTruthy();
   });
 
   it("keeps uncommon, epic, and legendary outcomes reachable from regular combat rarity rolls", () => {
-    expect(rollItemRarity("normal", () => 0.7).id).toBe("uncommon");
-    expect(rollItemRarity("normal", () => 0.93).id).toBe("epic");
-    expect(rollItemRarity("normal", () => 0.99).id).toBe("legendary");
+    expect(rollItemRarity("adventure", () => 0.7).id).toBe("uncommon");
+    expect(rollItemRarity("adventure", () => 0.96).id).toBe("epic");
+    expect(rollItemRarity("adventure", () => 0.998).id).toBe("legendary");
+  });
+
+  it("scales epic and legendary odds with mob rarity and magic find", () => {
+    const base = Object.fromEntries(getItemRarityWeights("adventure"));
+    const boosted = Object.fromEntries(getItemRarityWeights("adventure", { rarityMult: 4, magicFind: 30 }));
+
+    expect(base.legendary).toBe(0.5);
+    expect(boosted.legendary).toBeCloseTo(0.5 * 4 * 1.45, 5);
+    expect(boosted.epic).toBeCloseTo(5 * 4 * 1.45, 5);
+    expect(boosted.rare).toBeCloseTo(12 * 1.45, 5);
+    expect(boosted.normal).toBe(62);
+  });
+
+  it("gates random legendaries at base difficulty except for bosses", () => {
+    const gated = Object.fromEntries(getItemRarityWeights("adventure", { difficultyStars: 0 }));
+    const ungated = Object.fromEntries(getItemRarityWeights("adventure", { difficultyStars: 1 }));
+    const boss = Object.fromEntries(getItemRarityWeights("boss", { difficultyStars: 0 }));
+
+    expect(gated.legendary).toBe(0);
+    expect(ungated.legendary).toBe(0.5);
+    expect(boss.legendary).toBe(10);
+  });
+
+  it("maps legacy rarity table names onto the unified tables", () => {
+    expect(Object.keys(ITEM_RARITY_TABLES)).toEqual(["adventure", "boss"]);
+    expect(rollItemRarity("rootspireElite", () => 0.5).id).toBe(rollItemRarity("adventure", () => 0.5).id);
+    expect(rollItemRarity("wyvern", () => 0.5).id).toBe(rollItemRarity("boss", () => 0.5).id);
   });
 
   it("does not fold disabled artifact odds into random legendary equipment", () => {
@@ -253,7 +277,7 @@ describe("adventure loot pools", () => {
     const generated = drops.find(drop => drop.generated);
 
     expect(ITEM_RARITY_TABLES.boss.find(([id]) => id === "artifact")).toBeUndefined();
-    expect(ITEM_RARITY_TABLES.wyvern.find(([id]) => id === "artifact")).toBeUndefined();
+    expect(ITEM_RARITY_TABLES.adventure.find(([id]) => id === "artifact")).toBeUndefined();
     expect(generated?.rarity).toBe("legendary");
     expect(generated?.name).toContain("Legendary");
     expect(generated?.name).not.toContain("Artifact");
@@ -320,7 +344,7 @@ describe("adventure loot pools", () => {
     const table = LOOT_TABLES.crypts_chest_equipment;
     const [drop] = rollLootTable("crypts_chest_equipment", () => 0.99);
 
-    expect(table).toMatchObject({ dropChance: 1, rarityTable: "specialChest" });
+    expect(table).toMatchObject({ dropChance: 1, rarityTable: "adventure" });
     expect(table.tags).toEqual([]);
     expect(table.generatedEquipment.itemLevel).toBe(4);
     expect(table.generatedEquipment.baseIds).toEqual(expect.arrayContaining(["rapier", "staff", "composite_bow", "plate_chest", "tower_shield"]));
@@ -463,22 +487,16 @@ describe("adventure loot pools", () => {
     ]));
     expect(rootspirePool.generatedEquipment.materials).toEqual(expect.arrayContaining(["ancient", "bloodiron"]));
     expect(LOOT_TABLES.rootspire_armory.generatedEquipment.itemLevel).toBeGreaterThan(LOOT_TABLES.crypts_chest_equipment.generatedEquipment.itemLevel);
-    expect(LOOT_TABLES.rootspire_elite.rarityTable).toBe("rootspireElite");
+    expect(LOOT_TABLES.rootspire_elite.rarityTable).toBe("adventure");
     expect(LOOT_TABLES.rootspire_elite.rolls).toBe(1);
     expect(LOOT_TABLES.rootspire_elite.dropChance).toBe(0.87);
     expect(LOOT_TABLES.rootspire_armory.dropChance).toBe(0.87);
-    expect(ITEM_RARITY_TABLES.rootspireElite).toEqual([
-      ["uncommon", 15],
-      ["rare", 45],
-      ["epic", 20],
-      ["legendary", 7],
-    ]);
-    expect(LOOT_TABLES.wyvern_boss.rarityTable).toBe("wyvern");
-    expect(LOOT_TABLES.wyvern_boss.rolls).toBe(2);
+    expect(LOOT_TABLES.wyvern_boss.rarityTable).toBe("boss");
+    expect(LOOT_TABLES.wyvern_boss.rolls).toBe(1);
     expect(LOOT_TABLES.wyvern_boss.minimumRarity).toBeUndefined();
     expect(LOOT_TABLES.wyvern_boss.includeItemIds).not.toContain("fang_of_the_red_viper");
-    expect(LOOT_TABLES.fallen_knight_boss.rarityTable).toBe("wyvern");
-    expect(LOOT_TABLES.fallen_knight_boss.rolls).toBe(2);
+    expect(LOOT_TABLES.fallen_knight_boss.rarityTable).toBe("boss");
+    expect(LOOT_TABLES.fallen_knight_boss.rolls).toBe(1);
     expect(LOOT_TABLES.fallen_knight_boss.minimumRarity).toBe("epic");
     expect(LOOT_TABLES.fallen_knight_boss.relicDrop).toEqual({
       itemId: "relic_spectral_echo",
@@ -492,14 +510,14 @@ describe("adventure loot pools", () => {
     );
     const fangPerRoll = LOOT_TABLES.fallen_knight_boss.itemWeights.fang_of_the_red_viper / fallenKnightPoolWeight;
     const fangPerKill = 1 - ((1 - fangPerRoll) ** LOOT_TABLES.fallen_knight_boss.rolls);
-    expect(fangPerKill).toBeCloseTo(0.0296, 3);
+    expect(fangPerKill).toBeCloseTo(0.0149, 3);
     expect(itemById.fang_of_the_red_viper).toMatchObject({
       name: "Fang of the Red Viper",
       rarity: "artifact",
       family: "spear",
       slot: "weapon",
     });
-    expect(ITEM_RARITY_TABLES.wyvern.find(([id]) => id === "legendary")?.[1]).toBeGreaterThan(ITEM_RARITY_TABLES.boss.find(([id]) => id === "legendary")?.[1]);
+    expect(ITEM_RARITY_TABLES.boss.find(([id]) => id === "legendary")?.[1]).toBeGreaterThan(ITEM_RARITY_TABLES.adventure.find(([id]) => id === "legendary")?.[1]);
   });
 
   it("guarantees high-end boss loot has at least one epic item and uses the Wyvern rarity table", () => {
@@ -559,7 +577,9 @@ describe("adventure loot pools", () => {
     });
 
     expect(rollCombatLoot(basicEnemy, () => 0.6, { lootBonus: 0 })).toEqual([]);
-    expect(rollCombatLoot(basicEnemy, () => 0.6, { lootBonus: 10 }).length).toBeGreaterThan(0);
+    // Mob rarity lootBonus boosts drop chance; magic find no longer does (quality only).
+    expect(rollCombatLoot({ ...basicEnemy, lootBonus: 15 }, () => 0.6, {}).length).toBeGreaterThan(0);
+    expect(rollCombatLoot(basicEnemy, () => 0.6, { lootBonus: 50 })).toEqual([]);
   });
 
   it("keeps bags from rolling rarity affixes", () => {

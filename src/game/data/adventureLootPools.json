@@ -4,7 +4,7 @@
     "rootspire_tower": {
       "rolls": 1,
       "dropChance": 0.55,
-      "rarityTable": "rootspire",
+      "rarityTable": "adventure",
       "goodItemPenalty": 0.5,
       "generatedEquipment": {
         "enabled": true,
@@ -87,7 +87,7 @@
     "ancient_forest": {
       "rolls": 1,
       "dropChance": 0.55,
-      "rarityTable": "normal",
+      "rarityTable": "adventure",
       "goodItemPenalty": 0.35,
       "generatedEquipment": {
         "enabled": true,
@@ -165,7 +165,7 @@
     "crypts": {
       "rolls": 1,
       "dropChance": 0.55,
-      "rarityTable": "normal",
+      "rarityTable": "adventure",
       "goodItemPenalty": 0.35,
       "generatedEquipment": {
         "enabled": true,
@@ -234,7 +234,7 @@
     "orc_war_camp": {
       "rolls": 1,
       "dropChance": 0.55,
-      "rarityTable": "normal",
+      "rarityTable": "adventure",
       "goodItemPenalty": 0.35,
       "generatedEquipment": {
         "enabled": true,
@@ -282,7 +282,7 @@
     "karag_thorn": {
       "rolls": 1,
       "dropChance": 0.55,
-      "rarityTable": "karag_elite",
+      "rarityTable": "adventure",
       "goodItemPenalty": 0.5,
       "generatedEquipment": {
         "enabled": true,

@@ -269,7 +269,11 @@ async function adventureRoutes(fastify) {
         goldGained = enemy.rewards.gold || 0;
       }
       if (!suppressLoot) {
-        lootItems = rollCombatLoot(enemy, Math.random, { adventure, node }).filter(Boolean);
+        // Quality context: magic find shapes rarity rolls; difficultyStars drives
+        // the diff-0 legendary gate (mirrors client App.jsx combat loot context).
+        const lootBonus = calcStats(hero).magicFind || 0;
+        const difficultyStars = progress.activeDifficultyStars ?? 0;
+        lootItems = rollCombatLoot(enemy, Math.random, { adventure, node, lootBonus, difficultyStars }).filter(Boolean);
       }
     }
 

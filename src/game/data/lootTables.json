@@ -111,7 +111,7 @@
       "rolls": 1,
       "tags": [],
       "dropChance": 1,
-      "rarityTable": "forestChest",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "weight": 30,
@@ -176,7 +176,7 @@
       "rolls": 1,
       "tags": [],
       "dropChance": 1,
-      "rarityTable": "specialChest",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "weight": 36,
@@ -240,7 +240,7 @@
       "itemWeights": {
         "campfire": 15
       },
-      "rarityTable": "normal",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.18,
@@ -314,7 +314,7 @@
         "camp"
       ],
       "dropChance": 0.4,
-      "rarityTable": "normal",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.15,
@@ -348,7 +348,7 @@
         "boar_stock": 2,
         "cured_boar_meat": 3
       },
-      "rarityTable": "specialChest",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.18,
@@ -370,7 +370,7 @@
         "food"
       ],
       "dropChance": 0.85,
-      "rarityTable": "normal",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.10,
@@ -418,7 +418,7 @@
         "campfire": 2,
         "troll_hide": 1
       },
-      "rarityTable": "normal",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.08,
@@ -446,7 +446,7 @@
         "warg_fat": 2,
         "warg_fang_necklace": 1
       },
-      "rarityTable": "normal",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.12,
@@ -462,7 +462,7 @@
       }
     },
     "orc_shaman_boss": {
-      "rolls": 2,
+      "rolls": 1,
       "preventDuplicateItems": true,
       "tags": [],
       "includeItemIds": [
@@ -509,7 +509,7 @@
       ]
     },
     "orc_general_boss": {
-      "rolls": 2,
+      "rolls": 1,
       "preventDuplicateItems": true,
       "tags": [],
       "includeItemIds": [
@@ -556,7 +556,7 @@
       ]
     },
     "boss": {
-      "rolls": 2,
+      "rolls": 1,
       "preventDuplicateItems": true,
       "tags": [],
       "includeItemIds": [
@@ -607,7 +607,7 @@
       }
     },
     "elder_stag_boss": {
-      "rolls": 2,
+      "rolls": 1,
       "preventDuplicateItems": true,
       "tags": [],
       "dropChance": 1,
@@ -726,7 +726,7 @@
         "ward_amulet": 2,
         "protection_amulet": 1
       },
-      "rarityTable": "normal",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.10,
@@ -786,7 +786,7 @@
         "food"
       ],
       "dropChance": 0.55,
-      "rarityTable": "rootspire",
+      "rarityTable": "adventure",
       "includeItemIds": [
         "gargoyle_stone_ring",
         "imp_ember_ring",
@@ -841,7 +841,7 @@
       "rolls": 1,
       "tags": [],
       "dropChance": 0.87,
-      "rarityTable": "rootspireElite",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.10,
@@ -907,7 +907,7 @@
         "ash": 8,
         "gargoyle_stone_ring": 1
       },
-      "rarityTable": "rootspire",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.10,
@@ -929,7 +929,7 @@
         "ward_amulet": 2,
         "protection_amulet": 1
       },
-      "rarityTable": "rootspire",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.10,
@@ -958,7 +958,7 @@
       "rolls": 1,
       "tags": [],
       "dropChance": 0,
-      "rarityTable": "rootspire",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.14,
@@ -992,7 +992,7 @@
         "ward_amulet": 1,
         "imp_ember_ring": 1
       },
-      "rarityTable": "rootspire",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.10,
@@ -1018,7 +1018,7 @@
         "protection_amulet": 2,
         "veilstone_ring": 1
       },
-      "rarityTable": "rootspire",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.10,
@@ -1043,7 +1043,7 @@
         "protection_amulet": 3,
         "sentinel_focus_ring": 1
       },
-      "rarityTable": "rootspire",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.10,
@@ -1066,7 +1066,7 @@
       "itemWeights": {
         "bone": 8
       },
-      "rarityTable": "rootspire",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.08,
@@ -1089,7 +1089,7 @@
         "campfire": 2,
         "imp_ember_ring": 1
       },
-      "rarityTable": "rootspire",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.06,
@@ -1111,7 +1111,7 @@
         "emberglass_ring": 1,
         "cinderward_amulet": 1
       },
-      "rarityTable": "rootspire",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.08,
@@ -1134,7 +1134,7 @@
         "ash": 3,
         "emberward_cape": 1
       },
-      "rarityTable": "rootspire",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.10,
@@ -1155,7 +1155,7 @@
       "rolls": 1,
       "tags": [],
       "dropChance": 0.87,
-      "rarityTable": "rootspireElite",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.08,
@@ -1209,11 +1209,11 @@
       }
     },
     "wyvern_boss": {
-      "rolls": 2,
+      "rolls": 1,
       "preventDuplicateItems": true,
       "tags": [],
       "dropChance": 1,
-      "rarityTable": "wyvern",
+      "rarityTable": "boss",
       "relicDrop": {
         "itemId": "relic_igneous_scale",
         "chance": 5
@@ -1293,7 +1293,7 @@
         "itemId": "relic_infernal_fang",
         "chance": 2
       },
-      "rarityTable": "specialChest",
+      "rarityTable": "adventure",
       "includeItemIds": ["ash"],
       "itemWeights": { "ash": 1 },
       "generatedEquipment": {
@@ -1320,7 +1320,7 @@
         "itemId": "relic_troll_tooth",
         "chance": 1
       },
-      "rarityTable": "specialChest",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.08,
@@ -1349,7 +1349,7 @@
         "itemId": "relic_stone_core",
         "chance": 2
       },
-      "rarityTable": "specialChest",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.07,
@@ -1372,7 +1372,7 @@
         "itemId": "relic_black_armor",
         "chance": 1
       },
-      "rarityTable": "specialChest",
+      "rarityTable": "adventure",
       "equipmentDrops": {
         "dropChance": 0.06,
         "items": {
@@ -1390,7 +1390,7 @@
         "itemId": "relic_abyssal_seal",
         "chance": 1
       },
-      "rarityTable": "specialChest",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.08,
@@ -1427,11 +1427,11 @@
       }
     },
     "fallen_knight_boss": {
-      "rolls": 2,
+      "rolls": 1,
       "preventDuplicateItems": true,
       "tags": [],
       "dropChance": 1,
-      "rarityTable": "wyvern",
+      "rarityTable": "boss",
       "minimumRarity": "epic",
       "relicDrop": {
         "itemId": "relic_spectral_echo",
@@ -1623,7 +1623,7 @@
       "rolls": 1,
       "dropChance": 0.55,
       "tags": ["warg_meat"],
-      "rarityTable": "normal",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.10,
@@ -1643,7 +1643,7 @@
       "rolls": 1,
       "dropChance": 0.55,
       "tags": ["warg_meat"],
-      "rarityTable": "normal",
+      "rarityTable": "adventure",
       "generatedEquipment": {
         "enabled": true,
         "dropChance": 0.10,
@@ -1661,7 +1661,7 @@
     "dwarf_sentinel": {
       "rolls": 1,
       "dropChance": 0.55,
-      "rarityTable": "rootspireElite",
+      "rarityTable": "adventure",
       "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
@@ -1686,7 +1686,7 @@
     "dwarf_crossbowman": {
       "rolls": 1,
       "dropChance": 0.55,
-      "rarityTable": "rootspireElite",
+      "rarityTable": "adventure",
       "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
@@ -1713,7 +1713,7 @@
     "dwarf_ironbreaker": {
       "rolls": 1,
       "dropChance": 0.55,
-      "rarityTable": "rootspireElite",
+      "rarityTable": "adventure",
       "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
@@ -1739,7 +1739,7 @@
     "dwarf_ironbreaker_f2": {
       "rolls": 1,
       "dropChance": 0.55,
-      "rarityTable": "rootspireElite",
+      "rarityTable": "adventure",
       "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
@@ -1765,7 +1765,7 @@
     "dwarf_handler": {
       "rolls": 1,
       "dropChance": 0.55,
-      "rarityTable": "rootspireElite",
+      "rarityTable": "adventure",
       "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
@@ -1811,7 +1811,7 @@
     "dwarf_berserker": {
       "rolls": 1,
       "dropChance": 0.55,
-      "rarityTable": "rootspireElite",
+      "rarityTable": "adventure",
       "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
@@ -1836,7 +1836,7 @@
     "bolgrak_stonefist": {
       "rolls": 1,
       "dropChance": 1.0,
-      "rarityTable": "karag_elite",
+      "rarityTable": "adventure",
       "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
@@ -1867,7 +1867,7 @@
     "pit_manticore": {
       "rolls": 1,
       "dropChance": 0.65,
-      "rarityTable": "rootspireElite",
+      "rarityTable": "adventure",
       "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
@@ -1891,7 +1891,7 @@
     "karag_runic_construct": {
       "rolls": 1,
       "dropChance": 0.55,
-      "rarityTable": "rootspireElite",
+      "rarityTable": "adventure",
       "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
@@ -1917,7 +1917,7 @@
     "dwarf_runecarver": {
       "rolls": 1,
       "dropChance": 0.55,
-      "rarityTable": "rootspireElite",
+      "rarityTable": "adventure",
       "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
@@ -1943,7 +1943,7 @@
     "dwarf_honor_guard": {
       "rolls": 1,
       "dropChance": 0.55,
-      "rarityTable": "rootspireElite",
+      "rarityTable": "adventure",
       "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
@@ -1970,7 +1970,7 @@
     "kharzun_branded": {
       "rolls": 1,
       "dropChance": 1.0,
-      "rarityTable": "karag_elite",
+      "rarityTable": "adventure",
       "includeItemIds": ["campfire", "ration", "mushroom", "warhound_meat", "oak_campfire"],
       "itemWeights": {
         "campfire": 3,
@@ -2016,7 +2016,7 @@
     },
     "karag_thorn_boss": {
       "preventDuplicateItems": true,
-      "rarityTable": "karag_boss",
+      "rarityTable": "boss",
       "relicDrop": {
         "itemId": "relic_durnek_sigil",
         "chance": 0.5

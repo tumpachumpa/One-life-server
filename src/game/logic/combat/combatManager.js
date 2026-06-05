@@ -1821,7 +1821,9 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
       const markEff = (foe.activeEffects || []).find(e => e.type === 'shadow_mark');
       const markStacks = markEff?.stacks || 0;
       if (markStacks <= 0) continue;
-      const dmg = Math.max(1, Math.floor(hero.damage * markTickPct * markStacks / 100));
+      // Floor at 1 damage PER MARK: with 1%/mark, floor(damage*stacks/100) is 0 for any
+      // realistic weapon damage, so a flat max(1,...) made stacks invisible (always 1 dmg).
+      const dmg = Math.max(markStacks, Math.floor(hero.damage * markTickPct * markStacks / 100));
       foe.hp = Math.max(0, foe.hp - dmg);
       log.push(makeEntry(tick, 'hero', 'proc', `Deep Marks: ${dmg} shadow damage (${markStacks} mark${markStacks !== 1 ? 's' : ''}).`, dmg, hero.hp, foe.hp, { targetId: foe.id }));
     }

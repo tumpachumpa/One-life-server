@@ -52,6 +52,10 @@ export function buildCombatSnapFromHero(hero) {
   ));
 
   const pet = buildPetCombatant({ ...hero, heroClass: normalizedHeroClass });
+  // Duels are isolated sims: the hero enters at full HP (heroHp = snap.maxHp in
+  // the client's buildDuelHeroInitArgs), so the pet must too — don't carry
+  // open-world pet damage into PvP. buildPetCombatant returns the saved hp.
+  if (pet) pet.hp = pet.stats.maxHp;
 
   return {
     maxHp:            stats.maxHp,

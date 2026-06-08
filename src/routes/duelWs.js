@@ -214,6 +214,11 @@ function stepDuelTick(session, C, cm) {
     p2Cooldowns: enemyC?.abilityCooldowns || {},
     p1UsedAbilities: state.combatants.hero?.usedAbilityIds || {},
     p2UsedAbilities: enemyC?.usedAbilityIds || {},
+    // Combat triggers (after_crit/after_block/after_parry) for BOTH sides so reactive
+    // abilities like Aimed Shot enable once earned. Client runs no sim → without these
+    // the requiredTrigger gate never clears and the button stays disabled.
+    p1CombatTriggers: state.combatants.hero?.combatTriggers || {},
+    p2CombatTriggers: enemyC?.combatTriggers || {},
     newLogEntries,
   });
 

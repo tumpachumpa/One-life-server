@@ -407,6 +407,10 @@ function buildTick(f, state, newLogEntries) {
     // off the same synced tick, so the countdown lines up.
     p1Cooldowns: hero?.abilityCooldowns || {},
     p1UsedAbilities: hero?.usedAbilityIds || {},
+    // Combat triggers (after_crit/after_block/after_parry). The client runs no sim, so
+    // without these hero.combatTriggers stays empty → reactive abilities like Aimed Shot
+    // (requiredTrigger: after_crit) never enable. Sync so the gate clears once earned.
+    p1CombatTriggers: hero?.combatTriggers || {},
     // So the client disables the flee button after the one allowed attempt.
     p1FleeAttempted: !!state.fleeAttempted,
     // Which combatant is in front (hero vs companion). Swap (ACTION.SWAP_FRONT)

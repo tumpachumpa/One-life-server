@@ -9,7 +9,7 @@ export const GENERATED_EQUIPMENT_RARITIES = {
   epic: { id: "epic", label: "Epic", color: "#9b59b6", statMult: 1.28, priceMult: 2.2, affixSlots: 3, affixMult: 1.2 },
   legendary: { id: "legendary", label: "Legendary", color: "#f1c40f", statMult: 1.48, priceMult: 3.7, affixSlots: 4, affixMult: 1.4 },
   artifact: { id: "artifact", label: "Artifact", color: "#ff6b35", statMult: 1.7, priceMult: 6, affixSlots: 5, affixMult: 1.6 },
-  unique: { id: "unique", label: "Unique", color: "#1abc9c", statMult: 1.55, priceMult: 5, affixSlots: 4, affixMult: 1.35 },
+  unique: { id: "unique", label: "Unique", color: "#e74c3c", statMult: 1.55, priceMult: 5, affixSlots: 4, affixMult: 1.35 },
 };
 
 const BLOCK_AFFIX_TYPES = new Set(["block_chance", "block_power", "block_power_pct", "block_power_regen"]);

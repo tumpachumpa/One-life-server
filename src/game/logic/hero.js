@@ -292,7 +292,6 @@ export function initHero(name = "Hero", options = {}) {
     hp: baseStats.maxHp,
     hunger: 100,
     energy: 100,
-    stamina: 100,
     conditions: normalizeConditions(),
     xp: 0,
     gold: 150,

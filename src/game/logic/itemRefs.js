@@ -58,7 +58,6 @@ const SAVED_ITEM_ICON_OVERRIDES = {
   leather_boots: "/assets/items/generated/Leather%20boots.png?v=2",
   plate_boots: "/assets/items/generated/Leather%20boots.png?v=2",
   troll_hide: "/assets/items/troll hide.png",
-  tanned_troll_hide: "/assets/items/Troll tanned hide.png",
   foragers_satchel: "/assets/items/Forager satchel.png",
   // Rings
   ring_of_thorns: "/assets/items/rings/Guard ring.png",

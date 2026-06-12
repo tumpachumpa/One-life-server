@@ -246,7 +246,7 @@
                   "id": "speed_momentum_gen",
                   "name": "Momentum",
                   "summary": [
-                    "+1 Momentum stack (max 10) on every hit. Each stack = +6% attack speed"
+                    "+1 Momentum stack (max 10) on every hit. Each stack = +4% attack speed"
                   ],
                   "proc": {
                     "trigger": "on_hit",
@@ -276,27 +276,17 @@
                 },
                 {
                   "id": "speed_quickstep",
-                  "name": "Light Footwork",
+                  "name": "Bloodlust",
                   "summary": [
-                    "Enemy misses and your dodges grant +2 Momentum",
-                    "At 6+ Momentum: +5% dodge chance"
+                    "At 6+ Momentum: +10% critical damage"
                   ],
-                  "proc": {
-                    "trigger": "on_avoid",
-                    "chance": 100,
-                    "condition": null,
-                    "effect": {
-                      "type": "gain_momentum",
-                      "value": 2
-                    }
-                  },
                   "threshold": {
                     "stat": "momentum_stacks",
                     "min": 6,
                     "effects": [
                       {
-                        "type": "evasion_chance",
-                        "value": 5
+                        "type": "crit_damage_pct",
+                        "value": 10
                       }
                     ]
                   }
@@ -344,21 +334,19 @@
                 },
                 {
                   "id": "speed_crash_landing",
-                  "name": "Stutter Step",
+                  "name": "Onslaught",
                   "summary": [
-                    "On miss at 5+ Momentum: gain +10% dodge and +10% crit until your next hit"
+                    "At 8+ Momentum: your hits ignore 15% of enemy armor"
                   ],
-                  "proc": {
-                    "trigger": "on_miss",
-                    "chance": 100,
-                    "condition": {
-                      "momentum_stacks_gte": 5
-                    },
-                    "effect": {
-                      "type": "stutter_step",
-                      "evasionChanceBonus": 10,
-                      "critChanceBonus": 10
-                    }
+                  "threshold": {
+                    "stat": "momentum_stacks",
+                    "min": 8,
+                    "effects": [
+                      {
+                        "type": "armor_ignore",
+                        "value": 15
+                      }
+                    ]
                   }
                 }
               ]

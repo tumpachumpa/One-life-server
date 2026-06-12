@@ -19,7 +19,7 @@ export const ITEM_RARITIES = {
   epic: { id: "epic", label: "Epic", color: "#9b59b6", statMult: 1.6, priceMult: 2.2, effectSlots: 3 },
   legendary: { id: "legendary", label: "Legendary", color: "#f1c40f", statMult: 2.2, priceMult: 4, effectSlots: 4 },
   artifact: { id: "artifact", label: "Artifact", color: "#ff6b35", statMult: 2.8, priceMult: 7, effectSlots: 5 },
-  unique: { id: "unique", label: "Unique", color: "#1abc9c", statMult: 1, priceMult: 5, effectSlots: 5 },
+  unique: { id: "unique", label: "Unique", color: "#e74c3c", statMult: 1, priceMult: 5, effectSlots: 5 },
 };
 
 export const ITEM_RARITY_TABLES = {
@@ -410,6 +410,13 @@ function appendCombatBonusDrops(drops, enemy, table, rng = Math.random, context 
     ? rollBossStoneDrop(specialTable, difficulty, zoneId, rng)
     : rollStoneDrop(enemy, difficulty, zoneId, rng);
   if (stoneDrop) next.push(stoneDrop);
+
+  // Mithril Ore: flat 5% from every dwarf, by design — a FIXED code roll, not an
+  // independentDrops entry, so it can never scale with lootBonus/enemy rarity.
+  if (enemy?.family === "dwarf" && rng() < 0.05) {
+    const mithril = items.find(item => item.id === "mithril_ore");
+    if (mithril) next.push({ ...mithril });
+  }
 
   return next;
 }

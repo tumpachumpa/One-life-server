@@ -41,7 +41,8 @@
       "zoneType": "gray",
       "mapImage": "/assets/karag-thorn-map.png",
       "locationIds": [
-        "karag_thorn"
+        "karag_thorn",
+        "sealed_deep"
       ]
     }
   ]

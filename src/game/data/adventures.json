@@ -800,7 +800,8 @@
               "x": 84,
               "y": 70.9,
               "next": [],
-              "bossId": "elder_stag"
+              "bossId": "elder_stag",
+              "charges": { "max": 1, "rechargeSeconds": 300 }
             },
             {
               "id": "ancient_forest_floor_2_path_node_13",
@@ -1059,7 +1060,8 @@
               "bossId": "lich",
               "x": 86,
               "y": 22,
-              "next": []
+              "next": [],
+              "charges": { "max": 1, "rechargeSeconds": 360 }
             }
           ]
         }
@@ -1914,7 +1916,8 @@
               "bossId": "wyvern",
               "x": 76,
               "y": 34,
-              "next": []
+              "next": [],
+              "charges": { "max": 1, "rechargeSeconds": 480 }
             }
           ]
         }
@@ -3471,6 +3474,44 @@
         }
       ],
       "requiresAdventureCompletion": "orc_war_camp"
+    },
+    {
+      "id": "sealed_deep",
+      "zoneId": "sealed_deep",
+      "lootPoolId": "karag_thorn",
+      "regionId": "karag_thorn_region",
+      "name": "The Sealed Deep",
+      "description": "Below the throne chamber of Karag-Thorn, a door of rune-bound stone has held for three hundred years. The masons who built it spent their lives on the seals and considered the price fair. Ten rune stone shards will undo their work.",
+      "linearAdventure": true,
+      "disableChoiceRun": true,
+      "lockDifficulty": true,
+      "requiresAdventureCompletion": "karag_thorn",
+      "routes": [
+        {
+          "id": "sealed_deep_path",
+          "name": "The Sealed Deep",
+          "nodes": [
+            {
+              "id": "sd_khargul",
+              "type": "boss",
+              "bossId": "khargul",
+              "encounterCap": 1,
+              "entryCost": {
+                "itemId": "rune_stone_shard",
+                "qty": 10
+              },
+              "charges": {
+                "max": 1,
+                "rechargeSeconds": 600
+              },
+              "next": [],
+              "stepIndex": 0,
+              "bossDeathEndsFight": true,
+              "addsDespawnOnBossDeath": true
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "karag_thorn",

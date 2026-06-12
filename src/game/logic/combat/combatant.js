@@ -209,6 +209,7 @@ const ELEMENT_RESIST_KEY = {
 };
 
 export function resolveElementalDamage(amount, element, defender = null) {
+  if (isElementImmune(defender, element)) return 0;
   const raw = Math.max(1, Math.floor(amount));
   const resistKey = ELEMENT_RESIST_KEY[element] || 'magicDefense';
   const resist = Math.max(0, defender?.[resistKey] || defender?.magicResistance || 0);
@@ -315,6 +316,65 @@ export function isPoisonImmune(combatant) {
     || family.includes("spider")
     || tags.includes("undead")
     || tags.includes("poison_immune");
+}
+
+// Tag-based total elemental immunity (e.g. "fire_immune" on Khargul) — unlike
+// resists (capped at 75%), an immune combatant takes 0 from that element.
+export function isElementImmune(combatant, element) {
+  if (!combatant || !element) return false;
+  const tags = (combatant.tags || []).map(tag => String(tag).toLowerCase());
+  return tags.includes(`${String(element).toLowerCase()}_immune`);
+}
+
+// Burn-status immunity ("burn_immune" tag); fire immunity implies it.
+export function isBurnImmune(combatant) {
+  const tags = (combatant?.tags || []).map(tag => String(tag).toLowerCase());
+  return tags.includes("burn_immune") || isElementImmune(combatant, "fire");
+}
+
+// ── Khargul Brands ────────────────────────────────────────────────────────────
+// The Sealed Deep boss marks the hero with one of three brands; each is cleansed
+// by striking the matching Seal combatant. Defined here (dependency-free) so both
+// abilities.js (application) and combatManager.js (ticking/cleansing) share them.
+export const KHARGUL_BRAND_EFFECT = "khargul_brand";
+export const KHARGUL_BRAND_DEFS = {
+  cinder: {
+    id: "cinder",
+    label: "Brand of Cinder",
+    color: "#e74c3c",
+    element: "fire",
+    // Internal curse: a % of the player's MAX HP per tick, ramping the longer it holds,
+    // and it IGNORES fire resistance (players stack fire resist for this boss, which used
+    // to nullify the brand and made cleansing pointless). 1% → 5% max HP/tick.
+    baseDamagePctMaxHp: 1,
+    rampPctPerStep: 0.5,
+    rampEveryTicks: 3,
+    maxDamagePctMaxHp: 5,
+    bypassResist: true,
+    phrases: ['"Burn with me."', '"Your skin remembers fire."'],
+    appliedText: "The Brand of Cinder sears into you — fire that grows the longer it holds, ignoring your defenses.",
+  },
+  shadow: {
+    id: "shadow",
+    label: "Brand of Shadow",
+    color: "#9b59b6",
+    hitPenalty: 20,
+    phrases: ['"The deep has no eyes."', '"Darkness keeps what it takes."'],
+    appliedText: "The Brand of Shadow crawls over your eyes — your strikes go wide (-20% hit chance).",
+  },
+  stone: {
+    id: "stone",
+    label: "Brand of Stone",
+    color: "#95a5a6",
+    attackSpeedPenaltyPct: 15, // per stack — re-applications deepen the brand
+    maxStacks: 4,
+    phrases: ['"Be still."', '"Stone you came from. Stone you return."'],
+    appliedText: "The Brand of Stone settles into your limbs — your attacks slow (-15% attack speed per stack).",
+  },
+};
+
+export function getHeroBrands(combatant) {
+  return (combatant?.activeEffects || []).filter(effect => effect.type === KHARGUL_BRAND_EFFECT);
 }
 
 export function getTargetBleedStacks(target) {

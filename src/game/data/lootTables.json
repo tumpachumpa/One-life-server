@@ -2060,6 +2060,43 @@
         { "itemId": "rune_stone_shard", "dropChance": 0.35, "ignoreLootBonus": true, "allowDuplicate": true },
         { "itemId": "rune_stone_shard", "dropChance": 0.15, "ignoreLootBonus": true, "allowDuplicate": true }
       ]
+    },
+    "khargul": {
+      "preventDuplicateItems": true,
+      "rarityTable": "boss",
+      "stoneDrop": {
+        "maxRarity": "legendary",
+        "baseChance": 8
+      },
+      "generatedEquipment": {
+        "enabled": true,
+        "dropChance": 0.45,
+        "itemLevelBonus": 10,
+        "baseIds": [
+          "dwarven_crossbow",
+          "karag_warblade",
+          "runic_maul",
+          "karag_war_maul",
+          "sentinel_dagger",
+          "grimholt",
+          "dwarven_plate_helm",
+          "dwarven_plate_cuirass",
+          "dwarven_plate_legguards",
+          "dwarven_plate_sabatons",
+          "dwarven_plate_gauntlets",
+          "dwarven_bulwark",
+          "karag_hunt_quiver",
+          "command_pendant",
+          "double_strike_ring",
+          "forge_power_ring",
+          "runic_ward_ring"
+        ]
+      },
+      "guaranteedDrops": ["heart_of_khargul"],
+      "independentDrops": [
+        { "itemId": "rune_stone_shard", "dropChance": 1.0, "ignoreLootBonus": true, "allowDuplicate": true, "extraChance": 0.5 },
+        { "itemId": "mithril_ore", "dropChance": 0.5, "ignoreLootBonus": true, "allowDuplicate": true, "extraChance": 0.5 }
+      ]
     }
   }
 }

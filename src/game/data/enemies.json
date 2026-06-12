@@ -2671,6 +2671,108 @@
       "lootTable": "kharzun_branded"
     },
     {
+      "id": "khargul_seal_cinder",
+      "name": "Seal of Cinder",
+      "family": "ward",
+      "tags": [
+        "ward",
+        "seal",
+        "bleed_immune",
+        "poison_immune",
+        "burn_immune",
+        "fire_immune"
+      ],
+      "tier": 6,
+      "threat": "summon",
+      "sprite": "/assets/sprites/encounters/Khargul seal cinder.png",
+      "disableAutoAttack": true,
+      "baseStats": {
+        "maxHp": 90,
+        "attack": 0,
+        "armor": 10,
+        "attackSpeed": 0
+      },
+      "rewards": {
+        "xp": 0,
+        "gold": 0
+      },
+      "effects": [],
+      "sealConfig": {
+        "brandId": "cinder",
+        "color": "#e74c3c",
+        "cleanseText": "The Seal of Cinder drinks the fire from your skin.",
+        "rejectText": "The seal rejects you."
+      }
+    },
+    {
+      "id": "khargul_seal_shadow",
+      "name": "Seal of Shadow",
+      "family": "ward",
+      "tags": [
+        "ward",
+        "seal",
+        "bleed_immune",
+        "poison_immune",
+        "burn_immune",
+        "fire_immune"
+      ],
+      "tier": 6,
+      "threat": "summon",
+      "sprite": "/assets/sprites/encounters/Khargul seal shadow.png",
+      "disableAutoAttack": true,
+      "baseStats": {
+        "maxHp": 90,
+        "attack": 0,
+        "armor": 10,
+        "attackSpeed": 0
+      },
+      "rewards": {
+        "xp": 0,
+        "gold": 0
+      },
+      "effects": [],
+      "sealConfig": {
+        "brandId": "shadow",
+        "color": "#9b59b6",
+        "cleanseText": "The Seal of Shadow pulls the dark from your eyes.",
+        "rejectText": "The seal rejects you."
+      }
+    },
+    {
+      "id": "khargul_seal_stone",
+      "name": "Seal of Stone",
+      "family": "ward",
+      "tags": [
+        "ward",
+        "seal",
+        "bleed_immune",
+        "poison_immune",
+        "burn_immune",
+        "fire_immune"
+      ],
+      "tier": 6,
+      "threat": "summon",
+      "sprite": "/assets/sprites/encounters/Khargul seal stone.png",
+      "disableAutoAttack": true,
+      "baseStats": {
+        "maxHp": 90,
+        "attack": 0,
+        "armor": 10,
+        "attackSpeed": 0
+      },
+      "rewards": {
+        "xp": 0,
+        "gold": 0
+      },
+      "effects": [],
+      "sealConfig": {
+        "brandId": "stone",
+        "color": "#95a5a6",
+        "cleanseText": "The Seal of Stone takes the weight from your limbs.",
+        "rejectText": "The seal rejects you."
+      }
+    },
+    {
       "id": "durnek_ironthane",
       "name": "High Thane Durnek Ironthane",
       "family": "dwarf",

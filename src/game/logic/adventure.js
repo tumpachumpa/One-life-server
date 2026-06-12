@@ -609,7 +609,7 @@ export function getActiveAdventureDifficulty(progress = {}) {
 }
 
 export function getAdventureRunDifficulty(adventure, progress = {}) {
-  const normalized = normalizeAdventureDifficultyProgress(progress);
+  const normalized = applyAdventureDifficultyLock(adventure, normalizeAdventureDifficultyProgress(progress));
   if (normalized.activeDifficultyStars != null) return getActiveAdventureDifficulty(normalized);
   return hasAdventureRunProgress(adventure, normalized)
     ? getSelectedAdventureDifficulty(normalized)
@@ -658,16 +658,35 @@ function carryAdventureDifficulty(nextProgress, previousProgress) {
 
 export function getLinkedAdventureDifficultyIds(adventure) {
   if (!adventure?.id) return [];
+  // lockDifficulty adventures (The Sealed Deep) never share difficulty unlocks —
+  // not with their region siblings, not with anyone. Always base difficulty.
+  if (adventure.lockDifficulty) return [adventure.id];
   const linkedIds = new Set([adventure.id]);
   if (adventure.regionId) {
     Object.values(adventureById).forEach(candidate => {
-      if (candidate?.id && candidate.regionId === adventure.regionId) linkedIds.add(candidate.id);
+      if (candidate?.id && candidate.regionId === adventure.regionId && !candidate.lockDifficulty) linkedIds.add(candidate.id);
     });
   }
   if (isRootspireTowerAdventure(adventure)) {
     ROOTSPIRE_TOWER_ADVENTURE_IDS.forEach(adventureId => linkedIds.add(adventureId));
   }
   return [...linkedIds].filter(adventureId => adventureById[adventureId] || adventureId === adventure.id);
+}
+
+// Pins a lockDifficulty adventure's progress to base difficulty. Applied on every
+// normalize, so progress that was poisoned before the flag existed self-repairs.
+export function applyAdventureDifficultyLock(adventure, progress) {
+  if (!adventure?.lockDifficulty || !progress) return progress;
+  const base = ADVENTURE_DIFFICULTY_START_UNLOCKED_STAR;
+  const next = {
+    ...progress,
+    unlockedDifficultyStars: base,
+    selectedDifficultyStars: Math.min(progress.selectedDifficultyStars ?? base, base),
+  };
+  if (next.activeDifficultyStars != null) {
+    next.activeDifficultyStars = Math.min(next.activeDifficultyStars, base);
+  }
+  return next;
 }
 
 function getCompletedBossDifficultyStars(progress = {}) {
@@ -1067,6 +1086,10 @@ function repairStaticEncounterPoolCaps(adventure, progress) {
 }
 
 export function normalizeAdventureProgress(adventure, progress) {
+  return applyAdventureDifficultyLock(adventure, normalizeAdventureProgressInner(adventure, progress));
+}
+
+function normalizeAdventureProgressInner(adventure, progress) {
   if (!adventure) return progress;
   if (isDungeonAdventure(adventure)) return normalizeAdventureDifficultyProgress(normalizeDungeonProgress(progress || createInitialAdventureProgress(adventure)));
   if (shouldUseChoiceRun(adventure)) {

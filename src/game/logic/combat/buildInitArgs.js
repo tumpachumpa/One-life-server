@@ -3,6 +3,12 @@ import { collectEffects, collectProcNodes, getEquippedEnchantmentEffects } from 
 import { getActiveRelics } from '../relics.js';
 import { getCombatSkill, getItem } from '../content.js';
 
+// On-hit elemental procs that flow through combat's enchantment proc loop. Base
+// item effects of these types (not just enchant stones) must reach that loop.
+const BASE_WEAPON_ELEMENTAL_PROC_TYPES = new Set([
+  'fire_proc_on_hit', 'lightning_proc_on_hit', 'armor_reduce_on_hit',
+]);
+
 // Single source of truth for turning a saved hero + resolved enemies into the
 // argument object `initCombat` expects.
 //
@@ -92,7 +98,17 @@ export function buildCombatInitArgs(hero, enemyObjs, options = {}) {
     // these (e.g. the client's mid-run procCarryAtStart) still wins via the spread.
     heroProcOpts: {
       activeRelics: getActiveRelics(hero),
-      enchantmentEffects: getEquippedEnchantmentEffects(hero),
+      // enchantmentEffects feeds combat's on-hit elemental proc loop (fire/lightning
+      // sunder). Enchant STONES come from getEquippedEnchantmentEffects; a unique's
+      // BASE on-hit elemental proc (e.g. Cinderdoom's "Khargul's Fury" fireball) lives
+      // in the item's own effects[] and shares that loop — but was never collected, so
+      // it silently never fired. Pull those base procs (already in heroEffects, gated
+      // for offhand/quiver) into the same channel. Status on-hits (burn/bleed/stagger)
+      // use a different path (getOnHitEffects) and are unaffected.
+      enchantmentEffects: [
+        ...getEquippedEnchantmentEffects(hero),
+        ...heroEffects.filter(effect => BASE_WEAPON_ELEMENTAL_PROC_TYPES.has(effect.type)),
+      ],
       ...(options.heroProcOpts || {}),
     },
     heroClass: hero?.heroClass || null,

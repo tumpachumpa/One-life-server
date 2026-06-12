@@ -1463,24 +1463,6 @@
       "icon": "/assets/items/generated/plant_fiber.png"
     },
     {
-      "id": "thread",
-      "name": "Thread",
-      "size": [
-        1,
-        1
-      ],
-      "type": "resource",
-      "family": "processed_material",
-      "tags": [
-        "resource",
-        "thread",
-        "crafting_material"
-      ],
-      "price": 2,
-      "stackable": true,
-      "icon": "/assets/items/generated/thread.png"
-    },
-    {
       "id": "comfrey_leaf",
       "name": "Comfrey Leaf",
       "size": [
@@ -4659,26 +4641,6 @@
       "icon": "/assets/items/troll hide.png"
     },
     {
-      "id": "tanned_troll_hide",
-      "name": "Tanned Troll Hide",
-      "size": [
-        2,
-        2
-      ],
-      "type": "resource",
-      "family": "raw_material",
-      "tags": [
-        "resource",
-        "raw_material",
-        "troll",
-        "crafting_material"
-      ],
-      "price": 28,
-      "dropWeight": 0,
-      "stackable": true,
-      "icon": "/assets/items/Troll tanned hide.png"
-    },
-    {
       "id": "troll_hide_bag",
       "name": "Troll Hide Bag",
       "description": "A rugged bag cured from troll hide. Holds more campfires and opens an extra column of inventory.",
@@ -4875,6 +4837,308 @@
       "dropWeight": 0,
       "stackable": true,
       "icon": "/assets/items/Dwarf content/Rune stone shard.png"
+    },
+    {
+      "id": "mithril_ore",
+      "name": "Mithril Ore",
+      "description": "A vein-fragment of true mithril, impossibly light and cold to the touch. The deep dwarves dug for this — and woke what guarded it.",
+      "size": [
+        1,
+        1
+      ],
+      "type": "material",
+      "tags": [
+        "material",
+        "karag_thorn",
+        "forge"
+      ],
+      "price": 45,
+      "dropWeight": 0,
+      "stackable": true,
+      "icon": "/assets/items/Dwarf content/Mithril ore.png"
+    },
+    {
+      "id": "heart_of_khargul",
+      "name": "Heart of Khargul",
+      "description": "Still warm. Still beating, if you listen closely. The Blacksmith will know what to do with it — or be too afraid to try.",
+      "size": [
+        1,
+        1
+      ],
+      "type": "material",
+      "tags": [
+        "material",
+        "karag_thorn",
+        "forge",
+        "quest"
+      ],
+      "price": 0,
+      "dropWeight": 0,
+      "stackable": true,
+      "icon": "/assets/items/Dwarf content/Heart of khargul.png"
+    },
+    {
+      "id": "cinderdoom",
+      "name": "Cinderdoom",
+      "description": "Forged from the Heart of Khargul on dwarven anvils that should have stayed cold. The head still glows. It will never not glow.",
+      "rarity": "unique",
+      "icon": "/assets/items/Dwarf content/Cinderdoom.png",
+      "size": [
+        2,
+        4
+      ],
+      "type": "gear",
+      "slot": "weapon",
+      "family": "mace",
+      "weaponType": "two_handed_mace",
+      "hands": 2,
+      "classRestriction": "fighter",
+      "attackSpeed": 0.5,
+      "damageDice": {
+        "count": 3,
+        "sides": 8,
+        "bonus": 3,
+        "text": "3d8+3"
+      },
+      "baseStats": {
+        "damage": 22
+      },
+      "effects": [
+        {
+          "name": "Khargul's Fury",
+          "type": "fire_proc_on_hit",
+          "chance": 10,
+          "minDamage": 50,
+          "maxDamage": 100,
+          "rollDamage": true,
+          "_base": true
+        },
+        {
+          "type": "damage_bonus_pct",
+          "value": 10,
+          "_base": true
+        },
+        {
+          "type": "stun_on_hit",
+          "chance": 6,
+          "durationSeconds": 1,
+          "_base": true
+        },
+        {
+          "name": "Concussive Weight",
+          "type": "stagger_on_hit",
+          "chance": 12,
+          "duration": 2,
+          "attacks": 2,
+          "missPenalty": 35,
+          "_base": true
+        },
+        {
+          "type": "crit_damage",
+          "value": 10,
+          "_base": true
+        },
+        {
+          "type": "max_hp",
+          "value": 40,
+          "_base": true
+        },
+        {
+          "type": "stat_bonus",
+          "stat": "str",
+          "value": 4,
+          "_base": true
+        },
+        {
+          "type": "fire_resist",
+          "value": 15,
+          "_base": true
+        }
+      ],
+      "tags": [
+        "mace",
+        "weapon",
+        "melee",
+        "two_handed",
+        "karag_thorn",
+        "unique"
+      ],
+      "price": 1200,
+      "dropWeight": 0
+    },
+    {
+      "id": "ashsong",
+      "name": "Ashsong",
+      "description": "A bow strung with a single fiber of Khargul's whip. Every arrow leaves the string already burning, and the sound it makes is almost a voice.",
+      "rarity": "unique",
+      "icon": "/assets/items/Dwarf content/Ashsong.png",
+      "size": [
+        2,
+        4
+      ],
+      "type": "gear",
+      "slot": "weapon",
+      "family": "bow",
+      "weaponType": "two_handed_bow",
+      "hands": 2,
+      "classRestriction": "archer",
+      "attackSpeed": 0.95,
+      "damageDice": {
+        "count": 1,
+        "sides": 12,
+        "bonus": 2,
+        "text": "1d12+2"
+      },
+      "baseStats": {
+        "damage": 17
+      },
+      "effects": [
+        {
+          "name": "Emberflight",
+          "type": "burn_on_hit",
+          "chance": 25,
+          "duration": 3,
+          "damagePct": 0.8,
+          "_base": true
+        },
+        {
+          "type": "attack_speed",
+          "value": 8,
+          "_base": true
+        },
+        {
+          "type": "crit_chance",
+          "value": 4,
+          "_base": true
+        },
+        {
+          "type": "double_hit",
+          "value": 6,
+          "_base": true
+        },
+        {
+          "type": "hit_chance",
+          "value": 6,
+          "_base": true
+        },
+        {
+          "type": "crit_damage",
+          "value": 10,
+          "_base": true
+        },
+        {
+          "name": "Barbed Arrows",
+          "type": "bleed_on_hit",
+          "chance": 10,
+          "duration": 3,
+          "damagePct": 0.5,
+          "_base": true
+        },
+        {
+          "type": "stat_bonus",
+          "stat": "dex",
+          "value": 4,
+          "_base": true
+        }
+      ],
+      "tags": [
+        "bow",
+        "weapon",
+        "ranged",
+        "two_handed",
+        "karag_thorn",
+        "unique"
+      ],
+      "price": 1200,
+      "dropWeight": 0
+    },
+    {
+      "id": "moltenfang",
+      "name": "Moltenfang",
+      "description": "Quenched in the Heart itself, the blade never fully cooled. Cuts cauterize as they open — the flame finishes what the edge begins.",
+      "rarity": "unique",
+      "icon": "/assets/items/Dwarf content/Moltenfang.png",
+      "size": [
+        1,
+        2
+      ],
+      "type": "gear",
+      "slot": "weapon",
+      "family": "dagger",
+      "weaponType": "one_handed_dagger",
+      "hands": 1,
+      "classRestriction": "rogue",
+      "attackSpeed": 1.25,
+      "damageDice": {
+        "count": 1,
+        "sides": 8,
+        "bonus": 2,
+        "text": "1d8+2"
+      },
+      "baseStats": {
+        "damage": 15
+      },
+      "effects": [
+        {
+          "name": "Moltenfang",
+          "type": "burn_on_hit",
+          "chance": 25,
+          "duration": 3,
+          "damagePct": 0.8,
+          "_base": true
+        },
+        {
+          "type": "attack_speed",
+          "value": 8,
+          "_base": true
+        },
+        {
+          "type": "crit_chance",
+          "value": 4,
+          "_base": true
+        },
+        {
+          "type": "lifesteal",
+          "value": 6,
+          "_base": true
+        },
+        {
+          "type": "double_hit",
+          "value": 6,
+          "_base": true
+        },
+        {
+          "name": "Lingering Venom",
+          "type": "poison_on_hit",
+          "chance": 12,
+          "duration": 3,
+          "damagePct": 0.4,
+          "_base": true
+        },
+        {
+          "name": "Gutting Edge",
+          "type": "bleed_on_hit",
+          "chance": 30,
+          "duration": 3,
+          "damagePct": 0.5,
+          "_base": true
+        },
+        {
+          "type": "stat_bonus",
+          "stat": "dex",
+          "value": 4,
+          "_base": true
+        }
+      ],
+      "tags": [
+        "dagger",
+        "weapon",
+        "melee",
+        "karag_thorn",
+        "unique"
+      ],
+      "price": 1200,
+      "dropWeight": 0
     },
     {
       "id": "roasted_warhound",

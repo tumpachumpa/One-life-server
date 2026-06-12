@@ -1,6 +1,6 @@
 import { PHASE, ACTION, BLOCK_DODGE_COOLDOWN, ATTACK_ACTIONS, ABILITY_ACTIONS, ABILITY_SLOT_INDEX, TICK_MS, AUTO_ATTACK_TICKS, MOMENTUM_ATTACK_SPEED_PCT_PER_STACK } from './types.js';
 import { getActiveRelics, getActiveRelicByType } from '../relics.js';
-import { absorbDamageShield, applyCombatantDamage, createCombatant, canBlock, canDodge, getAbilityEnergyCost, getAbilityUseFailureReason, getActiveEffectTotal, getEffectiveArmor, getEffectiveCritChance, getPassiveArmorPenPct, getCritResistPct, getTargetBleedStacks, hasCombatTrigger, isAllyTargetAbility, isBleedImmune, isInvulnerable, isPoisonImmune, isStunned, resolveElementalDamage } from './combatant.js';
+import { absorbDamageShield, applyCombatantDamage, createCombatant, canBlock, canDodge, getAbilityEnergyCost, getAbilityUseFailureReason, getActiveEffectTotal, getEffectiveArmor, getEffectiveCritChance, getHeroBrands, getPassiveArmorPenPct, getCritResistPct, getTargetBleedStacks, hasCombatTrigger, isAllyTargetAbility, isBleedImmune, isBurnImmune, isElementImmune, isInvulnerable, isPoisonImmune, isStunned, KHARGUL_BRAND_DEFS, KHARGUL_BRAND_EFFECT, resolveElementalDamage } from './combatant.js';
 import {
   createActionQueue,
   enqueueAction,
@@ -66,7 +66,26 @@ const NON_PASSIVE_PHASE_EFFECTS = new Set([
   'pillar_intermission',
   'double_attack',
   'attack_mult',
+  // Khargul (Sealed Deep) phase machinery — handled by applySealSystems/applyPhaseCasts.
+  'brand_spell',
+  'spawn_seals',
+  'seal_intermission',
+  'seals_dark',
 ]);
+// Seals are "indestructible" outside their intermission: a huge locked HP pool that
+// seal maintenance refills, so hits still land (and trigger cleanse reactions).
+const SEAL_LOCKED_HP = 9999;
+
+// Elemental on-hit proc damage (Ember enchant, Cinderdoom's fireball). Default keeps
+// the legacy fixed average of min/max; `rollDamage: true` rolls the range instead.
+function rollElementalProcDamage(effect, rng = Math.random) {
+  if (effect.rollDamage && effect.maxDamage != null) {
+    const min = Math.max(1, Math.floor(effect.minDamage || 1));
+    const max = Math.max(min, Math.floor(effect.maxDamage));
+    return min + Math.floor(rng() * (max - min + 1));
+  }
+  return Math.max(1, effect.damage || Math.floor(((effect.minDamage || 0) + (effect.maxDamage || 0)) / 2));
+}
 const MELEE_ABILITY_TYPES = new Set([
   'multi_hit',
   'stun',
@@ -297,6 +316,11 @@ function createEnemyCombatant(enemyObj, id = 'enemy') {
     combatVisual: enemyObj.combatVisual || null,
     isDuelPlayer: enemyObj.isDuelPlayer || false,
     isDuelCompanion: enemyObj.isDuelCompanion || false,
+    // Khargul/Sealed Deep: partial DoT resistance ({bleed: 25} = takes 25% bleed
+    // damage), seal cleanse config, and scripted fight-opener log lines.
+    dotDamageTakenPct: enemyObj.dotDamageTakenPct || null,
+    sealConfig: enemyObj.sealConfig || null,
+    introLog: enemyObj.introLog || null,
     // Needed so the duel opponent's ability resource gating picks the right pool
     // (energy for rogue, rage otherwise) — see buildDuelCombatantResources.
     heroClass: enemyObj.heroClass || null,
@@ -975,6 +999,159 @@ function applyPillarIntermissions(enemies, queue, tick, log, hero) {
   return { enemies: nextEnemies, queue: nextQueue };
 }
 
+// ── Khargul Seal systems (Sealed Deep) ─────────────────────────────────────────
+function createSealCombatant(boss, sealId, index, tick) {
+  const def = getEnemy(sealId);
+  if (!def?.baseStats) return null;
+  const seal = createEnemyCombatant({
+    ...def,
+    stats: {
+      ...def.baseStats,
+      maxHp: SEAL_LOCKED_HP,
+      attack: 0,
+      armor: scaleMonsterArmor(def.baseStats.armor || 0),
+    },
+    hp: SEAL_LOCKED_HP,
+  }, `${boss.id}_seal_${def.sealConfig?.brandId || index + 1}`);
+  seal.summonedBy = boss.id;
+  seal.summonKey = `khargul_seal_${def.sealConfig?.brandId || index + 1}`;
+  seal.isSeal = true;
+  seal.sealConfig = def.sealConfig || {};
+  seal.spawnTick = tick;
+  seal.disableAutoAttack = true;
+  seal.autoAttackRate = 0;
+  return seal;
+}
+
+function getBossSeals(enemies, boss, livingOnly = false) {
+  return enemies.filter(enemy =>
+    enemy
+    && enemy.isSeal
+    && enemy.summonedBy === boss.id
+    && (!livingOnly || enemy.hp > 0));
+}
+
+// Runs every tick alongside applyPillarIntermissions. Handles:
+//  spawn_seals       — raise the three cleansing seals (once)
+//  seal_intermission — boss phases out INTO the seals; they become breakable and
+//                      pulse fire; breaking all three brings him back (cracked seals
+//                      revive as cleanse-stations)
+//  seals_dark        — final phase: seals stop answering (no more cleansing)
+//  maintenance       — outside the intermission, locked HP refills so seals read as
+//                      indestructible while hits still trigger cleanse reactions
+function applySealSystems(enemies, queue, tick, log, hero) {
+  let nextEnemies = enemies;
+  let nextQueue = queue;
+  for (const boss of nextEnemies) {
+    if (!boss?.phaseEffects?.length || boss.hp <= 0) continue;
+
+    for (const effect of boss.phaseEffects.filter(entry => entry.type === 'spawn_seals')) {
+      const key = `spawn_seals:${effect.id || 'seals'}`;
+      boss.bossTimers = { ...(boss.bossTimers || {}) };
+      if (boss.bossTimers[key]) continue;
+      const seals = [];
+      (effect.sealIds || []).forEach((sealId, index) => {
+        const seal = createSealCombatant(boss, sealId, index, tick);
+        if (seal) seals.push(seal);
+      });
+      if (!seals.length) continue;
+      boss.bossTimers[key] = tick + 1;
+      nextEnemies = [...nextEnemies, ...seals];
+      log.push(makeEntry(tick, boss.id, 'phase_change', effect.spawnText || `${boss.name} raises the old seals.`, 0, hero.hp, boss.hp, {
+        abilityId: effect.id || null,
+        abilityType: effect.type,
+        targetId: boss.id,
+        addCount: seals.length,
+      }));
+    }
+
+    for (const effect of boss.phaseEffects.filter(entry => entry.type === 'seal_intermission')) {
+      const key = `seal_intermission:${effect.id || 'seal_intermission'}`;
+      const startedKey = `${key}:started`;
+      const completedKey = `${key}:completed`;
+      boss.bossTimers = { ...(boss.bossTimers || {}) };
+      if (boss.bossTimers[completedKey]) {
+        setBossPillarIntermissionState(boss, effect, false, tick);
+        continue;
+      }
+      const seals = getBossSeals(nextEnemies, boss);
+      if (!boss.bossTimers[startedKey]) {
+        if (!seals.length) continue;
+        boss.bossTimers[startedKey] = tick + 1;
+        const sealHp = Math.max(1, Math.floor(effect.sealHp || 90));
+        for (const seal of seals) {
+          seal.sealIntermissionActive = true;
+          seal.maxHp = sealHp;
+          seal.hp = sealHp;
+        }
+        setBossPillarIntermissionState(boss, effect, true, tick);
+        nextQueue = removePendingBasicAttacksForActor(removePendingAbilityCastsForActor(nextQueue, boss.id), boss.id);
+        log.push(makeEntry(tick, boss.id, 'phase_change', effect.phaseOutText || `${boss.name} folds into the seals.`, 0, hero.hp, boss.hp, {
+          abilityId: effect.id || null,
+          abilityType: effect.type,
+          targetId: boss.id,
+        }));
+        continue;
+      }
+      const living = getBossSeals(nextEnemies, boss, true);
+      if (living.length > 0) {
+        setBossPillarIntermissionState(boss, effect, true, tick);
+        const interval = Math.max(1, Math.ceil(effect.pulseIntervalTicks || 3));
+        const pulseKey = `${key}:pulse`;
+        const elapsed = (boss.bossTimers[pulseKey] || 0) + 1;
+        if (elapsed >= interval && hero.hp > 0) {
+          boss.bossTimers[pulseKey] = 0;
+          const raw = Math.max(1, Math.floor(effect.pulseDamage || 5)) * living.length;
+          const dmg = resolveElementalDamage(raw, 'fire', hero);
+          hero.hp = Math.max(0, hero.hp - dmg);
+          log.push(makeEntry(tick, boss.id, 'ability', `The burning seals pulse — ${dmg} fire damage.`, dmg, hero.hp, boss.hp, {
+            abilityId: effect.id || null,
+            abilityType: 'spell_attack',
+            element: 'fire',
+            targetId: 'hero',
+          }));
+        } else if (elapsed < interval) {
+          boss.bossTimers[pulseKey] = elapsed;
+        }
+        continue;
+      }
+      boss.bossTimers[completedKey] = tick;
+      setBossPillarIntermissionState(boss, effect, false, tick);
+      for (const seal of seals) {
+        seal.sealIntermissionActive = false;
+        seal.sealCracked = true;
+        seal.maxHp = SEAL_LOCKED_HP;
+        seal.hp = SEAL_LOCKED_HP;
+      }
+      log.push(makeEntry(tick, boss.id, 'phase_change', effect.returnText || `${boss.name} is dragged back into the light.`, 0, hero.hp, boss.hp, {
+        abilityId: effect.id || null,
+        abilityType: effect.type,
+        targetId: boss.id,
+      }));
+    }
+
+    for (const effect of boss.phaseEffects.filter(entry => entry.type === 'seals_dark')) {
+      const key = `seals_dark:${effect.id || 'seals_dark'}`;
+      boss.bossTimers = { ...(boss.bossTimers || {}) };
+      if (boss.bossTimers[key]) continue;
+      const seals = getBossSeals(nextEnemies, boss);
+      if (!seals.length) continue;
+      boss.bossTimers[key] = tick + 1;
+      for (const seal of seals) seal.sealIsDark = true;
+      log.push(makeEntry(tick, boss.id, 'phase_change', effect.darkText || 'The seals gutter out.', 0, hero.hp, boss.hp, {
+        abilityId: effect.id || null,
+        abilityType: effect.type,
+        targetId: boss.id,
+      }));
+    }
+
+    for (const seal of getBossSeals(nextEnemies, boss)) {
+      if (!seal.sealIntermissionActive && seal.hp > 0 && seal.hp < seal.maxHp) seal.hp = seal.maxHp;
+    }
+  }
+  return { enemies: nextEnemies, queue: nextQueue };
+}
+
 function getCombatantStateHitReaction(combatant) {
   const cycle = combatant?.stateCycle;
   const stateKey = cycle?.stateKey || 'colorState';
@@ -1017,8 +1194,45 @@ function applyStackingStateDot(target, reaction, source, fallbackDamage, fallbac
   return applied;
 }
 
+// Khargul's Seals: striking the seal matching your active brand cleanses it; the
+// wrong seal lashes back. Only the hero's own hand works the seals (not pets).
+function applySealStrike(attacker, seal, tick, log, hero, logEnemy) {
+  if (!attacker?.isPlayer || !hero || hero.hp <= 0) return;
+  const config = seal.sealConfig || {};
+  const brandId = config.brandId || null;
+  if (seal.sealIsDark) {
+    log.push(makeEntry(tick, seal.id, 'seal', `${seal.name} is cold ash. Nothing answers.`, 0, hero.hp, logEnemy?.hp ?? null, { targetId: seal.id }));
+    return;
+  }
+  if (seal.sealIntermissionActive) return; // during the intermission seals are just targets to break
+  if ((seal.sealDimUntilTick || 0) >= tick) {
+    log.push(makeEntry(tick, seal.id, 'seal', `${seal.name} is still dark.`, 0, hero.hp, logEnemy?.hp ?? null, { targetId: seal.id }));
+    return;
+  }
+  const match = getHeroBrands(hero).find(effect => effect.brandId === brandId);
+  if (match) {
+    hero.activeEffects = (hero.activeEffects || []).filter(effect => effect !== match);
+    seal.sealDimUntilTick = tick + 4;
+    log.push(makeEntry(tick, seal.id, 'seal_cleanse', config.cleanseText || `${seal.name} takes the brand from you.`, 0, hero.hp, logEnemy?.hp ?? null, {
+      targetId: seal.id,
+      brandId,
+    }));
+    return;
+  }
+  const backlash = resolveElementalDamage(12, 'fire', hero);
+  hero.hp = Math.max(0, hero.hp - backlash);
+  log.push(makeEntry(tick, seal.id, 'seal_reject', `${config.rejectText || 'The seal rejects you.'} ${backlash} fire damage.`, backlash, hero.hp, logEnemy?.hp ?? null, {
+    targetId: seal.id,
+    element: 'fire',
+  }));
+}
+
 function applyCombatantStateHitReaction(attacker, defender, tick, log, hero, logEnemy, procState = null) {
   if (!attacker || !defender || !isPlayerSideCombatant(attacker)) return;
+  if (defender.isSeal) {
+    applySealStrike(attacker, defender, tick, log, hero, logEnemy);
+    return;
+  }
   const reaction = getCombatantStateHitReaction(defender);
   if (!reaction) return;
   const stateId = defender.colorState || defender.pillarState || 'state';
@@ -1184,33 +1398,56 @@ function applyPhaseCasts(combatant, enemies, queue, tick, log, rng, hero, target
   if (hasActiveCastAtTick(queue, combatant.id, tick)) return queue;
 
   for (const effect of combatant.phaseEffects) {
-    if (effect.type !== 'delayed_summon_add' && effect.type !== 'delayed_hazard_summon' && effect.type !== 'casted_spell') continue;
+    if (effect.type !== 'delayed_summon_add' && effect.type !== 'delayed_hazard_summon' && effect.type !== 'casted_spell' && effect.type !== 'brand_spell') continue;
     if (!isPhaseEffectHpReady(effect, combatant)) continue;
     const canStart = effect.type === 'casted_spell'
       ? target.hp > 0 && canStartCastedSpell(combatant, effect, tick)
-      : effect.type === 'delayed_hazard_summon'
-        ? canStartHazardCast(combatant, effect, enemies)
-        : canStartSummonCast(combatant, effect, enemies);
+      : effect.type === 'brand_spell'
+        // Brands always target the hero (never the pet, even when it holds front).
+        ? hero.hp > 0
+          && canStartCastedSpell(combatant, effect, tick)
+          && getHeroBrands(hero).length < Math.max(1, Math.floor(effect.maxActiveBrands || 1))
+        : effect.type === 'delayed_hazard_summon'
+          ? canStartHazardCast(combatant, effect, enemies)
+          : canStartSummonCast(combatant, effect, enemies);
     if (!canStart) continue;
 
     const abilityType = effect.type === 'casted_spell'
       ? 'spell_attack'
-      : effect.type === 'delayed_hazard_summon'
-        ? 'summon_hazard'
-        : 'summon_add';
+      : effect.type === 'brand_spell'
+        ? 'brand_spell'
+        : effect.type === 'delayed_hazard_summon'
+          ? 'summon_hazard'
+          : 'summon_add';
     if (!canStartPhaseAbilityCooldown(combatant, effect, abilityType, tick)) continue;
     if (rng() * 100 >= (effect.chance ?? 100)) continue;
 
     const ability = phaseCastAbility(effect, abilityType);
-    if (effect.type === 'casted_spell') markCastedSpellStarted(combatant, effect, tick, ability.castTicks);
-    log.push(makeEntry(tick, combatant.id, 'cast_start', `${combatant.name} begins ${ability.name}...`, 0, hero.hp, combatant.hp, {
+    if (effect.type === 'casted_spell' || effect.type === 'brand_spell') markCastedSpellStarted(combatant, effect, tick, ability.castTicks);
+    let castText = `${combatant.name} begins ${ability.name}...`;
+    let spokenFloat = null;
+    if (effect.type === 'brand_spell') {
+      // Pick the brand NOW so the spoken phrase telegraphs which seal will answer.
+      const held = new Set(getHeroBrands(hero).map(brand => brand.brandId));
+      const available = Object.keys(KHARGUL_BRAND_DEFS).filter(id => !held.has(id));
+      const brandId = available[Math.floor(rng() * available.length)] || 'cinder';
+      const brandDef = KHARGUL_BRAND_DEFS[brandId];
+      const phrase = brandDef.phrases[Math.floor(rng() * brandDef.phrases.length)] || '';
+      ability.brandId = brandId;
+      castText = `${combatant.name}: ${phrase}`;
+      spokenFloat = phrase; // the bare quote, floated over the boss sprite (telegraph)
+    }
+    const castTargetId = effect.type === 'brand_spell' ? hero.id : target.id;
+    log.push(makeEntry(tick, combatant.id, 'cast_start', castText, 0, hero.hp, combatant.hp, {
       abilityId: ability.id,
       abilityType,
-      targetId: target.id,
+      targetId: castTargetId,
       element: ability.element || null,
+      // Boss speech: float the quote over the boss's own sprite, not just the log.
+      ...(spokenFloat ? { spoken: true, floatText: spokenFloat } : {}),
     }));
     return enqueueAbility(queue, combatant.id, ACTION.ABILITY_0, ability.castTicks, tick, 0, ability, {
-      targetId: target.id,
+      targetId: castTargetId,
     });
   }
 
@@ -1285,7 +1522,18 @@ function applyTimedBossSpells(combatant, tick, log, hero, target = hero, procSta
       continue;
     }
     combatant.bossTimers[elapsedKey] = elapsed - interval;
-    const rawDamage = Math.max(1, Math.floor(effect.damage ?? combatant.spellDamage ?? combatant.damage ?? 1));
+    let rawDamage = Math.max(1, Math.floor(effect.damage ?? combatant.spellDamage ?? combatant.damage ?? 1));
+    // Rising Heat (Khargul): the spell's damage grows each cast, capped at maxDamage.
+    // Cast count is keyed by effect id on the combatant, so the ramp persists across
+    // phase changes that re-list the same timed spell.
+    const rampPerCast = Math.max(0, Number(effect.damageRampPerCast) || 0);
+    if (rampPerCast > 0) {
+      const castKey = `timed:${key}:casts`;
+      const casts = combatant.bossTimers[castKey] || 0;
+      rawDamage += rampPerCast * casts;
+      if (effect.maxDamage != null) rawDamage = Math.min(rawDamage, Math.max(1, Math.floor(effect.maxDamage)));
+      combatant.bossTimers[castKey] = casts + 1;
+    }
     const element = effect.element || effect.damageElement || 'magic';
     const damage = resolveElementalDamage(rawDamage, element, target);
     // Chimeric Mantle (reflect_first_spell): negate + reflect the first incoming spell.
@@ -1300,12 +1548,46 @@ function applyTimedBossSpells(combatant, tick, log, hero, target = hero, procSta
     }
     target.hp = Math.max(0, target.hp - damage);
     const elementLabel = element !== 'magic' ? ` ${element}` : '';
+    // Spoken flavor line the first time this spell fires, so the player understands
+    // where the recurring damage is coming from (e.g. Rising Heat's roomwide burn).
+    const announceKey = `timed:${key}:announced`;
+    if (effect.spokenText && !combatant.bossTimers[announceKey]) {
+      combatant.bossTimers[announceKey] = 1;
+      log.push(makeEntry(tick, combatant.id, 'cast_start', `${combatant.name}: "${effect.spokenText}"`, 0, hero.hp, combatant.hp, {
+        abilityId: effect.id || null,
+        abilityType: 'taunt',
+        spoken: true,
+        floatText: `"${effect.spokenText}"`,
+      }));
+    }
+    // Ramp callout: each time the damage actually grows, the boss "says it" as a SHORT
+    // floating callout over its sprite (float-only — the client filters it out of the log
+    // panel). Lets the player see ON the boss that the heat is climbing. Ramping spells only.
+    if (rampPerCast > 0) {
+      const lastDmgKey = `timed:${key}:lastDmg`;
+      const lastDmg = combatant.bossTimers[lastDmgKey] || 0;
+      if (rawDamage > lastDmg) {
+        log.push(makeEntry(tick, combatant.id, 'boss_callout', `${effect.name || 'Rising Heat'}!`, 0, hero.hp, combatant.hp, {
+          abilityId: effect.id || null,
+          element,
+        }));
+      }
+      combatant.bossTimers[lastDmgKey] = rawDamage;
+    }
     log.push(makeEntry(tick, combatant.id, 'ability', `${combatant.name} casts ${effect.name || 'Spell'} for ${damage}${elementLabel} damage.`, damage, hero.hp, combatant.hp, {
       abilityId: effect.id || null,
       abilityType: 'spell_attack',
       element,
       targetId: target.id,
     }));
+    // Persistent status chip on the player while the spell keeps ticking, so the UI
+    // shows WHY fire damage is landing every few seconds. Refreshed each cast; noTimer
+    // hides the countdown (it's a phase-long environmental effect, not a timed debuff).
+    if (effect.statusId && hero) {
+      const sid = effect.statusId;
+      hero.activeEffects = (hero.activeEffects || []).filter(e => e.type !== sid);
+      hero.activeEffects.push({ type: sid, remainingTicks: interval + 2, element, label: effect.name || 'Rising Heat', noTimer: true });
+    }
     break;
   }
 }
@@ -1574,6 +1856,13 @@ export function initCombat({
     fleeAttempted: false,
     debugPreventHeroDeath: !!debugPreventHeroDeath,
   };
+  // Scripted fight opener (e.g. Khargul): atmosphere lines before the first blow.
+  for (const foe of enemies) {
+    if (!Array.isArray(foe?.introLog) || !foe.introLog.length) continue;
+    for (const line of foe.introLog) {
+      state.log.push(makeEntry(0, foe.id, 'intro', String(line), 0, heroHp, foe.hp, { targetId: foe.id }));
+    }
+  }
   applyScarStackArmor(state.combatants.hero, procState);
   applyThresholdEffects(heroProcNodes, procState, state.combatants.hero, enemy, allyCombatants);
   if (enemyProcState) applyThresholdEffects(enemyProcNodes, enemyProcState, state.combatants.enemy, state.combatants.hero, []);
@@ -1840,6 +2129,7 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
   punishDeadSummons();
   for (const foe of enemies) applyBossPhaseState(foe, tick, log, hero.hp);
   ({ enemies, queue } = applyPillarIntermissions(enemies, queue, tick, log, hero));
+  ({ enemies, queue } = applySealSystems(enemies, queue, tick, log, hero));
   for (const foe of enemies) {
     if (isEnemyUntargetable(foe)) continue;
     applyTimedBossSpells(foe, tick, log, hero, frontTarget, procState);
@@ -1858,6 +2148,7 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
     queue = applyPhaseCasts(foe, enemies, queue, tick, log, enemyRng, hero, frontTarget);
   }
   ({ enemies, queue } = applyPillarIntermissions(enemies, queue, tick, log, hero));
+  ({ enemies, queue } = applySealSystems(enemies, queue, tick, log, hero));
   applySummonAuras(enemies);
   enemyFrontId = getEnemyFrontId(enemies, enemyFrontId);
   enemy = getLivingEnemy(enemies, selectedTargetId) || getLivingEnemy(enemies, enemyFrontId) || enemies[0];
@@ -2176,6 +2467,7 @@ export function processTick(state, playerAction = ACTION.NONE, rng = Math.random
   applyHazardExplosions(enemies, hero, frontTarget, tick, log);
   processGroupRevives(enemies, tick, log, hero);
   ({ enemies, queue } = applyPillarIntermissions(enemies, queue, tick, log, hero));
+  ({ enemies, queue } = applySealSystems(enemies, queue, tick, log, hero));
   applyPetDeathSaves(hero, allies, procState, tick, log);
   applyPetLowHpGuards(hero, allies, procState, tick, log);
   applyThresholdEffects(heroProcNodes, procState, hero, enemy, allies);
@@ -2680,6 +2972,42 @@ function tickActiveEffects(combatant, tick, log, procParams = null) {
     if ((effect.type === 'bleed' || effect.type === 'hemorrhage') && isBleedImmune(combatant)) {
       continue;
     }
+    // Burn-status immunity (e.g. Khargul): burning effects fizzle without ticking.
+    if ((effect.type === 'burning' || effect.type === 'shadow_burn') && isBurnImmune(combatant)) {
+      continue;
+    }
+    // Brand of Cinder (Khargul): fire that grows the longer it holds, until cleansed at
+    // the Seal of Cinder. New model is a % of the player's MAX HP per tick (ramping) that
+    // bypasses fire resistance; the old flat baseDamage path is kept for back-compat.
+    if (effect.type === KHARGUL_BRAND_EFFECT && effect.remainingTicks > 0
+        && ((effect.baseDamage || 0) > 0 || (effect.baseDamagePctMaxHp || 0) > 0)) {
+      const held = Math.max(0, tick - (effect.appliedTick ?? tick));
+      const steps = Math.floor(held / Math.max(1, effect.rampEveryTicks || 3));
+      let raw;
+      if ((effect.baseDamagePctMaxHp || 0) > 0) {
+        const pct = Math.min(
+          effect.maxDamagePctMaxHp ?? effect.baseDamagePctMaxHp,
+          (effect.baseDamagePctMaxHp || 0) + (effect.rampPctPerStep || 0) * steps,
+        );
+        raw = Math.max(1, Math.floor((combatant.maxHp || 1) * pct / 100));
+      } else {
+        raw = Math.min(
+          Math.max(1, Math.floor(effect.maxDamage || 8)),
+          (effect.baseDamage || 1) + steps,
+        );
+      }
+      const hpBeforeBrand = combatant.hp;
+      const dmg = dotImmune ? 0 : (effect.bypassResist ? raw : resolveElementalDamage(raw, effect.element || 'fire', combatant));
+      combatant.hp = Math.max(0, combatant.hp - dmg);
+      log.push(makeEntry(tick, combatant.id, 'burning', `${effect.label || 'Brand of Cinder'} sears you for ${dmg} fire damage.`, dmg, null, null, {
+        element: effect.element || 'fire',
+      }));
+      if (combatant.isPlayer && procParams?.procState) {
+        const { procState, heroProcNodes, hero, enemy, rng } = procParams;
+        maybeFireHpCrossBelowProcs(hpBeforeBrand, hero, procState, heroProcNodes, enemy, tick, log, rng);
+        preventDeathWithLastBreath(hero, tick, log, enemy, procState);
+      }
+    }
     if ((effect.type === 'bleed' || effect.type === 'hemorrhage') && combatant.isPlayer && procParams?.procState) {
       const immuneTick = getRelicDotImmunityTick(procParams.procState);
       if (immuneTick > 0 && tick <= immuneTick) {
@@ -2695,7 +3023,9 @@ function tickActiveEffects(combatant, tick, log, procParams = null) {
         : 0;
       const hasMarks = bleedVsMarkedBonusPct > 0 && (combatant.activeEffects || []).some(e => e.type === 'shadow_mark' && (e.stacks || 0) > 0);
       const bleedVsMarkedMult = hasMarks ? (1 + bleedVsMarkedBonusPct / 100) : 1;
-      const dmg = dotImmune ? 0 : Math.max(1, Math.floor((combatant.maxHp || combatant.hp) * (effect.damagePctPerTick || 2) * dotStackMultiplier(stacks) / 100 * bleedVsMarkedMult));
+      // Partial bleed resistance (e.g. Khargul bleeds lava: takes 25% bleed damage).
+      const bleedTakenMult = Math.max(0, Math.min(100, Number(combatant.dotDamageTakenPct?.bleed ?? 100))) / 100;
+      const dmg = dotImmune ? 0 : Math.max(1, Math.floor((combatant.maxHp || combatant.hp) * (effect.damagePctPerTick || 2) * dotStackMultiplier(stacks) / 100 * bleedVsMarkedMult * bleedTakenMult));
       const hpBeforeDot = combatant.hp;
       combatant.hp = Math.max(0, combatant.hp - dmg);
       const label = effect.type === 'hemorrhage' ? 'Hemorrhage' : 'Bleeding';
@@ -2758,7 +3088,9 @@ function tickActiveEffects(combatant, tick, log, procParams = null) {
       }
       const hpBeforePoison = combatant.hp;
       const stacks = Math.max(1, effect.stacks || 1);
-      const raw = Math.max(1, Math.floor((combatant.maxHp || combatant.hp) * (effect.damagePctPerTick || 1.4) * dotStackMultiplier(stacks) / 100));
+      // Partial poison resistance (e.g. Khargul: takes 25% poison damage).
+      const poisonTakenMult = Math.max(0, Math.min(100, Number(combatant.dotDamageTakenPct?.poison ?? 100))) / 100;
+      const raw = Math.max(1, Math.floor((combatant.maxHp || combatant.hp) * (effect.damagePctPerTick || 1.4) * dotStackMultiplier(stacks) / 100 * poisonTakenMult));
       const dmg = dotImmune ? 0 : resolveElementalDamage(raw, 'poison', combatant);
       combatant.hp = Math.max(0, combatant.hp - dmg);
       const text = combatant.isPlayer
@@ -3020,7 +3352,11 @@ function getHitChance(attacker) {
   const staggerPenalty = (attacker.activeEffects || [])
     .filter(effect => effect.type === 'stagger' && effect.attacksRemaining > 0)
     .reduce((sum, effect) => sum + (effect.missPenalty || 35), 0);
-  return Math.max(5, Math.min(100, 90 + statBonus + passiveBonus - blindPenalty - staggerPenalty));
+  // Brand of Shadow (Khargul): strikes go wide until cleansed at the Seal of Shadow.
+  const brandPenalty = (attacker.activeEffects || [])
+    .filter(effect => effect.type === KHARGUL_BRAND_EFFECT)
+    .reduce((sum, effect) => sum + (effect.hitPenalty || 0), 0);
+  return Math.max(5, Math.min(100, 90 + statBonus + passiveBonus - blindPenalty - staggerPenalty - brandPenalty));
 }
 
 function listAbilityTags(ability = {}) {
@@ -3744,6 +4080,10 @@ function getActiveFlashBurst(combatant) {
 
 function getAttackSpeedSlowPenaltyPct(combatant) {
   return (combatant.activeEffects || []).reduce((best, effect) => {
+    // Brand of Stone (Khargul): limbs slow until cleansed at the Seal of Stone.
+    if (effect.type === KHARGUL_BRAND_EFFECT && (effect.attackSpeedPenaltyPct || 0) > 0) {
+      return Math.max(best, effect.attackSpeedPenaltyPct);
+    }
     if (effect.type !== 'attack_speed_slow') return best;
     const hasAttackCharges = effect.attacksRemaining == null || effect.attacksRemaining > 0;
     const hasTickDuration = effect.remainingTicks == null || effect.remainingTicks > 0;
@@ -4584,9 +4924,9 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
           if (!e?.type || !e?.chance) continue;
           if (procRng() * 100 >= e.chance) continue;
           if (e.type === 'fire_proc_on_hit') {
-            const dmg = Math.max(1, e.damage || Math.floor(((e.minDamage || 0) + (e.maxDamage || 0)) / 2));
+            const dmg = isElementImmune(enemy, 'fire') ? 0 : rollElementalProcDamage(e, procRng);
             enemy.hp = Math.max(0, enemy.hp - dmg);
-            log.push(makeEntry(tick, 'hero', 'hit', `Ember: ${dmg} fire damage!`, dmg, hero.hp, enemy.hp, { element: 'fire' }));
+            log.push(makeEntry(tick, 'hero', 'hit', `${e.name || 'Ember'}: ${dmg} fire damage!`, dmg, hero.hp, enemy.hp, { element: 'fire' }));
             if (e.burnGuaranteed || (e.burnChanceBonus && procRng() * 100 < e.burnChanceBonus)) {
               const burnTicks = Math.round(((e.burnDurationSecs || 2) * 1000) / TICK_MS);
               enemy.activeEffects = (enemy.activeEffects || []).filter(eff => !(eff.type === 'burning' && eff.source === 'enchant_ember'));
@@ -4809,9 +5149,9 @@ function resolveBasicAttackImpact(action, attacker, defender, tick, log, rng, he
               if (!e?.type || !e?.chance) continue;
               if (enemyAttackerProcRng() * 100 >= e.chance) continue;
               if (e.type === 'fire_proc_on_hit') {
-                const dmg = Math.max(1, e.damage || Math.floor(((e.minDamage || 0) + (e.maxDamage || 0)) / 2));
+                const dmg = isElementImmune(hero, 'fire') ? 0 : rollElementalProcDamage(e, enemyAttackerProcRng);
                 hero.hp = Math.max(0, hero.hp - dmg);
-                log.push(makeEntry(tick, attacker.id, 'hit', `Ember: ${dmg} fire damage!`, dmg, hero.hp, enemy.hp, { element: 'fire' }));
+                log.push(makeEntry(tick, attacker.id, 'hit', `${e.name || 'Ember'}: ${dmg} fire damage!`, dmg, hero.hp, enemy.hp, { element: 'fire' }));
                 if (e.burnGuaranteed || (e.burnChanceBonus && enemyAttackerProcRng() * 100 < e.burnChanceBonus)) {
                   const burnTicks = Math.round(((e.burnDurationSecs || 2) * 1000) / TICK_MS);
                   hero.activeEffects = (hero.activeEffects || []).filter(eff => !(eff.type === 'burning' && eff.source === 'enchant_ember'));
@@ -6510,9 +6850,9 @@ export function applyEnchantmentProcs(heroInventory, heroEquip, enemy, tick, log
     if (rng() * 100 >= e.chance) continue;
 
     if (e.type === 'fire_proc_on_hit') {
-      const dmg = Math.max(1, e.damage || Math.floor(((e.minDamage || 0) + (e.maxDamage || 0)) / 2));
+      const dmg = isElementImmune(enemy, 'fire') ? 0 : rollElementalProcDamage(e, rng);
       enemy.hp = Math.max(0, enemy.hp - dmg);
-      log.push(makeEntry(tick, 'hero', 'hit', `Ember: ${dmg} fire damage!`, dmg, null, enemy.hp, { element: 'fire' }));
+      log.push(makeEntry(tick, 'hero', 'hit', `${e.name || 'Ember'}: ${dmg} fire damage!`, dmg, null, enemy.hp, { element: 'fire' }));
       if (e.burnGuaranteed || (e.burnChanceBonus && rng() * 100 < e.burnChanceBonus)) {
         const burnTicks = Math.round(((e.burnDurationSecs || 2) * 1000) / TICK_MS);
         enemy.activeEffects = (enemy.activeEffects || []).filter(eff => eff.type !== 'burning' || eff.source !== 'enchant_ember');

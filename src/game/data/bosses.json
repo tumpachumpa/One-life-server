@@ -2,6 +2,251 @@
   "schema": 1,
   "bosses": [
     {
+      "id": "khargul",
+      "name": "Khargul, Flame of the Deep",
+      "family": "demon",
+      "tags": [
+        "demon",
+        "fire",
+        "boss",
+        "fire_immune",
+        "burn_immune"
+      ],
+      "tier": 6,
+      "threat": "boss",
+      "sprite": "/assets/sprites/encounters/Bosses/Khargul boss.png",
+      "dotDamageTakenPct": {
+        "bleed": 25,
+        "poison": 25
+      },
+      "baseStats": {
+        "maxHp": 1500,
+        "attack": 85,
+        "armor": 55,
+        "attackSpeed": 0.5
+      },
+      "rewards": {
+        "xp": 950,
+        "gold": 330
+      },
+      "lootTable": "khargul",
+      "introLog": [
+        "The dark breathes.",
+        "Chains older than the city shift and snap.",
+        "Khargul rises."
+      ],
+      "abilities": [
+        {
+          "id": "khargul_flame_lash",
+          "name": "Flame Lash",
+          "description": "Khargul's whip uncoils in a slow arc of fire — 160% damage that sets the wound alight.",
+          "type": "empowered_attack",
+          "castTicks": 2,
+          "cooldownSeconds": 8,
+          "damageMult": 1.6,
+          "critChanceBonus": 0,
+          "burnChance": 100,
+          "burnDurationTicks": 2,
+          "burnDamagePct": 0.6,
+          "aiPool": "khargul_specials",
+          "aiUseChance": 35,
+          "aiWeight": 60
+        }
+      ],
+      "phases": [
+        {
+          "id": "sleeper_wakes",
+          "label": "The Sleeper Wakes",
+          "thresholdPct": 100,
+          "stats": {
+            "attack": 85,
+            "armor": 55,
+            "attackSpeed": 1
+          },
+          "effects": [
+            {
+              "type": "stagger_on_hit",
+              "chance": 12,
+              "duration": 1,
+              "missPenalty": 30
+            },
+            {
+              "type": "counter_chance",
+              "value": 10
+            }
+          ]
+        },
+        {
+          "id": "shadow_and_flame",
+          "label": "Shadow and Flame",
+          "thresholdPct": 75,
+          "stats": {
+            "attack": 92,
+            "armor": 30,
+            "attackSpeed": 1.5
+          },
+          "effects": [
+            {
+              "type": "spawn_seals",
+              "id": "khargul_seals",
+              "sealIds": [
+                "khargul_seal_cinder",
+                "khargul_seal_shadow",
+                "khargul_seal_stone"
+              ],
+              "spawnText": "Khargul drags the old wards out of the walls — three Seals ignite across the chamber."
+            },
+            {
+              "type": "brand_spell",
+              "id": "khargul_branding",
+              "name": "Branding",
+              "intervalTicks": 10,
+              "castTicks": 2,
+              "maxActiveBrands": 1
+            },
+            {
+              "type": "casted_spell",
+              "id": "khargul_molten_eruption",
+              "name": "Molten Eruption",
+              "intervalTicks": 8,
+              "castTicks": 2,
+              "damage": 55,
+              "element": "fire"
+            },
+            {
+              "type": "timed_spell",
+              "id": "khargul_rising_heat",
+              "name": "Rising Heat",
+              "spokenText": "The deep grows hotter. The very air will cook you alive.",
+              "statusId": "rising_heat",
+              "intervalTicks": 5,
+              "damage": 2,
+              "damageRampPerCast": 1,
+              "maxDamage": 20,
+              "element": "fire"
+            },
+            {
+              "type": "burn_on_hit",
+              "chance": 30,
+              "duration": 2,
+              "damagePct": 0.5
+            }
+          ]
+        },
+        {
+          "id": "wrath_unbound",
+          "label": "Wrath Unbound",
+          "thresholdPct": 45,
+          "stats": {
+            "attack": 100,
+            "armor": 30,
+            "attackSpeed": 1.6
+          },
+          "effects": [
+            {
+              "type": "boss_shield",
+              "id": "khargul_shroud",
+              "name": "Shroud of Shadow",
+              "shieldHp": 120,
+              "once": true
+            },
+            {
+              "type": "double_attack",
+              "chance": 20
+            },
+            {
+              "type": "brand_spell",
+              "id": "khargul_branding",
+              "name": "Branding",
+              "intervalTicks": 7,
+              "castTicks": 2,
+              "maxActiveBrands": 2
+            },
+            {
+              "type": "casted_spell",
+              "id": "khargul_molten_eruption",
+              "name": "Molten Eruption",
+              "intervalTicks": 8,
+              "castTicks": 2,
+              "damage": 55,
+              "element": "fire"
+            },
+            {
+              "type": "delayed_hazard_summon",
+              "id": "khargul_molten_core",
+              "name": "Molten Core",
+              "chance": 18,
+              "castTicks": 2,
+              "cooldownSeconds": 12,
+              "hazardId": "khargul_molten_core",
+              "hazardName": "Molten Core",
+              "hazardSprite": "/assets/sprites/encounters/Khargul molten core.png",
+              "hazardHp": 60,
+              "durationTicks": 5,
+              "explosionDamage": 70,
+              "maxAdds": 1
+            },
+            {
+              "type": "timed_spell",
+              "id": "khargul_rising_heat",
+              "name": "Rising Heat",
+              "spokenText": "The deep grows hotter. The very air will cook you alive.",
+              "statusId": "rising_heat",
+              "intervalTicks": 5,
+              "damage": 2,
+              "damageRampPerCast": 1,
+              "maxDamage": 20,
+              "element": "fire"
+            },
+            {
+              "type": "burn_on_hit",
+              "chance": 30,
+              "duration": 2,
+              "damagePct": 0.5
+            }
+          ]
+        },
+        {
+          "id": "last_flame",
+          "label": "The Last Flame",
+          "thresholdPct": 20,
+          "stats": {
+            "attack": 115,
+            "armor": 25,
+            "attackSpeed": 1.9
+          },
+          "effects": [
+            {
+              "type": "double_attack",
+              "chance": 25
+            },
+            {
+              "type": "defense_penalty_pct",
+              "value": 20
+            },
+            {
+              "type": "timed_spell",
+              "id": "khargul_rising_heat",
+              "name": "Rising Heat",
+              "spokenText": "The deep grows hotter. The very air will cook you alive.",
+              "statusId": "rising_heat",
+              "intervalTicks": 5,
+              "damage": 2,
+              "damageRampPerCast": 1,
+              "maxDamage": 20,
+              "element": "fire"
+            },
+            {
+              "type": "burn_on_hit",
+              "chance": 30,
+              "duration": 2,
+              "damagePct": 0.5
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "elder_stag",
       "name": "Elder Stag",
       "family": "deer",

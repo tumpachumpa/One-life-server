@@ -1,7 +1,7 @@
 import { applyArmor } from '../hero.js';
 import { getDiceAverage, rollDice } from '../equipmentGenerator.js';
 import { resolveImpact } from './actionResolver.js';
-import { applyCombatantDamage, applyDamageTakenReduction, getEffectiveArmor, getEffectiveCritChance, getPassiveArmorPenPct, isBleedImmune, resolveElementalDamage } from './combatant.js';
+import { applyCombatantDamage, applyDamageTakenReduction, getEffectiveArmor, getEffectiveCritChance, getPassiveArmorPenPct, isBleedImmune, isBurnImmune, KHARGUL_BRAND_DEFS, KHARGUL_BRAND_EFFECT, resolveElementalDamage } from './combatant.js';
 
 const PLAYER_BLEED_REFRESH_TICKS = 4;
 
@@ -294,6 +294,9 @@ function applyDirectBleedStacks(attacker, defender, ability, entries, heroCondit
 }
 
 function tryApplyAbilityBurning(attacker, defender, ability, entries, rng = Math.random) {
+  if (isBurnImmune(defender)) {
+    return;
+  }
   const burn = ability.burning || ability.burn || null;
   const chance = ability.burnChance ?? ability.burningChance ?? burn?.chance ?? 100;
   if (chance < 100 && rng() * 100 >= chance) return;
@@ -953,6 +956,48 @@ export function resolveAbilityImpact(action, attacker, defender, tick, rng, cont
         ? `${ability.name}: ${defender.name} is staggered for ${ability.attacks || ability.attacksRemaining || 2} auto attacks.`
         : `${attacker.name} casts ${ability.name}. You are staggered for ${ability.attacks || ability.attacksRemaining || 2} auto attacks.`;
       entries.push({ type: 'stagger', text, damage: 0 });
+      break;
+    }
+
+    case 'brand_spell': {
+      // Khargul's Branding: marks the hero with one of three brands. Cleansed by
+      // striking the matching Seal (see applySealStrike in combatManager).
+      const brandId = ability.brandId || 'cinder';
+      const brandDef = KHARGUL_BRAND_DEFS[brandId] || KHARGUL_BRAND_DEFS.cinder;
+      // Stacking brands (Stone): re-application deepens the brand instead of
+      // refreshing it. Cleansing at the matching Seal removes all stacks at once.
+      const existing = (defender.activeEffects || [])
+        .find(effect => effect.type === KHARGUL_BRAND_EFFECT && effect.brandId === brandId);
+      const stacks = Math.min(brandDef.maxStacks || 1, (existing?.stacks || 0) + 1);
+      defender.activeEffects = (defender.activeEffects || [])
+        .filter(effect => !(effect.type === KHARGUL_BRAND_EFFECT && effect.brandId === brandId));
+      defender.activeEffects.push({
+        type: KHARGUL_BRAND_EFFECT,
+        brandId,
+        label: brandDef.label,
+        color: brandDef.color,
+        element: brandDef.element || 'fire',
+        stacks,
+        hitPenalty: brandDef.hitPenalty || 0,
+        attackSpeedPenaltyPct: (brandDef.attackSpeedPenaltyPct || 0) * stacks,
+        baseDamage: brandDef.baseDamage || 0,
+        rampEveryTicks: brandDef.rampEveryTicks || 3,
+        maxDamage: brandDef.maxDamage || 0,
+        // % max-HP curse fields (Brand of Cinder): ramping % damage that ignores resist.
+        baseDamagePctMaxHp: brandDef.baseDamagePctMaxHp || 0,
+        rampPctPerStep: brandDef.rampPctPerStep || 0,
+        maxDamagePctMaxHp: brandDef.maxDamagePctMaxHp || 0,
+        bypassResist: !!brandDef.bypassResist,
+        appliedTick: tick,
+        remainingTicks: 9999, // until cleansed (or the fight ends)
+      });
+      entries.push({
+        type: 'brand',
+        text: stacks > 1
+          ? `${brandDef.label} sinks deeper — ×${stacks} (-${(brandDef.attackSpeedPenaltyPct || 0) * stacks}% attack speed).`
+          : (brandDef.appliedText || 'You are branded.'),
+        damage: 0,
+      });
       break;
     }
 

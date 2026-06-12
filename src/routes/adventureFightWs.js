@@ -29,13 +29,16 @@ const adventureModP = import('../game/logic/adventure.js');
 const contentModP   = import('../game/logic/content.js');
 const heroModP      = import('../game/logic/hero.js');
 const survivalModP  = import('../game/logic/survival.js');
+const inventoryModP = import('../game/logic/inventory.js');
 
 let _mods = null;
 async function loadMods() {
   if (_mods) return _mods;
-  const [cm, types, builder, adv, content, heroL, surv] = await Promise.all([combatModP, typesModP, builderModP, adventureModP, contentModP, heroModP, survivalModP]);
+  const [cm, types, builder, adv, content, heroL, surv, inv] = await Promise.all([combatModP, typesModP, builderModP, adventureModP, contentModP, heroModP, survivalModP, inventoryModP]);
   _mods = {
     getItem:                content.getItem,
+    countInGrid:            inv.countInGrid,
+    removeManyFromGrid:     inv.removeManyFromGrid,
     initCombat:             cm.initCombat,
     processTick:            cm.processTick,
     processAutoAttackFrame: cm.processAutoAttackFrame,
@@ -234,6 +237,22 @@ async function startFight(f) {
   );
   const hero = heroRes.rows[0]?.save_data?.hero;
   if (!hero) { send(f.ws, { type: 'error', code: 'NO_HERO' }); cleanup(f); return; }
+
+  // Sealed chamber gate (Khargul): the CLIENT checks and consumes the entryCost
+  // (inventory is client-authoritative today — its autosave always wins, so a
+  // server-side consume gets overwritten and a server-side hard reject races the
+  // autosave and produces false "can't afford" rejections for honest players).
+  // Log a soft warning when the DB save disagrees, for visibility; real server
+  // enforcement belongs to the deferred server-owned-inventory work.
+  const entryCost = node.entryCost;
+  if (entryCost?.itemId && (entryCost.qty || 0) > 0) {
+    const haveQty = M.countInGrid(hero.inventory || [], entryCost.itemId);
+    if (haveQty < entryCost.qty) {
+      console.warn('[adventure-fight] entryCost mismatch (DB save lags client?)', {
+        userId: f.userId, nodeId: f.nodeId, itemId: entryCost.itemId, need: entryCost.qty, dbHas: haveQty,
+      });
+    }
+  }
 
   // Phase 4 HP carry: HP is now server-authoritative within a run. Seed this
   // fight from the session's authoritative run_hp (carried from the prior fight's
@@ -475,6 +494,10 @@ function buildTick(f, state, newLogEntries) {
       isPillar: !!foe.isPillar,
       isHazard: !!foe.isHazard,
       isSummon: !!foe.isSummon,
+      // isSeal drives the client's seal layout (small cards in a column beside the
+      // boss). Without it the client can't tell seals apart and renders them in the
+      // normal grid under the boss.
+      isSeal: !!foe.isSeal,
       spawnTick: foe.spawnTick ?? null,
       explodeTick: foe.explodeTick ?? null,
       reviveAtTick: foe.reviveAtTick ?? null,
@@ -611,6 +634,13 @@ function setupAdventureFightWs(httpServer) {
         if (!userId) return;
         const f = fights.get(userId);
         if (!f || f.ended || !f.state) return;
+        // No fleeing boss fights — mirrors the client's isBossEncounter gate
+        // (InteractiveCombat hides the button), enforced here so a tampered
+        // client can't escape a boss chamber it paid to open.
+        const enemies = f.state.combatants?.enemies || [];
+        const hasLivingBoss = enemies.some(foe => foe && foe.hp > 0 && !foe.isSeal
+          && (foe.isBoss || (foe.phases || []).length || (foe.tags || []).includes('boss')));
+        if (hasLivingBoss) return;
         f.pending = 'flee'; // ACTION.FLEE — resolved next tick with fleeContext
       }
 
